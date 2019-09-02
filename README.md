@@ -3,9 +3,7 @@ A compiler from TIP to llvm bitcode
 
 ## TIP tools
 
-TIP is a "Tiny Imperative Programming" language developed by Anders M\oller and Michael I. Schwartzbach for the [Static Program Analysis](https://cs.au.dk/~amoeller/spa/ "Static Program Analysis") they developed for graduate instruction at Aarhus University[^1].
-
-[^1]: A big thanks to Anders and Michael for making TIP available to the community.
+TIP is a "Tiny Imperative Programming" language developed by Anders Moeller and Michael I. Schwartzbach for the [Static Program Analysis](https://cs.au.dk/~amoeller/spa/ "Static Program Analysis") they developed for graduate instruction at Aarhus University^[A big thanks to Anders and Michael for making TIP available to the community.].
 
 Accompanying those notes is a [Scala implementation](https://github.com/cs-au-dk/TIP/) that provides a number of static analysis implementations and interpreter-based evaluators.
 
