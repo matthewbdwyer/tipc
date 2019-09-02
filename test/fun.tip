@@ -1,0 +1,23 @@
+f() {
+  return 3;
+}
+
+g() {
+  var x;
+  x = f(); // call function by name
+  return x;
+}
+
+h(h1) {
+  var y, r;
+  y = h1;  // assign function reference
+  r = y(); // call function by reference
+  return r;
+}
+
+main() {
+  var z, zz;
+  z = h(f); // pass function reference as parameter
+  zz = f();
+  return z + zz;
+}

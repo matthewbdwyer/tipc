@@ -1,0 +1,9 @@
+main() {
+  var x,y,z;
+  x = input;
+  y = &x;
+  output *y;
+  *y = 0 - x;
+  output x;
+  return 0;
+}

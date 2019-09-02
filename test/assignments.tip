@@ -1,0 +1,20 @@
+f() {
+  var x, y;
+  x = 1;
+  y = 42;
+  x = x + y;
+  x = y - 13;
+  x = x / y;
+  y = x * x;
+  return (x + y) * 4;
+}
+
+g(a, b, c) {
+  var x, y, z;
+  x = a - b;
+  y = b - c;
+  z = c - a;
+  a = a * z;
+  b = b / y;
+  return 2 * x - y * 4;
+}

@@ -1,0 +1,1 @@
+cmd='/usr/bin/cmake;-C<TMP_DIR>/antlr4_runtime-cache-$<CONFIG>.cmake;-GUnix Makefiles;<SOURCE_DIR><SOURCE_SUBDIR>'

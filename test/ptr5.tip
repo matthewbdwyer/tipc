@@ -1,0 +1,11 @@
+main() {
+  var x1,x2,y,z;
+  x1 = 42;
+  x2 = 13;
+  y = &x1;
+  z = &y;
+  output **z;
+  y = &x2;
+  output **z;
+  return *y;
+}

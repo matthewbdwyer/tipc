@@ -1,32 +1,17 @@
-# Prerequisites
-*.d
+# Java
+*.class
 
-# Compiled Object files
-*.slo
-*.lo
+# C and Cpp
 *.o
-*.obj
+a.out
 
-# Precompiled Headers
-*.gch
-*.pch
+# ANTLR4
+*.tokens
+*.interp
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# CPP build directory
+*/build
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# LLVM
+*.bc
+*.ll

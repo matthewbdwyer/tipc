@@ -1,0 +1,12 @@
+f() {
+  return 1;
+}
+
+g(x) {
+  return x + 3;
+}
+
+h() {
+  var x;
+  return (x + -7) * 4;
+}
