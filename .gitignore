@@ -9,8 +9,8 @@ a.out
 *.tokens
 *.interp
 
-# CPP build directory
-*/build
+# build directory
+build
 
 # LLVM
 *.bc
