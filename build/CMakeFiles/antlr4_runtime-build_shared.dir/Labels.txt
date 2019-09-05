@@ -1,6 +1,0 @@
-# Target labels
- antlr4_runtime
-# Source files and their labels
-/home/matthewbdwyer/tipc/build/CMakeFiles/antlr4_runtime-build_shared
-/home/matthewbdwyer/tipc/build/CMakeFiles/antlr4_runtime-build_shared.rule
-/home/matthewbdwyer/tipc/build/antlr4_runtime/src/antlr4_runtime-stamp/antlr4_runtime-build_shared.rule

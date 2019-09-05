@@ -1,7 +1,0 @@
-/home/matthewbdwyer/tipc/build/CMakeFiles/rebuild_cache.dir
-/home/matthewbdwyer/tipc/build/CMakeFiles/antlr4_runtime-build_static.dir
-/home/matthewbdwyer/tipc/build/CMakeFiles/antlr4_runtime-build_shared.dir
-/home/matthewbdwyer/tipc/build/CMakeFiles/antlr4_runtime.dir
-/home/matthewbdwyer/tipc/build/CMakeFiles/intrinsics_gen.dir
-/home/matthewbdwyer/tipc/build/CMakeFiles/tipc.dir
-/home/matthewbdwyer/tipc/build/CMakeFiles/edit_cache.dir
