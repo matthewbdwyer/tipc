@@ -13,23 +13,29 @@ using namespace antlr4;
 using namespace TIPtree;
 using namespace llvm;
 
+/*
 static bool pretty = false;
 static bool disableOpt = true;
 static std::string sourceFile;
-/*
-static cl::opt<bool> pretty("p", cl::desc("pretty print"));
-static cl::opt<bool> pretty("l", cl::desc("pretty print with line numbers"));
-static cl::opt<bool> disableOpt("d", cl::desc("disable bitcode optimization"));
-static cl::opt<std::string> sourceFile(cl::Positional, 
-                                       cl::desc("<input file>"), 
-                                       cl::Required);
 */
 
+static cl::OptionCategory TIPcat("tipc Options", 
+      "Options for controlling the TIP compilation process.");
+static cl::opt<bool> pp("p", cl::desc("pretty print"), cl::cat(TIPcat));
+static cl::opt<bool> ppWlines("l", 
+                              cl::desc("pretty print with line numbers"), 
+                              cl::cat(TIPcat));
+static cl::opt<bool> noOpt("d", 
+                           cl::desc("disable bitcode optimization"), 
+                           cl::cat(TIPcat));
+static cl::opt<std::string> sourceFile(cl::Positional, 
+                                       cl::desc("<tip source file>"), 
+                                       cl::Required, 
+                                       cl::cat(TIPcat));
+
 int main(int argc, const char* argv[]) {
-/*
-    cl::ParseCommandLineOptions(argc, argv, "tipc - TIP llvm compiler\n");
-*/
-    sourceFile = argv[1];
+    cl::HideUnrelatedOptions(TIPcat); // suppress non TIP options
+    cl::ParseCommandLineOptions(argc, argv, "tipc - a TIP to llvm compiler\n");
 
     std::ifstream stream;
     stream.open(sourceFile);
@@ -44,12 +50,12 @@ int main(int argc, const char* argv[]) {
     TIPtreeBuild tb(&parser);
     auto ast = tb.build(tree);
 
-    if (pretty) {
-       std::cout << ast->print("  ", true);
+    if (pp || ppWlines) {
+       std::cout << ast->print("  ", ppWlines);
     } else {
        auto theModule = ast->codegen(sourceFile);
 
-       if (!disableOpt) {
+       if (!noOpt) {
            // Create a pass manager to simplify generated module
            auto TheFPM = 
               llvm::make_unique<legacy::FunctionPassManager>(theModule.get());

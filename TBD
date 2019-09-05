@@ -1,0 +1,5 @@
+- Differential test suite with TIP -run
+- clang-tidy
+- scan-build
+- in code documentation
+- Finish documentation in readme

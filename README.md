@@ -41,11 +41,10 @@ no type checking
 
 ## Tests
 
-unit testing 
-
-fuzz testing 
-
 differential testing with Scala tip
+
+Would be nice: fuzz testing 
+
 
 ## Documentation
 

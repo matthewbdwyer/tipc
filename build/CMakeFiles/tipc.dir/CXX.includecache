@@ -34,12 +34,6 @@ string
 vector
 -
 
-/home/matthewbdwyer/tipc/src/TIPtreeBuild.cpp
-TIPtreeBuild.h
-/home/matthewbdwyer/tipc/src/TIPtreeBuild.h
-vector
--
-
 /home/matthewbdwyer/tipc/src/TIPtreeBuild.h
 string
 -
@@ -51,10 +45,6 @@ TIPBaseVisitor.h
 /home/matthewbdwyer/tipc/src/TIPBaseVisitor.h
 TIPtree.h
 /home/matthewbdwyer/tipc/src/TIPtree.h
-
-/home/matthewbdwyer/tipc/src/TIPtreeGen.cpp
-TIPtreeGen.h
-/home/matthewbdwyer/tipc/src/TIPtreeGen.h
 
 /home/matthewbdwyer/tipc/src/TIPtreeGen.h
 llvm/ADT/STLExtras.h
@@ -97,10 +87,6 @@ llvm/Transforms/Scalar/GVN.h
 /home/matthewbdwyer/tipc/src/llvm/Transforms/Scalar/GVN.h
 llvm/Transforms/Utils.h
 /home/matthewbdwyer/tipc/src/llvm/Transforms/Utils.h
-TIPtree.h
-/home/matthewbdwyer/tipc/src/TIPtree.h
-
-/home/matthewbdwyer/tipc/src/TIPtreePrint.cpp
 TIPtree.h
 /home/matthewbdwyer/tipc/src/TIPtree.h
 
