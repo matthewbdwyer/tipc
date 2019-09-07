@@ -23,6 +23,10 @@ include_directories(${ANTLR4_INCLUDE_DIRS})
 # set variable pointing to the antlr tool that supports C++
 # this is not required if the jar file can be found under PATH environment
 set(ANTLR_EXECUTABLE /home/matthewbdwyer/lib/antlr-4.7.2-complete.jar)
+
+# Use this setup for cs6620.cs.virginia.edu
+# set(ANTLR_EXECUTABLE /sw/linux-any/antlr/antlr-4.7.2-complete.jar)
+
 # add macros to generate ANTLR Cpp code from grammar
 find_package(ANTLR REQUIRED)
 
