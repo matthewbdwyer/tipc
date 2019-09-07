@@ -7,16 +7,21 @@ TIP is a "Tiny Imperative Programming" language developed by Anders Moeller and 
 
 Accompanying those notes is a [Scala implementation](https://github.com/cs-au-dk/TIP/) that provides a number of static analysis implementations and interpreter-based evaluators.
 
+This project implements `tipc` which compiles TIP programs into LLVM bitcode.
+Linking that bitcode with the [intrinsic runtime](./intrinsics) routines and
+standard libraries will produce an executable.
+
 ## Dependencies
 
-tipc was developed and tested on Ubuntu 18.04LTS.
+`tipc` was developed and tested on Ubuntu 18.04LTS.
 It depends on java8, cpp, cmake, antlr4, and llvm which were installed using:
   1. `apt install openjdk-8-jdk-headless`
   2. `apt install cmake pkg-config uuid-dev`
   3. `apt install antlr4`
   4. `apt install libllvm-7-ocaml-dev libllvm7 llvm-7 llvm-7-dev llvm-7-doc llvm-7-examples llvm-7-runtime`
 
-This may work on other platforms and you may need to adjust paths appropriately for you installation.
+You may need to adjust paths appropriately for you installation.
+The 
 
 ## Building the executable
 
