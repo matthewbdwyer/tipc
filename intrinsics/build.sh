@@ -1,2 +1,2 @@
 #/bin/sh
-clang -c -emit-llvm tip_intrinsics.c
+clang-7 -c -emit-llvm tip_intrinsics.c
