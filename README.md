@@ -14,14 +14,16 @@ standard libraries will produce an executable.
 ## Dependencies
 
 `tipc` was developed and tested on Ubuntu 18.04LTS.
-It depends on java8, cpp, cmake, antlr4, and llvm which were installed using:
+It depends on java8, cpp, cmake, antlr4, clang, and llvm which were installed using:
   1. `apt install openjdk-8-jdk-headless`
   2. `apt install cmake pkg-config uuid-dev`
   3. `apt install antlr4`
   4. `apt install libllvm-7-ocaml-dev libllvm7 llvm-7 llvm-7-dev llvm-7-doc llvm-7-examples llvm-7-runtime`
+  5. `apt install clang-7
 
-You may need to adjust paths appropriately for you installation.
-The 
+You may need to adjust paths appropriately for your installation.
+We use the `llvm-7` and `clang-7` packages, but other versions
+of may work as well.  
 
 ## Building the executable
 
