@@ -5,6 +5,7 @@
 ./difftest.sh fibs.tip
 ./difftest.sh fun.tip
 ./difftest.sh ifthenelse.tip
+./difftest.sh outputerror.tip
 ./difftest.sh ptr1.tip
 ./difftest.sh ptr2.tip
 ./difftest.sh ptr3.tip

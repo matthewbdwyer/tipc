@@ -31,7 +31,7 @@ void _tip_output(int64_t x) {
 }  
 
 void _tip_error(int64_t x) {
-  printf("Execution error, code: %" PRId64 "\n", x); 
+  printf("[error] Error: Execution error, code: %" PRId64 "\n", x); 
   exit(-1);
 }
 
