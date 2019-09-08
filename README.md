@@ -56,7 +56,7 @@ TIP records are not implemented (yet).  Extending `tipc` to support records can 
 
 ## Tests
 
-The implementation has a small set of rudimentary tests.  These tests do accept input, rather they hard code values to exercise the generated code.  Tests are judged correct for `tipc` if the output produced matches that produced when runnint `./tip -run` for the Scala implementation.  The Scala implementation produces more output than `tipc`, due to messages from running it under `sbt`.  Consequently, test output is only judged relative to values produced by program output statements.
+The implementation has a small set of rudimentary tests.  These tests do not accept input, rather they hard code values to exercise the generated code.  Tests are judged correct for `tipc` if the output produced matches that produced when running `./tip -run` for the Scala implementation.  The Scala implementation produces more output than `tipc`, due to messages from running it under `sbt`.  Consequently, test output is only judged relative to values produced by program `output` and `error` statements.
 
 To run the current tests:
   1. compile and build TIP in `~/TIP`
@@ -64,7 +64,7 @@ To run the current tests:
   3. run `./build.sh` in `.../tipc/intrinsics`
   4. run `./difftest.sh` in `.../tipc/test`
 
-The ANTLR4 grammar is designed to make it possible to perform grammar-based fuzzing using a tool like (grammarinator)[https://github.com/renatahodovan/grammarinator].  To make this interesting one must bias the fuzzing towards programs that are syntactically and type correct and that have no input statements.  An even more interesting set of generated tests would agressively output the results of intermediate computations, e.g., after every assignment.  This is future work.
+The ANTLR4 grammar is designed to make it possible to perform grammar-based fuzzing using a tool like [grammarinator](https://github.com/renatahodovan/grammarinator).  To make this interesting one must bias the fuzzing towards programs that are syntactically and type correct and that have no input statements.  An even more interesting set of generated tests would agressively output the results of intermediate computations, e.g., after every assignment.  This is future work.
 
 ## Documentation
 
