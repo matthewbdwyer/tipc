@@ -50,16 +50,21 @@ Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README de
 
 ## Limitations
 
-no records
+TIP does not perform type checking.  Instead it relies on running the Scala TIP system to perform this check.  `tipc` relies on the fact that the types are correct and it casts values based on the operators, e.g., an operator that expects a pointer has its operand cast to a pointer.  This can work because TIP has a limited set of types and all of them can be represented as an int64_t.  This results in sub-optimal code because there are lots of `inttoptr` and `ptrtoint` casts in the generated LLVM bitcode.
 
-no type checking
+TIP records are not implemented (yet).  Extending `tipc` to support records can still use the above scheme since records are always heap allocated in TIP and, thus, that address can be represented as a pointer/int64_t.
 
 ## Tests
 
-differential testing with Scala tip
+The implementation has a small set of rudimentary tests.  These tests do accept input, rather they hard code values to exercise the generated code.  Tests are judged correct for `tipc` if the output produced matches that produced when runnint `./tip -run` for the Scala implementation.  The Scala implementation produces more output than `tipc`, due to messages from running it under `sbt`.  Consequently, test output is only judged relative to values produced by program output statements.
 
-Would be nice: fuzz testing 
+To run the current tests:
+  1. compile and build TIP in `~/TIP`
+  2. create a directory `~/TIP/tipc` to hold test input files
+  3. run `./build.sh` in `.../tipc/intrinsics`
+  4. run `./difftest.sh` in `.../tipc/test`
 
+The ANTLR4 grammar is designed to make it possible to perform grammar-based fuzzing using a tool like (grammarinator)[https://github.com/renatahodovan/grammarinator].  To make this interesting one must bias the fuzzing towards programs that are syntactically and type correct and that have no input statements.  An even more interesting set of generated tests would agressively output the results of intermediate computations, e.g., after every assignment.  This is future work.
 
 ## Documentation
 
