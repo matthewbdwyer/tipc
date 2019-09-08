@@ -15,7 +15,11 @@ fib(n){
 }
 
 main(){
-    var n;
-    n=input;
-    return fib(n);
+    var i;
+    i = 0;
+    while (10 > i) {
+       output fib(i);
+       i = i + 1;
+    } 
+    return -1;
 }

@@ -1,7 +1,0 @@
-whileifs(a) {
-    var x;
-    while (x-a > 0) {
-        x = x-3;
-    }
-    return x;
-}

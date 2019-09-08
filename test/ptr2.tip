@@ -2,6 +2,6 @@ main() {
   var x,y;
   x = 42;
   y = &x;
-  output *y;
-  return x;
+  output *y;	// 42
+  return x;	// 42
 }

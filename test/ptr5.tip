@@ -4,8 +4,8 @@ main() {
   x2 = 13;
   y = &x1;
   z = &y;
-  output **z;
+  output **z;	// 42
   y = &x2;
-  output **z;
-  return *y;
+  output **z;	// 13
+  return *y;	// 42
 }

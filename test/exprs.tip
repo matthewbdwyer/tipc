@@ -8,5 +8,12 @@ g(x) {
 
 h() {
   var x;
+  x = f();
   return (x + -7) * 4;
+}
+
+main() {
+  output g(f());	// outputs 4
+  output h();		// outputs -24
+  return g(-1*h());	// outputs 27
 }

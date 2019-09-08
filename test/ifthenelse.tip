@@ -30,3 +30,9 @@ nite(a,b) {
   return r;
 }
 
+main() {
+  output ite(7);	// 1
+  output it(-7);	// 2
+  output nite(0,7);	// 7
+  return nite(-1,7);	// -7
+}

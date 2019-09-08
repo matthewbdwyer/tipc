@@ -3,16 +3,25 @@ whileifs(a, b, c) {
     x = a;
     y = b + c;
     z = 42;
-    if (x == 1) {
+    if (x == 10) {
         while (x > 0) {
             if (y == 0) {
-                z = z - y;
+                z = z - 4;
+            } else {
+                while (x > y) {
+                   z = z - y;
+                   y = y + 2; 
+                }
             }
-            else {
-                while (x > y)
-                   x = x - 3;
-            }
+            x = x - 2;
         }
     }
     return z + x;
+}
+
+main() {
+  output whileifs(0,42,42);	// 42
+  output whileifs(0,0,0); 	// 42
+  output whileifs(10,2,-2); 	// 22
+  return whileifs(10,-2,-2); 	// 28
 }
