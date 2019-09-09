@@ -52,7 +52,7 @@ TIP does not perform type checking.  Instead it relies on running the Scala TIP 
 
 TIP records are not implemented (yet).  Extending `tipc` to support records can still use the above scheme since operators that access records are not overloaded with any other type and records are always heap allocated in TIP and, thus, that address can be represented as a pointer/`int64_t`.
 
-Note that other extensions of TIP, e.g., adding floats, would require having type annotations in `tipc`.  These could be constructed in a simple type annotation pass, as opposed to TIP Scala's type inference analysis, if the types of functions and declared variables were known.   Conveniently, the Scala TIP compiler can emit type annotations for functions and declared variables; run `./tip -types" and use the file with the `.ttip` suffix that is written to the `out` directory.
+Note that other extensions of TIP, e.g., adding floats, would require having type annotations in `tipc`.  These could be constructed in a simple type annotation pass, as opposed to TIP Scala's type inference analysis, if the types of functions and declared variables were known.   Conveniently, the Scala TIP compiler can emit type annotations for functions and declared variables; run `./tip -types` and use the file with the `.ttip` suffix that is written to the `out` directory.
 
 ## Tests
 
