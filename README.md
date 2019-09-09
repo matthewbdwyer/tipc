@@ -70,9 +70,16 @@ The ANTLR4 grammar is designed to make it possible to perform grammar-based fuzz
 
 ## Documentation
 
+The TIP grammar, [tipg4](./tipg4), is implemented using ANTLR4.  This grammar is free of any semantic actions, though it does use ANTLR4 rule features which allow for control over the tree visitors that form key parts of the compiler.  This allows the structure of the grammar to remain relatively clean, i.e., no grammar factoring or stratification needed.  Relative to the TIP Scala grammar, which is expressed as a PEG grammar, the ANTLR4 grammar consolidates some rules to facilitate the access to parsed structures in AST visitors.
+
+The `tipc` compiler is pretty straightforward.  It includes a [parse tree visitor](./src/TIPtreeBuild.cpp) that constructs an [AST](./src/TIPtree.h).  The compiler implements two passes over the AST: one to [generate LLVM bitcode](./src/TIPtreeGen.cpp) and one to [pretty print](.src/TIPtreePrint.cpp).   The [main](./src/tipcc.cpp) file parses command line options, chooses which pass to run, and if LLVM code is generated whether to run a set of LLVM passes to improve the bitcode (on by default).
+
+`tipc` only produces a bitcode file, `.bc`.  You need to link it with the [intrinsic](./intrinsics) which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines.  A [script](./test/build.sh) is available to statically link binaries compiled by `tipc`.
+
 To understand this code, and perhaps extend it, you will want to become familiar with the core LLVM classes:
   * http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-re
 ference
 
 The LLVM tutorials are a great starting point for understanding the APIs in the context of compiling:
   * https://llvm.org/docs/tutorial/
+If you are familiar with the tutorial you will see its influence on this compiler which leverages idioms, strategies, and code fragments from the tutorial.
