@@ -1,7 +1,7 @@
 # tipc
 A compiler from TIP to llvm bitcode
 
-## TIP tools
+## TIP Language, Interpreter, and Analyzers
 
 TIP is a "Tiny Imperative Programming" language developed by Anders Moeller and Michael I. Schwartzbach for the [Static Program Analysis](https://cs.au.dk/~amoeller/spa/ "Static Program Analysis") they developed for graduate instruction at Aarhus University.
 
@@ -19,7 +19,7 @@ It depends on java8, cpp, cmake, antlr4, clang, and llvm which were installed us
   2. `apt install cmake pkg-config uuid-dev`
   3. `apt install antlr4`
   4. `apt install libllvm-7-ocaml-dev libllvm7 llvm-7 llvm-7-dev llvm-7-doc llvm-7-examples llvm-7-runtime`
-  5. `apt install clang-7
+  5. `apt install clang-7`
 
 You may need to adjust paths appropriately for your installation.
 We use the `llvm-7` and `clang-7` packages, but other versions
