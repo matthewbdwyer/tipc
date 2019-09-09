@@ -50,9 +50,11 @@ Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README de
 
 ## Limitations
 
-TIP does not perform type checking.  Instead it relies on running the Scala TIP system to perform this check.  `tipc` relies on the fact that the types are correct and it casts values based on the operators, e.g., an operator that expects a pointer has its operand cast to a pointer.  This can work because TIP has a limited set of types and all of them can be represented as an int64_t.  This results in sub-optimal code because there are lots of `inttoptr` and `ptrtoint` casts in the generated LLVM bitcode.
+TIP does not perform type checking.  Instead it relies on running the Scala TIP system to perform this check.  `tipc` relies on the fact that the types are correct and it casts values based on the operators, e.g., an operator that expects a pointer has its operand cast to a pointer.  This can work because TIP has a limited set of types and all of them can be represented as an `int64_t`.  This results in sub-optimal code because there are lots of `inttoptr` and `ptrtoint` casts in the generated LLVM bitcode.
 
-TIP records are not implemented (yet).  Extending `tipc` to support records can still use the above scheme since records are always heap allocated in TIP and, thus, that address can be represented as a pointer/int64_t.
+TIP records are not implemented (yet).  Extending `tipc` to support records can still use the above scheme since operators that access records are not overloaded with any other type and records are always heap allocated in TIP and, thus, that address can be represented as a pointer/`int64_t`.
+
+Note that other extensions of TIP, e.g., adding floats, would require having type annotations in `tipc'.  These could be constructed in a simple type annotation pass, as opposed to TIP Scala's type inference analysis, if the types of functions and declared variables were known.   Conveniently, the Scala TIP compiler can emit type annotations for functions and declared variables; run `./tip -types" and use the file with the `.ttip` suffix that is written to the `out` directory.
 
 ## Tests
 
