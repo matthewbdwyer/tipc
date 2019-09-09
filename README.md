@@ -76,7 +76,7 @@ The `tipc` compiler is pretty straightforward.  It includes a [parse tree visito
 
 `tipc` only produces a bitcode file, `.bc`.  You need to link it with the [intrinsic functions](./intrinsics/tip_intrinsics.c) which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines.  A [script](./test/build.sh) is available to statically link binaries compiled by `tipc`.
 
-To understand this code, and perhaps extend it, you will want to become familiar with the [core LLVM classes](http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-reference).  It's probably best to read this while you are reading through some code to become familiar with it gradually.
+To understand this code, and perhaps extend it, you will want to become familiar with the [core LLVM classes](http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-reference).  It can be difficult to absorb all of the information in this type of documentation just by reading it.  A goal-directed strategy where you move back and forth between reading code and reading this documentation seems to work well for many people.
 
 If you are familiar with the [LLVM tutorial](https://llvm.org/docs/tutorial/) you will see its influence on this compiler which leverages idioms, strategies, and code fragments from the tutorial.  The LLVM tutorials are a great starting point for understanding the APIs in the context of compiling.
 
