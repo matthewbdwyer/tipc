@@ -76,10 +76,12 @@ The `tipc` compiler is pretty straightforward.  It includes a [parse tree visito
 
 `tipc` only produces a bitcode file, `.bc`.  You need to link it with the [intrinsic](./intrinsics) which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines.  A [script](./test/build.sh) is available to statically link binaries compiled by `tipc`.
 
-To understand this code, and perhaps extend it, you will want to become familiar with the core LLVM classes:
-  * http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-re
-ference
+To understand this code, and perhaps extend it, you will want to become familiar with the [core LLVM classes](http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-reference).  It's probably best to read this while you are reading through some code to become familiar with it gradually.
 
-The LLVM tutorials are a great starting point for understanding the APIs in the context of compiling:
-  * https://llvm.org/docs/tutorial/
-If you are familiar with the tutorial you will see its influence on this compiler which leverages idioms, strategies, and code fragments from the tutorial.
+If you are familiar with the [LLVM tutorial](https://llvm.org/docs/tutorial/) you will see its influence on this compiler which leverages idioms, strategies, and code fragments from the tutorial.  The LLVM tutorials are a great starting point for understanding the APIs in the context of compiling.
+
+There is lots of great advice about using LLVM available:
+  * https://www.cs.cornell.edu/~asampson/blog/llvm.html
+  * someone once told me to just use a search engine to find the LLVM APIs and its a standard use case for me, e.g., I don't remember where the docs are I just search for `llvm irbuilder`
+  * LLVM has some nuances that take a bit to understand.  For instance, the [GEP](https://llvm.org/docs/GetElementPtr.html) instruction, which `tipc` uses quite a bit actually given that it emits calls through a function table.
+  
