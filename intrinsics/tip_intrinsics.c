@@ -48,7 +48,7 @@ void _tip_main_undefined() {
  * the TIP "main" are passed through the "_tip_input_array".
  * Finally, the TIP "main" is renamed during compilation to "_tip_main",
  * its arguments are removed, and code to read them from "_tip_input_array"
- * is generated to read them.
+ * is generated.
  */
 int main(int argc, char *argv[]) {
   // Throw an error if the wrong number of arguments are passed
