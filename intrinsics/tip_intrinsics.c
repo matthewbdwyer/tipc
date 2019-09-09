@@ -4,20 +4,17 @@
 #include <inttypes.h>
 
 /*
- * These are defined for each TIP program.
+ * These are defined for each TIP program in the compiled code.
  */
 int64_t _tip_main();
 extern int64_t _tip_num_inputs;
 extern int64_t _tip_input_array[]; 
 
 /* 
- * intrinsic functions for TIP I/O/E
+ * intrinsic functions for TIP IO expressions and statements
  *    x = input;
  *    output y;
  *    error y;
- *
- * Note that these are reserved words in TIP, so there will be no
- * naming conflicts.
  */
 int64_t _tip_input() {
   int64_t x;
@@ -35,11 +32,24 @@ void _tip_error(int64_t x) {
   exit(-1);
 }
 
+/*
+ * If the compiled program has no "main" function then one is created
+ * that calls this function.
+ */
 void _tip_main_undefined() {
   printf("Error: missing main function\n"); 
   exit(-1);
 }
 
+/*
+ * Set up the arguments to be read by the TIP "main" function.
+ * The number of arguments is defined by the compiled TIP code
+ * and read here to perform error checking.  All arguments to
+ * the TIP "main" are passed through the "_tip_input_array".
+ * Finally, the TIP "main" is renamed during compilation to "_tip_main",
+ * its arguments are removed, and code to read them from "_tip_input_array"
+ * is generated to read them.
+ */
 int main(int argc, char *argv[]) {
   // Throw an error if the wrong number of arguments are passed
   if (argc != _tip_num_inputs + 1) {
