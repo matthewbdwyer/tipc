@@ -15,6 +15,9 @@ set(CMAKE_CXX_STANDARD 11)
 # compile with debug flags
 set(CMAKE_BUILD_TYPE Debug)
 
+# cleanup the code with clang-tidy
+#set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=-*,readability-*)
+
 ######## ANTLR4 CPP target rules ###########
 # required if linking to static library
 add_definitions(-DANTLR4CPP_STATIC)
