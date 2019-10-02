@@ -1,4 +1,4 @@
-whileifs(a, b, c) {
+nestedloopsifs(a, b, c) {
     var x,y,z;
     x = a;
     y = b + c;
@@ -20,8 +20,8 @@ whileifs(a, b, c) {
 }
 
 main() {
-  output whileifs(0,42,42);	// 42
-  output whileifs(0,0,0); 	// 42
-  output whileifs(10,2,-2); 	// 22
-  return whileifs(10,-2,-2); 	// 28
+  output nestedloopsifs(0,42,42);	// 42
+  output nestedloopsifs(0,0,0); 	// 42
+  output nestedloopsifs(10,2,-2); 	// 22
+  return nestedloopsifs(10,-2,-2); 	// 28
 }
