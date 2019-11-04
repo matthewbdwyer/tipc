@@ -17,10 +17,15 @@ fi
 clang-7 -w -static $1.bc ../intrinsics/tip_intrinsics.bc -o $bname
 ./$bname >/tmp/$USER/$bname.tipc-out
 
+# create a tipc directory for storing source to run TIP Scala
+if [ ! -d ~/TIP/tipc ]; then
+  mkdir ~/TIP/tipc
+fi
+
 # run the test through TIP Scala 
 #   must execute in its build directory
 #   reenable stty echo when finished
-cp $1 ~/TIP/tipc
+cp $1 ~/TIP/tipc/
 cd ~/TIP
 ./tip -run tipc/$1 >/tmp/$USER/$bname.tipscala-out
 stty echo
