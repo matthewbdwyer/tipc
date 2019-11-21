@@ -16,4 +16,5 @@ build
 *.bc
 *.ll
 
-
+# Editor
+.vscode/

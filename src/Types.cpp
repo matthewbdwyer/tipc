@@ -5,12 +5,12 @@
 
 class TipType {
 public:
-    virtual std::string print() = 0;
+    virtual std::string tostr() = 0;
 };
 
 class TipInt : public TipType {
 public:
-    std::string print() override {
+    std::string tostr() override {
         return "int";
     }
 };
@@ -21,9 +21,9 @@ class TipRef : public TipType {
 public:
     TipRef(TipType *of) : of(of) {}
 
-    std::string print() override {
+    std::string tostr() override {
         std::ostringstream oss;
-        oss << "&" << of->print();
+        oss << "&" << of->tostr();
         return oss.str();
     }
 };
@@ -34,28 +34,14 @@ class TipFun : public TipType {
 
 public:
     TipFun(std::vector<TipType*> args, TipType* ret) : args(args), ret(ret) {}
-    std::string print() override {
+    std::string tostr() override {
         std::ostringstream oss;
         oss << "(";
         for(TipType* arg : args) {
-            oss << arg->print() << ",";
+            oss << arg->tostr() << ",";
         }
-        oss << ")" << "->" << ret->print();
+        oss << ")" << "->" << ret->tostr();
         return oss.str();
     }
 };
-
-// // test below
-// int main(void) {
-//     TipInt *tip_int = new TipInt();
-//     TipRef *tip_ref = new TipRef(new TipInt());
-//     std::vector<TipType*> vec;
-//     vec.push_back(new TipInt());
-//     vec.push_back(new TipRef(new TipInt()));
-//     TipFun *tip_fun = new TipFun(vec, new TipInt());
-//     std::cout << tip_int->print() << std::endl;
-//     std::cout << tip_ref->print() << std::endl;
-//     std::cout << tip_fun->print() << std::endl;
-//     return 0;
-// }
 
