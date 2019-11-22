@@ -5,6 +5,10 @@ bool TIPtype::operator==(const TIPtype& other) const
     return toStr() == (&other)->toStr();
 }
 
+bool TIPtype::operator!=(const TIPtype& other) const
+{
+    return toStr() != (&other)->toStr();
+}
 std::string TIPint::toStr() const
 {
     return "int";
