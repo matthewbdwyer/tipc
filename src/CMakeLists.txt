@@ -65,5 +65,6 @@ add_executable(tipc
                TIPtreeBuild.cpp 
                TIPtreeGen.cpp 
                TIPtreePrint.cpp
+               TIPtypecheck.cpp
                ${ANTLR_TIPGrammar_CXX_OUTPUTS})
 target_link_libraries(tipc antlr4_static ${llvm_libs})

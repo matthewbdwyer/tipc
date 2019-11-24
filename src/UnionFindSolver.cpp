@@ -1,6 +1,6 @@
 #include "UnionFindSolver.h"
 
-void UnionFindSolver::makeSet(TIPtree::Node* node)
+void UnionFindSolver::addNode(TIPtree::Node* node)
 {
     if (parent.find(node) == parent.end()) {
         parent[node] = node;
@@ -12,7 +12,7 @@ void UnionFindSolver::makeSet(TIPtree::Node* node)
 
 TIPtree::Node* UnionFindSolver::findParent(TIPtree::Node* node) 
 {
-    makeSet(node);
+    addNode(node);
     while (parent[node] != node) {
         node = parent[node];
     }
@@ -21,11 +21,11 @@ TIPtree::Node* UnionFindSolver::findParent(TIPtree::Node* node)
 
 void UnionFindSolver::unifyNodes(TIPtree::Node* nodex, TIPtree::Node* nodey)
 {
-    makeSet(nodex);
-    makeSet(nodey);
+    addNode(nodex);
+    addNode(nodey);
     TIPtree::Node* parentx = findParent(nodex);
     TIPtree::Node* parenty = findParent(nodey);
-    if (*nodetype[parentx] != *nodetype[parenty]) {
+    if (nodetype[parentx] != nullptr && nodetype[parenty] != nullptr && *nodetype[parentx] != *nodetype[parenty]) {
         //type mismatch
         std::ostringstream oss;
         oss << "type mismatch:" << parentx->print() << " and " << parenty->print();
@@ -33,6 +33,9 @@ void UnionFindSolver::unifyNodes(TIPtree::Node* nodex, TIPtree::Node* nodey)
     }
     //unify parents
     parent[parentx] = parenty;
+    if (nodetype[parenty] == nullptr) {
+        nodetype[parenty] = nodetype[parentx];
+    }
 }
 
 void UnionFindSolver::setType(TIPtree::Node* node, TIPtype* type) 
