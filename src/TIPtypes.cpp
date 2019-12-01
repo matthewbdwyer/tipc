@@ -1,18 +1,11 @@
 #include "TIPtypes.h"
 
-bool TIPtype::operator==(const TIPtype& other) const
-{
-    return toStr() == (&other)->toStr();
-}
-
-bool TIPtype::operator!=(const TIPtype& other) const
-{
-    return toStr() != (&other)->toStr();
-}
 std::string TIPint::toStr() const
 {
     return "int";
 };
+
+TIPref::TIPref(TIPtype *of) : of(of) {}
 
 std::string TIPref::toStr() const
 {

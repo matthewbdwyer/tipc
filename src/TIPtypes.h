@@ -8,8 +8,6 @@
 class TIPtype {
 public:
     virtual std::string toStr() const = 0;
-    bool operator==(const TIPtype& other) const;
-    bool operator!=(const TIPtype& other) const;
 };
 
 class TIPint : public TIPtype {

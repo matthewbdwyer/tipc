@@ -306,7 +306,7 @@ public:
       : FUNCTIONS(std::move(FUNCTIONS)) {}
   std::unique_ptr<llvm::Module> codegen(std::string programName);
   std::string print(std::string i, bool pl);
-  void typecheck(UnionFindSolver* solver);
+  void typecheck();
 };
 
 } // namespace TIPtree

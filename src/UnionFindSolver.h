@@ -7,14 +7,15 @@
 #include "TIPtypes.h"
 
 class UnionFindSolver {
-    //constraint relationship between ast nodes
-    std::map<TIPtree::Node*, TIPtree::Node*> parent;
-    //mapping from ast node to type
-    std::map<TIPtree::Node*, TIPtype*> nodetype;
-public:    
+    //mapping from node to root 
+    std::map<std::string, std::string> node2root;
+    //mapping from node to type
+    std::map<std::string, TIPtype*> node2type;
+    std::string findRoot(TIPtree::Node* node);
+public: 
     void addNode(TIPtree::Node* node);
-    TIPtree::Node* findParent(TIPtree::Node* node);
     void unifyNodes(TIPtree::Node* nodex, TIPtree::Node* nodey);
     void setType(TIPtree::Node* node, TIPtype* type);
-    //std::string typeMismatchInfo(TIPtree::Node* nodex, TIPtree::Node* nodey);
+    TIPtype* getType(TIPtree::Node* node);
+    bool sameType(TIPtype* typex, TIPtype* typey);
 };

@@ -7,7 +7,6 @@
 #include "TIPtreeGen.h"
 #include "antlr4-runtime.h"
 #include "llvm/Support/CommandLine.h"
-#include "UnionFindSolver.h"
 
 using namespace std;
 using namespace antlr4;
@@ -48,9 +47,7 @@ int main(int argc, const char *argv[]) {
 
   TIPtreeBuild tb(&parser);
   auto ast = tb.build(tree);
-
-  UnionFindSolver* solver = new UnionFindSolver();
-  ast->typecheck(solver);
+  ast->typecheck();
 
   if (pp || ppWlines) {
     std::cout << ast->print("  ", ppWlines);
