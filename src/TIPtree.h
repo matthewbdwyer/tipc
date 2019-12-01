@@ -190,6 +190,7 @@ public:
   llvm::Value *codegen() override;
   std::string print() override;
   void typecheck(UnionFindSolver* solver) override;
+  std::string printTyped(UnionFindSolver* solver);
 };
 
 // BlockStmt - class for block of statements
@@ -287,6 +288,7 @@ public:
   llvm::Function *codegen();
   std::string print();
   void typecheck(UnionFindSolver* solver);
+  std::string printTyped();
   /*
    * These getters are needed because we perform two passes over
    * functions during code generation:
@@ -307,6 +309,7 @@ public:
   std::unique_ptr<llvm::Module> codegen(std::string programName);
   std::string print(std::string i, bool pl);
   void typecheck();
+  std::string printTyped();
 };
 
 } // namespace TIPtree

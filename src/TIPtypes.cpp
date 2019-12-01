@@ -5,7 +5,6 @@ const char* TIPTypeError::what() const noexcept {
     return msg.c_str();
 }
 
-
 std::string TIPint::print() const
 {
     return "int";
@@ -26,12 +25,15 @@ std::string TIPfun::print() const
 {
     std::ostringstream oss;
     oss << "(";
-    for (TIPtype *arg : args)
+    for (auto it = args.begin(); it != args.end(); ++it)
     {
-        oss << arg->print() << ",";
+        oss << (*it)->print();
+        if (std::next(it) != args.end())
+        {
+            oss << ",";
+        }
     }
-    oss << ")"
-        << "->" << ret->print();
+    oss << ")" << "->" << ret->print();
     return oss.str();
 }
 

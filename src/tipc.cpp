@@ -30,6 +30,7 @@ static cl::opt<bool> noOpt("d", cl::desc("disable bitcode optimization"),
 static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
                                        cl::Required, cl::cat(TIPcat));
+static cl::opt<bool> typecheck("t", cl::desc("type analysis"), cl::cat(TIPcat));
 
 int main(int argc, const char *argv[]) {
   cl::HideUnrelatedOptions(TIPcat); // suppress non TIP options
@@ -47,7 +48,10 @@ int main(int argc, const char *argv[]) {
 
   TIPtreeBuild tb(&parser);
   auto ast = tb.build(tree);
-  ast->typecheck();
+  
+  if (typecheck) {
+    std::cout << ast->printTyped() << std::endl;
+  }
 
   if (pp || ppWlines) {
     std::cout << ast->print("  ", ppWlines);

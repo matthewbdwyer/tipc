@@ -1,9 +1,9 @@
 fib(n){
-    var f1,f2,i;
+    var f1,f2,i, j;
     var temp;
     f1=1;
     f2=1;
-    
+    j = &f2;
     i=n;
     while( i>1 ){
         temp = f1+f2;
