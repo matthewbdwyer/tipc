@@ -153,10 +153,24 @@ void Function::typecheck(UnionFindSolver* solver)
 {
     //std::cout << "Function" << std::endl;
     for (auto const &decl : DECLS) {
-        decl->typecheck(solver);
+        try
+        {
+            decl->typecheck(solver);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "Exception at: " << decl->print() << e.what() << '\n';
+        }
     }
     for (auto const &stmt : BODY) {
-        stmt->typecheck(solver);
+        try
+        {
+            stmt->typecheck(solver);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "Exception at: " << stmt->print() << e.what() << '\n';
+        }
     }
 }
 

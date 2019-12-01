@@ -45,10 +45,9 @@ void UnionFindSolver::unifyNodes(TIPtree::Node* nodex, TIPtree::Node* nodey)
     if (!sameType(node2type[rootx_str], node2type[rooty_str])) {
         // TODO: move information from std::cout to logger
         std::ostringstream oss;
-        oss << "type mismatch: " << nodex->print() << "(" << node2type[rootx_str]->toStr() << ") does not match " << nodey->print() << "(" << node2type[rooty_str]->toStr() << ")";
+        oss << "Type error: " << nodex->print() << "(" << node2type[rootx_str]->print() << ") does not match " << nodey->print() << "(" << node2type[rooty_str]->print() << ")";
         std::string mismatch_information = oss.str();
-        std::cout << mismatch_information << std::endl;
-        return;
+        throw TIPTypeError(mismatch_information);
     } else {
         node2root[rootx_str] = rooty_str;
     }
@@ -66,9 +65,9 @@ void UnionFindSolver::setType(TIPtree::Node* node, TIPtype* type)
     if (!sameType(node2type[root_str], type)) {
         // TODO: move information from std::cout to logger
         std::ostringstream oss;
-        oss << "type mismatch: " << root_str << "(" << node2type[root_str]->toStr() << ") does not match type: " << type->toStr();
+        oss << "Type error: " << root_str << "(" << node2type[root_str]->print() << ") does not match type: " << type->print();
         std::string mismatch_information = oss.str();
-        std::cout << mismatch_information << std::endl;
+        throw TIPTypeError(mismatch_information);
     }
 }
 
@@ -86,6 +85,6 @@ bool UnionFindSolver::sameType(TIPtype* typex, TIPtype* typey)
     if (typex == nullptr || typey == nullptr) {
         return false;
     }
-    return typex->toStr() == typey->toStr();
+    return typex->print() == typey->print();
 }
 

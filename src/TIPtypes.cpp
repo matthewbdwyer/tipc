@@ -1,30 +1,37 @@
 #include "TIPtypes.h"
 
-std::string TIPint::toStr() const
+TIPTypeError::TIPTypeError(std::string msg) : msg(msg) {}
+const char* TIPTypeError::what() const noexcept {
+    return msg.c_str();
+}
+
+
+std::string TIPint::print() const
 {
     return "int";
 };
 
 TIPref::TIPref(TIPtype *of) : of(of) {}
 
-std::string TIPref::toStr() const
+std::string TIPref::print() const
 {
     std::ostringstream oss;
-    oss << "&" << of->toStr();
+    oss << "&" << of->print();
     return oss.str();
 }
 
 TIPfun::TIPfun(std::vector<TIPtype *> args, TIPtype *ret) : args(args), ret(ret) {}
 
-std::string TIPfun::toStr() const
+std::string TIPfun::print() const
 {
     std::ostringstream oss;
     oss << "(";
     for (TIPtype *arg : args)
     {
-        oss << arg->toStr() << ",";
+        oss << arg->print() << ",";
     }
     oss << ")"
-        << "->" << ret->toStr();
+        << "->" << ret->print();
     return oss.str();
 }
+

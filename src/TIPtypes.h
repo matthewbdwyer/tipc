@@ -5,14 +5,21 @@
 #include <sstream>
 #include <iostream>
 
+class TIPTypeError : public std::exception {
+    std::string msg;
+public:
+    TIPTypeError(std::string msg);
+    virtual const char* what() const noexcept override;
+};
+
 class TIPtype {
 public:
-    virtual std::string toStr() const = 0;
+    virtual std::string print() const = 0;
 };
 
 class TIPint : public TIPtype {
 public:
-    std::string toStr() const override;
+    std::string print() const override;
 };
 
 class TIPref : public TIPtype {
@@ -20,7 +27,7 @@ private:
     TIPtype *of;
 public:
     TIPref(TIPtype *of);
-    std::string toStr() const override;
+    std::string print() const override;
 };
 
 class TIPfun : public TIPtype {
@@ -29,5 +36,5 @@ private:
     TIPtype *ret;
 public:
     TIPfun(std::vector<TIPtype*> args, TIPtype* ret);
-    std::string toStr() const override;
+    std::string print() const override;
 };
