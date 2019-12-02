@@ -1,0 +1,25 @@
+expiter(a,n) {
+    var v, i;
+    v = a;
+    i = 1;
+    while (n > i) {
+      v = v * a;
+      i = i + 1;
+    }
+    return v;
+}
+
+exprec(a,n) {
+  var r;
+  if (n == 1)
+    r = a;
+  else 
+    r = a*exprec(a,n-1);
+  return r;
+}
+
+main() {
+  output expiter(2,10);
+  output exprec(2,10);
+  return exprec(2,expiter(2,4));
+}

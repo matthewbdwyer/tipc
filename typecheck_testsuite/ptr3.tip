@@ -1,0 +1,8 @@
+main() {
+  var x,y;
+  x = 42;
+  y = &x;
+  output *y;	// 42
+  x = 13;
+  return *y;	// 13
+}

@@ -1,0 +1,38 @@
+ite(n) {
+  var r;
+  if (n > 0) {
+    r = 1;
+  } else {
+    r = 2;
+  }
+  return r;
+}
+
+it(n) {
+  var r;
+  r = 2;
+  if (n > 0) r = 1;
+  return r;
+}
+
+nite(a,b) {
+  var r;
+  if (a == 0) 
+    if (b > 0)
+      r = b;
+    else
+      r = a;
+  else
+    if (0 > b)
+      r = 0-a;
+    else
+      r = 0-b;
+  return r;
+}
+
+main() {
+  output ite(7);	// 1
+  output it(-7);	// 2
+  output nite(0,7);	// 7
+  return nite(-1,7);	// -7
+}

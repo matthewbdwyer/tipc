@@ -23,8 +23,8 @@ public:
 };
 
 class TIPref : public TIPtype {
-    TIPtype *of;
 public:
+    TIPtype *of;
     TIPref(TIPtype *of);
     std::string print() const override;
 };

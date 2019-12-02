@@ -1,0 +1,8 @@
+main() {
+  var x,y,z;
+  x = 17;
+  y = &x;
+  output *y;	// 17
+  *y = 10 - x;
+  return *y;	// -7
+}

@@ -1,0 +1,24 @@
+f() {
+  var x, y;
+  y = 5;
+  x = 10 + 2*y;
+  y = y + 5;
+  x = x / y;
+  y = x * x;	
+  return (y - x) * 2;
+}
+
+g(a, b, c) {	
+  var x, y, z;
+  x = a - b;
+  y = b - c;
+  z = c - a;
+  a = a * z;
+  b = x / b;
+  return a + b;
+}
+
+main() {
+  output f();		// outputs 4
+  return g(1,1,1);  	// output 0
+}

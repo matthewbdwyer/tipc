@@ -49,6 +49,11 @@ void RefExpr::typecheck(UnionFindSolver* solver)
 void DeRefExpr::typecheck(UnionFindSolver* solver)
 {
     ARG->typecheck(solver);
+    TIPref* ref = dynamic_cast<TIPref*>(solver->getType(ARG.get()->print()));
+    if (ref == nullptr) {
+        throw TIPTypeError(ARG->print()+" cannot be dereferenced");
+    }
+    solver->setType(print(), ref->of);
 }
 
 void NullExpr::typecheck(UnionFindSolver* solver)
@@ -105,7 +110,10 @@ void IfStmt::typecheck(UnionFindSolver* solver)
     COND->typecheck(solver);
     solver->setType(COND->print(), new TIPint());
     THEN->typecheck(solver);
-    ELSE->typecheck(solver);
+    //else could be null
+    if (ELSE != nullptr) {
+        ELSE->typecheck(solver);
+    }
 }
 
 void OutputStmt::typecheck(UnionFindSolver* solver)
@@ -201,7 +209,7 @@ std::string Function::printTyped(UnionFindSolver* solver) {
     for (auto it = FORMALS.begin(); it != FORMALS.end(); ++it) {
         fun_type += solver->getType(*it)->print();
         if (std::next(it) != FORMALS.end()) {
-            typedFun += ",";
+            fun_type += ",";
         }
     }
     fun_type += ") -> ";
