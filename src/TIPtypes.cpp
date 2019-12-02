@@ -19,21 +19,9 @@ std::string TIPref::print() const
     return oss.str();
 }
 
-TIPfun::TIPfun(std::vector<TIPtype *> args, TIPtype *ret) : args(args), ret(ret) {}
+std::string TIPalpha::ALPHA = "α";
 
-std::string TIPfun::print() const
+std::string TIPalpha::print() const 
 {
-    std::ostringstream oss;
-    oss << "(";
-    for (auto it = args.begin(); it != args.end(); ++it)
-    {
-        oss << (*it)->print();
-        if (std::next(it) != args.end())
-        {
-            oss << ",";
-        }
-    }
-    oss << ")" << "->" << ret->print();
-    return oss.str();
+    return ALPHA;
 }
-

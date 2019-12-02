@@ -11,6 +11,10 @@ class UnionFindSolver {
     std::map<std::string, std::string> node2root;
     //mapping from node to type
     std::map<std::string, TIPtype*> node2type;
+    //mapping from function name to params
+    std::map<std::string, std::vector<std::string>> fun2params;
+    //mapping from function name to return value
+    std::map<std::string, std::string> fun2ret;
     std::string findRoot(std::string node_str);
 public: 
     void addNode(std::string node_str);
@@ -18,4 +22,9 @@ public:
     void setType(std::string node_str, TIPtype* type);
     TIPtype* getType(std::string node_str);
     bool sameType(TIPtype* typex, TIPtype* typey);
+    bool existNode(std::string node_str);
+    void addFun(std::string name, std::vector<std::string> params, std::string ret);
+    std::vector<std::string> getFunParams(std::string name);
+    std::string getFunRet(std::string name);
+    bool hasFun(std::string name);
 };

@@ -268,6 +268,7 @@ public:
   llvm::Value *codegen() override;
   std::string print() override;
   void typecheck(UnionFindSolver* solver) override;
+  std::string printArg();
 };
 
 /******************* Program and Function Nodes *********************/
@@ -288,7 +289,8 @@ public:
   llvm::Function *codegen();
   std::string print();
   void typecheck(UnionFindSolver* solver);
-  std::string printTyped();
+  std::string printTyped(UnionFindSolver* solver);
+  void definition(UnionFindSolver* solver);
   /*
    * These getters are needed because we perform two passes over
    * functions during code generation:
@@ -308,7 +310,6 @@ public:
       : FUNCTIONS(std::move(FUNCTIONS)) {}
   std::unique_ptr<llvm::Module> codegen(std::string programName);
   std::string print(std::string i, bool pl);
-  void typecheck();
   std::string printTyped();
 };
 

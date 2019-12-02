@@ -23,18 +23,14 @@ public:
 };
 
 class TIPref : public TIPtype {
-private:
     TIPtype *of;
 public:
     TIPref(TIPtype *of);
     std::string print() const override;
 };
 
-class TIPfun : public TIPtype {
-private:
-    std::vector<TIPtype*> args;
-    TIPtype *ret;
+class TIPalpha : public TIPtype {
 public:
-    TIPfun(std::vector<TIPtype*> args, TIPtype* ret);
+    static std::string ALPHA;
     std::string print() const override;
 };
