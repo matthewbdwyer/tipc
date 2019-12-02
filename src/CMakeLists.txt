@@ -60,10 +60,11 @@ include_directories(${ANTLR_TIPGrammar_OUTPUT_DIR})
 llvm_map_components_to_libnames(llvm_libs Support Core Passes)
 
 # add generated grammar to pretty printer binary target
-add_executable(tipc 
-               tipc.cpp 
-               TIPtreeBuild.cpp 
-               TIPtreeGen.cpp 
+add_executable(tipc
+               tipc.cpp
+               TIPtreeBuild.cpp
+               TIPtreeGen.cpp
                TIPtreePrint.cpp
+               TiptreeDepthFirstVisitor.cpp
                ${ANTLR_TIPGrammar_CXX_OUTPUTS})
 target_link_libraries(tipc antlr4_static ${llvm_libs})

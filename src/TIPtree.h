@@ -70,6 +70,10 @@ public:
       : OP(OP), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::string getOp() { return OP; };
+  std::unique_ptr<Expr> &getLhs() { return LHS; };
+  std::unique_ptr<Expr> &getRhs() { return RHS; };
 };
 
 /// FunAppExpr - class for function calls.
@@ -83,6 +87,9 @@ public:
       : FUN(std::move(FUN)), ACTUALS(std::move(ACTUALS)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getFun() { return FUN; };
+  std::vector<std::unique_ptr<Expr>> &getActuals() { return ACTUALS; };
 };
 
 /// InputExpr - class for input expression
@@ -112,6 +119,8 @@ public:
   RefExpr(const std::string &NAME) : NAME(NAME) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::string getName() { return NAME; };
 };
 
 // DeRefExpr - class for dereferencing a pointer expression
@@ -122,6 +131,8 @@ public:
   DeRefExpr(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getArg() { return ARG; };
 };
 
 /// NullExpr - class for a null expression
@@ -187,6 +198,8 @@ public:
       : VARS(std::move(VARS)), LINE(LINE) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::vector<std::string> getVars() { return VARS; };
 };
 
 // BlockStmt - class for block of statements
@@ -198,6 +211,8 @@ public:
       : STMTS(std::move(STMTS)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::vector<std::unique_ptr<Stmt>> &getStmts() { return STMTS; };
 };
 
 // AssignStmt - class for assignment
@@ -209,6 +224,9 @@ public:
       : LHS(std::move(LHS)), RHS(std::move(RHS)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getLhs() { return LHS; };
+  std::unique_ptr<Expr> &getRhs() { return RHS; };
 };
 
 // WhileStmt - class for a while loop
@@ -221,6 +239,9 @@ public:
       : COND(std::move(COND)), BODY(std::move(BODY)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getCond() { return COND; };
+  std::unique_ptr<Stmt> &getBody() { return BODY; };
 };
 
 /// IfStmt - class for if-then-else
@@ -234,6 +255,10 @@ public:
       : COND(std::move(COND)), THEN(std::move(THEN)), ELSE(std::move(ELSE)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getCond() { return COND; };
+  std::unique_ptr<Stmt> &getThen() { return THEN; };
+  std::unique_ptr<Stmt> &getElse() { return ELSE; };
 };
 
 /// OutputStmt - class for a output statement
@@ -244,6 +269,8 @@ public:
   OutputStmt(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getArg() { return ARG; };
 };
 
 /// ErrorStmt - class for a error statement
@@ -264,6 +291,8 @@ public:
   ReturnStmt(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getArg() { return ARG; };
 };
 
 /******************* Program and Function Nodes *********************/
@@ -294,6 +323,9 @@ public:
    */
   std::string getName() { return NAME; };
   std::vector<std::string> getFormals() { return FORMALS; };
+  std::vector<std::unique_ptr<DeclStmt>> &getDecls() { return DECLS; };
+  std::vector<std::unique_ptr<Stmt>> &getBody() { return BODY; };
+
 };
 
 // Program - just a list of functions
@@ -305,6 +337,8 @@ public:
       : FUNCTIONS(std::move(FUNCTIONS)) {}
   std::unique_ptr<llvm::Module> codegen(std::string programName);
   std::string print(std::string i, bool pl);
+
+  std::vector<std::unique_ptr<Function>> &getFunctions() { return FUNCTIONS; };
 };
 
 } // namespace TIPtree
