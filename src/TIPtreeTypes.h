@@ -43,9 +43,11 @@ public:
 // Con type
 class Con : public Type {
 public:
-  vector<Type> getArgs() {
-    return vector<Type>();
+  virtual vector<shared_ptr<Type>> getArgs() {
+    return vector<shared_ptr<Type>>();
   };
+
+  virtual void subst(vector<shared_ptr<Type>> newArgs) {};
 };
 
 class Int : public Con {
@@ -62,6 +64,14 @@ public:
 
   string print() {
     return "&" + targetType->print();
+  };
+
+  vector<shared_ptr<Type>> getArgs() {
+    return vector<shared_ptr<Type>>({targetType});
+  };
+
+  void subst(vector<shared_ptr<Type>> newArgs) {
+    targetType = newArgs[0];
   };
 };
 
@@ -85,6 +95,18 @@ public:
     }
 
     return "(" + ft + ") -> " + returnType->print();
+  };
+
+  vector<shared_ptr<Type>> getArgs() {
+    vector<shared_ptr<Type>> args(formalTypes);
+    args.push_back(returnType);
+    return args;
+  };
+
+  void subst(vector<shared_ptr<Type>> newArgs) {
+    returnType = newArgs.back();
+    newArgs.pop_back();
+    formalTypes = newArgs;
   };
 };
 

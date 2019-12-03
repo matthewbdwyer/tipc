@@ -1,3 +1,4 @@
+#include <iostream>
 #include <unordered_map>
 #include "TIPtreeDepthFirstVisitor.h"
 #include "TIPtreeTypes.h"
@@ -12,12 +13,17 @@ class TIPtreeTypeAnalyzer : public TIPtreeDepthFirstVisitor {
   unordered_map<Node*, shared_ptr<TIPtreeTypes::Var>> nodeTypeMap;
 
   // We dont have declarition analysis, so use following to keep track of the mapping between variable name and declarition of current scope
-  unordered_map<string, shared_ptr<TIPtreeTypes::IdVar>> declMap;
-  unordered_map<string, shared_ptr<TIPtreeTypes::IdVar>> funDeclMap;
+  unordered_map<string, shared_ptr<TIPtreeTypes::IdVar>> globalDeclMap;
+  unordered_map<string, unordered_map<
+    string, shared_ptr<TIPtreeTypes::IdVar>
+  >> scopedDeclMap;
+  string activeScope;
 
-  void unify(shared_ptr<TIPtreeTypes::Type> type1, shared_ptr<TIPtreeTypes::Type> type2);
   shared_ptr<TIPtreeTypes::Var> ast2Type(Node *node);
   shared_ptr<TIPtreeTypes::IdVar> name2Type(string name);
+  void unify(shared_ptr<TIPtreeTypes::Type> type1, shared_ptr<TIPtreeTypes::Type> type2);
+  shared_ptr<TIPtreeTypes::Type> findTypeRep(shared_ptr<TIPtreeTypes::Type> t);
+  shared_ptr<TIPtreeTypes::Type> closeRecType(shared_ptr<TIPtreeTypes::Type>);
 
 public:
   TIPtreeTypeAnalyzer(Program* pm);

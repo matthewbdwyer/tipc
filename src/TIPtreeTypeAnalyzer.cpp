@@ -4,25 +4,42 @@ TIPtreeTypeAnalyzer::TIPtreeTypeAnalyzer(Program* pm) : pm{pm} {}
 
 void TIPtreeTypeAnalyzer::analyze() {
   visit(pm);
+
+  for (auto git = globalDeclMap.begin(); git != globalDeclMap.end(); ++git) {
+    string scopeName = git->first;
+    auto gtype = closeRecType(git->second);
+    cout << scopeName + " : " + gtype->print() + "\n";
+
+    for (auto sit = scopedDeclMap[scopeName].begin(); sit != scopedDeclMap[scopeName].end(); ++sit) {
+      string varName = sit->first;
+
+      auto stype = closeRecType(sit->second);
+      cout << varName + " : " + stype->print() + "\n";
+    }
+  }
 }
 
 void TIPtreeTypeAnalyzer::visit(Program *pm) {
   for (auto &fn : pm->getFunctions()) {
     string name = fn->getName();
     // track function variable name in declarision map
-    funDeclMap[name] = make_shared<TIPtreeTypes::IdVar>(name);
+    globalDeclMap[name] = make_shared<TIPtreeTypes::IdVar>(name);
   }
 
   visitChildren(pm);
 }
 
 void TIPtreeTypeAnalyzer::visit(Function *fn) {
-  // renew declarision map for current function scope
-  declMap.clear();
+  // active declarision map for current function scope
+  activeScope = fn->getName();
+
   // add arguments to declarision map
   for (auto formal : fn->getFormals()) {
-    declMap[formal] = make_shared<TIPtreeTypes::IdVar>(formal);
+    scopedDeclMap[activeScope][formal] = make_shared<TIPtreeTypes::IdVar>(formal);
   }
+
+  // visit declarition in the children before adding constraint of return type
+  visitChildren(fn);
 
   // create types for formals & return
   vector<shared_ptr<TIPtreeTypes::Type>> formalTypes;
@@ -43,8 +60,6 @@ void TIPtreeTypeAnalyzer::visit(Function *fn) {
   auto funType = make_shared<TIPtreeTypes::Fun>(formalTypes, returnType);
 
   unify(name2Type(fn->getName()), funType);
-
-  visitChildren(fn);
 }
 
 void TIPtreeTypeAnalyzer::visit(Node *node) {
@@ -106,7 +121,7 @@ void TIPtreeTypeAnalyzer::visit(Stmt *stmt) {
   if (auto *ds = dynamic_cast<DeclStmt*>(stmt)) {
     // add decl vars to declarision map
     for (auto varName : ds->getVars()) {
-      declMap[varName] = make_shared<TIPtreeTypes::IdVar>(varName);
+      scopedDeclMap[activeScope][varName] = make_shared<TIPtreeTypes::IdVar>(varName);
     }
     visitChildren(ds);
   } else if (auto *as = dynamic_cast<AssignStmt*>(stmt)) {
@@ -151,16 +166,16 @@ shared_ptr<TIPtreeTypes::IdVar> TIPtreeTypeAnalyzer::name2Type(string name) {
   shared_ptr<TIPtreeTypes::IdVar> type;
 
   // if the name has a declarition
-  auto declSearch = declMap.find(name);
-  if (declSearch != declMap.end()){
+  auto declSearch = scopedDeclMap[activeScope].find(name);
+  if (declSearch != scopedDeclMap[activeScope].end()){
     type = declSearch->second;
   } else {
     // if the name has a function declarition
-    auto funDeclSearch = funDeclMap.find(name);
-    if (funDeclSearch != funDeclMap.end()){
+    auto funDeclSearch = globalDeclMap.find(name);
+    if (funDeclSearch != globalDeclMap.end()){
       type = funDeclSearch->second;
     } else {
-      std::runtime_error("undeclared variable :" + name);
+      throw std::runtime_error("undeclared variable : " + name);
     }
   }
 
@@ -168,5 +183,85 @@ shared_ptr<TIPtreeTypes::IdVar> TIPtreeTypeAnalyzer::name2Type(string name) {
 }
 
 void TIPtreeTypeAnalyzer::unify(shared_ptr<TIPtreeTypes::Type> type1, shared_ptr<TIPtreeTypes::Type> type2) {
+  // cout << "Unifying " + type1->print() + " and " + type2->print() + "\n";
 
+  auto rep1 = findTypeRep(type1);
+  auto rep2 = findTypeRep(type2);
+
+  // cout << "Found " + type1->print() + " to " + rep1->print() + "\n";
+  // cout << "Found " + type2->print() + " to " + rep2->print() + "\n";
+
+  // avoid unify itself which leads to endless recursion in findTypeRep
+  if (rep1 == rep2) { return; }
+
+  if (auto repCon1 = dynamic_pointer_cast<TIPtreeTypes::Con>(rep1)) {
+    if (auto repCon2 = dynamic_pointer_cast<TIPtreeTypes::Con>(rep2)) {
+      if (
+        (dynamic_pointer_cast<TIPtreeTypes::Int>(repCon1) && dynamic_pointer_cast<TIPtreeTypes::Int>(repCon2)) ||
+        (dynamic_pointer_cast<TIPtreeTypes::Ref>(repCon1) && dynamic_pointer_cast<TIPtreeTypes::Ref>(repCon2)) ||
+        (dynamic_pointer_cast<TIPtreeTypes::Fun>(repCon1) && dynamic_pointer_cast<TIPtreeTypes::Fun>(repCon2))
+      ) {
+        unification[repCon1] = repCon2;
+        // unify args
+        auto repConArgs1 = repCon1->getArgs();
+        auto repConArgs2 = repCon2->getArgs();
+
+        auto argIt1 = repConArgs1.begin();
+        auto argIt2 = repConArgs2.begin();
+
+        while(argIt1 != repConArgs1.end() && argIt2 != repConArgs2.end()) {
+          unify(*argIt1, *argIt2);
+
+          argIt1++;
+          argIt2++;
+        }
+      } else {
+        throw std::runtime_error("Can't unify " + type1->print() + " and " + type2->print() + " (with representatives " + repCon1->print() + " and " + repCon2->print() + ")");
+      }
+    } else {
+      unification[rep2] = repCon1;
+    }
+  } else {
+    if (auto repCon2 = dynamic_pointer_cast<TIPtreeTypes::Con>(rep2)) {
+      unification[rep1] = repCon2;
+    } else {
+      unification[rep1] = rep2;
+    }
+  }
+
+}
+
+shared_ptr<TIPtreeTypes::Type> TIPtreeTypeAnalyzer::findTypeRep(shared_ptr<TIPtreeTypes::Type> t) {
+  shared_ptr<TIPtreeTypes::Type> rep = nullptr;
+
+  auto search = unification.find(t);
+  if (search != unification.end()) {
+    rep = findTypeRep(search->second);
+  } else {
+    rep = t;
+  }
+
+  return rep;
+}
+
+shared_ptr<TIPtreeTypes::Type> TIPtreeTypeAnalyzer::closeRecType(shared_ptr<TIPtreeTypes::Type> t) {
+  auto type = findTypeRep(t);
+
+  if (auto varType = dynamic_pointer_cast<TIPtreeTypes::Var>(type)) {
+    if (auto alphaType = dynamic_pointer_cast<TIPtreeTypes::Alpha>(varType)) {
+      type = alphaType;
+    } else {
+      type = make_shared<TIPtreeTypes::Alpha>(varType);
+    }
+  } else if (auto conType = dynamic_pointer_cast<TIPtreeTypes::Con>(type)) {
+    vector<shared_ptr<TIPtreeTypes::Type>> newArgs;
+    for (auto arg : conType->getArgs()) {
+      newArgs.push_back(closeRecType(arg));
+    }
+
+    conType->subst(newArgs);
+    type = conType;
+  }
+
+  return type;
 }
