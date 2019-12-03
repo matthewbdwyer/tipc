@@ -108,16 +108,6 @@ bool UnionFindSolver::existNode(std::string node_str)
     return node2root.find(node_str) != node2root.end();
 }
 
-void UnionFindSolver::setFunScope(std::string fun_name)
-{
-    this->funscope = fun_name;
-}
-
-std::string UnionFindSolver::getFunScope()
-{
-    return funscope;
-}
-
 TIPfun* UnionFindSolver::mergeFuns(TIPtype* typex, TIPtype* typey)
 {
     TIPfun* funx = dynamic_cast<TIPfun*>(typex);
