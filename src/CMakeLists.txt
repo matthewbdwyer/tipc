@@ -65,6 +65,7 @@ add_executable(tipc
                TIPtreeBuild.cpp
                TIPtreeGen.cpp
                TIPtreePrint.cpp
-               TiptreeDepthFirstVisitor.cpp
+               TIPtreeDepthFirstVisitor.cpp
+               TIPtreeTypeAnalyzer.cpp
                ${ANTLR_TIPGrammar_CXX_OUTPUTS})
 target_link_libraries(tipc antlr4_static ${llvm_libs})

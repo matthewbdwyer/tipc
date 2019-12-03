@@ -109,6 +109,8 @@ public:
   AllocExpr(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
   llvm::Value *codegen() override;
   std::string print() override;
+
+  std::unique_ptr<Expr> &getArg() { return ARG; };
 };
 
 // RefExpr - class for referencing the address of a variable
@@ -325,7 +327,9 @@ public:
   std::vector<std::string> getFormals() { return FORMALS; };
   std::vector<std::unique_ptr<DeclStmt>> &getDecls() { return DECLS; };
   std::vector<std::unique_ptr<Stmt>> &getBody() { return BODY; };
-
+  // return statement is always the last statement in a TIP function body
+  ReturnStmt* getReturn() { return dynamic_cast<ReturnStmt*>(BODY.back().get());
+  }
 };
 
 // Program - just a list of functions

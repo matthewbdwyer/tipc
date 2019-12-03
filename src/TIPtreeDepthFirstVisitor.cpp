@@ -1,6 +1,6 @@
-#include "TiptreeDepthFirstVisitor.h"
+#include "TIPtreeDepthFirstVisitor.h"
 
-void TiptreeDepthFirstVisitor::visitChildren(Node *node) {
+void TIPtreeDepthFirstVisitor::visitChildren(Node *node) {
   if (auto *expr = dynamic_cast<Expr*>(node)) {
     visitChildren(expr);
   } else if (auto *stmt = dynamic_cast<Stmt*>(node)) {
@@ -8,7 +8,7 @@ void TiptreeDepthFirstVisitor::visitChildren(Node *node) {
   }
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(Expr *expr) {
+void TIPtreeDepthFirstVisitor::visitChildren(Expr *expr) {
   if (auto *be = dynamic_cast<BinaryExpr*>(expr)) {
     visitChildren(be);
   } else if (auto *fe = dynamic_cast<FunAppExpr*>(expr)) {
@@ -17,10 +17,12 @@ void TiptreeDepthFirstVisitor::visitChildren(Expr *expr) {
     visitChildren(ie);
   } else if (auto *de = dynamic_cast<DeRefExpr*>(expr)) {
     visitChildren(de);
+  } else if (auto *ae = dynamic_cast<AllocExpr*>(expr)) {
+    visitChildren(ae);
   }
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(Stmt *stmt) {
+void TIPtreeDepthFirstVisitor::visitChildren(Stmt *stmt) {
   if (auto *bs = dynamic_cast<BlockStmt*>(stmt)) {
     visitChildren(bs);
   } else if (auto *as = dynamic_cast<AssignStmt*>(stmt)) {
@@ -36,60 +38,64 @@ void TiptreeDepthFirstVisitor::visitChildren(Stmt *stmt) {
   }
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(BinaryExpr *expr) {
+void TIPtreeDepthFirstVisitor::visitChildren(BinaryExpr *expr) {
   visit(expr->getLhs().get());
   visit(expr->getRhs().get());
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(FunAppExpr *expr) {
+void TIPtreeDepthFirstVisitor::visitChildren(FunAppExpr *expr) {
   visit(expr->getFun().get());
   for (auto &actual : expr->getActuals()) {
     visit(actual.get());
   }
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(DeRefExpr *expr) {
+void TIPtreeDepthFirstVisitor::visitChildren(DeRefExpr *expr) {
   visit(expr->getArg().get());
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(BlockStmt *bs) {
+void TIPtreeDepthFirstVisitor::visitChildren(AllocExpr *expr) {
+  visit(expr->getArg().get());
+}
+
+void TIPtreeDepthFirstVisitor::visitChildren(BlockStmt *bs) {
   for (auto &stmt : bs->getStmts()) {
     visit(stmt.get());
   }
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(AssignStmt *as) {
+void TIPtreeDepthFirstVisitor::visitChildren(AssignStmt *as) {
   visit(as->getLhs().get());
   visit(as->getRhs().get());
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(WhileStmt *ws) {
+void TIPtreeDepthFirstVisitor::visitChildren(WhileStmt *ws) {
   visit(ws->getCond().get());
   visit(ws->getBody().get());
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(IfStmt *is) {
+void TIPtreeDepthFirstVisitor::visitChildren(IfStmt *is) {
   visit(is->getCond().get());
   visit(is->getThen().get());
   visit(is->getElse().get());
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(OutputStmt *os) {
+void TIPtreeDepthFirstVisitor::visitChildren(OutputStmt *os) {
   visit(os->getArg().get());
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(ReturnStmt *rs) {
+void TIPtreeDepthFirstVisitor::visitChildren(ReturnStmt *rs) {
   visit(rs->getArg().get());
 }
 
 
-void TiptreeDepthFirstVisitor::visitChildren(Program *pm) {
+void TIPtreeDepthFirstVisitor::visitChildren(Program *pm) {
   for (auto &fn : pm->getFunctions()) {
     visit(fn.get());
   }
 }
 
-void TiptreeDepthFirstVisitor::visitChildren(Function *fn) {
+void TIPtreeDepthFirstVisitor::visitChildren(Function *fn) {
   for (auto &decl : fn->getDecls()) {
     visit(decl.get());
   }
