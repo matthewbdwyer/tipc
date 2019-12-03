@@ -14,6 +14,7 @@ public:
 
 class TIPtype {
 public:
+    bool composite = false;
     virtual std::string print() const = 0;
 };
 
@@ -32,5 +33,13 @@ public:
 class TIPalpha : public TIPtype {
 public:
     static std::string ALPHA;
+    std::string print() const override;
+};
+
+class TIPfun : public TIPtype {
+public:
+    std::vector<TIPtype*> params_type;
+    TIPtype* ret;
+    TIPfun(std::vector<TIPtype*> params_type, TIPtype* ret);
     std::string print() const override;
 };

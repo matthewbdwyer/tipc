@@ -67,6 +67,10 @@ void UnionFindSolver::setType(std::string node_str, TIPtype* type)
         oss << " Type error: " << root_str << node2type[root_str]->print() << " does not match type: " << type->print();
         std::string mismatch_information = oss.str();
         throw TIPTypeError(mismatch_information);
+    } else {
+        if (type->composite) {
+            node2type[root_str] = mergeFuns(node2type[root_str], type);
+        }
     }
 }
 
@@ -79,7 +83,24 @@ TIPtype* UnionFindSolver::getType(std::string node_str)
 
 bool UnionFindSolver::sameType(TIPtype* typex, TIPtype* typey)
 {
-    return typex->print() == typey->print();
+    if (typex->composite && typey->composite) {
+        TIPfun* funx = dynamic_cast<TIPfun*>(typex);
+        TIPfun* funy = dynamic_cast<TIPfun*>(typey);
+        if (funx->params_type.size() != funy->params_type.size()) {
+            return false;
+        }
+        for (int i=0; i<funx->params_type.size(); i++) {
+            if (!sameType(funx->params_type[i], funy->params_type[i])) {
+                return false;
+            }
+        }
+        return sameType(funx->ret, funy->ret);
+    } else {
+        if (typex->print() == TIPalpha::ALPHA || typey->print() == TIPalpha::ALPHA) {
+            return true;
+        }
+        return typex->print() == typey->print();
+    }
 }
 
 bool UnionFindSolver::existNode(std::string node_str)
@@ -87,23 +108,33 @@ bool UnionFindSolver::existNode(std::string node_str)
     return node2root.find(node_str) != node2root.end();
 }
 
-void UnionFindSolver::addFun(std::string name, std::vector<std::string> params, std::string ret)
+void UnionFindSolver::setFunScope(std::string fun_name)
 {
-    fun2params[name] = params;
-    fun2ret[name] = ret;
+    this->funscope = fun_name;
 }
 
-std::vector<std::string> UnionFindSolver::getFunParams(std::string name)
+std::string UnionFindSolver::getFunScope()
 {
-    return fun2params[name];
+    return funscope;
 }
 
-std::string UnionFindSolver::getFunRet(std::string name)
+TIPfun* UnionFindSolver::mergeFuns(TIPtype* typex, TIPtype* typey)
 {
-    return fun2ret[name];
-}
-
-bool UnionFindSolver::hasFun(std::string name)
-{
-    return fun2ret.find(name) != fun2ret.end();
+    TIPfun* funx = dynamic_cast<TIPfun*>(typex);
+    TIPfun* funy = dynamic_cast<TIPfun*>(typey);
+    std::vector<TIPtype*> merged_params_type;
+    for (int i=0; i<funx->params_type.size(); i++) {
+        if (funx->params_type[i]->print() != TIPalpha::ALPHA) {
+            merged_params_type.push_back(funx->params_type[i]);
+        } else {
+            merged_params_type.push_back(funy->params_type[i]);
+        }
+    }
+    TIPtype* merged_ret_type;
+    if (funx->ret->print() != TIPalpha::ALPHA) {
+        merged_ret_type = funx->ret;
+    } else {
+        merged_ret_type = funy->ret;
+    }
+    return new TIPfun(merged_params_type, merged_ret_type);
 }

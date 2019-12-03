@@ -290,7 +290,6 @@ public:
   std::string print();
   void typecheck(UnionFindSolver* solver);
   std::string printTyped(UnionFindSolver* solver);
-  void definition(UnionFindSolver* solver);
   /*
    * These getters are needed because we perform two passes over
    * functions during code generation:

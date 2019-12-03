@@ -56,26 +56,6 @@ void DeRefExpr::typecheck(UnionFindSolver* solver)
     solver->setType(print(), ref->of);
 }
 
-void NullExpr::typecheck(UnionFindSolver* solver)
-{
-    return;
-}
-
-void FieldExpr::typecheck(UnionFindSolver* solver)
-{
-    return;
-}
-
-void RecordExpr::typecheck(UnionFindSolver* solver)
-{
-    return;
-}
-
-void AccessExpr::typecheck(UnionFindSolver* solver)
-{
-    return;
-}
-
 void DeclStmt::typecheck(UnionFindSolver* solver)
 {
     for (std::string var : VARS) {
@@ -121,11 +101,6 @@ void OutputStmt::typecheck(UnionFindSolver* solver)
     solver->setType(ARG->print(), new TIPint());
 }
 
-void ErrorStmt::typecheck(UnionFindSolver* solver)
-{
-    return;
-}
-
 void ReturnStmt::typecheck(UnionFindSolver* solver)
 {
     ARG->typecheck(solver);
@@ -133,36 +108,24 @@ void ReturnStmt::typecheck(UnionFindSolver* solver)
 
 void FunAppExpr::typecheck(UnionFindSolver* solver)
 {
-    //check function definition
-    if (!solver->hasFun(FUN->print())) {
-        throw TIPTypeError("Function "+FUN->print()+" not defined");
-    }
-    //check parameter count
-    std::vector<std::string> params = solver->getFunParams(FUN->print());
-    if (params.size() != ACTUALS.size()) {
-        throw TIPTypeError("Function "+FUN->print()+" parameter number mismatch");
-    }
-    //unify parameters with definition
-    for (int i = 0; i < params.size(); i++)
-    {
-        solver->unifyNodes(params[i], ACTUALS[i]->print());
-    }
-    //check return type
-    solver->unifyNodes(print(), solver->getFunRet(FUN->print()));
-}
-
-void Function::definition(UnionFindSolver* solver)
-{
-    std::string ret = "";
-    for (auto const &stmt : BODY) {
-        if (stmt->print().substr(0,6) == "return") {
-            ret = dynamic_cast<ReturnStmt*>(stmt.get())->printArg();
+    TIPfun* funType = dynamic_cast<TIPfun*>(solver->getType(FUN->print()));
+    if (funType == nullptr) {
+        solver->addNode(FUN->print());
+        std::vector<TIPtype*> params_type;
+        for (auto const& param : ACTUALS) {
+            params_type.push_back(solver->getType(param->print()));
         }
+        solver->setType(FUN->print(), new TIPfun(params_type, new TIPalpha()));
+        return;
     }
-    if (ret == "") {
-        throw TIPTypeError("No return statement found for function " + NAME);
+    std::vector<TIPtype*> params_type = funType->params_type;
+    if (params_type.size() != ACTUALS.size()) {
+        throw TIPTypeError("calling function "+FUN->print()+" with invalid number of parameters");
     }
-    solver->addFun(NAME, FORMALS, ret);
+    for (int i = 0; i < params_type.size(); i++) {
+        solver->setType(ACTUALS[i]->print(), params_type[i]);
+    }
+    solver->setType(print(), funType->ret);
 }
 
 void Function::typecheck(UnionFindSolver* solver)
@@ -192,6 +155,22 @@ void Function::typecheck(UnionFindSolver* solver)
             throw e;
         }
     }
+    TIPtype* ret_type = nullptr;
+    for (auto const &stmt : BODY) {
+        if (stmt->print().substr(0,6) == "return") {
+            ret_type = solver->getType(dynamic_cast<ReturnStmt*>(stmt.get())->printArg());
+            break;
+        }
+    }
+    if (ret_type == nullptr) {
+        throw TIPTypeError("No return statement found for function " + NAME);
+    }
+    std::vector<TIPtype*> params_type;
+    for (std::string param : FORMALS) {
+        params_type.push_back(solver->getType(param));
+    }
+    solver->addNode(NAME);
+    solver->setType(NAME, new TIPfun(params_type, ret_type));
 }
 
 std::string Function::printTyped(UnionFindSolver* solver) {
@@ -204,18 +183,7 @@ std::string Function::printTyped(UnionFindSolver* solver) {
         }
     }
     typedFun += "): ";
-    //build function type string
-    std::string fun_type = "(";
-    for (auto it = FORMALS.begin(); it != FORMALS.end(); ++it) {
-        fun_type += solver->getType(*it)->print();
-        if (std::next(it) != FORMALS.end()) {
-            fun_type += ",";
-        }
-    }
-    fun_type += ") -> ";
-    fun_type += solver->getType(solver->getFunRet(NAME))->print();
-    typedFun += fun_type;
-
+    typedFun += solver->getType(NAME)->print();
     typedFun += "\n{\n";
     for (auto const &decl : DECLS) {
         typedFun += decl->printTyped(solver) + "\n";
@@ -223,21 +191,15 @@ std::string Function::printTyped(UnionFindSolver* solver) {
     for (auto const &stmt : BODY) {
         typedFun += stmt->print() + "\n";
     }
-    typedFun += "}\n";
+    typedFun += "}";
     return typedFun;
 }
 
 std::string Program::printTyped() {
     UnionFindSolver* solver = new UnionFindSolver();
+    //typecheck functions twice to check function use before function definition
     for (auto const &fun : FUNCTIONS) {
-        try
-        {
-            fun->definition(solver);
-        }
-        catch(const std::exception& e)
-        {
-            std::cerr << e.what() << '\n';
-        }
+        fun->typecheck(solver);
     }
     for (auto const &fun : FUNCTIONS) {
         fun->typecheck(solver);
@@ -262,4 +224,34 @@ std::string DeclStmt::printTyped(UnionFindSolver* solver) {
     declTyped += ";";
     return declTyped;
 }
+
+/**
+ * Empty typechecks: record is not implemented, nullexpr and errorstmt 
+ * do not need typechecking  
+ */
+void NullExpr::typecheck(UnionFindSolver* solver)
+{
+    return;
+}
+
+void FieldExpr::typecheck(UnionFindSolver* solver)
+{
+    return;
+}
+
+void RecordExpr::typecheck(UnionFindSolver* solver)
+{
+    return;
+}
+
+void AccessExpr::typecheck(UnionFindSolver* solver)
+{
+    return;
+}
+
+void ErrorStmt::typecheck(UnionFindSolver* solver)
+{
+    return;
+}
+
 }

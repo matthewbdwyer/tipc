@@ -7,6 +7,7 @@
 #include "TIPtypes.h"
 
 class UnionFindSolver {
+    std::string funscope = "";
     //mapping from node to root 
     std::map<std::string, std::string> node2root;
     //mapping from node to type
@@ -16,6 +17,7 @@ class UnionFindSolver {
     //mapping from function name to return value
     std::map<std::string, std::string> fun2ret;
     std::string findRoot(std::string node_str);
+    TIPfun* mergeFuns(TIPtype* typex, TIPtype* typey);
 public: 
     void addNode(std::string node_str);
     void unifyNodes(std::string nodex_str, std::string nodey_str);
@@ -23,8 +25,6 @@ public:
     TIPtype* getType(std::string node_str);
     bool sameType(TIPtype* typex, TIPtype* typey);
     bool existNode(std::string node_str);
-    void addFun(std::string name, std::vector<std::string> params, std::string ret);
-    std::vector<std::string> getFunParams(std::string name);
-    std::string getFunRet(std::string name);
-    bool hasFun(std::string name);
+    void setFunScope(std::string fun_name);
+    std::string getFunScope();
 };
