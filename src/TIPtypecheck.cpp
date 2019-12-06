@@ -211,6 +211,10 @@ std::string Program::printTyped() {
     return typedProgram;
 }
 
+void Program::typecheck(UnionFindSolver* solver) {
+    return;
+}
+
 std::string DeclStmt::printTyped(UnionFindSolver* solver) {
     std::string declTyped = "var ";
     // comma separated variable names list
