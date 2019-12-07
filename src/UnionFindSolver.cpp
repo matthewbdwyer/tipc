@@ -1,130 +1,87 @@
 #include "UnionFindSolver.h"
 
-std::string UnionFindSolver::findRoot(std::string node_str) 
+int UnionFindSolver::findRoot(int node_id) 
 {
-    addNode(node_str);
-    while (node2root[node_str] != node_str) {
-        node_str = node2root[node_str];
+    addNode(node_id);
+    while (node2root[node_id] != node_id) {
+        node_id = node2root[node_id];
     }
-    return node_str;
+    return node_id;
 }
 
-void UnionFindSolver::addNode(std::string node_str)
+void UnionFindSolver::addNode(int node_id)
 {
-    if (node2root.find(node_str) == node2root.end()) {
-        node2root[node_str] = node_str;
+    if (node2root.find(node_id) == node2root.end()) {
+        node2root[node_id] = node_id;
     }
-    if (node2type.find(node_str) == node2type.end()) {
-        node2type[node_str] = new TIPalpha();
+    if (node2type.find(node_id) == node2type.end()) {
+        node2type[node_id] = new TIPalpha();
     }
 }
 
-void UnionFindSolver::unifyNodes(std::string nodex_str, std::string nodey_str)
+void UnionFindSolver::unifyNodes(int nodex_id, int nodey_id)
 {
-    addNode(nodex_str);
-    addNode(nodey_str);
-    std::string rootx_str = findRoot(nodex_str);
-    std::string rooty_str = findRoot(nodey_str);
-    if (rootx_str == rooty_str) {
+    addNode(nodex_id);
+    addNode(nodey_id);
+    int rootx_id = findRoot(nodex_id);
+    int rooty_id = findRoot(nodey_id);
+    if (rootx_id == rooty_id) {
         return;
     }
-    // rootx or rooty does not have a type yet
-    if (node2type[rootx_str]->print() == TIPalpha::ALPHA) {
-        node2type[rootx_str] = node2type[rooty_str];
-        node2root[rootx_str] = rooty_str;
-        return;
-    }
-    if (node2type[rooty_str]->print() == TIPalpha::ALPHA) {
-        node2type[rooty_str] = node2type[rootx_str];
-        node2root[rooty_str] = rootx_str;
-        return;
-    }
-    // type mismatch
-    if (!sameType(node2type[rootx_str], node2type[rooty_str])) {
-        // TODO: move information from std::cout to logger
-        std::ostringstream oss;
-        oss << " Type error: " << nodex_str << " " << node2type[rootx_str]->print() << " does not match " << node2type[rooty_str]->print();
-        std::string mismatch_information = oss.str();
-        throw TIPTypeError(mismatch_information);
-    } else {
-        node2root[rootx_str] = rooty_str;
-    }
+    //unify types
+    TIPtype* unified_type = unifyTypes(node2type[rootx_id], node2type[rooty_id]);
+    node2root[rootx_id] = rooty_id;
+    node2type[rooty_id] = unified_type;
 }
 
-void UnionFindSolver::setType(std::string node_str, TIPtype* type) 
+void UnionFindSolver::setType(int node_id, TIPtype* type) 
 {
-    addNode(node_str);
-    std::string root_str = findRoot(node_str);
-    // root does not have type yet
-    if (node2type[root_str]->print() == TIPalpha::ALPHA) {
-        node2type[root_str] = type;
-        return;
+    addNode(node_id);
+    int root_id = findRoot(node_id);
+    // unify types
+    TIPtype* unified_type = unifyTypes(node2type[root_id], type);
+    node2type[root_id] = unified_type;
+}
+
+TIPtype* UnionFindSolver::getType(int node_id) 
+{
+    addNode(node_id);
+    int root_id = findRoot(node_id);
+    return node2type[root_id];
+}
+
+bool UnionFindSolver::existNode(int node_id)
+{
+    return node2root.find(node_id) != node2root.end();
+}
+
+TIPtype* UnionFindSolver::unifyTypes(TIPtype* typex, TIPtype* typey)
+{
+    if (typex->print() == typey->print()) {
+        //same type
+        return typex;
     }
-    // root type mismatch
-    if (!sameType(node2type[root_str], type)) {
-        // TODO: move information from std::cout to logger
-        std::ostringstream oss;
-        oss << " Type error: " << root_str << node2type[root_str]->print() << " does not match type: " << type->print();
-        std::string mismatch_information = oss.str();
-        throw TIPTypeError(mismatch_information);
-    } else {
-        if (type->composite) {
-            node2type[root_str] = mergeFuns(node2type[root_str], type);
-        }
+    if (typex->print() == TIPalpha::ALPHA) {
+        //x is untyped
+        return typey;
     }
-}
-
-TIPtype* UnionFindSolver::getType(std::string node_str) 
-{
-    addNode(node_str);
-    std::string root_str = findRoot(node_str);
-    return node2type[root_str];
-}
-
-bool UnionFindSolver::sameType(TIPtype* typex, TIPtype* typey)
-{
-    if (typex->composite && typey->composite) {
-        TIPfun* funx = dynamic_cast<TIPfun*>(typex);
-        TIPfun* funy = dynamic_cast<TIPfun*>(typey);
-        if (funx->params_type.size() != funy->params_type.size()) {
-            return false;
-        }
-        for (int i=0; i<funx->params_type.size(); i++) {
-            if (!sameType(funx->params_type[i], funy->params_type[i])) {
-                return false;
-            }
-        }
-        return sameType(funx->ret, funy->ret);
-    } else {
-        if (typex->print() == TIPalpha::ALPHA || typey->print() == TIPalpha::ALPHA) {
-            return true;
-        }
-        return typex->print() == typey->print();
+    if (typey->print() == TIPalpha::ALPHA) {
+        //y is untyped
+        return typex;
     }
-}
-
-bool UnionFindSolver::existNode(std::string node_str)
-{
-    return node2root.find(node_str) != node2root.end();
-}
-
-TIPfun* UnionFindSolver::mergeFuns(TIPtype* typex, TIPtype* typey)
-{
+    if (!typex->composite || !typey->composite) {
+        throw TIPTypeError("Cannot unify types " + typex->print() +" and " + typey->print());
+    }
+    //unify functions
     TIPfun* funx = dynamic_cast<TIPfun*>(typex);
     TIPfun* funy = dynamic_cast<TIPfun*>(typey);
-    std::vector<TIPtype*> merged_params_type;
-    for (int i=0; i<funx->params_type.size(); i++) {
-        if (funx->params_type[i]->print() != TIPalpha::ALPHA) {
-            merged_params_type.push_back(funx->params_type[i]);
-        } else {
-            merged_params_type.push_back(funy->params_type[i]);
-        }
+    if (funx->param_types.size() != funy->param_types.size()) {
+        throw TIPTypeError("Cannot unify types " + typex->print() +" and " + typey->print());
     }
-    TIPtype* merged_ret_type;
-    if (funx->ret->print() != TIPalpha::ALPHA) {
-        merged_ret_type = funx->ret;
-    } else {
-        merged_ret_type = funy->ret;
+    std::vector<TIPtype*> merged_param_types;
+    for (int i=0; i<funx->param_types.size(); i++) {
+        merged_param_types.push_back(unifyTypes(funx->param_types[i], funy->param_types[i]));
     }
-    return new TIPfun(merged_params_type, merged_ret_type);
+    TIPtype* merged_ret = unifyTypes(funx->ret, funy->ret);
+    return new TIPfun(merged_param_types, merged_ret);
 }

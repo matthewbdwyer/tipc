@@ -38,8 +38,8 @@ public:
 
 class TIPfun : public TIPtype {
 public:
-    std::vector<TIPtype*> params_type;
+    std::vector<TIPtype*> param_types;
     TIPtype* ret;
-    TIPfun(std::vector<TIPtype*> params_type, TIPtype* ret);
+    TIPfun(std::vector<TIPtype*> param_types, TIPtype* ret);
     std::string print() const override;
 };

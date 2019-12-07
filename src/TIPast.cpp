@@ -36,7 +36,7 @@ void VariableExpr::genId() {
 }
 
 void BinaryExpr::genId() {
-    if (!this->id) {
+    if (this->id) {
         return;
     }
     this->id = ast_counter++;
@@ -53,6 +53,7 @@ void FunAppExpr::genId() {
     for (auto const& actual : ACTUALS) {
         actual->genId();
     }
+    this->FUN->genId();
 }
 
 void InputExpr::genId() {
@@ -75,6 +76,7 @@ void RefExpr::genId() {
         return;
     }
     this->id = ast_counter++;
+    this->refId = var2id[NAME];
 }
 
 void DeRefExpr::genId() {
@@ -120,6 +122,7 @@ void DeclStmt::genId() {
     this->id = ast_counter++;
     for (std::string var : VARS) {
         var2id[var] = ast_counter++;
+        this->VAR_IDS.push_back(var2id[var]);
     }
 }
 
@@ -197,6 +200,7 @@ void Function::genId() {
     var2id.clear();
     for (std::string param : FORMALS) {
         var2id[param] = ast_counter++;
+        FORMAL_IDS.push_back(var2id[param]);
     }
     for (auto const &decl : DECLS) {
         decl->genId();
@@ -215,4 +219,5 @@ void Program::genId() {
         fun->genId();
     }
 }
+
 }

@@ -23,7 +23,7 @@ namespace TIPtree {
 // AstNode - node identifying and typechecking interface
 class AstNode {
 public:
-  int id;
+  int id = 0;
   virtual void genId() = 0;
   int getId();
   virtual void typecheck(UnionFindSolver* solver) = 0;
@@ -124,11 +124,13 @@ public:
 class RefExpr : public Expr {
   std::string NAME;
 public:  
+  int refId;
   RefExpr(const std::string &NAME) : NAME(NAME) {}
   llvm::Value *codegen() override;
   std::string print() override;
   void typecheck(UnionFindSolver* solver) override;
   void genId() override;
+  int getRefId();
 };
 
 // DeRefExpr - class for dereferencing a pointer expression
@@ -203,6 +205,7 @@ public:
 // DeclStmt - class for declaration
 class DeclStmt : public Stmt {
   std::vector<std::string> VARS;
+  std::vector<int> VAR_IDS;
   int LINE; // line on which decl statement occurs
 public:
   DeclStmt(std::vector<std::string> VARS, int LINE)
@@ -297,6 +300,9 @@ public:
   void typecheck(UnionFindSolver* solver) override;
   std::string printArg();
   void genId() override;
+  int getArgId() {
+    return ARG->getId();
+  }
 };
 
 /******************* Program and Function Nodes *********************/
@@ -305,6 +311,7 @@ public:
 class Function : public AstNode{
   std::string NAME;
   std::vector<std::string> FORMALS;
+  std::vector<int> FORMAL_IDS;
   std::vector<std::unique_ptr<DeclStmt>> DECLS;
   std::vector<std::unique_ptr<Stmt>> BODY;
   int LINE; // line on which function definition occurs

@@ -26,16 +26,16 @@ std::string TIPalpha::print() const
     return ALPHA;
 }
 
-TIPfun::TIPfun(std::vector<TIPtype*> params_type, TIPtype* ret) : params_type(params_type), ret(ret){
+TIPfun::TIPfun(std::vector<TIPtype*> param_types, TIPtype* ret) : param_types(param_types), ret(ret){
     this->composite = true;
 }
 
 std::string TIPfun::print() const 
 {
     std::string fun_type = "(";
-    for (auto it = params_type.begin(); it != params_type.end(); it++) {
+    for (auto it = param_types.begin(); it != param_types.end(); it++) {
         fun_type += (*it)->print();
-        if (std::next(it) != params_type.end()) {
+        if (std::next(it) != param_types.end()) {
             fun_type += ",";
         }
     }

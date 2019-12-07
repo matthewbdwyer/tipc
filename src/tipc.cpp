@@ -50,6 +50,7 @@ int main(int argc, const char *argv[]) {
   auto ast = tb.build(tree);
   
   if (typecheck) {
+    ast->genId();
     std::cout << ast->printTyped() << std::endl;
   }
 
