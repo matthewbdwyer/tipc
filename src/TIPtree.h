@@ -13,6 +13,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "TIPtreeTypes.h"
 
 /******************************************************************
  * Abstract Syntax Tree for TIP
@@ -193,6 +194,7 @@ public:
 // DeclStmt - class for declaration
 class DeclStmt : public Stmt {
   std::vector<std::string> VARS;
+  std::vector<std::shared_ptr<TIPtreeTypes::Type>> types;
   int LINE; // line on which decl statement occurs
 
 public:
@@ -202,6 +204,7 @@ public:
   std::string print() override;
 
   std::vector<std::string> getVars() { return VARS; };
+  void setTypes(std::vector<std::shared_ptr<TIPtreeTypes::Type>> ts) { types = ts; };
 };
 
 // BlockStmt - class for block of statements
@@ -305,6 +308,7 @@ class Function {
   std::vector<std::string> FORMALS;
   std::vector<std::unique_ptr<DeclStmt>> DECLS;
   std::vector<std::unique_ptr<Stmt>> BODY;
+  std::shared_ptr<TIPtreeTypes::Type> type;
   int LINE; // line on which function definition occurs
 
 public:
@@ -328,8 +332,8 @@ public:
   std::vector<std::unique_ptr<DeclStmt>> &getDecls() { return DECLS; };
   std::vector<std::unique_ptr<Stmt>> &getBody() { return BODY; };
   // return statement is always the last statement in a TIP function body
-  ReturnStmt* getReturn() { return dynamic_cast<ReturnStmt*>(BODY.back().get());
-  }
+  ReturnStmt* getReturn() { return dynamic_cast<ReturnStmt*>(BODY.back().get()); };
+  void setType(std::shared_ptr<TIPtreeTypes::Type> t) { type = t; };
 };
 
 // Program - just a list of functions
@@ -340,7 +344,7 @@ public:
   Program(std::vector<std::unique_ptr<Function>> FUNCTIONS)
       : FUNCTIONS(std::move(FUNCTIONS)) {}
   std::unique_ptr<llvm::Module> codegen(std::string programName);
-  std::string print(std::string i, bool pl);
+  std::string print(std::string i, bool pl, bool pt);
 
   std::vector<std::unique_ptr<Function>> &getFunctions() { return FUNCTIONS; };
 };

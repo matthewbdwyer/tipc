@@ -5,6 +5,7 @@
 #include "TIPParser.h"
 #include "TIPtreeBuild.h"
 #include "TIPtreeGen.h"
+#include "TIPtreeTypeAnalyzer.h"
 #include "antlr4-runtime.h"
 #include "llvm/Support/CommandLine.h"
 
@@ -23,6 +24,7 @@ static cl::OptionCategory
     TIPcat("tipc Options",
            "Options for controlling the TIP compilation process.");
 static cl::opt<bool> pp("p", cl::desc("pretty print"), cl::cat(TIPcat));
+static cl::opt<bool> ppWtypes("t", cl::desc("pretty print with types"), cl::cat(TIPcat));
 static cl::opt<bool> ppWlines("l", cl::desc("pretty print with line numbers"),
                               cl::cat(TIPcat));
 static cl::opt<bool> noOpt("d", cl::desc("disable bitcode optimization"),
@@ -48,8 +50,13 @@ int main(int argc, const char *argv[]) {
   TIPtreeBuild tb(&parser);
   auto ast = tb.build(tree);
 
-  if (pp || ppWlines) {
-    std::cout << ast->print("  ", ppWlines);
+  if (pp || ppWlines || ppWtypes) {
+    if (ppWtypes) {
+      TIPtreeTypeAnalyzer ta(ast.get());
+      ta.analyze();
+    }
+
+    std::cout << ast->print("  ", ppWlines, ppWtypes);
   } else {
     auto theModule = ast->codegen(sourceFile);
 

@@ -5,16 +5,21 @@ TIPtreeTypeAnalyzer::TIPtreeTypeAnalyzer(Program* pm) : pm{pm} {}
 void TIPtreeTypeAnalyzer::analyze() {
   visit(pm);
 
-  for (auto git = globalDeclMap.begin(); git != globalDeclMap.end(); ++git) {
-    string scopeName = git->first;
-    auto gtype = closeRecType(git->second);
-    cout << scopeName + " : " + gtype->print() + "\n";
+  for (auto &fun : pm->getFunctions()) {
+    string funName = fun->getName();
 
-    for (auto sit = scopedDeclMap[scopeName].begin(); sit != scopedDeclMap[scopeName].end(); ++sit) {
-      string varName = sit->first;
+    // use a vector of single element to store the type of a function
+    auto gType = closeRecType(globalDeclMap[funName]);
+    fun->setType(gType);
 
-      auto stype = closeRecType(sit->second);
-      cout << varName + " : " + stype->print() + "\n";
+    for (auto &decl : fun->getDecls()) {
+      vector<shared_ptr<TIPtreeTypes::Type>> sTypes;
+
+      for (auto varName : decl->getVars()) {
+        auto sType = closeRecType(scopedDeclMap[funName][varName]);
+        sTypes.push_back(sType);
+      }
+      decl->setTypes(sTypes);
     }
   }
 }
@@ -153,7 +158,7 @@ shared_ptr<TIPtreeTypes::Var> TIPtreeTypeAnalyzer::ast2Type(Node *node) {
     if (auto *ve = dynamic_cast<VariableExpr*>(node)) {
       type = name2Type(ve->getName());
     } else {
-      type = make_shared<TIPtreeTypes::NodeVar>(node);
+      type = make_shared<TIPtreeTypes::NodeVar>(node->print());
       nodeTypeMap[node] = type;
     }
   }

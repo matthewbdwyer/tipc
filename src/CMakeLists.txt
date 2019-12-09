@@ -9,7 +9,7 @@ pkg_search_module(UUID REQUIRED uuid)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
 
-# compiler must be 11 
+# compiler must be 11
 set(CMAKE_CXX_STANDARD 11)
 
 # compile with debug flags

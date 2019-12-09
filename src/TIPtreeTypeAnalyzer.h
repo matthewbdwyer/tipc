@@ -1,6 +1,9 @@
 #include <iostream>
 #include <unordered_map>
+#include <string>
+#include <vector>
 #include "TIPtreeDepthFirstVisitor.h"
+#include "TIPtree.h"
 #include "TIPtreeTypes.h"
 
 using namespace std;

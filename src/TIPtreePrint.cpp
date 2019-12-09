@@ -5,6 +5,7 @@ namespace TIPtree {
 static std::string indent;
 static int indentLevel = 0;
 static bool printLines = false;
+static bool printTypes = false;
 
 // indentation is the contatenation of "level" indent strings
 std::string indentation() {
@@ -15,9 +16,10 @@ std::string indentation() {
   return indStr;
 }
 
-std::string Program::print(std::string i, bool pl = false) {
+std::string Program::print(std::string i, bool pl = false, bool pt = false) {
   indent = i;      // initialize namespace global for indent stride
   printLines = pl; // print line numbers
+  printTypes = pt;
   std::string pp;
   for (auto const &fn : FUNCTIONS) {
     pp += fn->print() + "\n";
@@ -39,6 +41,11 @@ std::string Function::print() {
     }
   }
   pp += ")";
+
+  if (printTypes) {
+    pp += ": " + type->print();
+  }
+
   if (printLines) {
     pp += " // @" + std::to_string(LINE);
   }
@@ -121,6 +128,8 @@ std::string DeclStmt::print() {
   std::string pp = "var ";
   // comma separated variable names list
   bool skip = true;
+  auto typeIt = types.begin();
+
   for (auto id : VARS) {
     if (skip) {
       skip = false;
@@ -128,6 +137,11 @@ std::string DeclStmt::print() {
     } else {
       pp += ", " + id;
     }
+
+    if (printTypes && typeIt != types.end()) {
+      pp += ": " + (*typeIt)->print();
+    }
+    typeIt++;
   }
   pp += ";";
   if (printLines)

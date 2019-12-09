@@ -1,41 +1,44 @@
-#include "TIPtree.h"
+#pragma once
+
+#include <string>
+#include <vector>
 
 namespace TIPtreeTypes {
 
 class Type {
 public:
-  virtual string print() = 0;
+  virtual std::string print() = 0;
 };
 
 // Var type
 class Var : public Type {};
 
 class NodeVar : public Var {
-  TIPtree::Node *node;
+  std::string nodeStr;
 public:
-  NodeVar(TIPtree::Node *node) : node{node} {}
+  NodeVar(std::string nodeStr) : nodeStr{nodeStr} {}
 
-  string print() {
-    return "[[" + node->print() + "]]";
+  std::string print() {
+    return "[[" + nodeStr + "]]";
   }
 };
 
 class IdVar : public Var {
   std::string name;
 public:
-  IdVar(string name) : name(name) {}
+  IdVar(std::string name) : name(name) {}
 
-  string print() {
+  std::string print() {
     return "[[" + name + "]]";
   }
 };
 
 class Alpha : public Var {
-  shared_ptr<Var> x;
+  std::shared_ptr<Var> x;
 public:
-  Alpha(shared_ptr<Var> x) : x(move(x)) {}
+  Alpha(std::shared_ptr<Var> x) : x(move(x)) {}
 
-  string print() {
+  std::string print() {
     return "\u03B1<" + x->print() + ">";
   };
 };
@@ -43,47 +46,47 @@ public:
 // Con type
 class Con : public Type {
 public:
-  virtual vector<shared_ptr<Type>> getArgs() {
-    return vector<shared_ptr<Type>>();
+  virtual std::vector<std::shared_ptr<Type>> getArgs() {
+    return std::vector<std::shared_ptr<Type>>();
   };
 
-  virtual void subst(vector<shared_ptr<Type>> newArgs) {};
+  virtual void subst(std::vector<std::shared_ptr<Type>> newArgs) {};
 };
 
 class Int : public Con {
 public:
-  string print() {
+  std::string print() {
     return "int";
   }
 };
 
 class Ref : public Con {
-  shared_ptr<Type> targetType;
+  std::shared_ptr<Type> targetType;
 public:
-  Ref(shared_ptr<Type> targetType) : targetType(move(targetType)) {}
+  Ref(std::shared_ptr<Type> targetType) : targetType(move(targetType)) {}
 
-  string print() {
+  std::string print() {
     return "&" + targetType->print();
   };
 
-  vector<shared_ptr<Type>> getArgs() {
-    return vector<shared_ptr<Type>>({targetType});
+  std::vector<std::shared_ptr<Type>> getArgs() {
+    return std::vector<std::shared_ptr<Type>>({targetType});
   };
 
-  void subst(vector<shared_ptr<Type>> newArgs) {
+  void subst(std::vector<std::shared_ptr<Type>> newArgs) {
     targetType = newArgs[0];
   };
 };
 
 class Fun : public Con {
-  vector<shared_ptr<Type>> formalTypes;
-  shared_ptr<Type> returnType;
+  std::vector<std::shared_ptr<Type>> formalTypes;
+  std::shared_ptr<Type> returnType;
 public:
-  Fun(vector<shared_ptr<Type>> formalTypes, shared_ptr<Type> returnType) : formalTypes(move(formalTypes)), returnType(move(returnType)) {}
+  Fun(std::vector<std::shared_ptr<Type>> formalTypes, std::shared_ptr<Type> returnType) : formalTypes(move(formalTypes)), returnType(move(returnType)) {}
 
-  string print() {
+  std::string print() {
     // comma separated parameter type list
-    string ft = "";
+    std::string ft = "";
     bool skip = true;
     for (auto formalType : formalTypes) {
       if (skip) {
@@ -97,13 +100,13 @@ public:
     return "(" + ft + ") -> " + returnType->print();
   };
 
-  vector<shared_ptr<Type>> getArgs() {
-    vector<shared_ptr<Type>> args(formalTypes);
+  std::vector<std::shared_ptr<Type>> getArgs() {
+    std::vector<std::shared_ptr<Type>> args(formalTypes);
     args.push_back(returnType);
     return args;
   };
 
-  void subst(vector<shared_ptr<Type>> newArgs) {
+  void subst(std::vector<std::shared_ptr<Type>> newArgs) {
     returnType = newArgs.back();
     newArgs.pop_back();
     formalTypes = newArgs;

@@ -16,4 +16,7 @@ build
 *.bc
 *.ll
 
-
+# compiled executables except sources
+test/*
+!test/*.sh
+!test/*.tip
