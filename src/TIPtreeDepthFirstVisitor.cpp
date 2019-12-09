@@ -13,8 +13,6 @@ void TIPtreeDepthFirstVisitor::visitChildren(Expr *expr) {
     visitChildren(be);
   } else if (auto *fe = dynamic_cast<FunAppExpr*>(expr)) {
     visitChildren(fe);
-  } else if (auto *ie = dynamic_cast<InputExpr*>(expr)) {
-    visitChildren(ie);
   } else if (auto *de = dynamic_cast<DeRefExpr*>(expr)) {
     visitChildren(de);
   } else if (auto *ae = dynamic_cast<AllocExpr*>(expr)) {

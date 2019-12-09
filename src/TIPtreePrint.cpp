@@ -51,7 +51,6 @@ std::string Function::print() {
   }
   pp += "\n";
 
-  indentLevel++;
   pp += indentation() + "{\n";
   indentLevel++;
 
@@ -65,7 +64,6 @@ std::string Function::print() {
 
   indentLevel--;
   pp += indentation() + "}\n";
-  indentLevel--;
 
   return pp;
 }
@@ -98,9 +96,9 @@ std::string FunAppExpr::print() {
 
 std::string AllocExpr::print() { return "alloc " + ARG->print(); }
 
-std::string RefExpr::print() { return "&" + NAME; }
+std::string RefExpr::print() { return "(&" + NAME + ")"; }
 
-std::string DeRefExpr::print() { return "*" + ARG->print(); }
+std::string DeRefExpr::print() { return "(*" + ARG->print() + ")"; }
 
 std::string NullExpr::print() { return "null"; }
 
@@ -165,25 +163,18 @@ std::string BlockStmt::print() {
 }
 
 std::string WhileStmt::print() {
-  std::string pp = "while (" + COND->print() + ") \n";
-  indentLevel++;
-  pp += indentation() + BODY->print();
-  indentLevel--;
+  std::string pp = "while (" + COND->print() + ") ";
+  pp += BODY->print();
   return pp;
 }
 
 std::string IfStmt::print() {
-  std::string pp = "if (" + COND->print() + ") \n";
-  indentLevel++;
-  pp += indentation() + THEN->print();
+  std::string pp = "if (" + COND->print() + ") ";
+  pp += THEN->print();
 
   if (ELSE != nullptr) {
-    indentLevel--;
-    pp += "\n" + indentation() + "else\n";
-    indentLevel++;
-    pp += indentation() + ELSE->print();
+    pp += " else " + ELSE->print();
   }
-  indentLevel--;
   return pp;
 }
 
