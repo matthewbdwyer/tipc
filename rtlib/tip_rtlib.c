@@ -11,7 +11,7 @@ extern int64_t _tip_num_inputs;
 extern int64_t _tip_input_array[]; 
 
 /* 
- * intrinsic functions for TIP IO expressions and statements
+ * runtime library functions for TIP IO expressions and statements
  *    x = input;
  *    output y;
  *    error y;

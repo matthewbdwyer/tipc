@@ -49,7 +49,7 @@ static std::map<std::string, AllocaInst *> NamedValues;
 static std::unique_ptr<Module> CurrentModule;
 
 /*
- * We use calls to intrinsic for several purposes.  To construct a "nop",
+ * We use calls to llvm intrinsics for several purposes.  To construct a "nop",
  * using an LLVM internal intrinsic, to perform TIP specific IO, and
  * to allocate heap memory.
  */
@@ -227,12 +227,12 @@ std::unique_ptr<llvm::Module> Program::codegen(std::string programName) {
 
   /*
    * Generate globals that establish the parameter passing structures from the
-   * intrinsic main() and define a "_tip_main" if one is not already defind.
+   * rtlib main() and define a "_tip_main" if one is not already defind.
    */
   {
     /*
      * If there is no "main(...)" defined in this TIP program we
-     * create main that calls the "_tip_main_undefined()" intrinsic.
+     * create main that calls the "_tip_main_undefined()" rtlib function.
      *
      * For this function we perform all code generation here and
      * we never visit it during the codegen() traversals - since
@@ -300,7 +300,7 @@ llvm::Function *Function::codegen() {
 
   /*
    * Add arguments to the symbol table
-   *   - for main function, we initialize allocas with intrinsic array loads
+   *   - for main function, we initialize allocas with array loads
    *   - for other functions, we initialize allocas with the arg values
    */
   if (getName() == "main") {

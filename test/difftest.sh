@@ -14,7 +14,7 @@ fi
 # compile and run the test through tipc 
 #    we suppress warnings while linking because of a target triple mismatch
 ../build/tipc $1
-clang-7 -w -static $1.bc ../intrinsics/tip_intrinsics.bc -o $bname
+clang-7 -w -static $1.bc ../rtlib/tip_rtlib.bc -o $bname
 ./$bname >/tmp/$USER/$bname.tipc-out
 
 # create a tipc directory for storing source to run TIP Scala
