@@ -82,6 +82,7 @@ If you are familiar with the [LLVM tutorial](https://llvm.org/docs/tutorial/) yo
 
 There is lots of great advice about using LLVM available:
   * https://www.cs.cornell.edu/~asampson/blog/llvm.html
+  * the [LLVM Programmer's Manual(http://llvm.org/docs/ProgrammersManual.html) is a key resource
   * someone once told me to just use a search engine to find the LLVM APIs and its a standard use case for me, e.g., I don't remember where the docs are I just search for `llvm irbuilder`
   * LLVM has some nuances that take a bit to understand.  For instance, the [GEP](https://llvm.org/docs/GetElementPtr.html) instruction, which `tipc` uses quite a bit given that it emits calls through a function table.
   
