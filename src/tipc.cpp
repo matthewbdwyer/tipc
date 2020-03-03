@@ -13,12 +13,6 @@ using namespace antlr4;
 using namespace TIPtree;
 using namespace llvm;
 
-/*
-static bool pretty = false;
-static bool disableOpt = true;
-static std::string sourceFile;
-*/
-
 static cl::OptionCategory
     TIPcat("tipc Options",
            "Options for controlling the TIP compilation process.");
