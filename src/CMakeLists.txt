@@ -9,7 +9,7 @@ pkg_search_module(UUID REQUIRED uuid)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
 
-# compiler must be 11 
+# compiler must be 11
 set(CMAKE_CXX_STANDARD 11)
 
 # compile with debug flags
@@ -59,11 +59,21 @@ include_directories(${ANTLR_TIPGrammar_OUTPUT_DIR})
 # list the specific LLVM libraries for this tool
 llvm_map_components_to_libnames(llvm_libs Support Core Passes)
 
+# Core tipc includes.
+file(GLOB TIP_HEADER_FILES *.h)
+file(GLOB TIP_SOURCE_FILES *.cpp)
+add_library(tipLib STATIC ${TIP_HEADER_FILES} ${TIP_SOURCE_FILES} ${ANTLR_TIPGrammar_CXX_OUTPUTS})
+target_link_libraries(tipLib antlr4_static ${llvm_libs})
+include_directories(.)
+
+# Utils.
+add_subdirectory(utils)
+include_directories(utils)
+
 # add generated grammar to pretty printer binary target
-add_executable(tipc 
-               tipc.cpp 
-               TIPtreeBuild.cpp 
-               TIPtreeGen.cpp 
-               TIPtreePrint.cpp
-               ${ANTLR_TIPGrammar_CXX_OUTPUTS})
-target_link_libraries(tipc antlr4_static ${llvm_libs})
+add_executable(tipc tipc.cpp)
+target_link_libraries(tipc tipLib utilsLib)
+
+# Testing.
+add_subdirectory(catch_tests)
+

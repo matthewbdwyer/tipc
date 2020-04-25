@@ -7,6 +7,8 @@
 #include "TIPtreeGen.h"
 #include "antlr4-runtime.h"
 #include "llvm/Support/CommandLine.h"
+#include "PrettyPrintVisitor.h"
+
 
 using namespace std;
 using namespace antlr4;
@@ -43,7 +45,8 @@ int main(int argc, const char *argv[]) {
   auto ast = tb.build(tree);
 
   if (pp || ppWlines) {
-    std::cout << ast->print("  ", ppWlines);
+    PrettyPrintVisitor visitor(std::cout, ' ', 2, ppWlines);
+    ast->accept(&visitor);
   } else {
     auto theModule = ast->codegen(sourceFile);
 

@@ -16,4 +16,9 @@ build
 *.bc
 *.ll
 
+# CLion
+.idea/
+src/cmake-build-debug/
 
+# Vim
+*.swp
