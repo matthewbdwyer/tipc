@@ -29,7 +29,7 @@ We use the `llvm-7` and `clang-7` packages, but other versions of may work as we
 
 This project uses CMake to manage the build process.  We follow the cmake build model for the [ANTLR4 Cpp target](https://github.com/antlr/antlr4/tree/master/runtime/Cpp/cmake).  The `cmake` directory stores ANTLR4 related cmake files. 
 
-`tipc` has a `CMakeLists.txt` file in the `src` directory.  This file configures the ANTLR4 and Cpp build process, e.g., source files, targets, libaries, etc.  You will need to adjust the path to the jar file that ANTLR4 uses (`antlr-4.8-complete.jar`) which is hardcoded in `CMakeLists.txt`.   Note that if the normal install of `antlr4` doesn't provide you with this file, then you can download it from the [ANTLR4 download site](https://www.antlr.org/download/antlr-4.8-complete.jar) and place it wherever you like, e.g., `$HOME/lib`.
+`tipc` has a `CMakeLists.txt` file in the `src` directory.  This file configures the ANTLR4 and Cpp build process, e.g., source files, targets, libraries, etc.  You will need to adjust the path to the jar file that ANTLR4 uses (`antlr-4.8-complete.jar`) which is hardcoded in `CMakeLists.txt`.   Note that if the normal install of `antlr4` doesn't provide you with this file, then you can download it from the [ANTLR4 download site](https://www.antlr.org/download/antlr-4.8-complete.jar) and place it wherever you like, e.g., `$HOME/lib`.
 
 You need to create a `build` directory within which you will build `tipc`.  To get started you should create that, empty, build directory if it doesn't exist.  All of the generated runtime files for ANTLR4 will be built the first time and stored in the build directory; this may take some time.
 
@@ -39,8 +39,8 @@ To build a tipc:
   3. `cmake ../src`
   4. `make`
 
-NB: You may see warnings related to ignored type attribute ATN that are due to s
-ome type gymnastics in the current implementation of the ANTLR4 CPP Visitor implemen tation.
+NB: You may see warnings related to ignored type attribute ATN that are due to some 
+type gymnastics in the current implementation of the ANTLR4 CPP Visitor implementation.
 
 During development you need only run steps 1 and 2 a single time, unless you modify the CmakeLists.txt file.  Just run make in the build directory to rebuild after making changes to your tool source.
 
@@ -66,7 +66,7 @@ To run the current set of differential tests:
   3. run `./build.sh` in `.../tipc/rtlib`
   4. run `./runtests.sh` in `.../tipc/test`
 
-The ANTLR4 grammar is designed to make it possible to perform grammar-based fuzzing using a tool like [grammarinator](https://github.com/renatahodovan/grammarinator).  To make this interesting one must bias the fuzzing towards programs that are syntactically and type correct and that have no input statements.  An even more interesting set of generated tests would agressively output the results of intermediate computations, e.g., after every assignment.  This is future work.
+The ANTLR4 grammar is designed to make it possible to perform grammar-based fuzzing using a tool like [grammarinator](https://github.com/renatahodovan/grammarinator).  To make this interesting one must bias the fuzzing towards programs that are syntactically and type correct and that have no input statements.  An even more interesting set of generated tests would aggressively output the results of intermediate computations, e.g., after every assignment.  This is future work.
 
 ## Documentation
 
