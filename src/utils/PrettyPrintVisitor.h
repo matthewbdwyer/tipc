@@ -1,5 +1,4 @@
-#ifndef PRETTYPRINTVISITOR_H
-#define PRETTYPRINTVISITOR_H
+#pragma once
 
 #include "TIPtreeVisitor.h"
 #include <ostream>
@@ -47,5 +46,3 @@ private:
   bool printLines;
 };
 
-
-#endif /* PRETTYPRINTVISITOR_H */

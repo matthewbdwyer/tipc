@@ -1,5 +1,5 @@
-#ifndef TIPC_TIPTREEVISITOR_H
-#define TIPC_TIPTREEVISITOR_H
+#pragma once
+
 #include "TIPtree.h"
 
 class TIPtreeVisitor {
@@ -28,5 +28,3 @@ public:
   virtual void visit(TIPtree::BlockStmt * element) = 0;
 };
 
-
-#endif //TIPC_TIPTREEVISITOR_H

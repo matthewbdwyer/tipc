@@ -1,5 +1,4 @@
-#ifndef ASTHELPER_H
-#define ASTHELPER_H
+#pragma once
 
 #include "TIPtreeBuild.h"
 #include <istream>
@@ -9,5 +8,3 @@ public:
   static std::unique_ptr<TIPtree::Program> build_ast(std::istream &stream);
 };
 
-
-#endif /* ASTHELPER_H */

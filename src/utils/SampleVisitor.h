@@ -1,5 +1,4 @@
-#ifndef TIPC_SAMPLEVISITOR_H
-#define TIPC_SAMPLEVISITOR_H
+#pragma once
 
 #include "TIPtreeVisitor.h"
 
@@ -31,5 +30,3 @@ public:
   void visit(TIPtree::ErrorStmt * element) override;
   void visit(TIPtree::ReturnStmt * element) override;
 };
-
-#endif //TIPC_SAMPLEVISITOR_H
