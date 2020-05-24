@@ -1,5 +1,4 @@
-#ifndef GENERALHELPER_H
-#define GENERALHELPER_H
+#pragma once
 
 #include "TIPtreeBuild.h"
 #include <istream>
@@ -13,4 +12,3 @@ public:
 };
 
 
-#endif /* GENERALHELPER_H */
