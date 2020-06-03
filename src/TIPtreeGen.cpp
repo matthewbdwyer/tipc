@@ -157,7 +157,7 @@ static Value *LogError(std::string s) {
 
 std::unique_ptr<llvm::Module> Program::codegen(std::string programName) {
   // Create module to hold generated code
-  auto TheModule = llvm::make_unique<Module>(programName, TheContext);
+  auto TheModule = std::make_unique<Module>(programName, TheContext);
 
   // Initialize nop declaration
   nop = Intrinsic::getDeclaration(TheModule.get(), Intrinsic::donothing);

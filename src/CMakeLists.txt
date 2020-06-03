@@ -10,7 +10,7 @@ pkg_search_module(UUID REQUIRED uuid)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
 
 # compiler must be 11
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # compile with debug flags
 set(CMAKE_BUILD_TYPE Debug)
@@ -41,7 +41,7 @@ find_package(ANTLR REQUIRED)
 
 ######## LLVM rules for installed libraries ###########
 # We want to select the latest stable release even if others are installed
-find_package(LLVM 7 REQUIRED CONFIG)
+find_package(LLVM 10 REQUIRED CONFIG)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")

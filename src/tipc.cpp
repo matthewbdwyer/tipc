@@ -53,7 +53,7 @@ int main(int argc, const char *argv[]) {
     if (!noOpt) {
       // Create a pass manager to simplify generated module
       auto TheFPM =
-          llvm::make_unique<legacy::FunctionPassManager>(theModule.get());
+          std::make_unique<legacy::FunctionPassManager>(theModule.get());
 
       // Promote allocas to registers.
       TheFPM->add(createPromoteMemoryToRegisterPass());
