@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+set -x
+declare -r ANTLR_JAR=https://www.antlr.org/download/antlr-4.8-complete.jar
+declare -r LIB_DIR=${HOME}/.local/lib
+declare -r CMAKE_LISTS_FILE=./src/CMakeLists.txt
+
+
+echoerr() { 
+  echo "$@" 1>&2; 
+}
+
+
+bootstrap_ubuntu_dependencies() {
+  wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add -
+  sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
+  sudo apt -y update
+
+  sudo apt -y install \
+    java-1.8.0-amazon-corretto-jdk \
+    git \
+    cmake \
+    pkg-config \
+    uuid-dev \
+    antlr4 \
+    zlib1g-dev
+
+  sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+
+  sudo apt -y install \
+    libllvm-10-ocaml-dev \
+    libllvm10 \
+    llvm-10 \
+    llvm-10-dev \
+    llvm-10-doc \
+    llvm-10-examples \
+    llvm-10-runtime
+
+  sudo apt -y install \
+    clang-10 \
+    clang-tools-10 \
+    clang-10-doc \
+    libclang-common-10-dev \
+    libclang-10-dev \
+    libclang1-10 \
+    clang-format-10 \
+    python3-clang-10 \
+    clangd-10
+}
+
+
+bootstrap_ubuntu_env() {
+  :
+}
+
+
+bootstrap_ubuntu() {
+  bootstrap_ubuntu_dependencies
+}
+
+
+bootstrap_linux() {
+  . /etc/os-release
+  if [ $ID == ubuntu ]; then
+    bootstrap_ubuntu
+  else
+    echoerr $ID is not supported.
+    exit 1
+  fi
+}
+
+bootstrap_mac_env() {
+  echo export LLVM_DIR=$(brew --prefix llvm@10)/lib/cmake >> ~/.bashrc
+}
+
+bootstrap_mac_dependencies() {
+  if ! [ -x "$(command -v brew)" ]; then
+    echoerr error: Homebrew is not installed.
+    exit 1
+  fi
+
+  brew install homebrew/cask-versions/corretto8
+  brew install \
+    git \
+    cmake \
+    pkg-config \
+    llvm@10 \
+    antlr@4
+
+  #echo export PATH=${llvm_prefix}/bin:\$PATH  >> ~/.bashrc
+  #echo export CC=${llvm_prefix}/bin/clang >> ~/.bashrc
+  #echo export CXX=${llvm_prefix}/bin/clang++ >> ~/.bashrc
+  #echo export JAVA_HOME=$(/usr/libexec/java_home -v 1.8) >> ~/.bashrc
+}
+
+
+bootstrap_mac() {
+  bootstrap_mac_dependencies
+  bootstrap_mac_env
+}
+
+
+bootstrap() {
+  local unameOut="$(uname -s)"
+  case "${unameOut}" in
+    Linux*)
+      bootstrap_linux;;
+    Darwin*)
+      bootstrap_mac;;
+    *)
+      echo "Script has not been implemented for: ${unameOut}."
+      exit 1
+      ;;
+  esac
+
+  bootstrap_env
+  mkdir -p "${LIB_DIR}"
+  wget "${ANTLR_JAR}" -P "${LIB_DIR}"
+  sed -i.bak "s,__ANTLR_JAR_PATH__,${LIB_DIR}/$(basename ${ANTLR_JAR}),g" ${CMAKE_LISTS_FILE}
+}
+
+bootstrap

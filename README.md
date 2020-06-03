@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/nicholasphair/tipc.svg?branch=devel)](https://travis-ci.com/nicholasphair/tipc)
 # tipc
 A compiler from TIP to llvm bitcode
 

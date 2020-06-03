@@ -1,0 +1,17 @@
+language: c++
+
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+    - os: osx
+
+before_install:
+  - bash bootstrap
+
+script:
+  - . ~/.bashrc
+  - mkdir build
+  - cd build
+  - cmake ../src
+  - make
