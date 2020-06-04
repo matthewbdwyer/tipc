@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/nicholasphair/tipc.svg?branch=devel)](https://travis-ci.com/nicholasphair/tipc)
+[![Build Status](https://travis-ci.com/matthewbdwyer/tipc.svg?branch=devel)](https://travis-ci.com/matthewbdwyer/tipc)
 # tipc
 A compiler from TIP to llvm bitcode
 
@@ -19,10 +19,10 @@ It depends on java8, cpp, cmake, antlr4, clang, and llvm which were installed us
   1. `apt install openjdk-8-jdk-headless`
   2. `apt install cmake pkg-config uuid-dev`
   3. `apt install antlr4`
-  4. `apt install libllvm-7-ocaml-dev libllvm7 llvm-7 llvm-7-dev llvm-7-doc llvm-7-examples llvm-7-runtime`
-  5. `apt install clang-7`
+  4. `apt install libllvm-10-ocaml-dev libllvm10 llvm-10 llvm-10-dev llvm-10-doc llvm-10-examples llvm-10-runtime`
+  5. `apt install clang-10`
 
-We use the `llvm-7` and `clang-7` packages, but other versions of may work as well.  
+We use the `llvm-10` and `clang-10` packages, but other versions of may work as well.  
 
 
 
