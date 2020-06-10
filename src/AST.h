@@ -15,20 +15,19 @@
 #include <vector>
 #include <ostream>
 
-// Forward declare the visitor to fight circular dependencies.
-class TIPtreeVisitor;
+// Forward declare the visitor to resolve circular dependency
+class ASTVisitor;
 
 /******************************************************************
  * Abstract Syntax Tree for TIP
  *****************************************************************/
-namespace TIPtree {
+namespace AST {
 
 // Node - this is a base class for all tree nodes
 class Node {
 public:
   virtual ~Node() = default;
-  virtual llvm::Value *codegen() = 0;
-  virtual void accept(TIPtreeVisitor * visitor) = 0;
+  virtual void accept(ASTVisitor * visitor) = 0;
 };
 
 /******************* Expression AST Nodes *********************/
@@ -46,8 +45,7 @@ public:
   int VAL;
 
   NumberExpr(int VAL) : VAL(VAL) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// VariableExpr - class for referencing a variable
@@ -55,11 +53,8 @@ class VariableExpr : public Expr {
 public:
   std::string NAME;
 
-  VariableExpr(std::string &NAME) : NAME(NAME) {}
-  llvm::Value *codegen() override;
-  // Getter to distinguish LHS of assigment for codegen
-  std::string getName() { return NAME; };
-  void accept(TIPtreeVisitor * visitor) override;
+  VariableExpr(std::string NAME) : NAME(NAME) {}
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// BinaryExpr - class for a binary operator.
@@ -71,8 +66,7 @@ public:
   BinaryExpr(const std::string &OP, std::unique_ptr<Expr> LHS,
              std::unique_ptr<Expr> RHS)
       : OP(OP), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// FunAppExpr - class for function calls.
@@ -84,16 +78,14 @@ public:
   FunAppExpr(std::unique_ptr<Expr> FUN,
              std::vector<std::unique_ptr<Expr>> ACTUALS)
       : FUN(std::move(FUN)), ACTUALS(std::move(ACTUALS)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// InputExpr - class for input expression
 class InputExpr : public Expr {
 public:
   InputExpr() {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 // AllocExpr - class for alloc expression
@@ -102,8 +94,8 @@ public:
   std::unique_ptr<Expr> ARG;
 
   AllocExpr(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+
+  void accept(ASTVisitor * visitor) override;
 };
 
 // RefExpr - class for referencing the address of a variable
@@ -112,8 +104,8 @@ public:
   std::string NAME;
 
   RefExpr(const std::string &NAME) : NAME(NAME) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+
+  void accept(ASTVisitor * visitor) override;
 };
 
 // DeRefExpr - class for dereferencing a pointer expression
@@ -122,17 +114,16 @@ public:
   std::unique_ptr<Expr> ARG;
 
   DeRefExpr(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// NullExpr - class for a null expression
 class NullExpr : public Expr {
 public:
   NullExpr() {}
-  llvm::Value *codegen() override;
 
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 // FieldExpr - class for the field of a structure
@@ -143,9 +134,8 @@ public:
 
   FieldExpr(const std::string &FIELD, std::unique_ptr<Expr> INIT)
       : FIELD(FIELD), INIT(std::move(INIT)) {}
-  llvm::Value *codegen() override;
 
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 // RecordExpr - class for defining a record
@@ -155,9 +145,8 @@ public:
 
   RecordExpr(std::vector<std::unique_ptr<FieldExpr>> FIELDS)
       : FIELDS(std::move(FIELDS)) {}
-  llvm::Value *codegen() override;
 
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 // AccessExpr - class for a record field access
@@ -168,8 +157,7 @@ public:
 
   AccessExpr(std::unique_ptr<Expr> RECORD, const std::string &FIELD)
       : RECORD(std::move(RECORD)), FIELD(FIELD) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /******************* Statement AST Nodes *********************/
@@ -189,8 +177,7 @@ public:
 
   DeclStmt(std::vector<std::string> VARS, int LINE)
       : VARS(std::move(VARS)), LINE(LINE) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 
 };
 
@@ -201,8 +188,7 @@ public:
 
   BlockStmt(std::vector<std::unique_ptr<Stmt>> STMTS)
       : STMTS(std::move(STMTS)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 // AssignStmt - class for assignment
@@ -212,9 +198,8 @@ public:
 
   AssignStmt(std::unique_ptr<Expr> LHS, std::unique_ptr<Expr> RHS)
       : LHS(std::move(LHS)), RHS(std::move(RHS)) {}
-  llvm::Value *codegen() override;
 
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 // WhileStmt - class for a while loop
@@ -225,8 +210,7 @@ public:
 
   WhileStmt(std::unique_ptr<Expr> COND, std::unique_ptr<Stmt> BODY)
       : COND(std::move(COND)), BODY(std::move(BODY)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// IfStmt - class for if-then-else
@@ -238,8 +222,7 @@ public:
   IfStmt(std::unique_ptr<Expr> COND, std::unique_ptr<Stmt> THEN,
          std::unique_ptr<Stmt> ELSE)
       : COND(std::move(COND)), THEN(std::move(THEN)), ELSE(std::move(ELSE)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// OutputStmt - class for a output statement
@@ -247,8 +230,7 @@ class OutputStmt : public Stmt {
 public:
   std::unique_ptr<Expr> ARG;
   OutputStmt(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// ErrorStmt - class for a error statement
@@ -257,8 +239,7 @@ class ErrorStmt : public Stmt {
 public:
   std::unique_ptr<Expr> ARG;
   ErrorStmt(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /// ReturnStmt - class for a return statement
@@ -267,14 +248,13 @@ class ReturnStmt : public Stmt {
 public:
   std::unique_ptr<Expr> ARG;
   ReturnStmt(std::unique_ptr<Expr> ARG) : ARG(std::move(ARG)) {}
-  llvm::Value *codegen() override;
-  void accept(TIPtreeVisitor * visitor) override;
+  void accept(ASTVisitor * visitor) override;
 };
 
 /******************* Program and Function Nodes *********************/
 
 // Function - signature, local declarations, and a body
-class Function {
+class Function : public Node {
 public:
   std::string NAME;
   std::vector<std::string> FORMALS;
@@ -287,7 +267,6 @@ public:
            std::vector<std::unique_ptr<Stmt>> BODY, int LINE)
       : NAME(NAME), FORMALS(std::move(FORMALS)), DECLS(std::move(DECLS)),
         BODY(std::move(BODY)), LINE(LINE) {}
-  llvm::Function *codegen();
 
   /*
    * These getters are needed because we perform two passes over
@@ -298,18 +277,21 @@ public:
    */
   std::string getName() { return NAME; };
   std::vector<std::string> getFormals() { return FORMALS; };
-  void accept(TIPtreeVisitor * visitor) ;
+  void accept(ASTVisitor * visitor) override;
 };
 
 // Program - just a list of functions
-class Program {
+class Program : public Node {
+  std::string name;
 public:
+  void setName(std::string n) { name = n; }
+  std::string getName() { return name; }
   std::vector<std::unique_ptr<Function>> FUNCTIONS;
   Program(std::vector<std::unique_ptr<Function>> FUNCTIONS)
       : FUNCTIONS(std::move(FUNCTIONS)) {}
   std::unique_ptr<llvm::Module> codegen(std::string programName);
-  void accept(TIPtreeVisitor * visitor) ;
+  void accept(ASTVisitor * visitor) override;
 };
 
-} // namespace TIPtree
+} // namespace AST
 

@@ -2,11 +2,11 @@
 #include "catch.hpp"
 #include "ASTHelper.h"
 #include "GeneralHelper.h"
-#include "PrettyPrintVisitor.h"
+#include "PrettyPrinter.h"
 
 #include <iostream>
 
-TEST_CASE("PrettyPrintVisitor: Test default constructor", "[PrettyPrintVisitor]") {
+TEST_CASE("PrettyPrinter: Test default constructor", "[PrettyPrinter]") {
     std::stringstream stream;
     stream << R"(
       short() {
@@ -20,12 +20,12 @@ TEST_CASE("PrettyPrintVisitor: Test default constructor", "[PrettyPrintVisitor]"
     )";
 
     auto ast = ASTHelper::build_ast(stream);
-    PrettyPrintVisitor prettyPrintVisitor;
-    ast->accept(&prettyPrintVisitor);
+    PrettyPrinter prettyPrinter;
+    ast->accept(&prettyPrinter);
     REQUIRE(true);
 }
 
-TEST_CASE("PrettyPrintVisitor: Test indentation", "[PrettyPrintVisitor]") {
+TEST_CASE("PrettyPrinter: Test indentation", "[PrettyPrinter]") {
   std::stringstream stream;
   stream << R"(
       foo() {
@@ -40,8 +40,8 @@ TEST_CASE("PrettyPrintVisitor: Test indentation", "[PrettyPrintVisitor]") {
   auto ast = ASTHelper::build_ast(stream);
 
   std::stringstream outputStream;
-  PrettyPrintVisitor prettyPrintVisitor(outputStream, '#', 2, true);
-  ast->accept(&prettyPrintVisitor);
+  PrettyPrinter prettyPrinter(outputStream, '#', 2, true);
+  ast->accept(&prettyPrinter);
   std::vector<std::string> tokens = GeneralHelper::tokenize(outputStream.str(), '\n');
 
   auto token0 = tokens.at(0);

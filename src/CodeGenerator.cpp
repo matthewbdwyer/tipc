@@ -1,13 +1,18 @@
-#include "TIPtreeGen.h"
+#include "CodeGenerator.h"
 
+#include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/Verifier.h"
 
 using namespace llvm;
 
-namespace TIPtree {
+using namespace AST;
 
 /*
- * Code Generation Routines from TIP Tree Representation
- *
  * These code generation routines are based on the LLVM Kaleidoscope
  * Tutorial for C++ Chapters 3 and 7
  *     https://llvm.org/docs/tutorial/LangImpl03.html
@@ -20,13 +25,25 @@ namespace TIPtree {
  * dead blocks.
  */
 
+/********* data structures for storing code gen information ********/
+
+// TBD: these should really be member data of the visitor, but
+// doing that (a) exposes the implementation and (b) makes for
+// some complex constructor initialization.
+
 /*
- * These structures records lots of information that spans the codegen()
- * routines.  For example, the current insertion, entry, return blocks
+ * These structures records lots of information that spans a code
+ * gen pass.  For example, the current insertion, entry, return blocks
  * in the current function.
  */
-static LLVMContext TheContext;
-static IRBuilder<> Builder(TheContext);
+static LLVMContext Context;
+static IRBuilder<> Builder(Context);
+
+// Passes value up the visitor; this is a dummy initial value
+static Value *codegenValue = ConstantInt::get(Type::getInt64Ty(Context), 0);
+
+// Permits getFunction to access the current module being compiled
+static std::unique_ptr<Module> CurrentModule = nullptr;
 
 /*
  * This function symbol table stores, for each function, its index
@@ -34,10 +51,9 @@ static IRBuilder<> Builder(TheContext);
  *
  * TBD: It currently relies on the fact that all function parameters are integer
  * type, so we don't need to indicate the type explicitly.  Ultimately, we will
- * want * to record pairs of formals and types here.
+ * want to record pairs of formals and types here.
  */
-static std::map<std::string, std::pair<int, std::vector<std::string>>>
-    FunctionDecls;
+static std::map<std::string, std::pair<int, std::vector<std::string>>> FunctionDecls;
 
 /*
  * This structure stores the mapping from names in a function scope
@@ -46,12 +62,13 @@ static std::map<std::string, std::pair<int, std::vector<std::string>>>
  */
 static std::map<std::string, AllocaInst *> NamedValues;
 
-// Permits getFunction to access the current module being compiled
-static std::unique_ptr<Module> CurrentModule;
-
 /*
- * We use calls to llvm intrinsics for several purposes.  To construct a "nop",
- * using an LLVM internal intrinsic, to perform TIP specific IO, and
+ * An intrinsic function in a program representation provides the declaration
+ * for a function that is defined "elsewhere", e.g., hardwired into code
+ * generation, in a runtime library, in special hardware support, etc.
+ *
+ * For TIP we use intrinsics for several purposes.  To construct a "nop",
+ * using an LLVM intrinsic, to perform TIP specific IO, and and
  * to allocate heap memory.
  */
 static llvm::Function *nop = nullptr;
@@ -83,81 +100,19 @@ static int numTIPArgs = 0;
 static GlobalVariable *tipNumInputs = nullptr;
 static GlobalVariable *tipInputArray = nullptr;
 
-/*
- * Create LLVM Function in Module associated with current program.
- * This function declares the function, but it does not generate code.
- * This is a key element of the shallow pass that builds the function
- * dispatch table.
- */
-static llvm::Function *getFunction(std::string Name) {
-  // Lookup the symbol to access the formal parameter list
-  auto idx_formals = FunctionDecls[Name];
+/********************* code gen routines ************************/
 
-  /*
-   * Main is handled specially.  It is declared as "_tip_main" with
-   * no arguments - any arguments are converted to locals with special
-   * initializaton in Function::codegen().
-   */
-  if (Name == "main") {
-    if (auto *M = CurrentModule->getFunction("_tip_main")) {
-      return M;
-    }
-
-    // initialize the number of TIP program args for initializing globals
-    numTIPArgs = idx_formals.second.size();
-
-    // Declare "_tip_main()"
-    auto *M = llvm::Function::Create(
-        FunctionType::get(Type::getInt64Ty(TheContext), false),
-        llvm::Function::ExternalLinkage, "_tip_" + Name, CurrentModule.get());
-    return M;
-  } else {
-    // check if function is in the current module
-    if (auto *F = CurrentModule->getFunction(Name)) {
-      return F;
-    }
-
-    std::vector<Type *> FormalTypes(idx_formals.second.size(),
-                                    Type::getInt64Ty(TheContext));
-
-    // Use type factory to create function from formal type to int
-    auto *FT =
-        FunctionType::get(Type::getInt64Ty(TheContext), FormalTypes, false);
-
-    auto *F = llvm::Function::Create(FT, llvm::Function::ExternalLinkage, Name,
-                                     CurrentModule.get());
-
-    // assign names to args for readability of generated code
-    unsigned i = 0;
-    for (auto &param : F->args()) {
-      param.setName(idx_formals.second[i++]);
-    }
-
-    return F;
-  }
+std::unique_ptr<llvm::Module> CodeGenerator::codegen(
+          std::unique_ptr<AST::Program> p, std::string programName) {
+  CodeGenerator visitor;
+  p->setName(programName);
+  p->accept(&visitor);
+  return std::move(CurrentModule);
 }
 
-/*
- * Create an alloca instruction in the entry block of the function.
- * This is used for mutable variables, including arguments to functions.
- */
-static AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction,
-                                          const std::string &VarName) {
-  IRBuilder<> TmpB(&TheFunction->getEntryBlock(),
-                   TheFunction->getEntryBlock().begin());
-  return TmpB.CreateAlloca(Type::getInt64Ty(TheContext), 0, VarName);
-}
-
-static Value *LogError(std::string s) {
-  fprintf(stderr, "Error: %s\n", s.c_str());
-  return nullptr;
-}
-
-/********************* codegen() routines ************************/
-
-std::unique_ptr<llvm::Module> Program::codegen(std::string programName) {
+void CodeGenerator::visit(AST::Program *n) {
   // Create module to hold generated code
-  auto TheModule = std::make_unique<Module>(programName, TheContext);
+  auto TheModule = std::make_unique<Module>(n->getName(), Context);
 
   // Initialize nop declaration
   nop = Intrinsic::getDeclaration(TheModule.get(), Intrinsic::donothing);
@@ -178,7 +133,7 @@ std::unique_ptr<llvm::Module> Program::codegen(std::string programName) {
      * the function index and formal parameters
      */
     int funIndex = 0;
-    for (auto const &fn : FUNCTIONS) {
+    for (auto const &fn : n->FUNCTIONS) {
       std::pair<int, std::vector<std::string>> thePair(funIndex++,
                                                        fn->getFormals());
       FunctionDecls[fn->getName()] = thePair;
@@ -192,7 +147,7 @@ std::unique_ptr<llvm::Module> Program::codegen(std::string programName) {
      * below in creating the ftableInit.
      */
     std::vector<llvm::Constant *> programFunctions;
-    for (auto const &fn : FUNCTIONS) {
+    for (auto const &fn : n->FUNCTIONS) {
       programFunctions.push_back(getFunction(fn->getName()));
     }
 
@@ -202,7 +157,7 @@ std::unique_ptr<llvm::Module> Program::codegen(std::string programName) {
      * bitcast the declared functions prior to inserting them.
      */
     auto *genFunPtrType = PointerType::get(
-        FunctionType::get(Type::getInt64Ty(TheContext), None, false), 0);
+        FunctionType::get(Type::getInt64Ty(Context), None, false), 0);
 
     // Create and record the function dispatch table
     auto *ftableType = ArrayType::get(genFunPtrType, funIndex);
@@ -236,64 +191,58 @@ std::unique_ptr<llvm::Module> Program::codegen(std::string programName) {
      * create main that calls the "_tip_main_undefined()" rtlib function.
      *
      * For this function we perform all code generation here and
-     * we never visit it during the codegen() traversals - since
+     * we never visit it during the code gen traversals - since
      * the function doesn't exist in the TIP program.
      */
     auto fd = FunctionDecls.find("main");
     if (fd == FunctionDecls.end()) {
       auto *M = llvm::Function::Create(
-          FunctionType::get(Type::getInt64Ty(TheContext), false),
+          FunctionType::get(Type::getInt64Ty(Context), false),
           llvm::Function::ExternalLinkage, "_tip_main", CurrentModule.get());
-      BasicBlock *BB = BasicBlock::Create(TheContext, "entry", M);
+      BasicBlock *BB = BasicBlock::Create(Context, "entry", M);
       Builder.SetInsertPoint(BB);
 
       auto *undef = llvm::Function::Create(
-          FunctionType::get(Type::getVoidTy(TheContext), false),
+          FunctionType::get(Type::getVoidTy(Context), false),
           llvm::Function::ExternalLinkage, "_tip_main_undefined",
           CurrentModule.get());
       Builder.CreateCall(undef);
-      Builder.CreateRet(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+      Builder.CreateRet(ConstantInt::get(Type::getInt64Ty(Context), 0));
     }
 
     // create global _tip_num_inputs with init of numTIPArgs
     tipNumInputs = new GlobalVariable(
-        *CurrentModule, Type::getInt64Ty(TheContext), true,
+        *CurrentModule, Type::getInt64Ty(Context), true,
         llvm::GlobalValue::ExternalLinkage,
-        ConstantInt::get(Type::getInt64Ty(TheContext), numTIPArgs),
+        ConstantInt::get(Type::getInt64Ty(Context), numTIPArgs),
         "_tip_num_inputs");
 
     // create global _tip_input_array with up to numTIPArgs of Int64
     auto *inputArrayType =
-        ArrayType::get(Type::getInt64Ty(TheContext), numTIPArgs);
+        ArrayType::get(Type::getInt64Ty(Context), numTIPArgs);
     std::vector<Constant *> zeros(
-        numTIPArgs, ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+        numTIPArgs, ConstantInt::get(Type::getInt64Ty(Context), 0));
     tipInputArray = new GlobalVariable(
         *CurrentModule, inputArrayType, false, llvm::GlobalValue::CommonLinkage,
         ConstantArray::get(inputArrayType, zeros), "_tip_input_array");
   }
 
   // Code is generated into the module by the other routines
-  for (auto const &fn : FUNCTIONS) {
-    fn->codegen();
+  for (auto const &fn : n->FUNCTIONS) {
+    fn->accept(this);
   }
 
-  TheModule = std::move(CurrentModule);
-
-  verifyModule(*TheModule);
-
-  return TheModule;
+  verifyModule(*CurrentModule);
 }
 
-llvm::Function *Function::codegen() {
-  bool success = true;
-
-  llvm::Function *TheFunction = getFunction(getName());
+void CodeGenerator::visit(AST::Function *n) {
+  llvm::Function *TheFunction = getFunction(n->getName());
   if (TheFunction == nullptr) {
-    return nullptr;
+    return;
   }
 
   // create basic block to hold body of function definition
-  BasicBlock *BB = BasicBlock::Create(TheContext, "entry", TheFunction);
+  BasicBlock *BB = BasicBlock::Create(Context, "entry", TheFunction);
   Builder.SetInsertPoint(BB);
 
   // keep scope separate from prior definitions
@@ -304,19 +253,20 @@ llvm::Function *Function::codegen() {
    *   - for main function, we initialize allocas with array loads
    *   - for other functions, we initialize allocas with the arg values
    */
-  if (getName() == "main") {
+  if (n->getName() == "main") {
     int argIdx = 0;
     // Note that the args are not in the LLVM function decl, so we use the AST
     // formals
-    for (auto &argName : getFormals()) {
+    for (auto &argName : n->getFormals()) {
       // Create an alloca for this argument and store its value
       AllocaInst *argAlloc = CreateEntryBlockAlloca(TheFunction, argName);
 
       // Emit the GEP instruction to index into input array
       std::vector<Value *> indices;
-      indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
-      indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), argIdx));
-      auto *gep = Builder.CreateInBoundsGEP(tipInputArray, indices, "inputidx");
+      indices.push_back(ConstantInt::get(Type::getInt64Ty(Context), 0));
+      indices.push_back(ConstantInt::get(Type::getInt64Ty(Context), argIdx));
+      auto *gep = 
+          Builder.CreateInBoundsGEP(tipInputArray, indices, "inputidx");
 
       // Load the value and store it into the arg's alloca
       auto *inVal =
@@ -337,55 +287,63 @@ llvm::Function *Function::codegen() {
     }
   }
 
+  bool success = true;
+
   // add local declarations to the symbol table
-  for (auto const &decl : DECLS) {
-    if (decl->codegen() == nullptr) {
-      success = false;
-    }
+  for (auto const &decl : n->DECLS) {
+    decl->accept(this);
+    success |= (codegenValue != nullptr);
   }
 
-  for (auto &stmt : BODY) {
-    if (stmt->codegen() == nullptr) {
-      success = false;
-    }
+  for (auto &stmt : n->BODY) {
+    stmt->accept(this);
+    success |= (codegenValue != nullptr);
   }
 
   if (success) {
     // internal LLVM helper function to detect errors in function defs
     verifyFunction(*TheFunction);
-    return TheFunction;
-  }
-
-  // error in generating body, so remove partial function definition
-  TheFunction->eraseFromParent();
-  return nullptr;
-}
-
-llvm::Value *NumberExpr::codegen() {
-  return ConstantInt::get(Type::getInt64Ty(TheContext), VAL);
-}
-
-llvm::Value *BinaryExpr::codegen() {
-  Value *L = LHS->codegen();
-  Value *R = RHS->codegen();
-  if (L == nullptr || R == nullptr) {
-    return nullptr;
-  }
-
-  if (OP == "+") {
-    return Builder.CreateAdd(L, R, "addtmp");
-  } else if (OP == "-") {
-    return Builder.CreateSub(L, R, "subtmp");
-  } else if (OP == "*") {
-    return Builder.CreateMul(L, R, "multmp");
-  } else if (OP == "/") {
-    return Builder.CreateSDiv(L, R, "divtmp");
-  } else if (OP == ">") {
-    return Builder.CreateICmpSGT(L, R, "gttmp");
-  } else if (OP == "==") {
-    return Builder.CreateICmpEQ(L, R, "eqtmp");
   } else {
-    return LogError("Invalid binary operator: " + OP);
+    // error in generating body, so remove partial function definition
+    TheFunction->eraseFromParent();
+  }
+}
+
+/* 
+ * These routines are expression visit methods
+ * As such the member data of the code generator visitor is directly accessible.
+ */
+
+void CodeGenerator::visit(AST::NumberExpr *n) {
+  codegenValue = ConstantInt::get(Type::getInt64Ty(Context), n->VAL);
+}
+
+void CodeGenerator::visit(AST::BinaryExpr *n) {
+  n->LHS->accept(this);
+  Value *L = codegenValue;
+
+  n->RHS->accept(this);
+  Value *R = codegenValue;
+
+  if (L == nullptr || R == nullptr) {
+    codegenValue = nullptr;
+    return;
+  }
+
+  if (n->OP == "+") {
+    codegenValue = Builder.CreateAdd(L, R, "addtmp");
+  } else if (n->OP == "-") {
+    codegenValue = Builder.CreateSub(L, R, "subtmp");
+  } else if (n->OP == "*") {
+    codegenValue = Builder.CreateMul(L, R, "multmp");
+  } else if (n->OP == "/") {
+    codegenValue = Builder.CreateSDiv(L, R, "divtmp");
+  } else if (n->OP == ">") {
+    codegenValue = Builder.CreateICmpSGT(L, R, "gttmp");
+  } else if (n->OP == "==") {
+    codegenValue = Builder.CreateICmpEQ(L, R, "eqtmp");
+  } else {
+    codegenValue = LogError("Invalid binary operator: " + n->OP);
   }
 }
 
@@ -395,31 +353,36 @@ llvm::Value *BinaryExpr::codegen() {
  *
  * This relies on the fact that TIP programs do not permit duplicate names.
  */
-llvm::Value *VariableExpr::codegen() {
-  auto nv = NamedValues.find(NAME);
+void CodeGenerator::visit(AST::VariableExpr *n) {
+  auto nv = NamedValues.find(n->NAME);
+
+  // Lookup name in variable symbol table
   if (nv != NamedValues.end()) {
     if (lValueGen) {
-      return NamedValues[nv->first];
+      lValueGen = false;
+      codegenValue = NamedValues[nv->first];
     } else {
-      return Builder.CreateLoad(nv->second, NAME.c_str());
+      codegenValue = Builder.CreateLoad(nv->second, n->NAME.c_str());
     }
+    return;
   }
 
-  auto fd = FunctionDecls.find(NAME);
+  // Lookup name in variable function symbol table
+  auto fd = FunctionDecls.find(n->NAME);
   if (fd == FunctionDecls.end()) {
-    return LogError("Unknown variable name: " + NAME);
+    codegenValue = LogError("Unknown variable name: " + n->NAME);
   }
 
-  return ConstantInt::get(Type::getInt64Ty(TheContext), (fd->second).first);
+  codegenValue = ConstantInt::get(Type::getInt64Ty(Context), (fd->second).first);
 }
 
-llvm::Value *InputExpr::codegen() {
+void CodeGenerator::visit(AST::InputExpr *n) {
   if (inputIntrinsic == nullptr) {
-    auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), false);
+    auto *FT = FunctionType::get(Type::getInt64Ty(Context), false);
     inputIntrinsic = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                             "_tip_input", CurrentModule.get());
   }
-  return Builder.CreateCall(inputIntrinsic);
+  codegenValue = Builder.CreateCall(inputIntrinsic);
 }
 
 /*
@@ -432,22 +395,21 @@ llvm::Value *InputExpr::codegen() {
  * The function name values and table are setup in a shallow-pass over
  * functions performed during codegen for the Program.
  */
-llvm::Value *FunAppExpr::codegen() {
+void CodeGenerator::visit(AST::FunAppExpr *n) {
   /*
    * Evaluate the function expression - it will resolve to an integer value
    * whether it is a function literal or an expression.
    */
-  auto *funVal = FUN->codegen();
-  if (funVal == nullptr) {
-    return nullptr;
-  }
+  n->FUN->accept(this);
+  if (codegenValue == nullptr) return;
+  auto *funVal = codegenValue;
 
   /*
    * Emit the GEP instruction to compute the address of LLVM function
    * pointer to be called.
    */
   std::vector<Value *> indices;
-  indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+  indices.push_back(ConstantInt::get(Type::getInt64Ty(Context), 0));
   indices.push_back(funVal);
   auto *gep = Builder.CreateInBoundsGEP(tipFTable, indices, "ftableidx");
 
@@ -464,9 +426,9 @@ llvm::Value *FunAppExpr::codegen() {
    * Once type information is available we will need to iterate the actuals
    * and construct the per actual vector of types.
    */
-  std::vector<Type *> actualTypes(ACTUALS.size(), Type::getInt64Ty(TheContext));
+  std::vector<Type *> actualTypes(n->ACTUALS.size(), Type::getInt64Ty(Context));
   auto *funPtrType = PointerType::get(
-      FunctionType::get(Type::getInt64Ty(TheContext), actualTypes, false), 0);
+      FunctionType::get(Type::getInt64Ty(Context), actualTypes, false), 0);
 
   // Bitcast the function pointer to the call-site determined function type
   auto *castFunPtr =
@@ -474,26 +436,24 @@ llvm::Value *FunAppExpr::codegen() {
 
   // Compute the actual parameters
   std::vector<Value *> argsV;
-  for (auto const &arg : ACTUALS) {
-    Value *argVal = arg->codegen();
-    if (argVal == nullptr) {
-      return nullptr;
-    }
-    argsV.push_back(argVal);
+  for (auto const &arg : n->ACTUALS) {
+    arg->accept(this);
+    if (codegenValue == nullptr) return;
+    Value *ArgVal = codegenValue;
+    argsV.push_back(ArgVal);
   }
 
-  return Builder.CreateCall(castFunPtr, argsV, "calltmp");
+  codegenValue = Builder.CreateCall(castFunPtr, argsV, "calltmp");
 }
 
-llvm::Value *AllocExpr::codegen() {
-  Value *argVal = ARG->codegen();
-  if (argVal == nullptr) {
-    return nullptr;
-  }
+void CodeGenerator::visit(AST::AllocExpr *n) {
+  n->ARG->accept(this);
+  if (codegenValue == nullptr) return;
+  Value *argVal = codegenValue;
 
   if (mallocFun == nullptr) {
-    std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
-    auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), oneInt, false);
+    std::vector<Type *> oneInt(1, Type::getInt64Ty(Context));
+    auto *FT = FunctionType::get(Type::getInt8PtrTy(Context), oneInt, false);
     mallocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                        "malloc", CurrentModule.get());
     mallocFun->addFnAttr(llvm::Attribute::NoUnwind);
@@ -502,20 +462,20 @@ llvm::Value *AllocExpr::codegen() {
 
   // Since we do not support records all allocs are for 8 bytes, i.e., int64_t
   std::vector<Value *> oneArg(
-      1, ConstantInt::get(Type::getInt64Ty(TheContext), 8));
+      1, ConstantInt::get(Type::getInt64Ty(Context), 8));
   auto *allocInst = Builder.CreateCall(mallocFun, oneArg, "allocPtr");
   auto *castPtr = Builder.CreatePointerCast(
-      allocInst, Type::getInt64PtrTy(TheContext), "castPtr");
+      allocInst, Type::getInt64PtrTy(Context), "castPtr");
   // Initialize with argument
   auto *initializingStore = Builder.CreateStore(argVal, castPtr);
 
-  return Builder.CreatePtrToInt(castPtr, Type::getInt64Ty(TheContext),
+  codegenValue = Builder.CreatePtrToInt(castPtr, Type::getInt64Ty(Context),
                                 "allocIntVal");
 }
 
-llvm::Value *NullExpr::codegen() {
-  auto *nullPtr = ConstantPointerNull::get(Type::getInt64PtrTy(TheContext));
-  return Builder.CreatePtrToInt(nullPtr, Type::getInt64Ty(TheContext),
+void CodeGenerator::visit(AST::NullExpr *n) {
+  auto *nullPtr = ConstantPointerNull::get(Type::getInt64PtrTy(Context));
+  codegenValue = Builder.CreatePtrToInt(nullPtr, Type::getInt64Ty(Context),
                                 "nullPtrIntVal");
 }
 
@@ -528,13 +488,13 @@ llvm::Value *NullExpr::codegen() {
  * we explicitly cast it with "ptrtoint" to enforce our invariant
  * that all code generation routines produce int values.
  */
-llvm::Value *RefExpr::codegen() {
-  Value *argVal = NamedValues[NAME];
+void CodeGenerator::visit(AST::RefExpr *n) {
+  Value *argVal = NamedValues[n->NAME];
   if (argVal == nullptr) {
-    return LogError("Unknown variable name: " + NAME);
+    codegenValue = LogError("Unknown variable name: " + n->NAME);
   }
 
-  return Builder.CreatePtrToInt(argVal, Type::getInt64Ty(TheContext),
+  codegenValue = Builder.CreatePtrToInt(argVal, Type::getInt64Ty(Context),
                                 "intPtrVal");
 }
 
@@ -545,55 +505,57 @@ llvm::Value *RefExpr::codegen() {
  * Consequently, we convert the value with "inttoptr" before loading
  * the value at the pointed-to memory location.
  */
-llvm::Value *DeRefExpr::codegen() {
+void CodeGenerator::visit(AST::DeRefExpr *n) {
   if (lValueGen) {
-    // For an l-value, just compute the address and return it.
+    /* 
+     * For an l-value, just compute the address of the outermost expression
+     * all sub-expressions are actually r-values.
+     */
     lValueGen = false;
-    Value *argVal = ARG->codegen();
-    if (argVal == nullptr) {
-      return nullptr;
-    }
 
-    return Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(TheContext),
+    n->ARG->accept(this);
+    if (codegenValue == nullptr) return;
+    Value *argVal = codegenValue;
+
+    codegenValue = Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(Context),
                                   "ptrIntVal");
 
   } else {
     // For an r-value, compute the address and return the value it points to.
-    Value *argVal = ARG->codegen();
-    if (argVal == nullptr) {
-      return nullptr;
-    }
+    n->ARG->accept(this);
+    if (codegenValue == nullptr) return;
+    Value *argVal = codegenValue;
 
-    auto *ref = Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(TheContext),
+    auto *ref = Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(Context),
                                        "ptrIntVal");
-    return Builder.CreateLoad(ref, "valueAt");
+    codegenValue = Builder.CreateLoad(ref, "valueAt");
   }
 }
 
-llvm::Value *RecordExpr::codegen() {
-  return LogError("Record expressions not implemented");
+void CodeGenerator::visit(AST::RecordExpr *n) {
+  codegenValue = LogError("Record expressions not implemented");
 }
 
-llvm::Value *FieldExpr::codegen() {
-  return LogError("Field expressions not implemented");
+void CodeGenerator::visit(AST::FieldExpr *n) {
+  codegenValue = LogError("Field expressions not implemented");
 }
 
-llvm::Value *AccessExpr::codegen() {
-  return LogError("Field access expressions not implemented");
+void CodeGenerator::visit(AST::AccessExpr *n) {
+  codegenValue = LogError("Field access expressions not implemented");
 }
 
-llvm::Value *DeclStmt::codegen() {
+void CodeGenerator::visit(AST::DeclStmt *n) {
   // The LLVM builder records the function we are currently generating
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
   AllocaInst *localAlloca = nullptr;
 
   // Register all variables and emit their initializer.
-  for (auto l : VARS) {
+  for (auto l : n->VARS) {
     localAlloca = CreateEntryBlockAlloca(TheFunction, l);
 
     // Initialize all locals to "0"
-    Builder.CreateStore(ConstantInt::get(Type::getInt64Ty(TheContext), 0),
+    Builder.CreateStore(ConstantInt::get(Type::getInt64Ty(Context), 0),
                         localAlloca);
 
     // Remember this binding.
@@ -601,36 +563,38 @@ llvm::Value *DeclStmt::codegen() {
   }
 
   // Return the body computation.
-  return localAlloca;
+  codegenValue = localAlloca;
 }
 
-llvm::Value *AssignStmt::codegen() {
-  // trigger code generation for l-value expressions
+void CodeGenerator::visit(AST::AssignStmt *n) {
+  /*  
+   * Generate l-value code for the top-most expression of the LHS.
+   * In doing so treat all sub-expressions as r-values.
+   */
   lValueGen = true;
-  Value *lValue = LHS->codegen();
-  lValueGen = false;
 
-  if (lValue == nullptr) {
-    return nullptr;
-  }
+  n->LHS->accept(this);
+  if (codegenValue == nullptr) return;
+  Value *lValue = codegenValue;
 
-  Value *rValue = RHS->codegen();
-  if (rValue == nullptr) {
-    return nullptr;
-  }
+  n->RHS->accept(this);
+  if (codegenValue == nullptr) return;
+  Value *rValue = codegenValue;
 
-  return Builder.CreateStore(rValue, lValue);
+  codegenValue = Builder.CreateStore(rValue, lValue);
 }
 
-llvm::Value *BlockStmt::codegen() {
+void CodeGenerator::visit(AST::BlockStmt *n) {
   Value *lastStmt = nullptr;
 
-  for (auto const &s : STMTS) {
-    lastStmt = s->codegen();
+  for (auto const &s : n->STMTS) {
+    s->accept(this);
+    if (codegenValue == nullptr) return;
+    lastStmt = codegenValue;
   }
 
   // If the block was empty return a nop
-  return (lastStmt == nullptr) ? Builder.CreateCall(nop) : lastStmt;
+  codegenValue = (lastStmt == nullptr) ? Builder.CreateCall(nop) : lastStmt;
 }
 
 /*
@@ -650,7 +614,7 @@ llvm::Value *BlockStmt::codegen() {
  * is generated into a basic block since it will be branched to after the
  * body executes.
  */
-llvm::Value *WhileStmt::codegen() {
+void CodeGenerator::visit(AST::WhileStmt *n) {
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
   /*
@@ -664,11 +628,11 @@ llvm::Value *WhileStmt::codegen() {
   labelNum++; // create unique labels for these BBs
 
   BasicBlock *HeaderBB = BasicBlock::Create(
-      TheContext, "header" + std::to_string(labelNum), TheFunction);
+      Context, "header" + std::to_string(labelNum), TheFunction);
   BasicBlock *BodyBB =
-      BasicBlock::Create(TheContext, "body" + std::to_string(labelNum));
+      BasicBlock::Create(Context, "body" + std::to_string(labelNum));
   BasicBlock *ExitBB =
-      BasicBlock::Create(TheContext, "exit" + std::to_string(labelNum));
+      BasicBlock::Create(Context, "exit" + std::to_string(labelNum));
 
   // Add an explicit branch from the current BB to the header
   Builder.CreateBr(HeaderBB);
@@ -677,10 +641,9 @@ llvm::Value *WhileStmt::codegen() {
   {
     Builder.SetInsertPoint(HeaderBB);
 
-    Value *CondV = COND->codegen();
-    if (CondV == nullptr) {
-      return nullptr;
-    }
+    n->COND->accept(this);
+    if (codegenValue == nullptr) return;
+    Value *CondV = codegenValue;
 
     // Convert condition to a bool by comparing non-equal to 0.
     CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0),
@@ -694,10 +657,9 @@ llvm::Value *WhileStmt::codegen() {
     TheFunction->getBasicBlockList().push_back(BodyBB);
     Builder.SetInsertPoint(BodyBB);
 
-    Value *BodyV = BODY->codegen();
-    if (BodyV == nullptr) {
-      return nullptr;
-    }
+    n->BODY->accept(this);
+    if (codegenValue == nullptr) return;
+    Value *BodyV = codegenValue;
 
     Builder.CreateBr(HeaderBB);
   }
@@ -705,7 +667,7 @@ llvm::Value *WhileStmt::codegen() {
   // Emit loop exit block.
   TheFunction->getBasicBlockList().push_back(ExitBB);
   Builder.SetInsertPoint(ExitBB);
-  return Builder.CreateCall(nop);
+  codegenValue = Builder.CreateCall(nop);
 }
 
 /*
@@ -723,11 +685,10 @@ llvm::Value *WhileStmt::codegen() {
  * the insertion point, and then letting other codegen functions write
  * code at that insertion point.
  */
-llvm::Value *IfStmt::codegen() {
-  Value *CondV = COND->codegen();
-  if (CondV == nullptr) {
-    return nullptr;
-  }
+void CodeGenerator::visit(AST::IfStmt *n) {
+  n->COND->accept(this);
+  if (codegenValue == nullptr) return;
+  Value *CondV = codegenValue;
 
   // Convert condition to a bool by comparing non-equal to 0.
   CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0),
@@ -745,11 +706,11 @@ llvm::Value *IfStmt::codegen() {
    */
   labelNum++; // create unique labels for these BBs
   BasicBlock *ThenBB = BasicBlock::Create(
-      TheContext, "then" + std::to_string(labelNum), TheFunction);
+      Context, "then" + std::to_string(labelNum), TheFunction);
   BasicBlock *ElseBB =
-      BasicBlock::Create(TheContext, "else" + std::to_string(labelNum));
+      BasicBlock::Create(Context, "else" + std::to_string(labelNum));
   BasicBlock *MergeBB =
-      BasicBlock::Create(TheContext, "ifmerge" + std::to_string(labelNum));
+      BasicBlock::Create(Context, "ifmerge" + std::to_string(labelNum));
 
   Builder.CreateCondBr(CondV, ThenBB, ElseBB);
 
@@ -757,10 +718,9 @@ llvm::Value *IfStmt::codegen() {
   {
     Builder.SetInsertPoint(ThenBB);
 
-    Value *ThenV = THEN->codegen();
-    if (ThenV == nullptr) {
-      return nullptr;
-    }
+    n->THEN->accept(this);
+    if (codegenValue == nullptr) return;
+    Value *ThenV = codegenValue;
 
     Builder.CreateBr(MergeBB);
   }
@@ -772,11 +732,10 @@ llvm::Value *IfStmt::codegen() {
 
     // if there is no ELSE then exist emit a "nop"
     Value *ElseV = nullptr;
-    if (ELSE != nullptr) {
-      ElseV = ELSE->codegen();
-      if (ElseV == nullptr) {
-        return nullptr;
-      }
+    if (n->ELSE != nullptr) {
+      n->ELSE->accept(this);
+      if (codegenValue == nullptr) return;
+      ElseV = codegenValue;
     } else {
       Builder.CreateCall(nop);
     }
@@ -787,49 +746,119 @@ llvm::Value *IfStmt::codegen() {
   // Emit merge block.
   TheFunction->getBasicBlockList().push_back(MergeBB);
   Builder.SetInsertPoint(MergeBB);
-  return Builder.CreateCall(nop);
+  codegenValue = Builder.CreateCall(nop);
 }
 
-llvm::Value *OutputStmt::codegen() {
+void CodeGenerator::visit(AST::OutputStmt *n) {
   if (outputIntrinsic == nullptr) {
-    std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
-    auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), oneInt, false);
+    std::vector<Type *> oneInt(1, Type::getInt64Ty(Context));
+    auto *FT = FunctionType::get(Type::getInt64Ty(Context), oneInt, false);
     outputIntrinsic =
         llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                "_tip_output", CurrentModule.get());
   }
 
-  Value *argVal = ARG->codegen();
-  if (argVal == nullptr) {
-    return nullptr;
-  }
+  n->ARG->accept(this);
+  if (codegenValue == nullptr) return;
+  Value *ArgVal = codegenValue;
 
-  std::vector<Value *> ArgsV(1, argVal);
+  std::vector<Value *> ArgsV(1, ArgVal);
 
-  return Builder.CreateCall(outputIntrinsic, ArgsV);
+  codegenValue = Builder.CreateCall(outputIntrinsic, ArgsV);
 }
 
-llvm::Value *ErrorStmt::codegen() {
+void CodeGenerator::visit(AST::ErrorStmt *n) {
   if (errorIntrinsic == nullptr) {
-    std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
-    auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), oneInt, false);
+    std::vector<Type *> oneInt(1, Type::getInt64Ty(Context));
+    auto *FT = FunctionType::get(Type::getInt64Ty(Context), oneInt, false);
     errorIntrinsic = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                             "_tip_error", CurrentModule.get());
   }
 
-  Value *argVal = ARG->codegen();
-  if (argVal == nullptr) {
-    return nullptr;
+  n->ARG->accept(this);
+  if (codegenValue == nullptr) return;
+  Value *ArgVal = codegenValue;
+
+  std::vector<Value *> ArgsV(1, ArgVal);
+
+  codegenValue = Builder.CreateCall(errorIntrinsic, ArgsV);
+}
+
+void CodeGenerator::visit(AST::ReturnStmt *n) {
+  n->ARG->accept(this);
+  if (codegenValue == nullptr) return;
+  Value *ArgVal = codegenValue;
+  codegenValue = Builder.CreateRet(ArgVal);
+}
+
+/******************* utility routines ******************/
+
+/*
+ * Create LLVM Function in Module associated with current program.
+ * This function declares the function, but it does not generate code.
+ * This is a key element of the shallow pass that builds the function
+ * dispatch table.
+ */
+llvm::Function *CodeGenerator::getFunction(std::string Name) {
+  // Lookup the symbol to access the formal parameter list
+  auto idx_formals = FunctionDecls[Name];
+
+  /*
+   * Main is handled specially.  It is declared as "_tip_main" with
+   * no arguments - any arguments are converted to locals with special
+   * initializaton in Function visit method.
+   */
+  if (Name == "main") {
+    if (auto *M = CurrentModule->getFunction("_tip_main")) {
+      return M;
+    }
+
+    // initialize the number of TIP program args for initializing globals
+    numTIPArgs = idx_formals.second.size();
+
+    // Declare "_tip_main()"
+    auto *M = llvm::Function::Create(
+        FunctionType::get(Type::getInt64Ty(Context), false),
+        llvm::Function::ExternalLinkage, "_tip_" + Name, CurrentModule.get());
+    return M;
+  } else {
+    // check if function is in the current module
+    if (auto *F = CurrentModule->getFunction(Name)) {
+      return F;
+    }
+
+    std::vector<Type *> FormalTypes(idx_formals.second.size(),
+                                    Type::getInt64Ty(Context));
+
+    // Use type factory to create function from formal type to int
+    auto *FT =
+        FunctionType::get(Type::getInt64Ty(Context), FormalTypes, false);
+
+    auto *F = llvm::Function::Create(FT, llvm::Function::ExternalLinkage, Name,
+                                     CurrentModule.get());
+
+    // assign names to args for readability of generated code
+    unsigned i = 0;
+    for (auto &param : F->args()) {
+      param.setName(idx_formals.second[i++]);
+    }
+
+    return F;
   }
-
-  std::vector<Value *> ArgsV(1, argVal);
-
-  return Builder.CreateCall(errorIntrinsic, ArgsV);
 }
 
-llvm::Value *ReturnStmt::codegen() {
-  Value *argVal = ARG->codegen();
-  return Builder.CreateRet(argVal);
+/*
+ * Create an alloca instruction in the entry block of the function.
+ * This is used for mutable variables, including arguments to functions.
+ */
+AllocaInst *CodeGenerator::CreateEntryBlockAlloca(
+                llvm::Function *TheFunction, const std::string &VarName) {
+  IRBuilder<> TmpB(&TheFunction->getEntryBlock(),
+                   TheFunction->getEntryBlock().begin());
+  return TmpB.CreateAlloca(Type::getInt64Ty(Context), 0, VarName);
 }
 
-} // namespace TIPtree
+Value *CodeGenerator::LogError(std::string s) {
+  fprintf(stderr, "Error: %s\n", s.c_str());
+  return nullptr;
+}

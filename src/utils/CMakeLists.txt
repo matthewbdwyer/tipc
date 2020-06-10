@@ -1,5 +1,6 @@
-file(GLOB HEADER_FILES *.h)
-file(GLOB SOURCE_FILES *.cpp)
-
-add_library(utilsLib STATIC ${SOURCE_FILES} ${HEADER_FILES} )
+add_library(utilsLib STATIC 
+            PrettyPrinter.h
+            PrettyPrinter.cpp
+            SampleVisitor.h
+            SampleVisitor.cpp)
 target_link_libraries(utilsLib tipLib)

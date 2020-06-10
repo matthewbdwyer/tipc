@@ -1,12 +1,23 @@
 #pragma once
 
 #include "ASTVisitor.h"
+#include <ostream>
+#include <iostream>
+#include <string>
 
-/**
- * Sample Visitor to illustrate traversing the AST.
- */
-class SampleVisitor: public ASTVisitor {
+#include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/Value.h"
+
+class CodeGenerator: public ASTVisitor {
 public:
+  CodeGenerator() {} 
+
+  // Main entry point for code generation
+  static std::unique_ptr<llvm::Module> codegen(
+             std::unique_ptr<AST::Program> p, std::string pname);
+
+  // TBD Can visit methods be private?
   void visit(AST::Program * element) override;
   void visit(AST::Function * element) override;
   void visit(AST::NumberExpr * element) override;
@@ -29,4 +40,24 @@ public:
   void visit(AST::OutputStmt * element) override;
   void visit(AST::ErrorStmt * element) override;
   void visit(AST::ReturnStmt * element) override;
+
+private:
+/*
+ * Create LLVM Function in Module associated with current program.
+ * This function declares the function, but it does not generate code.
+ * This is a key element of the shallow pass that builds the function
+ * dispatch table.
+ */
+llvm::Function *getFunction(std::string Name);
+
+/*
+ * Create an alloca instruction in the entry block of the function.
+ * This is used for mutable variables, including arguments to functions.
+ */
+llvm::AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction,
+                                         const std::string &VarName);
+
+llvm::Value *LogError(std::string s);
+
 };
+
