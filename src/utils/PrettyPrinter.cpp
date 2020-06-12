@@ -1,7 +1,14 @@
-#include "PrettyPrintVisitor.h"
+#include "PrettyPrinter.h"
 #include <iostream>
 
-void PrettyPrintVisitor::visit(TIPtree::Program * element) {
+void PrettyPrinter::print(std::unique_ptr<AST::Program> p,
+                          std::ostream &s,
+                          char c, int n, bool wlines) {
+   PrettyPrinter visitor(s, c, n, wlines);
+   p->accept(&visitor);
+}
+
+void PrettyPrinter::visit(AST::Program * element) {
   for (auto &fn : element->FUNCTIONS) {
     fn->accept(this);
     os << "\n";
@@ -9,7 +16,7 @@ void PrettyPrintVisitor::visit(TIPtree::Program * element) {
   os.flush();
 }
 
-void PrettyPrintVisitor::visit(TIPtree::Function * element) {
+void PrettyPrinter::visit(AST::Function * element) {
   os << element->NAME << "(";
 
   bool skip = true;
@@ -48,15 +55,15 @@ void PrettyPrintVisitor::visit(TIPtree::Function * element) {
   indentLevel--;
 }
 
-void PrettyPrintVisitor::visit(TIPtree::NumberExpr * element) {
+void PrettyPrinter::visit(AST::NumberExpr * element) {
   os << element->VAL;
 }
 
-void PrettyPrintVisitor::visit(TIPtree::VariableExpr * element) {
+void PrettyPrinter::visit(AST::VariableExpr * element) {
   os << element->NAME;
 }
 
-void PrettyPrintVisitor::visit(TIPtree::BinaryExpr * element) {
+void PrettyPrinter::visit(AST::BinaryExpr * element) {
   os << "(";
   element->LHS->accept(this);
   os << " " << element->OP;
@@ -64,11 +71,11 @@ void PrettyPrintVisitor::visit(TIPtree::BinaryExpr * element) {
   os << ")";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::InputExpr * element) {
+void PrettyPrinter::visit(AST::InputExpr * element) {
   os << "input";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::FunAppExpr * element) {
+void PrettyPrinter::visit(AST::FunAppExpr * element) {
   element->FUN->accept(this);
   os << "(";
 
@@ -86,30 +93,30 @@ void PrettyPrintVisitor::visit(TIPtree::FunAppExpr * element) {
   os << ")";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::AllocExpr * element) {
+void PrettyPrinter::visit(AST::AllocExpr * element) {
   os << "alloc ";
   element->ARG->accept(this);
 }
 
-void PrettyPrintVisitor::visit(TIPtree::RefExpr * element) {
+void PrettyPrinter::visit(AST::RefExpr * element) {
   os << "&" << element->NAME;
 }
 
-void PrettyPrintVisitor::visit(TIPtree::DeRefExpr * element) {
+void PrettyPrinter::visit(AST::DeRefExpr * element) {
   os << "*";
   element->ARG->accept(this);
 }
 
-void PrettyPrintVisitor::visit(TIPtree::NullExpr * element) {
+void PrettyPrinter::visit(AST::NullExpr * element) {
   os << "null";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::FieldExpr * element) {
+void PrettyPrinter::visit(AST::FieldExpr * element) {
   os << element->FIELD << ":";
   element->INIT->accept(this);
 }
 
-void PrettyPrintVisitor::visit(TIPtree::RecordExpr * element) {
+void PrettyPrinter::visit(AST::RecordExpr * element) {
   os << "{";
   bool skip = true;
   for (auto  &field : element->FIELDS) {
@@ -125,12 +132,12 @@ void PrettyPrintVisitor::visit(TIPtree::RecordExpr * element) {
   os << "}";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::AccessExpr * element) {
+void PrettyPrinter::visit(AST::AccessExpr * element) {
   element->RECORD->accept(this);
   os << "." << element->FIELD;
 }
 
-void PrettyPrintVisitor::visit(TIPtree::DeclStmt * element) {
+void PrettyPrinter::visit(AST::DeclStmt * element) {
   bool skip = true;
   for (auto &id : element->VARS) {
     if (skip) {
@@ -146,14 +153,14 @@ void PrettyPrintVisitor::visit(TIPtree::DeclStmt * element) {
   safePrintLineNumber(element->LINE);
 }
 
-void PrettyPrintVisitor::visit(TIPtree::AssignStmt * element) {
+void PrettyPrinter::visit(AST::AssignStmt * element) {
   element->LHS->accept(this);
   os << " = ";
   element->RHS->accept(this);
   os << ";";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::BlockStmt * element) {
+void PrettyPrinter::visit(AST::BlockStmt * element) {
   os << "{\n";
   indentLevel++;
   for (auto &s : element->STMTS) {
@@ -166,7 +173,7 @@ void PrettyPrintVisitor::visit(TIPtree::BlockStmt * element) {
   os << indent() << "}";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::WhileStmt * element) {
+void PrettyPrinter::visit(AST::WhileStmt * element) {
   os << "while (";
   element->COND->accept(this);
   os << ") \n";
@@ -176,7 +183,7 @@ void PrettyPrintVisitor::visit(TIPtree::WhileStmt * element) {
   indentLevel--;
 }
 
-void PrettyPrintVisitor::visit(TIPtree::IfStmt * element) {
+void PrettyPrinter::visit(AST::IfStmt * element) {
   os << "if (";
   element->COND->accept(this);
   os << ") \n";
@@ -195,29 +202,29 @@ void PrettyPrintVisitor::visit(TIPtree::IfStmt * element) {
   indentLevel--;
 }
 
-void PrettyPrintVisitor::visit(TIPtree::OutputStmt * element) {
+void PrettyPrinter::visit(AST::OutputStmt * element) {
   os << "output ";
   element->ARG->accept(this);
   os << ";";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::ErrorStmt * element) {
+void PrettyPrinter::visit(AST::ErrorStmt * element) {
   os << "error ";
   element->ARG->accept(this);
   os << ";";
 }
 
-void PrettyPrintVisitor::visit(TIPtree::ReturnStmt * element) {
+void PrettyPrinter::visit(AST::ReturnStmt * element) {
   os << "return ";
   element->ARG->accept(this);
   os << ";";
 }
 
-std::string PrettyPrintVisitor::indent() const {
+std::string PrettyPrinter::indent() const {
   return std::string(indentLevel*indentSize, indentChar);
 }
 
-void PrettyPrintVisitor::safePrintLineNumber(int lineNumber) const {
+void PrettyPrinter::safePrintLineNumber(int lineNumber) const {
   if (printLines) {
     os << " // @" << lineNumber;
   }

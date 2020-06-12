@@ -149,6 +149,6 @@ IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
 WS : [ \t\n\r]+ -> skip ;
 
 // This does not handle nested block comments.
-BLOCKCOMMENT: '/*' .* '*/' -> skip ;
+BLOCKCOMMENT: '/*' .*? '*/' -> skip ;
 
 COMMENT : '//' ~[\n\r]* -> skip ;

@@ -1,11 +1,11 @@
-#include "TIPtreeBuild.h"
+#include "ASTBuilder.h"
 #include <vector>
 
 using namespace antlrcpp;
 
-using namespace TIPtree;
+using namespace AST;
 
-TIPtreeBuild::TIPtreeBuild(TIPParser *p) : parser{p} {}
+ASTBuilder::ASTBuilder(TIPParser *p) : parser{p} {}
 
 /*
  * Questions:
@@ -14,7 +14,7 @@ TIPtreeBuild::TIPtreeBuild(TIPParser *p) : parser{p} {}
  *        (in ctor and in ctor invocatin)
  */
 
-std::string TIPtreeBuild::opString(int op) {
+std::string ASTBuilder::opString(int op) {
   std::string opStr;
   switch (op) {
   case TIPParser::MUL:
@@ -38,7 +38,7 @@ std::string TIPtreeBuild::opString(int op) {
   default:
     std::runtime_error(
         "unknown operator :" +
-        TIPtreeBuild::parser->getVocabulary().getLiteralName(op));
+        ASTBuilder::parser->getVocabulary().getLiteralName(op));
   }
   return opStr;
 }
@@ -84,8 +84,8 @@ static std::unique_ptr<Function> visitedFunction = nullptr;
  * You will access these from the method overrides in your visitor.
  */
 
-std::unique_ptr<TIPtree::Program>
-TIPtreeBuild::build(TIPParser::ProgramContext *ctx) {
+std::unique_ptr<AST::Program>
+ASTBuilder::build(TIPParser::ProgramContext *ctx) {
   std::vector<std::unique_ptr<Function>> pFunctions;
   for (auto fn : ctx->function()) {
     visit(fn);
@@ -94,7 +94,7 @@ TIPtreeBuild::build(TIPParser::ProgramContext *ctx) {
   return std::make_unique<Program>(std::move(pFunctions));
 }
 
-Any TIPtreeBuild::visitFunction(TIPParser::FunctionContext *ctx) {
+Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
   std::string fName; // always initialized in the "count == 0" case
   std::vector<std::string> fParams;
   std::vector<std::unique_ptr<DeclStmt>> fDecls;
@@ -137,7 +137,7 @@ Any TIPtreeBuild::visitFunction(TIPParser::FunctionContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitNegNumber(TIPParser::NegNumberContext *ctx) {
+Any ASTBuilder::visitNegNumber(TIPParser::NegNumberContext *ctx) {
   int val = std::stoi(ctx->NUMBER()->getText());
   val = -val;
   visitedExpr = std::make_unique<NumberExpr>(val);
@@ -154,7 +154,7 @@ Any TIPtreeBuild::visitNegNumber(TIPParser::NegNumberContext *ctx) {
  * This might be improved by restructuring the grammar, but then another
  * mechanism for handling operator precedence would be needed.
  */
-Any TIPtreeBuild::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
+Any ASTBuilder::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
   std::string op = opString(ctx->op->getType());
 
   visit(ctx->expr(0));
@@ -168,7 +168,7 @@ Any TIPtreeBuild::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitRelationalExpr(TIPParser::RelationalExprContext *ctx) {
+Any ASTBuilder::visitRelationalExpr(TIPParser::RelationalExprContext *ctx) {
   std::string op = opString(ctx->op->getType());
 
   visit(ctx->expr(0));
@@ -182,7 +182,7 @@ Any TIPtreeBuild::visitRelationalExpr(TIPParser::RelationalExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitMultiplicativeExpr(
+Any ASTBuilder::visitMultiplicativeExpr(
     TIPParser::MultiplicativeExprContext *ctx) {
   std::string op = opString(ctx->op->getType());
 
@@ -197,7 +197,7 @@ Any TIPtreeBuild::visitMultiplicativeExpr(
   return "";
 }
 
-Any TIPtreeBuild::visitEqualityExpr(TIPParser::EqualityExprContext *ctx) {
+Any ASTBuilder::visitEqualityExpr(TIPParser::EqualityExprContext *ctx) {
   std::string op = opString(ctx->op->getType());
 
   visit(ctx->expr(0));
@@ -211,30 +211,30 @@ Any TIPtreeBuild::visitEqualityExpr(TIPParser::EqualityExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitParenExpr(TIPParser::ParenExprContext *ctx) {
+Any ASTBuilder::visitParenExpr(TIPParser::ParenExprContext *ctx) {
   visit(ctx->expr());
   // leave visitedExpr from expr unchanged
   return "";
 }
 
-Any TIPtreeBuild::visitNumExpr(TIPParser::NumExprContext *ctx) {
+Any ASTBuilder::visitNumExpr(TIPParser::NumExprContext *ctx) {
   int val = std::stoi(ctx->NUMBER()->getText());
   visitedExpr = std::make_unique<NumberExpr>(val);
   return "";
 }
 
-Any TIPtreeBuild::visitIdExpr(TIPParser::IdExprContext *ctx) {
+Any ASTBuilder::visitIdExpr(TIPParser::IdExprContext *ctx) {
   std::string name = ctx->IDENTIFIER()->getText();
   visitedExpr = std::make_unique<VariableExpr>(name);
   return "";
 }
 
-Any TIPtreeBuild::visitInputExpr(TIPParser::InputExprContext *ctx) {
+Any ASTBuilder::visitInputExpr(TIPParser::InputExprContext *ctx) {
   visitedExpr = std::make_unique<InputExpr>();
   return "";
 }
 
-Any TIPtreeBuild::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
+Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
   std::unique_ptr<Expr> fExpr = nullptr;
   std::vector<std::unique_ptr<Expr>> fArgs;
 
@@ -260,30 +260,30 @@ Any TIPtreeBuild::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
+Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
   visit(ctx->expr());
   visitedExpr = std::make_unique<AllocExpr>(std::move(visitedExpr));
   return "";
 }
 
-Any TIPtreeBuild::visitRefExpr(TIPParser::RefExprContext *ctx) {
+Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
   std::string vName = ctx->IDENTIFIER()->getText();
   visitedExpr = std::make_unique<RefExpr>(vName);
   return "";
 }
 
-Any TIPtreeBuild::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
+Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
   visit(ctx->atom());
   visitedExpr = std::make_unique<DeRefExpr>(std::move(visitedExpr));
   return "";
 }
 
-Any TIPtreeBuild::visitNullExpr(TIPParser::NullExprContext *ctx) {
+Any ASTBuilder::visitNullExpr(TIPParser::NullExprContext *ctx) {
   visitedExpr = std::make_unique<NullExpr>();
   return "";
 }
 
-Any TIPtreeBuild::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
+Any ASTBuilder::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
   std::vector<std::unique_ptr<FieldExpr>> rFields;
   for (auto fn : ctx->fieldExpr()) {
     visit(fn);
@@ -294,7 +294,7 @@ Any TIPtreeBuild::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitFieldExpr(TIPParser::FieldExprContext *ctx) {
+Any ASTBuilder::visitFieldExpr(TIPParser::FieldExprContext *ctx) {
   std::string fName = ctx->IDENTIFIER()->getText();
   visit(ctx->expr());
   visitedFieldExpr =
@@ -302,7 +302,7 @@ Any TIPtreeBuild::visitFieldExpr(TIPParser::FieldExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitAccessExpr(TIPParser::AccessExprContext *ctx) {
+Any ASTBuilder::visitAccessExpr(TIPParser::AccessExprContext *ctx) {
   std::unique_ptr<Expr> rExpr = nullptr;
   std::string fName; // will be initialized below based on record expr
 
@@ -328,7 +328,7 @@ Any TIPtreeBuild::visitAccessExpr(TIPParser::AccessExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitAssignableExpr(TIPParser::AssignableExprContext *ctx) {
+Any ASTBuilder::visitAssignableExpr(TIPParser::AssignableExprContext *ctx) {
   if (ctx->IDENTIFIER() != nullptr) {
     std::string aName = ctx->IDENTIFIER()->getText();
     visitedExpr = std::make_unique<VariableExpr>(aName);
@@ -342,7 +342,7 @@ Any TIPtreeBuild::visitAssignableExpr(TIPParser::AssignableExprContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitDeclaration(TIPParser::DeclarationContext *ctx) {
+Any ASTBuilder::visitDeclaration(TIPParser::DeclarationContext *ctx) {
   std::vector<std::string> dVars;
   int dLine = -1;
   for (auto id : ctx->IDENTIFIER()) {
@@ -353,7 +353,7 @@ Any TIPtreeBuild::visitDeclaration(TIPParser::DeclarationContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitAssignmentStmt(TIPParser::AssignmentStmtContext *ctx) {
+Any ASTBuilder::visitAssignmentStmt(TIPParser::AssignmentStmtContext *ctx) {
   visit(ctx->assignableExpr());
   std::unique_ptr<Expr> lhs = std::move(visitedExpr);
   visit(ctx->expr());
@@ -362,7 +362,7 @@ Any TIPtreeBuild::visitAssignmentStmt(TIPParser::AssignmentStmtContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
+Any ASTBuilder::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
   std::vector<std::unique_ptr<Stmt>> bStmts;
   for (auto s : ctx->statement()) {
     visit(s);
@@ -372,7 +372,7 @@ Any TIPtreeBuild::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitWhileStmt(TIPParser::WhileStmtContext *ctx) {
+Any ASTBuilder::visitWhileStmt(TIPParser::WhileStmtContext *ctx) {
   visit(ctx->expr());
   std::unique_ptr<Expr> cond = std::move(visitedExpr);
 
@@ -383,7 +383,7 @@ Any TIPtreeBuild::visitWhileStmt(TIPParser::WhileStmtContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitIfStmt(TIPParser::IfStmtContext *ctx) {
+Any ASTBuilder::visitIfStmt(TIPParser::IfStmtContext *ctx) {
   visit(ctx->expr());
   std::unique_ptr<Expr> cond = std::move(visitedExpr);
 
@@ -402,19 +402,19 @@ Any TIPtreeBuild::visitIfStmt(TIPParser::IfStmtContext *ctx) {
   return "";
 }
 
-Any TIPtreeBuild::visitOutputStmt(TIPParser::OutputStmtContext *ctx) {
+Any ASTBuilder::visitOutputStmt(TIPParser::OutputStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<OutputStmt>(std::move(visitedExpr));
   return "";
 }
 
-Any TIPtreeBuild::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
+Any ASTBuilder::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ErrorStmt>(std::move(visitedExpr));
   return "";
 }
 
-Any TIPtreeBuild::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
+Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ReturnStmt>(std::move(visitedExpr));
   return "";

@@ -1,21 +1,23 @@
 #pragma once
 
-#include "TIPBaseVisitor.h"
-#include "TIPParser.h"
-#include "TIPtree.h"
-#include "antlr4-runtime.h"
 #include <string>
+
+#include "antlr4-runtime.h"
+#include "TIPParser.h"
+#include "TIPBaseVisitor.h"
+
+#include "AST.h"
 
 using namespace antlrcpp;
 
-class TIPtreeBuild : public TIPBaseVisitor {
+class ASTBuilder : public TIPBaseVisitor {
 private:
   TIPParser *parser;
   std::string opString(int op);
 
 public:
-  TIPtreeBuild(TIPParser *parser);
-  std::unique_ptr<TIPtree::Program> build(TIPParser::ProgramContext *ctx);
+  ASTBuilder(TIPParser *parser);
+  std::unique_ptr<AST::Program> build(TIPParser::ProgramContext *ctx);
   Any visitFunction(TIPParser::FunctionContext *ctx) override;
   Any visitNegNumber(TIPParser::NegNumberContext *ctx) override;
   Any visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) override;

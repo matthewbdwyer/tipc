@@ -60,7 +60,7 @@ bootstrap_ubuntu() {
 
 bootstrap_linux() {
   . /etc/os-release
-  if [ $ID == ubuntu ]; then
+  if [ $ID == ubuntu -o $ID == pop ]; then
     bootstrap_ubuntu
   else
     echoerr $ID is not supported.

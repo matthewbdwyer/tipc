@@ -1,19 +1,28 @@
 #include <iostream>
 #include <stdlib.h>
 
+#include "antlr4-runtime.h"
 #include "TIPLexer.h"
 #include "TIPParser.h"
-#include "TIPtreeBuild.h"
-#include "TIPtreeGen.h"
-#include "antlr4-runtime.h"
-#include "llvm/Support/CommandLine.h"
-#include "PrettyPrintVisitor.h"
 
+#include "ASTBuilder.h"
+#include "PrettyPrinter.h"
+#include "CodeGenerator.h"
+
+#include "llvm/Support/CommandLine.h"
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Transforms/Utils.h"
+#include "llvm/Transforms/InstCombine/InstCombine.h"
+#include "llvm/Transforms/Scalar.h"
+#include "llvm/Transforms/Scalar/GVN.h"
+#include "llvm/Bitcode/BitcodeWriter.h"
+#include "llvm/Support/FileSystem.h"
+#include "llvm/Support/ToolOutputFile.h"
 
 using namespace std;
 using namespace antlr4;
-using namespace TIPtree;
 using namespace llvm;
+using namespace AST;
 
 static cl::OptionCategory
     TIPcat("tipc Options",
@@ -41,14 +50,13 @@ int main(int argc, const char *argv[]) {
 
   TIPParser::ProgramContext *tree = parser.program();
 
-  TIPtreeBuild tb(&parser);
-  auto ast = tb.build(tree);
+  ASTBuilder ab(&parser);
+  auto ast = ab.build(tree);
 
   if (pp || ppWlines) {
-    PrettyPrintVisitor visitor(std::cout, ' ', 2, ppWlines);
-    ast->accept(&visitor);
+    PrettyPrinter::print(std::move(ast), std::cout, ' ', 2, ppWlines);
   } else {
-    auto theModule = ast->codegen(sourceFile);
+    auto theModule = CodeGenerator::codegen(std::move(ast), sourceFile);
 
     if (!noOpt) {
       // Create a pass manager to simplify generated module
