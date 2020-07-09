@@ -31,8 +31,9 @@ nite(a,b) {
 }
 
 main() {
-  output ite(7);	// 1
-  output it(-7);	// 2
-  output nite(0,7);	// 7
-  return nite(-1,7);	// -7
+  if (ite(7) != 1) error ite(7);
+  if (it(-7) != 2) error it(-7);
+  if (nite(0,7) != 7) error nite(0,7);
+  if (nite(-1,7) != -7) error nite(-1,7);
+  return 0;
 }

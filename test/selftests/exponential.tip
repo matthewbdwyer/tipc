@@ -19,7 +19,8 @@ exprec(a,n) {
 }
 
 main() {
-  output expiter(2,10);
-  output exprec(2,10);
-  return exprec(2,expiter(2,4));
+  if (expiter(2,10) != 1024) error expiter(2,10);
+  if (exprec(2,10) != 1024) error exprec(2,10);
+  if (exprec(2,expiter(2,4)) != 65536) error exprec(2,expiter(2,4));
+  return 0;
 }

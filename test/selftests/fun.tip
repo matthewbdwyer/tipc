@@ -16,7 +16,8 @@ h(h1) {
 }
 
 main() {
-  output h(f); 	// 3
-  output f();	// 3
-  return h(g);	// 3
+  if (h(f) != 3) error h(f);
+  if (f() != 3) error f();
+  if (h(g) != 3) error h(g);
+  return 0;
 }

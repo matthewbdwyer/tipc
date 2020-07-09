@@ -4,8 +4,8 @@ main() {
   x2 = 13;
   y = &x1;
   z = &y;
-  output **z;	// 42
+  if (**z != 42) error **z;
   y = &x2;
-  output **z;	// 13
-  return *y;	// 42
+  if (**z != 13) error **z;
+  return 0;
 }

@@ -2,9 +2,10 @@ main() {
   var x,y,z;
   x = alloc 42;
   z = &x;
-  output **z;	// 42
+  if (**z != 42) error **z;
   y = alloc null;
   *y = 13;
   z = &y;
-  return **z;	// 13
+  if (**z != 13) error **z;
+  return 0;
 }

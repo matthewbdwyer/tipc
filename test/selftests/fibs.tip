@@ -1,0 +1,29 @@
+fib(n){
+    var f1,f2,i;
+    var temp;
+    f1=1;
+    f2=1;
+    
+    i=n;
+    while( i>1 ){
+        temp = f1+f2;
+        f1=f2;
+        f2=temp;
+        i=i-1;
+    }
+    return f2;
+}
+
+main(){
+    if (fib(0) != 1) error fib(0);
+    if (fib(1) != 1) error fib(1);
+    if (fib(2) != 2) error fib(2);
+    if (fib(3) != 3) error fib(3);
+    if (fib(4) != 5) error fib(4);
+    if (fib(5) != 8) error fib(5);
+    if (fib(6) != 13) error fib(6);
+    if (fib(7) != 21) error fib(7);
+    if (fib(8) != 34) error fib(8);
+    if (fib(9) != 55) error fib(9);
+    return 0;
+}

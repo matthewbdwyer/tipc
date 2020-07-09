@@ -78,14 +78,10 @@ target_link_libraries(tipLib antlr4_static ${llvm_libs})
 # Header files in this directory used in subdirectories
 include_directories(.)
 
-# pretty printer binary target
-#add_executable(tippp tippp.cpp)
-#target_link_libraries(tippp tipLib)
-
 ## compiler binary target
 add_executable(tipc tipc.cpp)
 target_link_libraries(tipc tipLib)
 
 # Testing.
-#add_subdirectory(catch_tests)
+add_subdirectory(catch_tests)
 

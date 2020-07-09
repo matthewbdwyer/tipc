@@ -30,6 +30,8 @@ nameDeclaration : IDENTIFIER ;
 // to define the syntax, e.g., #recordExpr.
 //
 expr : expr '(' (expr (',' expr)*)? ')' 	#funAppExpr
+     | '*' expr					#deRefExpr
+     | expr '.' IDENTIFIER			#accessExpr
      | SUB NUMBER				#negNumber
      | expr op=(MUL | DIV) expr 		#multiplicativeExpr
      | expr op=(ADD | SUB) expr 		#additiveExpr
@@ -41,10 +43,8 @@ expr : expr '(' (expr (',' expr)*)? ')' 	#funAppExpr
      | KINPUT					#inputExpr
      | KALLOC expr				#allocExpr
      | '&' varExpr				#refExpr
-     | '*' expr					#deRefExpr
      | KNULL					#nullExpr
      | recordExpr				#recordRule
-     | expr '.' IDENTIFIER			#accessExpr
 ;
 
 varExpr : IDENTIFIER ;				

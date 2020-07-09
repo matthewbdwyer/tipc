@@ -1,0 +1,8 @@
+main() {
+  var x,y;
+  x = 42;
+  y = &x;
+  if (*y != 42) error *y;
+  if (x != 42) error x;
+  return 0;
+}

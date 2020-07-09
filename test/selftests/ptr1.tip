@@ -1,0 +1,9 @@
+main() {
+  var x,y,z;
+  x = 17;
+  y = &x;
+  if (*y != 17) error *y;
+  *y = 10 - x;
+  if (*y != -7) error *y;
+  return 0;
+}

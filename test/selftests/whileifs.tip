@@ -20,8 +20,9 @@ nestedloopsifs(a, b, c) {
 }
 
 main() {
-  output nestedloopsifs(0,42,42);	// 42
-  output nestedloopsifs(0,0,0); 	// 42
-  output nestedloopsifs(10,2,-2); 	// 22
-  return nestedloopsifs(10,-2,-2); 	// 28
+  if (nestedloopsifs(0,42,42) != 42) error nestedloopsifs(0,42,42);
+  if (nestedloopsifs(0,0,0) != 42) error nestedloopsifs(0,0,0); 
+  if (nestedloopsifs(10,2,-2) != 22) error nestedloopsifs(10,2,-2);
+  if (nestedloopsifs(10,-2,-2) != 28) error nestedloopsifs(10,-2,-2);
+  return 0;
 }
