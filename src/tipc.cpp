@@ -7,7 +7,7 @@
 
 #include "ASTBuilder.h"
 #include "PrettyPrinter.h"
-#include "CodeGenerator.h"
+#include "SymbolTable.h"
 
 #include "llvm/Support/CommandLine.h"
 #include "llvm/IR/LegacyPassManager.h"
@@ -24,14 +24,11 @@ using namespace antlr4;
 using namespace llvm;
 using namespace AST;
 
-static cl::OptionCategory
-    TIPcat("tipc Options",
-           "Options for controlling the TIP compilation process.");
-static cl::opt<bool> pp("p", cl::desc("pretty print"), cl::cat(TIPcat));
-static cl::opt<bool> ppWlines("l", cl::desc("pretty print with line numbers"),
-                              cl::cat(TIPcat));
-static cl::opt<bool> noOpt("d", cl::desc("disable bitcode optimization"),
-                           cl::cat(TIPcat));
+static cl::OptionCategory TIPcat("tipc Options",
+                                 "Options for controlling the TIP compilation process.");
+static cl::opt<bool> ppretty("p", cl::desc("pretty print"), cl::cat(TIPcat));
+static cl::opt<bool> psym("s", cl::desc("print symbol table"), cl::cat(TIPcat));
+static cl::opt<bool> disopt("d", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
                                        cl::Required, cl::cat(TIPcat));
@@ -53,12 +50,16 @@ int main(int argc, const char *argv[]) {
   ASTBuilder ab(&parser);
   auto ast = ab.build(tree);
 
-  if (pp || ppWlines) {
-    PrettyPrinter::print(std::move(ast), std::cout, ' ', 2, ppWlines);
+  if (ppretty) {
+    PrettyPrinter::print(ast.get(), std::cout, ' ', 2);
+    if (psym) { 
+       auto symbols = SymbolTable::build(ast.get()); 
+       symbols->print();
+    }
   } else {
-    auto theModule = CodeGenerator::codegen(std::move(ast), sourceFile);
+    auto theModule = ast->codegen(sourceFile);
 
-    if (!noOpt) {
+    if (!disopt) {
       // Create a pass manager to simplify generated module
       auto TheFPM =
           std::make_unique<legacy::FunctionPassManager>(theModule.get());

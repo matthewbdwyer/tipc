@@ -1,7 +1,6 @@
-project(tipc)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 
-# minimum required CMAKE version
-CMAKE_MINIMUM_REQUIRED(VERSION 3.7 FATAL_ERROR)
+project(tipc)
 
 # Required packages
 find_package(PkgConfig REQUIRED)
@@ -9,8 +8,8 @@ pkg_search_module(UUID REQUIRED uuid)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
 
-# compiler must be 11
-set(CMAKE_CXX_STANDARD 14)
+# compiler must be 17
+set(CMAKE_CXX_STANDARD 17)
 
 # compile with debug flags
 set(CMAKE_BUILD_TYPE Debug)
@@ -66,22 +65,25 @@ add_library(tipLib STATIC
             AST.h
             AST.cpp
             ASTVisitor.h
-            CodeGenerator.h
             CodeGenerator.cpp
+            SymbolTable.h
+            SymbolTable.cpp
+            PrettyPrinter.h
+            PrettyPrinter.cpp
             ${ANTLR_TIPGrammar_CXX_OUTPUTS})
 target_link_libraries(tipLib antlr4_static ${llvm_libs})
 
 # Header files in this directory used in subdirectories
 include_directories(.)
 
-# Utils.
-add_subdirectory(utils)
-include_directories(utils)
+# pretty printer binary target
+#add_executable(tippp tippp.cpp)
+#target_link_libraries(tippp tipLib)
 
-# add generated grammar to pretty printer binary target
+## compiler binary target
 add_executable(tipc tipc.cpp)
-target_link_libraries(tipc tipLib utilsLib)
+target_link_libraries(tipc tipLib)
 
 # Testing.
-add_subdirectory(catch_tests)
+#add_subdirectory(catch_tests)
 

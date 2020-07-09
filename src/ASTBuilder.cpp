@@ -35,6 +35,9 @@ std::string ASTBuilder::opString(int op) {
   case TIPParser::EQ:
     opStr = "==";
     break;
+  case TIPParser::NE:
+    opStr = "!=";
+    break;
   default:
     std::runtime_error(
         "unknown operator :" +
@@ -46,10 +49,10 @@ std::string ASTBuilder::opString(int op) {
 /*
  * Globals for communicating information up from visited subtrees
  * These are overwritten by every visit call.
- * We use multiple variables here since downcasting of unique smart pointers
- * is not supported.
+ * We use multiple variables here to avoid downcasting of unique smart pointers.
  */
 static std::unique_ptr<Stmt> visitedStmt = nullptr;
+static std::unique_ptr<DeclNode> visitedDeclNode = nullptr;
 static std::unique_ptr<DeclStmt> visitedDeclStmt = nullptr;
 static std::unique_ptr<Expr> visitedExpr = nullptr;
 static std::unique_ptr<FieldExpr> visitedFieldExpr = nullptr;
@@ -95,26 +98,19 @@ ASTBuilder::build(TIPParser::ProgramContext *ctx) {
 }
 
 Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
-  std::string fName; // always initialized in the "count == 0" case
-  std::vector<std::string> fParams;
+  std::unique_ptr<DeclNode> fName;
+  std::vector<std::unique_ptr<DeclNode>> fParams;
   std::vector<std::unique_ptr<DeclStmt>> fDecls;
   std::vector<std::unique_ptr<Stmt>> fBody;
-  int fLine;
 
-  /*
-   * The structure of the g4 grammar causes the names of the function
-   * and the formal parameters to be collected into a single vector
-   * named IDENTIFIER.  Consequently, we special case the iteration
-   * over that vector.
-   */
   bool firstId = true;
-  for (auto id : ctx->IDENTIFIER()) {
+  for (auto decl : ctx->nameDeclaration()) {
+    visit(decl);
     if (firstId) {
       firstId = !firstId;
-      fName = id->getText();
-      fLine = id->getSymbol()->getLine();
+      fName = std::move(visitedDeclNode);
     } else {
-      fParams.push_back(std::move(id->getText()));
+      fParams.push_back(std::move(visitedDeclNode));
     }
   }
 
@@ -133,7 +129,7 @@ Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
   fBody.push_back(std::move(visitedStmt));
 
   visitedFunction = std::make_unique<Function>(
-      fName, std::move(fParams), std::move(fDecls), std::move(fBody), fLine);
+      std::move(fName), std::move(fParams), std::move(fDecls), std::move(fBody));
   return "";
 }
 
@@ -223,7 +219,7 @@ Any ASTBuilder::visitNumExpr(TIPParser::NumExprContext *ctx) {
   return "";
 }
 
-Any ASTBuilder::visitIdExpr(TIPParser::IdExprContext *ctx) {
+Any ASTBuilder::visitVarExpr(TIPParser::VarExprContext *ctx) {
   std::string name = ctx->IDENTIFIER()->getText();
   visitedExpr = std::make_unique<VariableExpr>(name);
   return "";
@@ -238,25 +234,19 @@ Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
   std::unique_ptr<Expr> fExpr = nullptr;
   std::vector<std::unique_ptr<Expr>> fArgs;
 
-  // function determined by name or computed expression
-  if (ctx->IDENTIFIER() != nullptr) {
-    std::string name = ctx->IDENTIFIER()->getText();
-    fExpr = std::make_unique<VariableExpr>(name);
-  } else if (ctx->parenExpr() != nullptr) {
-    visit(ctx->parenExpr());
-    fExpr = std::move(visitedExpr);
-  } else {
-    // one of these alternative must be defined
-    assert(false);
-  }
-
+  // First expression is the function, the rest are the args
+  bool first = true; 
   for (auto e : ctx->expr()) {
     visit(e);
-    fArgs.push_back(std::move(visitedExpr));
+    if (first) {
+      fExpr = std::move(visitedExpr);
+      first = false;
+    } else {
+      fArgs.push_back(std::move(visitedExpr));
+    }
   }
 
-  visitedExpr =
-      std::make_unique<FunAppExpr>(std::move(fExpr), std::move(fArgs));
+  visitedExpr = std::make_unique<FunAppExpr>(std::move(fExpr), std::move(fArgs));
   return "";
 }
 
@@ -267,13 +257,13 @@ Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
 }
 
 Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
-  std::string vName = ctx->IDENTIFIER()->getText();
-  visitedExpr = std::make_unique<RefExpr>(vName);
+  visit(ctx->varExpr());
+  visitedExpr = std::make_unique<RefExpr>(std::move(visitedExpr));
   return "";
 }
 
 Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
-  visit(ctx->atom());
+  visit(ctx->expr());
   visitedExpr = std::make_unique<DeRefExpr>(std::move(visitedExpr));
   return "";
 }
@@ -297,66 +287,40 @@ Any ASTBuilder::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
 Any ASTBuilder::visitFieldExpr(TIPParser::FieldExprContext *ctx) {
   std::string fName = ctx->IDENTIFIER()->getText();
   visit(ctx->expr());
-  visitedFieldExpr =
-      std::make_unique<FieldExpr>(fName, std::move(visitedExpr));
+  visitedFieldExpr = std::make_unique<FieldExpr>(fName, std::move(visitedExpr));
   return "";
 }
 
 Any ASTBuilder::visitAccessExpr(TIPParser::AccessExprContext *ctx) {
-  std::unique_ptr<Expr> rExpr = nullptr;
-  std::string fName; // will be initialized below based on record expr
+  std::string fName = ctx->IDENTIFIER()->getText();
 
-  // If the base of the access is an identifier, then there will be two
-  // elements in the IDENTIFIER vector in this context.
-  if (ctx->IDENTIFIER().size() == 2) {
-    std::string rName = ctx->IDENTIFIER(0)->getText();
-    rExpr = std::make_unique<VariableExpr>(rName);
-  } else if (ctx->deRefExpr() != nullptr) {
-    visit(ctx->deRefExpr());
-    rExpr = std::move(visitedExpr);
-  } else if (ctx->parenExpr() != nullptr) {
-    visit(ctx->parenExpr());
-    rExpr = std::move(visitedExpr);
-  } else {
-    // one of these alternative must be defined
-    assert(false);
-  }
-
-  fName = ctx->IDENTIFIER(ctx->IDENTIFIER().size() - 1)->getText();
+  visit(ctx->expr());
+  std::unique_ptr<Expr> rExpr = std::move(visitedExpr);
 
   visitedExpr = std::make_unique<AccessExpr>(std::move(rExpr), fName);
   return "";
 }
 
-Any ASTBuilder::visitAssignableExpr(TIPParser::AssignableExprContext *ctx) {
-  if (ctx->IDENTIFIER() != nullptr) {
-    std::string aName = ctx->IDENTIFIER()->getText();
-    visitedExpr = std::make_unique<VariableExpr>(aName);
-  } else if (ctx->deRefExpr() != nullptr) {
-    visit(ctx->deRefExpr());
-    // leave visitedExpr from deRefExpr unchanged
-  } else {
-    // one of these alternative must be defined
-    assert(false);
+Any ASTBuilder::visitDeclaration(TIPParser::DeclarationContext *ctx) {
+  std::vector<std::unique_ptr<DeclNode>> dVars;
+  for (auto decl : ctx->nameDeclaration()) {
+    visit(decl);
+    dVars.push_back(std::move(visitedDeclNode));
   }
+  visitedDeclStmt = std::make_unique<DeclStmt>(std::move(dVars));
   return "";
 }
 
-Any ASTBuilder::visitDeclaration(TIPParser::DeclarationContext *ctx) {
-  std::vector<std::string> dVars;
-  int dLine = -1;
-  for (auto id : ctx->IDENTIFIER()) {
-    dLine = id->getSymbol()->getLine();
-    dVars.push_back(std::move(id->getText()));
-  }
-  visitedDeclStmt = std::make_unique<DeclStmt>(std::move(dVars), dLine);
+Any ASTBuilder::visitNameDeclaration(TIPParser::NameDeclarationContext *ctx) {
+  std::string name = ctx->IDENTIFIER()->getText();
+  visitedDeclNode = std::make_unique<DeclNode>(name);
   return "";
 }
 
 Any ASTBuilder::visitAssignmentStmt(TIPParser::AssignmentStmtContext *ctx) {
-  visit(ctx->assignableExpr());
+  visit(ctx->expr(0));
   std::unique_ptr<Expr> lhs = std::move(visitedExpr);
-  visit(ctx->expr());
+  visit(ctx->expr(1));
   std::unique_ptr<Expr> rhs = std::move(visitedExpr);
   visitedStmt = std::make_unique<AssignStmt>(std::move(lhs), std::move(rhs));
   return "";
