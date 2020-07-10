@@ -26,7 +26,7 @@ public:
   }
 };
 
-bool ASTHelper::check_parse(std::istream &stream) {
+bool ASTHelper::is_parseable(std::istream &stream) {
   antlr4::ANTLRInputStream input(stream);
   TIPLexer lexer(&input);
   antlr4::CommonTokenStream tokens(&lexer);
@@ -40,6 +40,6 @@ bool ASTHelper::check_parse(std::istream &stream) {
   parser.addErrorListener(&errorListener);
 
   TIPParser::ProgramContext *tree = parser.program();
-  return *parseError;
+  return !*parseError;
 }
 
