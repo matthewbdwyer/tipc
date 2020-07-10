@@ -1,5 +1,9 @@
-file(GLOB HEADER_FILES *.h)
-file(GLOB SOURCE_FILES *.cpp)
-
-add_library(testHelpersLib ${SOURCE_FILES} ${HEADER_FILES})
-target_link_libraries(testHelpersLib tipLib)
+add_library(test_helpers)
+target_sources(test_helpers
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/ASTHelper.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ASTHelper.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/GeneralHelper.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/GeneralHelper.h
+)
+target_link_libraries(test_helpers tipLib)

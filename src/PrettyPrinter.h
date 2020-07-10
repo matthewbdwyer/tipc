@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 
+/**
+ * GNU Style PrettyPrinter.
+ */
 class PrettyPrinter: public ASTVisitor {
 public:
   PrettyPrinter() : os(std::cout), indentChar(' '), indentSize(2) {}

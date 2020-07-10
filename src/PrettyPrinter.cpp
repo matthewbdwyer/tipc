@@ -66,7 +66,7 @@ void PrettyPrinter::endVisit(AST::Function * element) {
   std::string functionString = visitResults.back();
   visitResults.pop_back();
 
-  functionString += "(" + formalsString + ") {\n" + bodyString + "}\n";
+  functionString += "(" + formalsString + ") \n{\n" + bodyString + "}\n";
 
   indentLevel--;
 
@@ -269,7 +269,7 @@ void PrettyPrinter::endVisit(AST::IfStmt * element) {
   std::string ifString = indent() + "if (" + condString + ") \n" + thenString;
 
   if (element->getElse() != nullptr) {
-    ifString += "\n" + indent() + "else\n" + elseString; 
+    ifString += "\n" + indent() + "else\n" + elseString;
   }
 
   visitResults.push_back(ifString);
