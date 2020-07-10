@@ -2,6 +2,7 @@
 #include <TIPLexer.h>
 #include <TIPParser.h>
 #include "antlr4-runtime.h"
+#include "ConsoleErrorListener.h"
 
 std::unique_ptr<AST::Program> ASTHelper::build_ast(std::istream &stream) {
   antlr4::ANTLRInputStream input(stream);
@@ -26,7 +27,7 @@ public:
   }
 };
 
-bool ASTHelper::is_parseable(std::istream &stream) {
+bool ASTHelper::is_parsable(std::istream &stream) {
   antlr4::ANTLRInputStream input(stream);
   TIPLexer lexer(&input);
   antlr4::CommonTokenStream tokens(&lexer);
@@ -35,9 +36,10 @@ bool ASTHelper::is_parseable(std::istream &stream) {
   std::shared_ptr<bool> parseError = std::make_shared<bool>(false);
   ErrorListener errorListener(parseError);
 
-  // Add error listeners
+  // Set error listeners
   lexer.addErrorListener(&errorListener);
   parser.addErrorListener(&errorListener);
+  parser.removeErrorListener(&antlr4::ConsoleErrorListener::INSTANCE);
 
   TIPParser::ProgramContext *tree = parser.program();
   return !*parseError;

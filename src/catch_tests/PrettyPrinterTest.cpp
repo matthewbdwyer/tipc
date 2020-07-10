@@ -19,8 +19,9 @@ TEST_CASE("PrettyPrinter: Test default constructor", "[PrettyPrinter]") {
       }
     )";
 
+    std::stringstream devnull;
     auto ast = ASTHelper::build_ast(stream);
-    PrettyPrinter::print(ast.get(), std::cout, ' ', 4);
+    PrettyPrinter::print(ast.get(), devnull, ' ', 4);
     REQUIRE(true);
 }
 

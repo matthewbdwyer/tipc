@@ -90,7 +90,6 @@ GT  : '>' ;
 EQ  : '==' ;
 NE  : '!=' ;
 
-// "Number" (in Scala also "Digits") is "I" (in SPA)
 NUMBER : [0-9]+ ;
 
 // Placing the keyword definitions first causes ANTLR4 to prioritize
@@ -106,7 +105,6 @@ KNULL   : 'null' ;
 KOUTPUT : 'output' ;
 KERROR  : 'error' ;
 
-// "Identifier" (in Scala) is "X" (in SPA)
 IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
 
 // ANTLR4 has a nice mechanism for specifying the characters that should
