@@ -33,6 +33,19 @@ static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
                                        cl::Required, cl::cat(TIPcat));
 
+// Handle parse errors
+class ErrorListener : public BaseErrorListener {
+  std::shared_ptr<bool> error;
+public:
+  ErrorListener(std::shared_ptr<bool> e) : error(e) {}
+
+  void syntaxError(Recognizer *recognizer, Token *offendingSymbol,
+                   size_t line, size_t charPositionInLine,
+                   const std::string &msg, std::exception_ptr e) {
+    *error = true;
+  }
+};
+
 int main(int argc, const char *argv[]) {
   cl::HideUnrelatedOptions(TIPcat); // suppress non TIP options
   cl::ParseCommandLineOptions(argc, argv, "tipc - a TIP to llvm compiler\n");
@@ -45,7 +58,19 @@ int main(int argc, const char *argv[]) {
   CommonTokenStream tokens(&lexer);
   TIPParser parser(&tokens);
 
+  std::shared_ptr<bool> parseError = std::make_shared<bool>(false);
+  ErrorListener errorListener(parseError);
+
+  // Add error listeners
+  lexer.addErrorListener(&errorListener);
+  parser.addErrorListener(&errorListener);
+
   TIPParser::ProgramContext *tree = parser.program();
+
+  if (*parseError) {
+    cout << "tipc parse error\n";
+    exit (EXIT_FAILURE);
+  }
 
   ASTBuilder ab(&parser);
   auto ast = ab.build(tree);

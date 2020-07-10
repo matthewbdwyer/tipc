@@ -20,8 +20,7 @@ TEST_CASE("PrettyPrinter: Test default constructor", "[PrettyPrinter]") {
     )";
 
     auto ast = ASTHelper::build_ast(stream);
-    PrettyPrinter prettyPrinter;
-    ast->accept(&prettyPrinter);
+    PrettyPrinter::print(ast.get(), std::cout, ' ', 4);
     REQUIRE(true);
 }
 
@@ -40,7 +39,7 @@ TEST_CASE("PrettyPrinter: Test indentation", "[PrettyPrinter]") {
   auto ast = ASTHelper::build_ast(stream);
 
   std::stringstream outputStream;
-  PrettyPrinter prettyPrinter(outputStream, '#', 2, true);
+  PrettyPrinter prettyPrinter(outputStream, '#', 2);
   ast->accept(&prettyPrinter);
   std::vector<std::string> tokens = GeneralHelper::tokenize(outputStream.str(), '\n');
 
