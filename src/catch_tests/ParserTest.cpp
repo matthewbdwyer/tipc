@@ -10,7 +10,7 @@ TEST_CASE("Parser: control structures", "[Parser]") {
       short() {
         var x, y, z;
         if (x>0) {
-          while (y<z) {
+          while (y>z) {
             y = y + 1;
           }
         } else {
