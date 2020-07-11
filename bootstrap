@@ -22,7 +22,8 @@ bootstrap_ubuntu_dependencies() {
     pkg-config \
     uuid-dev \
     antlr4 \
-    zlib1g-dev
+    zlib1g-dev \
+    lcov
 
   sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
@@ -84,12 +85,8 @@ bootstrap_mac_dependencies() {
     cmake \
     pkg-config \
     llvm@10 \
-    antlr@4
-
-  #echo export PATH=${llvm_prefix}/bin:\$PATH  >> ~/.bashrc
-  #echo export CC=${llvm_prefix}/bin/clang >> ~/.bashrc
-  #echo export CXX=${llvm_prefix}/bin/clang++ >> ~/.bashrc
-  #echo export JAVA_HOME=$(/usr/libexec/java_home -v 1.8) >> ~/.bashrc
+    antlr@4 \
+    lcov
 }
 
 
