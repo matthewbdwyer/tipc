@@ -1,7 +1,7 @@
 #!/bin/bash
 
-TIPC=../build/tipc
-RTLIB=../rtlib
+TIPC=../../build/src/tipc
+RTLIB=../../rtlib
 
 numtests=0
 numfailures=0

@@ -38,6 +38,7 @@ bool ASTHelper::is_parsable(std::istream &stream) {
 
   // Set error listeners
   lexer.addErrorListener(&errorListener);
+  lexer.removeErrorListener(&antlr4::ConsoleErrorListener::INSTANCE);
   parser.addErrorListener(&errorListener);
   parser.removeErrorListener(&antlr4::ConsoleErrorListener::INSTANCE);
 
