@@ -23,12 +23,12 @@ add_library(tipLib STATIC
             PrettyPrinter.h
             PrettyPrinter.cpp
             ${ANTLR_TIPGrammar_CXX_OUTPUTS})
-target_link_libraries(tipLib antlr4_static ${llvm_libs})
+target_link_libraries(tipLib antlr4_static ${llvm_libs} coverage_config)
 
 # Header files in this directory used in subdirectories
 include_directories(.)
 
 ## compiler binary target
 add_executable(tipc tipc.cpp)
-target_link_libraries(tipc tipLib)
+target_link_libraries(tipc tipLib coverage_config)
 
