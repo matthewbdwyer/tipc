@@ -78,8 +78,8 @@ int main(int argc, const char *argv[]) {
   if (ppretty) {
     PrettyPrinter::print(ast.get(), std::cout, ' ', 2);
     if (psym) { 
-       auto symbols = SymbolTable::build(ast.get()); 
-       symbols->print();
+       auto symbols = SymbolTable::build(ast.get(), std::cerr); 
+       symbols->print(std::cout);
     }
   } else {
     auto theModule = ast->codegen(sourceFile);
