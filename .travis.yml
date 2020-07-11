@@ -6,12 +6,14 @@ jobs:
       dist: bionic
     - os: osx
 
-before_install:
+install:
   - bash bootstrap
 
 script:
   - . ~/.bashrc
   - mkdir build
   - cd build
-  - cmake ../src
+  - cmake ../
   - make
+  - echo running unit tests...
+  - ./test/unit/unit_tests
