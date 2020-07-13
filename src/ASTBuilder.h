@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <optional>
 
 #include "antlr4-runtime.h"
 #include "TIPParser.h"
@@ -17,7 +18,14 @@ private:
 
 public:
   ASTBuilder(TIPParser *parser);
-  std::unique_ptr<AST::Program> build(TIPParser::ProgramContext *ctx);
+
+  /*
+   * If AST is built without error then a unique pointer to it is 
+   * found in the value() of the returned result, oherwise 
+   * std::nullopt is returned.
+   */
+  std::optional<std::unique_ptr<AST::Program>> build(TIPParser::ProgramContext *ctx);
+
   Any visitFunction(TIPParser::FunctionContext *ctx) override;
   Any visitNegNumber(TIPParser::NegNumberContext *ctx) override;
   Any visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) override;

@@ -3,16 +3,9 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Value.h"
-#include <cassert>
-#include <cctype>
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
-#include <map>
 #include <memory>
 #include <string>
 #include <vector>
-#include <ostream>
 
 // Forward declare the visitor to resolve circular dependency
 class ASTVisitor;

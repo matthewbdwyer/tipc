@@ -2,6 +2,8 @@
 
 #include "ASTVisitor.h"
 
+#include <optional>
+
 /*
  * The symbol table maps names of identifiers to declaration nodes.
  * There is a global map of for function names and a local map for
@@ -16,8 +18,15 @@ public:
       : functionNames(f), localNames(l) {}
   AST::DeclNode* getFunction(std::string s);
   AST::DeclNode* getLocal(std::string s, AST::DeclNode* f);
-  void print(std::ostream &s);
-  static std::unique_ptr<SymbolTable> build(AST::Program* p, std::ostream &s);
+
+   /*
+   * If SymbolTable is built without error then a unique pointer to it is 
+   * found in the value() of the returned result, oherwise 
+   * std::nullopt is returned.
+   */
+  static std::optional<std::unique_ptr<SymbolTable>> build(AST::Program* p, std::ostream &s);
+
+  static void print(SymbolTable* st, std::ostream &s);
 };
 
 /*
@@ -33,6 +42,7 @@ public:
 class FunctionNameBuilder : public ASTVisitor {
   // stream used to emit error messages
   std::ostream &s;
+  bool buildError = false;
 public:
   FunctionNameBuilder(std::ostream &s) : s(s) {}
   // this map is public so that the static method can access it
@@ -52,6 +62,7 @@ class LocalNameBuilder : public ASTVisitor {
   std::map<std::string, AST::DeclNode*> curMap;
   std::map<std::string, AST::DeclNode*> fMap;
   bool first = true;
+  bool buildError = false;
   // stream used to emit error messages
   std::ostream &s;
 public:

@@ -68,48 +68,62 @@ int main(int argc, const char *argv[]) {
   TIPParser::ProgramContext *tree = parser.program();
 
   if (*parseError) {
-    cout << "tipc parse error\n";
+    cerr << "tipc parse error\n";
     exit (EXIT_FAILURE);
   }
 
   ASTBuilder ab(&parser);
-  auto ast = ab.build(tree);
+  // Build AST
+  if (auto maybeAST = ab.build(tree); maybeAST) {
+    auto ast = std::move(maybeAST.value());
 
-  if (ppretty) {
-    PrettyPrinter::print(ast.get(), std::cout, ' ', 2);
-    if (psym) { 
-       auto symbols = SymbolTable::build(ast.get(), std::cerr); 
-       symbols->print(std::cout);
-    }
-  } else {
-    auto theModule = ast->codegen(sourceFile);
+    // Build Symbol Table
+    if (auto maybeSymTable = SymbolTable::build(ast.get(), std::cerr); maybeSymTable) {
+      auto symbols = std::move(maybeSymTable.value());
 
-    if (!disopt) {
-      // Create a pass manager to simplify generated module
-      auto TheFPM =
-          std::make_unique<legacy::FunctionPassManager>(theModule.get());
+      if (ppretty) {
+        PrettyPrinter::print(ast.get(), std::cout, ' ', 2);
+        if (psym) { 
+          SymbolTable::print(symbols.get(), std::cout);
+        }
+      } else {
+        auto theModule = ast->codegen(sourceFile);
 
-      // Promote allocas to registers.
-      TheFPM->add(createPromoteMemoryToRegisterPass());
-      // Do simple "peephole" optimizations
-      TheFPM->add(createInstructionCombiningPass());
-      // Reassociate expressions.
-      TheFPM->add(createReassociatePass());
-      // Eliminate Common SubExpressions.
-      TheFPM->add(createGVNPass());
-      // Simplify the control flow graph (deleting unreachable blocks, etc).
-      TheFPM->add(createCFGSimplificationPass());
-      TheFPM->doInitialization();
+        if (!disopt) {
+          // Create a pass manager to simplify generated module
+          auto TheFPM =
+              std::make_unique<legacy::FunctionPassManager>(theModule.get());
 
-      // run simplification pass on each function
-      for (auto &fun : theModule->getFunctionList()) {
-        TheFPM->run(fun);
+          // Promote allocas to registers.
+          TheFPM->add(createPromoteMemoryToRegisterPass());
+          // Do simple "peephole" optimizations
+          TheFPM->add(createInstructionCombiningPass());
+          // Reassociate expressions.
+          TheFPM->add(createReassociatePass());
+          // Eliminate Common SubExpressions.
+          TheFPM->add(createGVNPass());
+          // Simplify the control flow graph (deleting unreachable blocks, etc).
+          TheFPM->add(createCFGSimplificationPass());
+          TheFPM->doInitialization();
+  
+          // run simplification pass on each function
+          for (auto &fun : theModule->getFunctionList()) {
+            TheFPM->run(fun);
+          }
+        }
+
+        std::error_code ec;
+        ToolOutputFile result(sourceFile + ".bc", ec, sys::fs::F_None);
+        WriteBitcodeToFile(*theModule, result.os());
+        result.keep();
       }
+    } else {
+      cerr << "tipc Symbol Table build error\n";
+      exit (EXIT_FAILURE);
     }
 
-    std::error_code ec;
-    ToolOutputFile result(sourceFile + ".bc", ec, sys::fs::F_None);
-    WriteBitcodeToFile(*theModule, result.os());
-    result.keep();
+  } else {
+    cerr << "tipc AST build error\n";
+    exit (EXIT_FAILURE);
   }
 }

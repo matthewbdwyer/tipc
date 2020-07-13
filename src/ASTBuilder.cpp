@@ -58,6 +58,8 @@ static std::unique_ptr<Expr> visitedExpr = nullptr;
 static std::unique_ptr<FieldExpr> visitedFieldExpr = nullptr;
 static std::unique_ptr<Function> visitedFunction = nullptr;
 
+static bool buildError = false;
+
 /**********************************************************************
  * These methods override selected methods in the TIPBaseVisitor.
  *
@@ -87,14 +89,17 @@ static std::unique_ptr<Function> visitedFunction = nullptr;
  * You will access these from the method overrides in your visitor.
  */
 
-std::unique_ptr<AST::Program>
+std::optional<std::unique_ptr<AST::Program>>
 ASTBuilder::build(TIPParser::ProgramContext *ctx) {
+  buildError = false;
   std::vector<std::unique_ptr<Function>> pFunctions;
   for (auto fn : ctx->function()) {
     visit(fn);
     pFunctions.push_back(std::move(visitedFunction));
   }
-  return std::make_unique<Program>(std::move(pFunctions));
+  return buildError ? std::nullopt :
+         std::make_optional<std::unique_ptr<Program>>(
+             std::make_unique<Program>(std::move(pFunctions)));
 }
 
 Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {

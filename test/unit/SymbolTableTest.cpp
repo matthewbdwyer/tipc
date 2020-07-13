@@ -3,6 +3,7 @@
 #include "SymbolTable.h"
 
 #include <iostream>
+#include <optional>
 
 TEST_CASE("Symbol Table: locals", "[Symbol]") {
     std::stringstream stream;
@@ -13,9 +14,9 @@ TEST_CASE("Symbol Table: locals", "[Symbol]") {
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
     // There should be no error messages emitted
-    REQUIRE(outputStream.tellp() == 0);
+    REQUIRE(symbols != std::nullopt);
 
-    symbols->print(outputStream);
+    SymbolTable::print(symbols.value().get(), outputStream);
     std::string output = outputStream.str();
 
     std::size_t found = output.find("Functions : {short}");
@@ -35,9 +36,9 @@ TEST_CASE("Symbol Table: functions", "[Symbol]") {
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
     // There should be no error messages emitted
-    REQUIRE(outputStream.tellp() == 0);
+    REQUIRE(symbols != std::nullopt);
 
-    symbols->print(outputStream);
+    SymbolTable::print(symbols.value().get(), outputStream);
     std::string output = outputStream.str();
 
     std::size_t found = output.find("Functions : {bar, baz, foo}");
@@ -56,9 +57,9 @@ TEST_CASE("Symbol Table: params", "[Symbol]") {
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
     // There should be no error messages emitted
-    REQUIRE(outputStream.tellp() == 0);
+    REQUIRE(symbols != std::nullopt);
 
-    symbols->print(outputStream);
+    SymbolTable::print(symbols.value().get(), outputStream);
     std::string output = outputStream.str();
 
     std::size_t found = output.find("Functions : {bar, baz, foo}");
@@ -83,9 +84,9 @@ TEST_CASE("Symbol Table: locals params ", "[Symbol]") {
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
     // There should be no error messages emitted
-    REQUIRE(outputStream.tellp() == 0);
+    REQUIRE(symbols != std::nullopt);
 
-    symbols->print(outputStream);
+    SymbolTable::print(symbols.value().get(), outputStream);
     std::string output = outputStream.str();
 
     std::size_t found = output.find("Functions : {short}");
@@ -105,6 +106,8 @@ TEST_CASE("Symbol Table: locals param clash ", "[Symbol]") {
     auto ast = ASTHelper::build_ast(stream);
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
+    REQUIRE(symbols == std::nullopt);
+
     std::string output = outputStream.str();
 
     // There should be an error messages emitted
@@ -120,6 +123,8 @@ TEST_CASE("Symbol Table: locals clash ", "[Symbol]") {
     auto ast = ASTHelper::build_ast(stream);
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
+    REQUIRE(symbols == std::nullopt);
+
     std::string output = outputStream.str();
 
     // There should be an error messages emitted
@@ -135,6 +140,8 @@ TEST_CASE("Symbol Table: params clash ", "[Symbol]") {
     auto ast = ASTHelper::build_ast(stream);
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
+    REQUIRE(symbols == std::nullopt);
+
     std::string output = outputStream.str();
 
     // There should be an error messages emitted
@@ -150,6 +157,8 @@ TEST_CASE("Symbol Table: functions clash ", "[Symbol]") {
     auto ast = ASTHelper::build_ast(stream);
 
     auto symbols = SymbolTable::build(ast.get(), outputStream);
+    REQUIRE(symbols == std::nullopt);
+
     std::string output = outputStream.str();
 
     // There should be an error messages emitted
