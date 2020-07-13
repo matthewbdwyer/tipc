@@ -14,8 +14,6 @@ fib(n){
     return f2;
 }
 
-main(){
-    var n;
-    n=input;
+main(n){
     return fib(n);
 }

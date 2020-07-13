@@ -3,9 +3,12 @@
 TIPC=../../build/src/tipc
 RTLIB=../../rtlib
 
+set -x
+
 numtests=0
 numfailures=0
 
+# Self contained test cases
 for i in selftests/*.tip
 do
   base="$(basename $i .tip)"
@@ -46,6 +49,35 @@ do
     rm ${base}
   fi
   rm $i.bc
+done
+
+# IO related test cases
+for i in iotests/fib-*.expected
+do
+  expected="$(basename $i .tip)"
+  executable="$(echo $expected | cut -f1 -d-)"
+  input="$(echo $expected | cut -f2 -d- | cut -f1 -d.)"
+  ((numtests++))
+
+  ${TIPC} -d iotests/$executable.tip
+  clang-10 -w -static iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
+
+  ./${base} $input >iotests/$executable.output
+
+  diff iotests/$executable.output iotests/$executable.expected >iotests/$expected.diff
+
+  if [[ -s /tmp/$base.diff ]]
+  then
+    echo -n "Test differences for : " 
+    echo $i
+    cat $expected.diff
+    ((numfailures++))
+  fi 
+
+  rm iotests/$executable.tip.bc
+  rm iotests/$executable.output
+  rm iotests/$expected.diff
+  rm $executable
 done
 
 

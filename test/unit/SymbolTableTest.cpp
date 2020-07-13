@@ -7,7 +7,7 @@
 
 TEST_CASE("Symbol Table: locals", "[Symbol]") {
     std::stringstream stream;
-    stream << R"(short() { var x, y, z; return z; })";
+    stream << R"(short() { var x, y, z; output x+y; return z; })";
 
     std::stringstream outputStream;
     auto ast = ASTHelper::build_ast(stream);
