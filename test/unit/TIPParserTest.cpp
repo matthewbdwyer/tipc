@@ -1,3 +1,4 @@
+#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "ParserHelper.h"
 
@@ -237,5 +238,15 @@ TEST_CASE("TIP Parser: missing comparison", "[TIP Parser]") {
 
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));
 }
+
+TEST_CASE("TIP Parser: keywords as ids", "[TIP Parser]") {
+    std::stringstream stream;
+    stream << R"(
+      if() { var x; if (x <= 0) x = x + 1; return x; }
+    )";
+
+    REQUIRE_FALSE(ParserHelper::is_parsable(stream));
+}
+
 
 

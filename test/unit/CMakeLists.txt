@@ -8,6 +8,7 @@ add_subdirectory(helpers)
 
 add_executable(unit_tests)
 target_sources(unit_tests PUBLIC
+        # First test defines CATCH_CONFIG_MAIN
         ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTableTest.cpp

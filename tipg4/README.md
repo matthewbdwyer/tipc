@@ -1,6 +1,9 @@
 # TIP grammar
 
+Once you have built the tipc project the antlr4 library will be installed in:
+`../build/include/antlr-4.8-complete.jar`
+
 To build and run it using ANTLR4 execute:
- 1. antlr4 -no-listener -no-visitor TIP.g4
- 1. javac *.java
- 1. grun TIP program <tip program>
+ 1. java -jar ../build/include/antlr-4.8-complete.jar  TIP.g4 
+ 1. javac -cp .:../build/include/antlr-4.8-complete.jar *.java
+ 1. java -cp .:../build/include/antlr-4.8-complete.jar org.antlr.v4.gui.TestRig TIP program < <a TIP program>

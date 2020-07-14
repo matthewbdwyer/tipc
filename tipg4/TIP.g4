@@ -3,7 +3,7 @@ grammar TIP;
 
 ////////////////////// TIP Programs ////////////////////////// 
 
-program : (function)*
+program : (function)+
 ;
 
 function : nameDeclaration 
