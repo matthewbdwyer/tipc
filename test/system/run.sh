@@ -3,10 +3,14 @@
 TIPC=../../build/src/tipc
 RTLIB=../../rtlib
 
-set -x
-
 numtests=0
 numfailures=0
+
+curdir="$(basename `pwd`)"
+if [ "${curdir}" != "system" ]; then
+  echo "Test runner must be executed in .../tipc/test/system"
+  exit 1
+fi
 
 # Self contained test cases
 for i in selftests/*.tip
@@ -62,9 +66,9 @@ do
   ${TIPC} -d iotests/$executable.tip
   clang-10 -w -static iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
 
-  ./${base} $input >iotests/$executable.output
+  ./${executable} $input >iotests/$executable.output
 
-  diff iotests/$executable.output iotests/$executable.expected >iotests/$expected.diff
+  diff iotests/$executable.output $i >iotests/$expected.diff
 
   if [[ -s /tmp/$base.diff ]]
   then
