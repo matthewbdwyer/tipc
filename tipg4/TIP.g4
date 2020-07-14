@@ -111,7 +111,7 @@ IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
 // skipped during parsing.  You write "-> skip" after the pattern and
 // let ANTLR4s pattern matching do the rest.
 
-// This handles the 
+// Ignore whitespace
 WS : [ \t\n\r]+ -> skip ;
 
 // This does not handle nested block comments.
