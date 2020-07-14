@@ -8,7 +8,7 @@ add_subdirectory(helpers)
 
 add_executable(unit_tests)
 target_sources(unit_tests PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/ParserTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTableTest.cpp
 )
