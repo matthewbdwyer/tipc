@@ -19,9 +19,10 @@ nameDeclaration : IDENTIFIER ;
 
 ////////////////////// TIP Expressions ////////////////////////// 
 
-// Expressions in TIP use a stratified grammar to capture precedence.
-// ANTLR4 allows for operator precedence parsing where precendence 
-// comes from ordering of rules.
+// Expressions in TIP are ordered to capture precedence.
+// We adopt the C convention that orders operators as:
+//   postfix, unary, multiplicative, additive, relational,
+//   equality, 
 //
 // NB: # creates rule label that can be accessed in visitor
 //
@@ -30,21 +31,21 @@ nameDeclaration : IDENTIFIER ;
 // to define the syntax, e.g., #recordExpr.
 //
 expr : expr '(' (expr (',' expr)*)? ')' 	#funAppExpr
-     | '*' expr					#deRefExpr
      | expr '.' IDENTIFIER			#accessExpr
+     | '*' expr					#deRefExpr
      | SUB NUMBER				#negNumber
+     | '&' varExpr				#refExpr
      | expr op=(MUL | DIV) expr 		#multiplicativeExpr
      | expr op=(ADD | SUB) expr 		#additiveExpr
      | expr op=GT expr 				#relationalExpr
      | expr op=(EQ | NE) expr 			#equalityExpr
-     | '(' expr ')'				#parenExpr
      | varExpr					#varRule
      | NUMBER					#numExpr
      | KINPUT					#inputExpr
      | KALLOC expr				#allocExpr
-     | '&' varExpr				#refExpr
      | KNULL					#nullExpr
      | recordExpr				#recordRule
+     | '(' expr ')'				#parenExpr
 ;
 
 varExpr : IDENTIFIER ;				
