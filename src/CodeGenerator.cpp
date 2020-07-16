@@ -302,6 +302,14 @@ std::unique_ptr<llvm::Module> AST::Program::codegen(std::string programName) {
         ConstantArray::get(inputArrayType, zeros), "_tip_input_array");
   }
 
+  // Setup the malloc function
+  std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
+  auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), oneInt, false);
+  mallocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
+                                     "malloc", CurrentModule.get());
+  mallocFun->addFnAttr(llvm::Attribute::NoUnwind);
+  mallocFun->addAttribute(0, llvm::Attribute::NoAlias);
+
   // Code is generated into the module by the other routines
   for (auto const &fn : getFunctions()) {
     fn->codegen();
@@ -522,15 +530,6 @@ llvm::Value* AST::AllocExpr::codegen() {
     return nullptr;
   }
 
-  if (mallocFun == nullptr) {
-    std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
-    auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), oneInt, false);
-    mallocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
-                                       "malloc", CurrentModule.get());
-    mallocFun->addFnAttr(llvm::Attribute::NoUnwind);
-    mallocFun->addAttribute(0, llvm::Attribute::NoAlias);
-  }
-
   // TBD RECORDS - update this
   // Since we do not support records all allocs are for 8 bytes, i.e., int64_t
   std::vector<Value *> oneArg(
@@ -606,25 +605,30 @@ llvm::Value* AST::DeRefExpr::codegen() {
 llvm::Value* AST::RecordExpr::codegen() {
   //First, we declare type
   ArrayType* members_array_ref = ArrayType::get((IntegerType::getInt64Ty(TheContext)),3);
-  auto *theStruct = StructType::create(TheContext, members_array_ref);
+  auto *theStruct = StructType::create(TheContext, members_array_ref, "threeI64s");
+  auto *ptrToTheStruct = PointerType::get(theStruct, 0);
 
   //%eg = alloca %struct.will*, align 8
-  auto allocaStruct = Builder.CreateAlloca(theStruct);
+  auto *allocaStruct = Builder.CreateAlloca(theStruct);
 
   //Next allocate space
-  Constant* AllocSize = ConstantExpr::getSizeOf(theStruct);
-  Type* ITy = Type::getInt64Ty(TheContext);
-  AllocSize = ConstantExpr::getTruncOrBitCast(AllocSize, ITy);
+  auto *AllocSize = ConstantExpr::getSizeOf(theStruct);
+
   //%call = call noalias i8* @malloc(i64, 12) #2
-  Instruction* malloc = CallInst::CreateMalloc(Builder.GetInsertBlock(), ITy, theStruct, AllocSize, nullptr, nullptr, "");
+
+  // Use Builder to create the malloc call using pre-defined mallocFun
+  std::vector<Value *> sizeArg(1, AllocSize);
+  auto *malloc = Builder.CreateCall(mallocFun, sizeArg, "mallocedPtr");
 
   //Bitcast the malloc call to theStruct Type
-  //%0 = bitcast i8* %call to %struct.will
-  //auto *ptrCast = Builder.CreatePointerCast(malloc, theStruct, "structMalloc");
-  auto *bitCast = Builder.CreateBitCast(malloc, theStruct);
+  auto *structPtr = Builder.CreatePointerCast(malloc, ptrToTheStruct, "structMalloc");
+
+  return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
+
+/* STOPPED HERE
 
   //store %struct.will* %0, %struct will** %eg, align 8
-  Builder.CreateStore(bitCast, allocaStruct);
+  Builder.CreateStore(structPtr, allocaStruct);
 
   int fieldCounter = 0;
   for (auto const &field : getFields()){
@@ -637,7 +641,8 @@ llvm::Value* AST::RecordExpr::codegen() {
     auto fieldCode = field->codegen();
 
     //%num = load %struct.will*, struct will** %eg, align 8
-    auto loadInst = Builder.CreateLoad(theStruct,allocaStruct);
+    //auto loadInst = Builder.CreateLoad(theStruct,allocaStruct);
+
     //Create the values vector
     std::vector<Value *> indices;
     //First index which is 0
@@ -646,7 +651,7 @@ llvm::Value* AST::RecordExpr::codegen() {
     indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), fieldCounter));
     //Create GEP: getelementptr inbounds %struct.type, struct.type *value, 0, field index
     //%ltr = getelementptr inbounds %struct.will, %struct.will* %1, i32 0, i32 num
-    auto *gep = Builder.CreateInBoundsGEP(theStruct,loadInst,indices);
+    auto *gep = Builder.CreateInBoundsGEP(bitCast,indices,"fieldptr");
     //Store field value in gep location
     //%store i32 val, i32* %ltr, align 4
     Builder.CreateStore(fieldCode, gep);
@@ -654,9 +659,9 @@ llvm::Value* AST::RecordExpr::codegen() {
   if(fieldCounter<3){
     return LogError("Record expressions must be of the following type: {int, int, int}");
   }
+*/
   //Return pointer to value
-  return Builder.CreatePtrToInt(bitCast, Type::getInt64Ty(TheContext),
-                                "recordPtrVal");
+//  return Builder.CreatePtrToInt(bitCast, Type::getInt64Ty(TheContext), "recordPtrVal");
 }
 
 llvm::Value* AST::FieldExpr::codegen() {
