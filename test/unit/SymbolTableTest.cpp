@@ -98,6 +98,23 @@ TEST_CASE("Symbol Table: locals params ", "[Symbol]") {
 
 /******************** symbol errors *******************/
 
+TEST_CASE("Symbol Table: local undeclared", "[Symbol]") {
+    std::stringstream stream;
+    stream << R"(short(a, b, c) { var x; return z; })";
+
+    std::stringstream outputStream;
+    auto ast = ASTHelper::build_ast(stream);
+
+    auto symbols = SymbolTable::build(ast.get(), outputStream);
+    REQUIRE(symbols == std::nullopt);
+
+    std::string output = outputStream.str();
+
+    // There should be an error messages emitted
+    std::size_t found = output.find("variable z is undeclared");
+    REQUIRE(found!=std::string::npos);
+}
+
 TEST_CASE("Symbol Table: locals param clash ", "[Symbol]") {
     std::stringstream stream;
     stream << R"(short(a, b, c) { var x, b, z; return z; })";
