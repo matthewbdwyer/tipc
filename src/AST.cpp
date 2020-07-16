@@ -49,6 +49,15 @@ std::vector<Function*> Program::getFunctions() {
   return rawRefs(FUNCTIONS);
 }
 
+Function * Program::findFunctionByName(std::string name) {
+    for(auto fn : getFunctions()) {
+        if(fn->getName() == name) {
+            return fn;
+        }
+    }
+    return nullptr;
+}
+
 /*
  * Accept methods are defined for each subtype of node.  Their job is to 
  * determine if the visitor wishes to visit the substructure of the node,
@@ -59,17 +68,14 @@ std::vector<Function*> Program::getFunctions() {
  */ 
 
 void DeclNode::accept(ASTVisitor * visitor) {
-  bool b = visitor->visit(this); 
   visitor->endVisit(this);
 }
 
 void NumberExpr::accept(ASTVisitor * visitor) {
-  bool b = visitor->visit(this); 
   visitor->endVisit(this);
 }
 
 void VariableExpr::accept(ASTVisitor * visitor) {
-  bool b = visitor->visit(this); 
   visitor->endVisit(this);
 }
 
@@ -92,7 +98,6 @@ void FunAppExpr::accept(ASTVisitor * visitor) {
 }
 
 void InputExpr::accept(ASTVisitor * visitor) {
-  bool b = visitor->visit(this); 
   visitor->endVisit(this);
 }
 
@@ -118,7 +123,6 @@ void DeRefExpr::accept(ASTVisitor * visitor) {
 }
 
 void NullExpr::accept(ASTVisitor * visitor) {
-  bool b = visitor->visit(this); 
   visitor->endVisit(this);
 }
 
@@ -143,7 +147,6 @@ void AccessExpr::accept(ASTVisitor * visitor) {
     getRecord()->accept(visitor);
   }
   visitor->endVisit(this);
-  visitor->visit(this);
 }
 
 void DeclStmt::accept(ASTVisitor * visitor) {

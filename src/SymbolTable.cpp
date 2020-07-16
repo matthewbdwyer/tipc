@@ -15,12 +15,20 @@ std::optional<std::unique_ptr<SymbolTable>>
 }
 
 AST::DeclNode* SymbolTable::getFunction(std::string s) {
-  return functionNames.find(s)->second;
+  auto func = functionNames.find(s);
+  if(func == functionNames.end()) {
+    return nullptr;
+  }
+  return func->second;
 }
 
 AST::DeclNode* SymbolTable::getLocal(std::string s, AST::DeclNode* f) {
   auto lMap = localNames.find(f)->second;
-  return lMap.find(s)->second;
+  auto local = lMap.find(s);
+  if(local == lMap.end()) {
+    return nullptr;
+  }
+  return local->second;
 }
 
 void SymbolTable::print(SymbolTable* st, std::ostream &s) {
