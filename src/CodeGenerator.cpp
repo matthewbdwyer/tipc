@@ -609,10 +609,10 @@ llvm::Value* AST::RecordExpr::codegen() {
   auto *ptrToTheStruct = PointerType::get(theStruct, 0);
 
   //%eg = alloca %struct.will*, align 8
-  auto *allocaStruct = Builder.CreateAlloca(theStruct);
+  auto *allocaStruct = Builder.CreateAlloca(ptrToTheStruct);
 
   //Next allocate space
-  auto *AllocSize = ConstantExpr::getSizeOf(theStruct);
+  auto *AllocSize = ConstantExpr::getSizeOf(ptrToTheStruct);
 
   //%call = call noalias i8* @malloc(i64, 12) #2
 
@@ -623,39 +623,32 @@ llvm::Value* AST::RecordExpr::codegen() {
   //Bitcast the malloc call to theStruct Type
   auto *structPtr = Builder.CreatePointerCast(malloc, ptrToTheStruct, "structMalloc");
 
-  return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
-
-/* STOPPED HERE
-
   //store %struct.will* %0, %struct will** %eg, align 8
   Builder.CreateStore(structPtr, allocaStruct);
 
   int fieldCounter = 0;
-  for (auto const &field : getFields()){
-    //Ensure there are three ints in the struct
-    fieldCounter++;
-    if(fieldCounter>3){
-      return LogError("Record expressions must be of the following type: {int, int, int}");
-    }
-    //Generate the code for the values in the fields
-    auto fieldCode = field->codegen();
+  for (auto const &field : getFields()) {
+      //Ensure there are three ints in the struct
+      if (fieldCounter > 2) {
+          return LogError("Record expressions must be of the following type: {int, int, int}");
+      }
+      //Generate the code for the values in the fields
+      auto fieldCode = field->codegen();
+      auto loadInst = Builder.CreateLoad(ptrToTheStruct,allocaStruct);
 
-    //%num = load %struct.will*, struct will** %eg, align 8
-    //auto loadInst = Builder.CreateLoad(theStruct,allocaStruct);
+      std::vector<Value *> indices;
+      indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0 ));
+      indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), fieldCounter));
 
-    //Create the values vector
-    std::vector<Value *> indices;
-    //First index which is 0
-    indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
-    //Second index, which is the field number
-    indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), fieldCounter));
-    //Create GEP: getelementptr inbounds %struct.type, struct.type *value, 0, field index
-    //%ltr = getelementptr inbounds %struct.will, %struct.will* %1, i32 0, i32 num
-    auto *gep = Builder.CreateInBoundsGEP(bitCast,indices,"fieldptr");
-    //Store field value in gep location
-    //%store i32 val, i32* %ltr, align 4
-    Builder.CreateStore(fieldCode, gep);
+      // --- GOT TO HERE ---
+      // Returns error:
+      //tipc: /usr/lib/llvm-10/include/llvm/IR/Instructions.h:885: llvm::Type* llvm::checkGEPType(llvm::Type*):
+      // Assertion `Ty && "Invalid GetElementPtrInst indices for type!"' failed.
+      //auto *gep = Builder.CreateInBoundsGEP(theStruct,loadInst, indices, field->getField());
+      fieldCounter++;
   }
+    return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
+  /*
   if(fieldCounter<3){
     return LogError("Record expressions must be of the following type: {int, int, int}");
   }
