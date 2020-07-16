@@ -604,11 +604,63 @@ llvm::Value* AST::DeRefExpr::codegen() {
 }
 
 llvm::Value* AST::RecordExpr::codegen() {
-  return LogError("Record expressions not implemented");
+  //First, we declare type
+  ArrayType* members_array_ref = ArrayType::get((IntegerType::getInt64Ty(TheContext)),3);
+  auto *theStruct = StructType::create(TheContext, members_array_ref);
+
+  //%eg = alloca %struct.will*, align 8
+  auto allocaStruct = Builder.CreateAlloca(theStruct);
+
+  //Next allocate space
+  Constant* AllocSize = ConstantExpr::getSizeOf(theStruct);
+  Type* ITy = Type::getInt64Ty(TheContext);
+  AllocSize = ConstantExpr::getTruncOrBitCast(AllocSize, ITy);
+  //%call = call noalias i8* @malloc(i64, 12) #2
+  Instruction* malloc = CallInst::CreateMalloc(Builder.GetInsertBlock(), ITy, theStruct, AllocSize, nullptr, nullptr, "");
+
+  //Bitcast the malloc call to theStruct Type
+  //%0 = bitcast i8* %call to %struct.will
+  //auto *ptrCast = Builder.CreatePointerCast(malloc, theStruct, "structMalloc");
+  auto *bitCast = Builder.CreateBitCast(malloc, theStruct);
+
+  //store %struct.will* %0, %struct will** %eg, align 8
+  Builder.CreateStore(bitCast, allocaStruct);
+
+  int fieldCounter = 0;
+  for (auto const &field : getFields()){
+    //Ensure there are three ints in the struct
+    fieldCounter++;
+    if(fieldCounter>3){
+      return LogError("Record expressions must be of the following type: {int, int, int}");
+    }
+    //Generate the code for the values in the fields
+    auto fieldCode = field->codegen();
+
+    //%num = load %struct.will*, struct will** %eg, align 8
+    auto loadInst = Builder.CreateLoad(theStruct,allocaStruct);
+    //Create the values vector
+    std::vector<Value *> indices;
+    //First index which is 0
+    indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+    //Second index, which is the field number
+    indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), fieldCounter));
+    //Create GEP: getelementptr inbounds %struct.type, struct.type *value, 0, field index
+    //%ltr = getelementptr inbounds %struct.will, %struct.will* %1, i32 0, i32 num
+    auto *gep = Builder.CreateInBoundsGEP(theStruct,loadInst,indices);
+    //Store field value in gep location
+    //%store i32 val, i32* %ltr, align 4
+    Builder.CreateStore(fieldCode, gep);
+  }
+  if(fieldCounter<3){
+    return LogError("Record expressions must be of the following type: {int, int, int}");
+  }
+  //Return pointer to value
+  return Builder.CreatePtrToInt(bitCast, Type::getInt64Ty(TheContext),
+                                "recordPtrVal");
 }
 
 llvm::Value* AST::FieldExpr::codegen() {
-  return LogError("Field expressions not implemented");
+  return this->getInitializer()->codegen();
 }
 
 llvm::Value* AST::AccessExpr::codegen() {
