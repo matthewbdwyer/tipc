@@ -302,6 +302,14 @@ std::unique_ptr<llvm::Module> AST::Program::codegen(std::string programName) {
         ConstantArray::get(inputArrayType, zeros), "_tip_input_array");
   }
 
+  // declare the malloc function
+  std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
+  auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), oneInt, false);
+  mallocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
+                                     "malloc", CurrentModule.get());
+  mallocFun->addFnAttr(llvm::Attribute::NoUnwind);
+  mallocFun->addAttribute(0, llvm::Attribute::NoAlias);
+
   // Code is generated into the module by the other routines
   for (auto const &fn : getFunctions()) {
     fn->codegen();
@@ -349,8 +357,7 @@ llvm::Value* AST::Function::codegen() {
       auto *gep = Builder.CreateInBoundsGEP(tipInputArray, indices, "inputidx");
 
       // Load the value and store it into the arg's alloca
-      auto *inVal =
-          Builder.CreateLoad(gep, "tipinput" + std::to_string(argIdx++));
+      auto *inVal = Builder.CreateLoad(gep, "tipinput" + std::to_string(argIdx++));
       Builder.CreateStore(inVal, argAlloc);
 
       // Record name binding to alloca
@@ -392,7 +399,7 @@ llvm::Value* AST::Function::codegen() {
 }
 
 llvm::Value* AST::NumberExpr::codegen() {
-  return ConstantInt::get(Type::getInt64Ty(TheContext), VAL);
+  return ConstantInt::get(Type::getInt64Ty(TheContext), getValue());
 }
 
 llvm::Value* AST::BinaryExpr::codegen() {
@@ -522,16 +529,7 @@ llvm::Value* AST::AllocExpr::codegen() {
     return nullptr;
   }
 
-  if (mallocFun == nullptr) {
-    std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
-    auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), oneInt, false);
-    mallocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
-                                       "malloc", CurrentModule.get());
-    mallocFun->addFnAttr(llvm::Attribute::NoUnwind);
-    mallocFun->addAttribute(0, llvm::Attribute::NoAlias);
-  }
-
-  // TBD RECORDS - update this
+  // TBD TYPE CHECKING - this needs upating
   // Since we do not support records all allocs are for 8 bytes, i.e., int64_t
   std::vector<Value *> oneArg(
       1, ConstantInt::get(Type::getInt64Ty(TheContext), 8));
@@ -579,27 +577,27 @@ llvm::Value* AST::RefExpr::codegen() {
  * the value at the pointed-to memory location.
  */
 llvm::Value* AST::DeRefExpr::codegen() {
-  if (lValueGen) {
-    // For an l-value, just compute the address and return it.
+  bool isLValue = lValueGen;
+
+  if (isLValue) {
+    // This flag is reset here so that sub-expressions are treated as r-values
     lValueGen = false;
-    Value *argVal = getPtr()->codegen();
-    if (argVal == nullptr) {
-      return nullptr;
-    }
+  }
+ 
+  Value *argVal = getPtr()->codegen();
+  if (argVal == nullptr) {
+    return nullptr;
+  }
 
-    return Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(TheContext),
-                                  "ptrIntVal");
+  // compute the address
+  Value *address = Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(TheContext), "ptrIntVal");
 
+  if (isLValue) {
+    // For an l-value, return the address
+    return address;
   } else {
-    // For an r-value, compute the address and return the value it points to.
-    Value *argVal = getPtr()->codegen();
-    if (argVal == nullptr) {
-      return nullptr;
-    }
-
-    auto *ref = Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(TheContext),
-                                       "ptrIntVal");
-    return Builder.CreateLoad(ref, "valueAt");
+    // For an r-value, return the value at the address
+    return Builder.CreateLoad(address, "valueAt");
   }
 }
 
