@@ -70,6 +70,17 @@ std::map<std::string, std::vector<std::string>> functionFormalNames;
 // TBD SYMBOL TABLE this could really be a mapping from DeclNode to AllocaInst
 std::map<std::string, AllocaInst *> NamedValues;
 
+//TO-DO: Use typechecking do add to map in the assignment statement
+//Houses structs alloca's. Currently we only support one struct at a time
+std::map<std::string, AllocaInst *> StructValues;
+
+//TO-DO: Use typechecking to find type of structs at run time and add them
+//Keeps track of struct types
+std::map<std::string, Type *> StructTypes;
+
+//Keeps track of the fields associated with a struct
+std::map<std::string, std::vector<FieldExpr*>> FieldMap;
+
 // Permits getFunction to access the current module being compiled
 std::unique_ptr<Module> CurrentModule;
 
@@ -602,10 +613,17 @@ llvm::Value* AST::DeRefExpr::codegen() {
   }
 }
 
+//TO-DO: Use typechecking to add struct types to the StructType map
+//TO-DO: Use typechecking to add structs to the Struct map in assign statement
 llvm::Value* AST::RecordExpr::codegen() {
   //First, we declare type
-  ArrayType* members_array_ref = ArrayType::get((IntegerType::getInt64Ty(TheContext)),3);
-  auto *theStruct = StructType::create(TheContext, members_array_ref, "threeI64s");
+  //ArrayType* members_array_ref = ArrayType::get((IntegerType::getInt64Ty(TheContext)),3);
+  std::vector<Type *> member_values;
+  member_values.push_back(IntegerType::getInt64Ty(TheContext));
+  member_values.push_back(IntegerType::getInt64Ty(TheContext));
+  member_values.push_back(IntegerType::getInt64Ty(TheContext));
+  auto *theStruct = StructType::create(TheContext, member_values, "threeI64s");
+  StructTypes["threeI64s"] = theStruct;
   auto *ptrToTheStruct = PointerType::get(theStruct, 0);
 
   //%eg = alloca %struct.will*, align 8
@@ -636,33 +654,42 @@ llvm::Value* AST::RecordExpr::codegen() {
       auto fieldCode = field->codegen();
       auto loadInst = Builder.CreateLoad(ptrToTheStruct,allocaStruct);
 
-      std::vector<Value *> indices;
-      indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0 ));
-      indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), fieldCounter));
-
-      // --- GOT TO HERE ---
-      // Returns error:
-      //tipc: /usr/lib/llvm-10/include/llvm/IR/Instructions.h:885: llvm::Type* llvm::checkGEPType(llvm::Type*):
-      // Assertion `Ty && "Invalid GetElementPtrInst indices for type!"' failed.
-      //auto *gep = Builder.CreateInBoundsGEP(theStruct,loadInst, indices, field->getField());
+      auto *gep = Builder.CreateStructGEP(theStruct, loadInst, fieldCounter, field->getField());
+      Builder.CreateStore(fieldCode, gep);
       fieldCounter++;
   }
-    return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
-  /*
-  if(fieldCounter<3){
-    return LogError("Record expressions must be of the following type: {int, int, int}");
+
+  if(fieldCounter<3) {
+      return LogError("Record expressions must be of the following type: {int, int, int}");
   }
-*/
-  //Return pointer to value
-//  return Builder.CreatePtrToInt(bitCast, Type::getInt64Ty(TheContext), "recordPtrVal");
+  StructValues["onlyStruct"] = allocaStruct;
+  FieldMap["onlyStruct"] = this->getFields();
+  return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
 }
 
 llvm::Value* AST::FieldExpr::codegen() {
   return this->getInitializer()->codegen();
 }
 
+//TO-DO: Use typechecking to add structs to the Struct map in assign statement
+//TO-DO: Add if statement to check if struct exists in structmap. Throw error if it doesnt
 llvm::Value* AST::AccessExpr::codegen() {
-  return LogError("Field access expressions not implemented");
+  auto ptrToStruct = PointerType::get(StructTypes["threeI64s"], 0);
+  auto loadInst = Builder.CreateLoad(ptrToStruct, StructValues["onlyStruct"]);
+  auto currField = this->getField();
+  int fieldNum = 0;
+  for(auto fields : FieldMap["onlyStruct"]){
+    if(fields->getField() == currField){
+      break;
+    }
+    ++fieldNum;
+  }
+  if(fieldNum>2){
+      LogError("This fields name is non-existant");
+  }
+  auto *gep = Builder.CreateStructGEP(StructTypes["threeI64s"], loadInst, fieldNum, this->getField());
+  auto fieldLoad = Builder.CreateLoad(IntegerType::getInt64Ty(TheContext), gep);
+  return Builder.CreatePtrToInt(fieldLoad, Type::getInt64Ty(TheContext), "fieldAccess");
 }
 
 llvm::Value* AST::DeclNode::codegen() {
