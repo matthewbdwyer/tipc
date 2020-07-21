@@ -19,7 +19,7 @@ do
   ((numtests++))
 
   ${TIPC} $i
-  clang-10 -w -static $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  ${TIPCLANG} -w -static $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} >/dev/null 2>/dev/null
   exit_code=${?}
@@ -40,7 +40,7 @@ do
   ((numtests++))
 
   ${TIPC} -d $i
-  clang-10 -w -static $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  ${TIPCLANG} -w -static $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} >/dev/null 2>/dev/null
   exit_code=${?}
@@ -64,7 +64,7 @@ do
   ((numtests++))
 
   ${TIPC} -d iotests/$executable.tip
-  clang-10 -w -static iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
+  ${TIPCLANG} -w -static iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
 
   ./${executable} $input >iotests/$executable.output
 

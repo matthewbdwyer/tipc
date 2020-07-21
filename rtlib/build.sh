@@ -1,2 +1,2 @@
 #!/bin/sh
-clang -c -emit-llvm tip_rtlib.c
+${TIPCLANG} -c -emit-llvm tip_rtlib.c
