@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-set -x
-declare -r ANTLR_JAR=https://www.antlr.org/download/antlr-4.8-complete.jar
-declare -r LIB_DIR=${HOME}/.local/lib
-declare -r CMAKE_LISTS_FILE=./src/CMakeLists.txt
+declare -r ANTLR_VERSION=4
+declare -r JAVA_VERSION=8
+declare -r LLVM_VERSION=10
 
 
 echoerr() { 
@@ -16,39 +15,40 @@ bootstrap_ubuntu_dependencies() {
   sudo apt -y update
 
   sudo apt -y install \
-    java-1.8.0-amazon-corretto-jdk \
+    java-1.$JAVA_VERSION.0-amazon-corretto-jdk \
     git \
     cmake \
     pkg-config \
     uuid-dev \
-    antlr4 \
+    antlr$ANTLR_VERSION \
     zlib1g-dev \
     lcov
 
   sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
   sudo apt -y install \
-    libllvm-10-ocaml-dev \
-    libllvm10 \
-    llvm-10 \
-    llvm-10-dev \
-    llvm-10-doc \
-    llvm-10-examples \
-    llvm-10-runtime
+    libllvm-$LLVM_VERSION-ocaml-dev \
+    libllvm$LLVM_VERSION \
+    llvm-$LLVM_VERSION \
+    llvm-$LLVM_VERSION-dev \
+    llvm-$LLVM_VERSION-doc \
+    llvm-$LLVM_VERSION-examples \
+    llvm-$LLVM_VERSION-runtime
 
   sudo apt -y install \
-    clang-10 \
-    clang-tools-10 \
-    clang-10-doc \
-    libclang-common-10-dev \
-    libclang-10-dev \
-    libclang1-10 \
-    clang-format-10 \
-    python3-clang-10 \
-    clangd-10
+    clang-$LLVM_VERSION \
+    clang-tools-$LLVM_VERSION \
+    clang-$LLVM_VERSION-doc \
+    libclang-common-$LLVM_VERSION-dev \
+    libclang-$LLVM_VERSION-dev \
+    libclang1-$LLVM_VERSION \
+    clang-format-$LLVM_VERSION \
+    python3-clang-$LLVM_VERSION \
+    clangd-$LLVM_VERSION
 }
 
 
+# TODO (nphair): Set TIPCLANG here.
 bootstrap_ubuntu_env() {
   :
 }
@@ -70,7 +70,9 @@ bootstrap_linux() {
 }
 
 bootstrap_mac_env() {
-  echo export LLVM_DIR=$(brew --prefix llvm@10)/lib/cmake >> ~/.bashrc
+  echo export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake >> ~/.bashrc
+  echo export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang >> ~/.bashrc
+  echo bashrc has been updated - be sure to source the file or restart your shell.
 }
 
 bootstrap_mac_dependencies() {
@@ -79,13 +81,13 @@ bootstrap_mac_dependencies() {
     exit 1
   fi
 
-  brew install homebrew/cask-versions/corretto8
+  brew install homebrew/cask-versions/corretto$JAVA_VERSION
   brew install \
     git \
     cmake \
     pkg-config \
-    llvm@10 \
-    antlr@4 \
+    llvm@$LLVM_VERSION \
+    antlr@$ANTLR_VERSION \
     lcov
 }
 
@@ -104,15 +106,12 @@ bootstrap() {
     Darwin*)
       bootstrap_mac;;
     *)
-      echo "Script has not been implemented for: ${unameOut}."
+      echoerr error: Script has not been implemented for: ${unameOut}.
       exit 1
       ;;
   esac
 
-  bootstrap_env
-  mkdir -p "${LIB_DIR}"
-  wget "${ANTLR_JAR}" -P "${LIB_DIR}"
-  sed -i.bak "s,__ANTLR_JAR_PATH__,${LIB_DIR}/$(basename ${ANTLR_JAR}),g" ${CMAKE_LISTS_FILE}
 }
 
 bootstrap
+
