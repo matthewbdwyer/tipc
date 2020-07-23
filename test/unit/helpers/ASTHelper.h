@@ -6,6 +6,5 @@
 class ASTHelper {
 public:
   static std::unique_ptr<AST::Program> build_ast(std::istream &stream);
-  static bool is_parsable(std::istream &stream);
 };
 

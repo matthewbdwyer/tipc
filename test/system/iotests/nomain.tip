@@ -1,0 +1,10 @@
+foo() {
+  var z;
+  z = input;
+  z = z + 13;
+  if (0 > z)
+     error z;
+  else 
+     output z;
+  return z + 1;
+}
