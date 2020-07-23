@@ -1,0 +1,26 @@
+foo(n){
+    var b;
+    b = n*2;
+
+    if (b>0){
+        b=b-4;
+    }
+    return b;
+}
+
+bar(n){
+    while(n>85){
+        n = n-3;
+    }
+    return n;
+}
+
+main(){
+    var rec;
+    rec = {a:foo(23), b:33, c:bar(91)};
+
+    if (rec.a!=42) error rec.a;
+    if (rec.b!=33) error rec.b;
+    if (rec.c!=85) error rec.c;
+    return 0;
+}

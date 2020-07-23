@@ -70,6 +70,17 @@ std::map<std::string, std::vector<std::string>> functionFormalNames;
 // TBD SYMBOL TABLE this could really be a mapping from DeclNode to AllocaInst
 std::map<std::string, AllocaInst *> NamedValues;
 
+//TO-DO: Use typechecking do add to map in the assignment statement
+//Houses structs alloca's. Currently we only support one struct at a time
+std::map<std::string, AllocaInst *> StructValues;
+
+//TO-DO: Use typechecking to find type of structs at run time and add them
+//Keeps track of struct types
+std::map<std::string, Type *> StructTypes;
+
+//Keeps track of the fields associated with a struct
+std::map<std::string, std::vector<FieldExpr*>> FieldMap;
+
 // Permits getFunction to access the current module being compiled
 std::unique_ptr<Module> CurrentModule;
 
@@ -601,16 +612,83 @@ llvm::Value* AST::DeRefExpr::codegen() {
   }
 }
 
+//TO-DO: Use typechecking to add struct types to the StructType map
+//TO-DO: Use typechecking to add structs to the Struct map in assign statement
 llvm::Value* AST::RecordExpr::codegen() {
-  return LogError("Record expressions not implemented");
+  //First, we declare type
+  //ArrayType* members_array_ref = ArrayType::get((IntegerType::getInt64Ty(TheContext)),3);
+  std::vector<Type *> member_values;
+  member_values.push_back(IntegerType::getInt64Ty(TheContext));
+  member_values.push_back(IntegerType::getInt64Ty(TheContext));
+  member_values.push_back(IntegerType::getInt64Ty(TheContext));
+  auto *theStruct = StructType::create(TheContext, member_values, "threeI64s");
+  StructTypes["threeI64s"] = theStruct;
+  auto *ptrToTheStruct = PointerType::get(theStruct, 0);
+
+  //%eg = alloca %struct.will*, align 8
+  auto *allocaStruct = Builder.CreateAlloca(ptrToTheStruct);
+
+  //Next allocate space
+  auto *AllocSize = ConstantExpr::getSizeOf(ptrToTheStruct);
+
+  //%call = call noalias i8* @malloc(i64, 12) #2
+
+  // Use Builder to create the malloc call using pre-defined mallocFun
+  std::vector<Value *> sizeArg(1, AllocSize);
+  auto *malloc = Builder.CreateCall(mallocFun, sizeArg, "mallocedPtr");
+
+  //Bitcast the malloc call to theStruct Type
+  auto *structPtr = Builder.CreatePointerCast(malloc, ptrToTheStruct, "structMalloc");
+
+  //store %struct.will* %0, %struct will** %eg, align 8
+  Builder.CreateStore(structPtr, allocaStruct);
+
+  int fieldCounter = 0;
+  for (auto const &field : getFields()) {
+      //Ensure there are three ints in the struct
+      if (fieldCounter > 2) {
+          return LogError("Record expressions must be of the following type: {int, int, int}");
+      }
+      //Generate the code for the values in the fields
+      auto fieldCode = field->codegen();
+      auto loadInst = Builder.CreateLoad(ptrToTheStruct,allocaStruct);
+
+      auto *gep = Builder.CreateStructGEP(theStruct, loadInst, fieldCounter, field->getField());
+      Builder.CreateStore(fieldCode, gep);
+      fieldCounter++;
+  }
+
+  if(fieldCounter<3) {
+      return LogError("Record expressions must be of the following type: {int, int, int}");
+  }
+  StructValues["onlyStruct"] = allocaStruct;
+  FieldMap["onlyStruct"] = this->getFields();
+  return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
 }
 
 llvm::Value* AST::FieldExpr::codegen() {
-  return LogError("Field expressions not implemented");
+  return this->getInitializer()->codegen();
 }
 
+//TO-DO: Use typechecking to add structs to the Struct map in assign statement
+//TO-DO: Add if statement to check if struct exists in structmap. Throw error if it doesnt
 llvm::Value* AST::AccessExpr::codegen() {
-  return LogError("Field access expressions not implemented");
+  auto ptrToStruct = PointerType::get(StructTypes["threeI64s"], 0);
+  auto loadInst = Builder.CreateLoad(ptrToStruct, StructValues["onlyStruct"]);
+  auto currField = this->getField();
+  int fieldNum = 0;
+  for(auto fields : FieldMap["onlyStruct"]){
+    if(fields->getField() == currField){
+      break;
+    }
+    ++fieldNum;
+  }
+  if(fieldNum>2){
+      LogError("This fields name is non-existant");
+  }
+  auto *gep = Builder.CreateStructGEP(StructTypes["threeI64s"], loadInst, fieldNum, this->getField());
+  auto fieldLoad = Builder.CreateLoad(IntegerType::getInt64Ty(TheContext), gep);
+  return Builder.CreatePtrToInt(fieldLoad, Type::getInt64Ty(TheContext), "fieldAccess");
 }
 
 llvm::Value* AST::DeclNode::codegen() {
