@@ -17,3 +17,4 @@ script:
   - make
   - echo running unit tests...
   - ./test/unit/unit_tests
+  - ./test/unit/types/types_test
