@@ -1,7 +1,10 @@
 GET_PROPERTY(GrammarIncDir GLOBAL PROPERTY GrammarIncludeDir)
 
 include_directories(${GrammarIncDir})
-include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/src/ast)
+include_directories(${PROJECT_SOURCE_DIR}/src/ast/treetypes)
+include_directories(${PROJECT_SOURCE_DIR}/src/prettyprint)
+include_directories(${PROJECT_SOURCE_DIR}/src/symboltable)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/helpers)
 include_directories(external/catch2)
 

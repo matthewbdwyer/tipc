@@ -2,17 +2,17 @@
 #include <iostream>
 #include <sstream>
 
-void PrettyPrinter::print(AST::Program *p, std::ostream &s, char c, int n) {
+void PrettyPrinter::print(ASTProgram *p, std::ostream &s, char c, int n) {
    PrettyPrinter visitor(s, c, n);
    p->accept(&visitor);
 }
 
-void PrettyPrinter::print2(AST::Node *p, std::ostream &s, char c, int n) {
+void PrettyPrinter::print2(ASTNode *p, std::ostream &s, char c, int n) {
     PrettyPrinter visitor(s, c, n);
     visitor.endVisitNode(p);
 }
 
-void PrettyPrinter::endVisitNode(AST::Node * element) {
+void PrettyPrinter::endVisitNode(ASTNode * element) {
     element->accept(this);
     for (auto &x : visitResults) {
         os << x;
@@ -20,7 +20,7 @@ void PrettyPrinter::endVisitNode(AST::Node * element) {
     os.flush();
 }
 
-void PrettyPrinter::endVisit(AST::Program * element) {
+void PrettyPrinter::endVisit(ASTProgram * element) {
   std::string programString = "";
   for (auto &fn : element->getFunctions()) {
     programString = visitResults.back() + "\n" + programString;
@@ -41,7 +41,7 @@ void PrettyPrinter::endVisit(AST::Program * element) {
  * Before visiting function, record string for signature and setup indentation for body.
  * This visit method pushes a string result, that the endVisit method should extend.
  */
-bool PrettyPrinter::visit(AST::Function * element) {
+bool PrettyPrinter::visit(ASTFunction * element) {
   indentLevel++;
   return true;
 }
@@ -51,7 +51,7 @@ bool PrettyPrinter::visit(AST::Function * element) {
  *   statements, declarations, formals, and then function name
  * they are on the visit stack in that order.
  */
-void PrettyPrinter::endVisit(AST::Function * element) {
+void PrettyPrinter::endVisit(ASTFunction * element) {
   std::string bodyString = "";
   for (auto &stmt : element->getStmts()) {
     bodyString = visitResults.back() + "\n" + bodyString;
@@ -87,15 +87,15 @@ void PrettyPrinter::endVisit(AST::Function * element) {
   visitResults.push_back(functionString);
 }
 
-void PrettyPrinter::endVisit(AST::NumberExpr * element) {
+void PrettyPrinter::endVisit(ASTNumberExpr * element) {
   visitResults.push_back(std::to_string(element->getValue()));
 }
 
-void PrettyPrinter::endVisit(AST::VariableExpr * element) {
+void PrettyPrinter::endVisit(ASTVariableExpr * element) {
   visitResults.push_back(element->getName());
 }
 
-void PrettyPrinter::endVisit(AST::BinaryExpr * element) {
+void PrettyPrinter::endVisit(ASTBinaryExpr * element) {
   std::string rightString = visitResults.back();
   visitResults.pop_back();
   std::string leftString = visitResults.back();
@@ -104,11 +104,11 @@ void PrettyPrinter::endVisit(AST::BinaryExpr * element) {
   visitResults.push_back("(" + leftString + " " + element->getOp() + " " + rightString + ")");
 }
 
-void PrettyPrinter::endVisit(AST::InputExpr * element) {
+void PrettyPrinter::endVisit(ASTInputExpr * element) {
   visitResults.push_back("input");
 }
 
-void PrettyPrinter::endVisit(AST::FunAppExpr * element) {
+void PrettyPrinter::endVisit(ASTFunAppExpr * element) {
   std::string funAppString;
 
   /* 
@@ -133,35 +133,35 @@ void PrettyPrinter::endVisit(AST::FunAppExpr * element) {
   visitResults.push_back(funAppString);
 }
 
-void PrettyPrinter::endVisit(AST::AllocExpr * element) {
+void PrettyPrinter::endVisit(ASTAllocExpr * element) {
   std::string init = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back("alloc " + init);
 }
 
-void PrettyPrinter::endVisit(AST::RefExpr * element) {
+void PrettyPrinter::endVisit(ASTRefExpr * element) {
   std::string var = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back("&" + var);
 }
 
-void PrettyPrinter::endVisit(AST::DeRefExpr * element) {
+void PrettyPrinter::endVisit(ASTDeRefExpr * element) {
   std::string base = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back("*" + base);
 }
 
-void PrettyPrinter::endVisit(AST::NullExpr * element) {
+void PrettyPrinter::endVisit(ASTNullExpr * element) {
   visitResults.push_back("null");
 }
 
-void PrettyPrinter::endVisit(AST::FieldExpr * element) {
+void PrettyPrinter::endVisit(ASTFieldExpr * element) {
   std::string init = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back(element->getField() + ":" + init);
 }
 
-void PrettyPrinter::endVisit(AST::RecordExpr * element) {
+void PrettyPrinter::endVisit(ASTRecordExpr * element) {
   /* 
    * Skip printing of comma separator for last record element.
    */ 
@@ -182,17 +182,17 @@ void PrettyPrinter::endVisit(AST::RecordExpr * element) {
   visitResults.push_back(recordString);
 }
 
-void PrettyPrinter::endVisit(AST::AccessExpr * element) {
+void PrettyPrinter::endVisit(ASTAccessExpr * element) {
   std::string accessString = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back(accessString + '.' + element->getField());
 }
 
-void PrettyPrinter::endVisit(AST::DeclNode * element) {
+void PrettyPrinter::endVisit(ASTDeclNode * element) {
   visitResults.push_back(element->getName());
 }
 
-void PrettyPrinter::endVisit(AST::DeclStmt * element) {
+void PrettyPrinter::endVisit(ASTDeclStmt * element) {
   std::string declString = "";
   bool skip = true;
   for (auto &id : element->getVars()) {
@@ -211,7 +211,7 @@ void PrettyPrinter::endVisit(AST::DeclStmt * element) {
   visitResults.push_back(declString);
 }
 
-void PrettyPrinter::endVisit(AST::AssignStmt * element) {
+void PrettyPrinter::endVisit(ASTAssignStmt * element) {
   std::string rhsString = visitResults.back();
   visitResults.pop_back();
   std::string lhsString = visitResults.back();
@@ -219,12 +219,12 @@ void PrettyPrinter::endVisit(AST::AssignStmt * element) {
   visitResults.push_back(indent() + lhsString + " = " + rhsString + ";");
 }
 
-bool PrettyPrinter::visit(AST::BlockStmt * element) {
+bool PrettyPrinter::visit(ASTBlockStmt * element) {
   indentLevel++;
   return true;
 }
 
-void PrettyPrinter::endVisit(AST::BlockStmt * element) {
+void PrettyPrinter::endVisit(ASTBlockStmt * element) {
   std::string stmtsString = "";
   for (auto &s : element->getStmts()) {
     stmtsString = visitResults.back() + "\n" + stmtsString;
@@ -243,12 +243,12 @@ void PrettyPrinter::endVisit(AST::BlockStmt * element) {
  * Since conditions are expressions and their visit methods never indent
  * incrementing here works.
  */
-bool PrettyPrinter::visit(AST::WhileStmt * element) {
+bool PrettyPrinter::visit(ASTWhileStmt * element) {
   indentLevel++;
   return true;
 }
 
-void PrettyPrinter::endVisit(AST::WhileStmt * element) {
+void PrettyPrinter::endVisit(ASTWhileStmt * element) {
   std::string bodyString = visitResults.back();
   visitResults.pop_back();
   std::string condString = visitResults.back();
@@ -260,12 +260,12 @@ void PrettyPrinter::endVisit(AST::WhileStmt * element) {
   visitResults.push_back(whileString);
 }
 
-bool PrettyPrinter::visit(AST::IfStmt * element) {
+bool PrettyPrinter::visit(ASTIfStmt * element) {
   indentLevel++;
   return true;
 }
 
-void PrettyPrinter::endVisit(AST::IfStmt * element) {
+void PrettyPrinter::endVisit(ASTIfStmt * element) {
   std::string elseString;
   if (element->getElse() != nullptr) {
     elseString = visitResults.back();
@@ -289,19 +289,19 @@ void PrettyPrinter::endVisit(AST::IfStmt * element) {
   visitResults.push_back(ifString);
 }
 
-void PrettyPrinter::endVisit(AST::OutputStmt * element) {
+void PrettyPrinter::endVisit(ASTOutputStmt * element) {
   std::string argString = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back(indent() + "output " + argString + ";");
 }
 
-void PrettyPrinter::endVisit(AST::ErrorStmt * element) {
+void PrettyPrinter::endVisit(ASTErrorStmt * element) {
   std::string argString = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back(indent() + "error " + argString + ";");
 }
 
-void PrettyPrinter::endVisit(AST::ReturnStmt * element) {
+void PrettyPrinter::endVisit(ASTReturnStmt * element) {
   std::string argString = visitResults.back();
   visitResults.pop_back();
   visitResults.push_back(indent() + "return " + argString + ";");

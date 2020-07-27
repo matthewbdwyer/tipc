@@ -16,7 +16,7 @@ std::vector<TypeConstraint> TypeConstraintVisitor::get_constraints() {
     return constraints;
 }
 
-void TypeConstraintVisitor::endVisit(AST::Program * element) {
+void TypeConstraintVisitor::endVisit(ASTProgram * element) {
     auto main = element->findFunctionByName(ENTRYPOINT_NAME);
     if(main == nullptr) {
         // TODO (nphair): Figure out what we want to do here.
@@ -39,12 +39,12 @@ void TypeConstraintVisitor::endVisit(AST::Program * element) {
 }
 
 
-bool TypeConstraintVisitor::visit(AST::Function * element) {
+bool TypeConstraintVisitor::visit(ASTFunction * element) {
     scope.push(element->getDecl());
     return true;
 }
 
-void TypeConstraintVisitor::endVisit(AST::Function * element) {
+void TypeConstraintVisitor::endVisit(ASTFunction * element) {
     auto node = std::make_shared<TipVar>(element);
 
     auto ret = visitResults.top();
@@ -70,7 +70,7 @@ void TypeConstraintVisitor::endVisit(AST::Function * element) {
     scope.pop();
 }
 
-void TypeConstraintVisitor::endVisit(AST::NumberExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTNumberExpr * element) {
     auto node = std::make_shared<TipVar>(element);
 
     TypeConstraint constraint(node, std::make_shared<TipInt>());
@@ -78,8 +78,8 @@ void TypeConstraintVisitor::endVisit(AST::NumberExpr * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::VariableExpr * element) {
-    AST::DeclNode * canonical;
+void TypeConstraintVisitor::endVisit(ASTVariableExpr * element) {
+    ASTDeclNode * canonical;
     if((canonical = symbolTable.getLocal(element->getName(), scope.top()))) {
         visitResults.push(std::make_shared<TipVar>(canonical));
     } else if((canonical = symbolTable.getFunction(element->getName()))) {
@@ -89,7 +89,7 @@ void TypeConstraintVisitor::endVisit(AST::VariableExpr * element) {
     }
 }
 
-void TypeConstraintVisitor::endVisit(AST::BinaryExpr  * element) {
+void TypeConstraintVisitor::endVisit(ASTBinaryExpr  * element) {
     auto node = std::make_shared<TipVar>(element);
     auto e2 = visitResults.top();
     visitResults.pop();
@@ -118,7 +118,7 @@ void TypeConstraintVisitor::endVisit(AST::BinaryExpr  * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::InputExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTInputExpr * element) {
     auto node = std::make_shared<TipVar>(element);
 
     TypeConstraint constraint(node, std::make_shared<TipInt>());
@@ -126,7 +126,7 @@ void TypeConstraintVisitor::endVisit(AST::InputExpr * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::FunAppExpr  * element) {
+void TypeConstraintVisitor::endVisit(ASTFunAppExpr  * element) {
     auto node = std::make_shared<TipVar>(element);
     std::vector<std::shared_ptr<TipType>> actuals;
     for(auto _ : element->getActuals()) {
@@ -142,7 +142,7 @@ void TypeConstraintVisitor::endVisit(AST::FunAppExpr  * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::AllocExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTAllocExpr * element) {
     auto node = std::make_shared<TipVar>(element);
     auto initializer = visitResults.top();
     visitResults.pop();
@@ -154,7 +154,7 @@ void TypeConstraintVisitor::endVisit(AST::AllocExpr * element) {
 }
 
 
-void TypeConstraintVisitor::endVisit(AST::RefExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTRefExpr * element) {
     auto node = std::make_shared<TipVar>(element);
     auto var = visitResults.top();
     visitResults.pop();
@@ -165,7 +165,7 @@ void TypeConstraintVisitor::endVisit(AST::RefExpr * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::DeRefExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTDeRefExpr * element) {
     auto node = std::make_shared<TipVar>(element);
     auto tipRef = std::make_shared<TipRef>(node);
     auto dereferenced = visitResults.top();
@@ -177,7 +177,7 @@ void TypeConstraintVisitor::endVisit(AST::DeRefExpr * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::NullExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTNullExpr * element) {
     auto node = std::make_shared<TipVar>(element);
     auto tipAlpha = std::make_shared<TipAlpha>("");
     auto tipRef = std::make_shared<TipRef>(tipAlpha);
@@ -189,7 +189,7 @@ void TypeConstraintVisitor::endVisit(AST::NullExpr * element) {
 }
 
 // Variable Declarations make no constraints.
-void TypeConstraintVisitor::endVisit(AST::DeclStmt * element) {
+void TypeConstraintVisitor::endVisit(ASTDeclStmt * element) {
     auto node = std::make_shared<TipVar>(element);
     for(auto &_ : element->getVars()) {
         visitResults.pop();
@@ -198,18 +198,18 @@ void TypeConstraintVisitor::endVisit(AST::DeclStmt * element) {
 }
 
 // No need to to a symbol table lookup. These are the canonical forms.
-void TypeConstraintVisitor::endVisit(AST::DeclNode * element) {
+void TypeConstraintVisitor::endVisit(ASTDeclNode * element) {
     auto node = std::make_shared<TipVar>(element);
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::AssignStmt  * element) {
+void TypeConstraintVisitor::endVisit(ASTAssignStmt  * element) {
     auto node = std::make_shared<TipVar>(element);
     auto rhs = visitResults.top();
     visitResults.pop();
     auto _lhs = visitResults.top();
     if(auto tipVar = std::dynamic_pointer_cast<TipVar>(_lhs)) {
-        if(auto deref = dynamic_cast<AST::DeRefExpr *>(tipVar->node)) {
+        if(auto deref = dynamic_cast<ASTDeRefExpr *>(tipVar->node)) {
             auto lhs = std::make_shared<TipVar>(deref->getPtr());
             auto r = std::make_shared<TipRef>(rhs);
 
@@ -227,7 +227,7 @@ void TypeConstraintVisitor::endVisit(AST::AssignStmt  * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::WhileStmt * element) {
+void TypeConstraintVisitor::endVisit(ASTWhileStmt * element) {
     auto node = std::make_shared<TipVar>(element);
     visitResults.pop();
     auto condition = visitResults.top();
@@ -238,7 +238,7 @@ void TypeConstraintVisitor::endVisit(AST::WhileStmt * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::IfStmt * element) {
+void TypeConstraintVisitor::endVisit(ASTIfStmt * element) {
     auto node = std::make_shared<TipVar>(element);
     if (element->getElse() != nullptr) {
         visitResults.pop();
@@ -252,7 +252,7 @@ void TypeConstraintVisitor::endVisit(AST::IfStmt * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::OutputStmt * element) {
+void TypeConstraintVisitor::endVisit(ASTOutputStmt * element) {
     auto node = std::make_shared<TipVar>(element);
     auto argument = visitResults.top();
     visitResults.pop();
@@ -263,25 +263,25 @@ void TypeConstraintVisitor::endVisit(AST::OutputStmt * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::ReturnStmt * element) {
+void TypeConstraintVisitor::endVisit(ASTReturnStmt * element) {
     auto var = std::make_shared<TipVar>(element);
     visitResults.pop();
     visitResults.push(var);
 }
 
-void TypeConstraintVisitor::endVisit(AST::FieldExpr  * element) {
+void TypeConstraintVisitor::endVisit(ASTFieldExpr  * element) {
     // NOT IMPLEMENTED.
     assert(0);
 }
 
-void TypeConstraintVisitor::endVisit(AST::RecordExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
     // NOT IMPLEMENTED.
     assert(0);
 }
 
 // TODO (nphair). Uh-oh, keys in a record don't map to decl nodes. They should,
 // they are identifiers.
-void TypeConstraintVisitor::endVisit(AST::AccessExpr * element) {
+void TypeConstraintVisitor::endVisit(ASTAccessExpr * element) {
     assert(0);
     //auto node = std::make_shared<TipVar>(element);
     //auto record = visitResults.top();
@@ -298,7 +298,7 @@ void TypeConstraintVisitor::endVisit(AST::AccessExpr * element) {
     //visitResults.pop();
 }
 
-void TypeConstraintVisitor::endVisit(AST::ErrorStmt * element) {
+void TypeConstraintVisitor::endVisit(ASTErrorStmt * element) {
     auto node = std::make_shared<TipVar>(element);
     auto argument = visitResults.top();
     visitResults.pop();
@@ -309,7 +309,7 @@ void TypeConstraintVisitor::endVisit(AST::ErrorStmt * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(AST::BlockStmt * element) {
+void TypeConstraintVisitor::endVisit(ASTBlockStmt * element) {
     auto node = std::make_shared<TipVar>(element);
     for(auto &_ : element->getStmts()) {
         visitResults.pop();

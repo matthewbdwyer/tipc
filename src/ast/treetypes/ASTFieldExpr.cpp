@@ -1,0 +1,9 @@
+#include "ASTFieldExpr.h"
+#include "ASTVisitor.h"
+
+void ASTFieldExpr::accept(ASTVisitor * visitor) {
+  if (visitor->visit(this)) {
+    getInitializer()->accept(visitor);
+  }
+  visitor->endVisit(this);
+}

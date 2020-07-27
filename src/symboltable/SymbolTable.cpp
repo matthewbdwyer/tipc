@@ -5,7 +5,7 @@
 bool symTableBuildError = false;
 
 std::optional<std::unique_ptr<SymbolTable>> 
-      SymbolTable::build(AST::Program* p, std::ostream &s) {
+      SymbolTable::build(ASTProgram* p, std::ostream &s) {
   symTableBuildError = false;
   auto fMap = FunctionNameBuilder::build(p, s);
   auto lMap = LocalNameBuilder::build(p, fMap, s);
@@ -14,7 +14,7 @@ std::optional<std::unique_ptr<SymbolTable>>
              std::make_unique<SymbolTable>(fMap, lMap));
 }
 
-AST::DeclNode* SymbolTable::getFunction(std::string s) {
+ASTDeclNode* SymbolTable::getFunction(std::string s) {
   auto func = functionNames.find(s);
   if(func == functionNames.end()) {
     return nullptr;
@@ -22,7 +22,7 @@ AST::DeclNode* SymbolTable::getFunction(std::string s) {
   return func->second;
 }
 
-AST::DeclNode* SymbolTable::getLocal(std::string s, AST::DeclNode* f) {
+ASTDeclNode* SymbolTable::getLocal(std::string s, ASTDeclNode* f) {
   auto lMap = localNames.find(f)->second;
   auto local = lMap.find(s);
   if(local == lMap.end()) {
@@ -59,7 +59,7 @@ void SymbolTable::print(SymbolTable* st, std::ostream &s) {
   }
 }
 
-std::map<std::string, AST::DeclNode*> FunctionNameBuilder::build(AST::Program* p, std::ostream &s) {
+std::map<std::string, ASTDeclNode*> FunctionNameBuilder::build(ASTProgram* p, std::ostream &s) {
   FunctionNameBuilder visitor(s);
   p->accept(&visitor);
   symTableBuildError |= visitor.buildError;
@@ -70,11 +70,11 @@ std::map<std::string, AST::DeclNode*> FunctionNameBuilder::build(AST::Program* p
  * By returning false, this implements a "shallow" visit of the program by skipping
  * all of the function bodies.
  */
-bool FunctionNameBuilder::visit(AST::Function * element) {
+bool FunctionNameBuilder::visit(ASTFunction * element) {
   auto decl = element->getDecl();
   // check to see if the name has been declared
   if (fMap.count(decl->getName()) == 0) {
-    fMap.insert(std::pair<std::string, AST::DeclNode*>(decl->getName(), decl));
+    fMap.insert(std::pair<std::string, ASTDeclNode*>(decl->getName(), decl));
   } else {
     buildError = true;
     s << "Symbol Error: function name " + decl->getName() + " already declared\n";
@@ -82,34 +82,34 @@ bool FunctionNameBuilder::visit(AST::Function * element) {
   return false;
 }
 
-std::map<AST::DeclNode*, std::map<std::string, AST::DeclNode*>> LocalNameBuilder::build(
-    AST::Program* p, std::map<std::string, AST::DeclNode*> fMap, std::ostream &s) {
+std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> LocalNameBuilder::build(
+    ASTProgram* p, std::map<std::string, ASTDeclNode*> fMap, std::ostream &s) {
   LocalNameBuilder visitor(fMap, s);
   p->accept(&visitor);
   symTableBuildError |= visitor.buildError;
   return visitor.lMap;
 }
 
-bool LocalNameBuilder::visit(AST::Function * element) {
+bool LocalNameBuilder::visit(ASTFunction * element) {
   curMap.clear();
   first = true;
   return true;
 }
 
-void LocalNameBuilder::endVisit(AST::Function * element) {
+void LocalNameBuilder::endVisit(ASTFunction * element) {
   auto decl = element->getDecl();
-  lMap.insert(std::pair<AST::DeclNode*,
-                        std::map<std::string, AST::DeclNode*>>(decl, curMap));
+  lMap.insert(std::pair<ASTDeclNode*,
+                        std::map<std::string, ASTDeclNode*>>(decl, curMap));
 }
 
-void LocalNameBuilder::endVisit(AST::DeclNode * element) {
+void LocalNameBuilder::endVisit(ASTDeclNode * element) {
   if (first) {
     // first declaration in a function is the function name which is in the function map
     first = false;
   } else {
     if (fMap.count(element->getName()) == 0) {
       if (curMap.count(element->getName()) == 0) {
-        curMap.insert(std::pair<std::string, AST::DeclNode*>(element->getName(), element));
+        curMap.insert(std::pair<std::string, ASTDeclNode*>(element->getName(), element));
       } else {
         buildError = true;
         s << "Symbol Error: local name " + element->getName() + " redeclared within function\n";
@@ -121,7 +121,7 @@ void LocalNameBuilder::endVisit(AST::DeclNode * element) {
   }
 }
 
-void LocalNameBuilder::endVisit(AST::VariableExpr * element) {
+void LocalNameBuilder::endVisit(ASTVariableExpr * element) {
   if (fMap.count(element->getName()) == 0) {
     if (curMap.count(element->getName()) == 0) {
       buildError = true;

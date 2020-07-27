@@ -16,7 +16,7 @@
  */
 class Stringifier {
 public:
-    static std::string stringify(AST::Node * node);
+    static std::string stringify(ASTNode * node);
     static std::string stringify(TipType * tipType);
     static std::string stringify(TypeConstraint * constraint);
 };

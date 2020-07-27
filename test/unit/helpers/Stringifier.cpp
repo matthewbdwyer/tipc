@@ -8,7 +8,7 @@
 #include <sstream>
 
 
-std::string Stringifier::stringify(AST::Node * node) {
+std::string Stringifier::stringify(ASTNode * node) {
     std::stringstream stream;
     PrettyPrinter prettyPrinter(stream, ' ', 2);
     prettyPrinter.print2(node, stream, ' ', 2);

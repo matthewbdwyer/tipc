@@ -22,7 +22,6 @@
 using namespace std;
 using namespace antlr4;
 using namespace llvm;
-using namespace AST;
 
 static cl::OptionCategory TIPcat("tipc Options",
                                  "Options for controlling the TIP compilation process.");

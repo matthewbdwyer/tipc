@@ -10,6 +10,8 @@ SET_PROPERTY(GLOBAL PROPERTY GrammarIncludeDir ${ANTLR_TIPGrammar_OUTPUT_DIR})
 # list the specific LLVM libraries for this tool
 llvm_map_components_to_libnames(llvm_libs Support Core Passes)
 
+# build the AST and type checking libraries
+add_subdirectory(ast)
 add_subdirectory(types)
 
 # TIP compiler datastructures and passes
@@ -18,22 +20,24 @@ add_subdirectory(types)
 add_library(tip_lib STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS})
 target_sources(tip_lib
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/AST.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/AST.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/ASTVisitor.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/CodeGenerator.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTable.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTable.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinter.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinter.cpp)
-target_link_libraries(tip_lib antlr4_static ${llvm_libs} coverage_config)
-
-# Header files in this directory used in subdirectories
-include_directories(.)
+        ${CMAKE_CURRENT_SOURCE_DIR}/codegen/CodeGenerator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/symboltable/SymbolTable.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/symboltable/SymbolTable.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/prettyprint/PrettyPrinter.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/prettyprint/PrettyPrinter.cpp)
+target_link_libraries(tip_lib antlr4_static ast_lib ${llvm_libs} coverage_config)
 
 ## compiler binary target
 add_executable(tipc tipc.cpp)
 target_link_libraries(tipc tip_lib coverage_config)
+target_include_directories(tipc PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/ast
+        ${CMAKE_CURRENT_SOURCE_DIR}/ast/treetypes
+        ${CMAKE_CURRENT_SOURCE_DIR}/codegen
+        ${CMAKE_CURRENT_SOURCE_DIR}/symboltable
+        ${CMAKE_CURRENT_SOURCE_DIR}/prettyprint
+        ${CMAKE_CURRENT_SOURCE_DIR}/types/concrete
+        ${CMAKE_CURRENT_SOURCE_DIR}/types/constraints
+        )
+
 

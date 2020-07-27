@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iostream>
 
-TipVar::TipVar(AST::Node * node): node(node) {};
+TipVar::TipVar(ASTNode * node): node(node) {};
 
 bool TipVar::operator==(const TipType &other) const {
     if(auto t = dynamic_cast<TipVar const *>(&other)) {

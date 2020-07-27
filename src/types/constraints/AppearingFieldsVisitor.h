@@ -8,7 +8,7 @@
 class AppearingFieldsVisitor:  public ASTVisitor {
 public:
     AppearingFieldsVisitor() = default;
-    virtual void endVisit(AST::FieldExpr * element) override;
+    virtual void endVisit(ASTFieldExpr * element) override;
     std::set<std::string>& getFields();
 
 private:

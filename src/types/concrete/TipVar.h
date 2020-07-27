@@ -7,9 +7,9 @@
 class TipVar: public TipType {
 public:
     TipVar() = default;
-    TipVar(AST::Node * node);
+    TipVar(ASTNode * node);
 
-    AST::Node * node;
+    ASTNode * node;
     bool operator==(const TipType& other) const override;
     bool operator!=(const TipType& other) const override;
     std::ostream& print(std::ostream &out) const override;

@@ -31,6 +31,9 @@ target_sources(types_lib PUBLIC
         )
 target_include_directories(types_lib PUBLIC
         ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/ast
+        ${CMAKE_SOURCE_DIR}/src/ast/treetypes
+        ${CMAKE_SOURCE_DIR}/src/symboltable
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints
         )

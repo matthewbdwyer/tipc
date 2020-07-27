@@ -1,6 +1,6 @@
 #include "AppearingFieldsVisitor.h"
 
-void AppearingFieldsVisitor::endVisit(AST::FieldExpr * element) {
+void AppearingFieldsVisitor::endVisit(ASTFieldExpr * element) {
     fields.emplace(element->getField());
 }
 

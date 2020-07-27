@@ -16,30 +16,30 @@ public:
     TypeConstraintVisitor() = delete;
     TypeConstraintVisitor(SymbolTable &table, std::set<std::string> &appearingFields);
 
-    void endVisit(AST::Program * element) override;
-    bool visit(AST::Function * element) override;
-    void endVisit(AST::Function * element) override;
-    void endVisit(AST::NumberExpr * element) override;
-    void endVisit(AST::VariableExpr * element) override;
-    void endVisit(AST::BinaryExpr * element) override;
-    void endVisit(AST::InputExpr * element) override;
-    void endVisit(AST::FunAppExpr * element) override;
-    void endVisit(AST::AllocExpr * element) override;
-    void endVisit(AST::RefExpr * element) override;
-    void endVisit(AST::DeRefExpr * element) override;
-    void endVisit(AST::NullExpr * element) override;
-    void endVisit(AST::FieldExpr * element) override;
-    void endVisit(AST::RecordExpr * element) override;
-    void endVisit(AST::AccessExpr * element) override;
-    void endVisit(AST::DeclNode * element) override;
-    void endVisit(AST::DeclStmt * element) override;
-    void endVisit(AST::AssignStmt * element) override;
-    void endVisit(AST::WhileStmt * element) override;
-    void endVisit(AST::IfStmt * element) override;
-    void endVisit(AST::OutputStmt * element) override;
-    void endVisit(AST::ReturnStmt * element) override;
-    void endVisit(AST::ErrorStmt * element) override;
-    void endVisit(AST::BlockStmt * element) override;
+    void endVisit(ASTProgram * element) override;
+    bool visit(ASTFunction * element) override;
+    void endVisit(ASTFunction * element) override;
+    void endVisit(ASTNumberExpr * element) override;
+    void endVisit(ASTVariableExpr * element) override;
+    void endVisit(ASTBinaryExpr * element) override;
+    void endVisit(ASTInputExpr * element) override;
+    void endVisit(ASTFunAppExpr * element) override;
+    void endVisit(ASTAllocExpr * element) override;
+    void endVisit(ASTRefExpr * element) override;
+    void endVisit(ASTDeRefExpr * element) override;
+    void endVisit(ASTNullExpr * element) override;
+    void endVisit(ASTFieldExpr * element) override;
+    void endVisit(ASTRecordExpr * element) override;
+    void endVisit(ASTAccessExpr * element) override;
+    void endVisit(ASTDeclNode * element) override;
+    void endVisit(ASTDeclStmt * element) override;
+    void endVisit(ASTAssignStmt * element) override;
+    void endVisit(ASTWhileStmt * element) override;
+    void endVisit(ASTIfStmt * element) override;
+    void endVisit(ASTOutputStmt * element) override;
+    void endVisit(ASTReturnStmt * element) override;
+    void endVisit(ASTErrorStmt * element) override;
+    void endVisit(ASTBlockStmt * element) override;
 
     std::vector<TypeConstraint> get_constraints();
 private:
@@ -51,6 +51,6 @@ private:
     // the canonical representations of identifiers to propagate up to
     // where they are used.
     std::stack<std::shared_ptr<TipType>> visitResults;
-    std::stack<AST::DeclNode *> scope;
+    std::stack<ASTDeclNode *> scope;
 };
 

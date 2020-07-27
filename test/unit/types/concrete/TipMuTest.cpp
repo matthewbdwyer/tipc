@@ -6,7 +6,7 @@
 
 TEST_CASE("TipMu: test TipMus are compared by their underlying t and v" "[TipMu]") {
     auto term = std::make_shared<TipInt>();
-    AST::NumberExpr n(42);
+    ASTNumberExpr n(42);
     auto var = std::make_shared<TipVar>(&n);
 
     TipMu mu(var, term);
@@ -16,8 +16,8 @@ TEST_CASE("TipMu: test TipMus are compared by their underlying t and v" "[TipMu]
 
 TEST_CASE("TipMu: test not equals" "[TipMu]") {
     auto term = std::make_shared<TipInt>();
-    AST::NumberExpr n(42);
-    AST::NumberExpr n2(42);
+    ASTNumberExpr n(42);
+    ASTNumberExpr n2(42);
     auto var = std::make_shared<TipVar>(&n);
     auto var2 = std::make_shared<TipVar>(&n2);
 
@@ -28,7 +28,7 @@ TEST_CASE("TipMu: test not equals" "[TipMu]") {
 
 TEST_CASE("TipMu: test TipMu is a Mu" "[TipMu]") {
     auto term = std::make_shared<TipInt>();
-    AST::NumberExpr n(42);
+    ASTNumberExpr n(42);
     auto var = std::make_shared<TipVar>(&n);
 
     TipMu mu(var, term);
@@ -37,7 +37,7 @@ TEST_CASE("TipMu: test TipMu is a Mu" "[TipMu]") {
 
 TEST_CASE("TipMu: test TipMu is a TipType" "[TipMu]") {
     auto term = std::make_shared<TipInt>();
-    AST::NumberExpr n(42);
+    ASTNumberExpr n(42);
     auto var = std::make_shared<TipVar>(&n);
 
     TipMu mu(var, term);
@@ -47,7 +47,7 @@ TEST_CASE("TipMu: test TipMu is a TipType" "[TipMu]") {
 // TODO
 TEST_CASE("TipMu: test this is returned when substitute equals member v", "[.][TipMu]") {
     //auto term = std::make_shared<TipInt>();
-    //AST::NumberExpr n(42);
+    //ASTNumberExpr n(42);
     //auto var = std::make_shared<TipVar>(&n);
 
     //TipMu mu(var, term);

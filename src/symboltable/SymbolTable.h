@@ -10,21 +10,21 @@
  * each function.
  */ 
 class SymbolTable {
-  std::map<std::string, AST::DeclNode*> functionNames;
-  std::map<AST::DeclNode*, std::map<std::string, AST::DeclNode*>> localNames;
+  std::map<std::string, ASTDeclNode*> functionNames;
+  std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> localNames;
 public:
-  SymbolTable(std::map<std::string, AST::DeclNode*> f,
-              std::map<AST::DeclNode*, std::map<std::string, AST::DeclNode*>> l)
+  SymbolTable(std::map<std::string, ASTDeclNode*> f,
+              std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> l)
       : functionNames(f), localNames(l) {}
-  AST::DeclNode* getFunction(std::string s);
-  AST::DeclNode* getLocal(std::string s, AST::DeclNode* f);
+  ASTDeclNode* getFunction(std::string s);
+  ASTDeclNode* getLocal(std::string s, ASTDeclNode* f);
 
    /*
    * If SymbolTable is built without error then a unique pointer to it is 
    * found in the value() of the returned result, oherwise 
    * std::nullopt is returned.
    */
-  static std::optional<std::unique_ptr<SymbolTable>> build(AST::Program* p, std::ostream &s);
+  static std::optional<std::unique_ptr<SymbolTable>> build(ASTProgram* p, std::ostream &s);
 
   static void print(SymbolTable* st, std::ostream &s);
 };
@@ -46,9 +46,9 @@ class FunctionNameBuilder : public ASTVisitor {
 public:
   FunctionNameBuilder(std::ostream &s) : s(s) {}
   // this map is public so that the static method can access it
-  std::map<std::string, AST::DeclNode*> fMap;
-  static std::map<std::string, AST::DeclNode*> build(AST::Program* p, std::ostream &s);
-  virtual bool visit(AST::Function * element) override;
+  std::map<std::string, ASTDeclNode*> fMap;
+  static std::map<std::string, ASTDeclNode*> build(ASTProgram* p, std::ostream &s);
+  virtual bool visit(ASTFunction * element) override;
 };
 
 /*
@@ -59,23 +59,23 @@ public:
  * - VariableExpr to ensure that the referenced name is in the map
  */
 class LocalNameBuilder : public ASTVisitor {
-  std::map<std::string, AST::DeclNode*> curMap;
-  std::map<std::string, AST::DeclNode*> fMap;
+  std::map<std::string, ASTDeclNode*> curMap;
+  std::map<std::string, ASTDeclNode*> fMap;
   bool first = true;
   bool buildError = false;
   // stream used to emit error messages
   std::ostream &s;
 public:
-  LocalNameBuilder(std::map<std::string, AST::DeclNode*> fMap, std::ostream &s) : 
+  LocalNameBuilder(std::map<std::string, ASTDeclNode*> fMap, std::ostream &s) : 
       fMap(fMap), s(s) {}
   // this map is public so that the static method can access it
-  std::map<AST::DeclNode*, 
-           std::map<std::string, AST::DeclNode*>> lMap;
-  static std::map<AST::DeclNode*, std::map<std::string, AST::DeclNode*>> build(
-      AST::Program* p, std::map<std::string, AST::DeclNode*> fMap, std::ostream &s);
-  virtual bool visit(AST::Function * element) override;
-  virtual void endVisit(AST::Function * element) override;
-  virtual void endVisit(AST::DeclNode * element) override;
-  virtual void endVisit(AST::VariableExpr * element) override;
+  std::map<ASTDeclNode*, 
+           std::map<std::string, ASTDeclNode*>> lMap;
+  static std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> build(
+      ASTProgram* p, std::map<std::string, ASTDeclNode*> fMap, std::ostream &s);
+  virtual bool visit(ASTFunction * element) override;
+  virtual void endVisit(ASTFunction * element) override;
+  virtual void endVisit(ASTDeclNode * element) override;
+  virtual void endVisit(ASTVariableExpr * element) override;
 };
 
