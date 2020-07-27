@@ -1,9 +1,23 @@
 #include "PrettyPrinter.h"
 #include <iostream>
+#include <sstream>
 
 void PrettyPrinter::print(AST::Program *p, std::ostream &s, char c, int n) {
    PrettyPrinter visitor(s, c, n);
    p->accept(&visitor);
+}
+
+void PrettyPrinter::print2(AST::Node *p, std::ostream &s, char c, int n) {
+    PrettyPrinter visitor(s, c, n);
+    visitor.endVisitNode(p);
+}
+
+void PrettyPrinter::endVisitNode(AST::Node * element) {
+    element->accept(this);
+    for (auto &x : visitResults) {
+        os << x;
+    }
+    os.flush();
 }
 
 void PrettyPrinter::endVisit(AST::Program * element) {

@@ -18,7 +18,10 @@ build
 
 # CLion
 .idea/
-src/cmake-build-debug/
+cmake-build-debug
 
 # Vim
 *.swp
+
+# Lcov
+gen/

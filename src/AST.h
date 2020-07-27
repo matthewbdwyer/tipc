@@ -310,6 +310,7 @@ public:
   void setName(std::string n) { name = n; }
   std::string getName() { return name; }
   std::vector<Function*> getFunctions();
+  Function * findFunctionByName(std::string);
   void accept(ASTVisitor * visitor);
   std::unique_ptr<llvm::Module> codegen(std::string name);
 };

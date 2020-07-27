@@ -15,6 +15,8 @@ public:
           os(os), indentChar(indentChar), indentSize(indentSize) {}
 
   static void print(AST::Program* p, std::ostream &s, char c, int n);
+  void print2(AST::Node *p, std::ostream &s, char c, int n);
+  virtual void endVisitNode(AST::Node * element);
 
   virtual void endVisit(AST::Program * element) override;
   virtual bool visit(AST::Function * element) override;
