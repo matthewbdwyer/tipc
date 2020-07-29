@@ -43,7 +43,6 @@ TEST_CASE("TypeConstraintVisitor: Test constraint generation", "[TypeConstraintV
             "[[x]] = [[input]]",
             "[[alloc x]] = &[[x]]",
             "[[y]] = [[alloc x]]",
-            "[[y]] = &[[*y]]",
             "[[y]] = &[[x]]",
             "[[y]] = &[[*y]]",
             "[[z]] = [[*y]]",
@@ -56,16 +55,7 @@ TEST_CASE("TypeConstraintVisitor: Test constraint generation", "[TypeConstraintV
         auto actualConstraint = Stringifier::stringify(&tcs.at(i));
         REQUIRE(expectedConstraint == actualConstraint);
     }
-
-    // NB: The textbook shows 8 constraints but the nature of our
-    // AST actually leads us to generate 9 (1 duplicate). This comes
-    // from the fact that assignments and assignments through pointers
-    // are both mapped to assignment expressions (whereas in the textbook,
-    // they are separate constructs). When processing an assignment through
-    // a pointer we end up travelling down the tree into the LHS's dereference
-    // expression. This generates an additional constraint that in not generated
-    // in the textbook example.
-    REQUIRE(tcs.size() == 9);
+    REQUIRE(tcs.size() == 8);
 }
 
 TEST_CASE("TypeConstraintVisitor: Test constraint generation2", "[TypeConstraintVisitor]") {

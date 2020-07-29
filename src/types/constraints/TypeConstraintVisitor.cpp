@@ -203,26 +203,14 @@ void TypeConstraintVisitor::endVisit(ASTDeclNode * element) {
     visitResults.push(node);
 }
 
-void TypeConstraintVisitor::endVisit(ASTAssignStmt  * element) {
+void TypeConstraintVisitor::endVisit(ASTVariableAssignStmt  * element) {
     auto node = std::make_shared<TipVar>(element);
     auto rhs = visitResults.top();
     visitResults.pop();
-    auto _lhs = visitResults.top();
-    if(auto tipVar = std::dynamic_pointer_cast<TipVar>(_lhs)) {
-        if(auto deref = dynamic_cast<ASTDeRefExpr *>(tipVar->node)) {
-            auto lhs = std::make_shared<TipVar>(deref->getPtr());
-            auto r = std::make_shared<TipRef>(rhs);
-
-            TypeConstraint constraint(lhs, r);
-            constraints.push_back(constraint);
-            visitResults.pop();
-            visitResults.push(node);
-            return;
-        }
-    }
+    auto lhs = visitResults.top();
     visitResults.pop();
 
-    TypeConstraint constraint(_lhs, rhs);
+    TypeConstraint constraint(lhs, rhs);
     constraints.push_back(constraint);
     visitResults.push(node);
 }
@@ -314,6 +302,18 @@ void TypeConstraintVisitor::endVisit(ASTBlockStmt * element) {
     for(auto &_ : element->getStmts()) {
         visitResults.pop();
     }
+    visitResults.push(node);
+}
+
+void TypeConstraintVisitor::endVisit(ASTPointerAssignStmt *element) {
+    auto node = std::make_shared<TipVar>(element);
+    auto rhs = std::make_shared<TipRef>(visitResults.top());
+    visitResults.pop();
+    auto lhs = visitResults.top();
+    visitResults.pop();
+
+    TypeConstraint constraint(lhs, rhs);
+    constraints.push_back(constraint);
     visitResults.push(node);
 }
 

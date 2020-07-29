@@ -64,7 +64,11 @@ statement : blockStmt
     | errorStmt
 ;
 
-assignmentStmt : expr '=' expr ';' ;
+assignmentStmt : pointerAssignment | variableAssignment ;
+
+variableAssignment : expr '=' expr ';' ;
+
+pointerAssignment : '*' expr '=' expr ';' ;
 
 blockStmt : '{' (statement*) '}' ;
 

@@ -3,11 +3,11 @@
 #include "ASTStmt.h"
 #include "ASTExpr.h"
 
-// ASTAssignStmt - class for assignment
-class ASTAssignStmt : public ASTStmt {
+// ASTVariableAssignStmt - class for assignment
+class ASTVariableAssignStmt : public ASTStmt {
   std::unique_ptr<ASTExpr> LHS, RHS;
 public:
-  ASTAssignStmt(std::unique_ptr<ASTExpr> LHS, std::unique_ptr<ASTExpr> RHS)
+  ASTVariableAssignStmt(std::unique_ptr<ASTExpr> LHS, std::unique_ptr<ASTExpr> RHS)
       : LHS(std::move(LHS)), RHS(std::move(RHS)) {}
   ASTExpr* getLHS() { return LHS.get(); }
   ASTExpr* getRHS() { return RHS.get(); }

@@ -20,8 +20,8 @@ public:
   ASTBuilder(TIPParser *parser);
 
   /*
-   * If AST is built without error then a unique pointer to it is 
-   * found in the value() of the returned result, oherwise 
+   * If AST is built without error then a unique pointer to it is
+   * found in the value() of the returned result, oherwise
    * std::nullopt is returned.
    */
   std::optional<std::unique_ptr<ASTProgram>> build(TIPParser::ProgramContext *ctx);
@@ -30,8 +30,7 @@ public:
   Any visitNegNumber(TIPParser::NegNumberContext *ctx) override;
   Any visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) override;
   Any visitRelationalExpr(TIPParser::RelationalExprContext *ctx) override;
-  Any visitMultiplicativeExpr(
-      TIPParser::MultiplicativeExprContext *ctx) override;
+  Any visitMultiplicativeExpr(TIPParser::MultiplicativeExprContext *ctx) override;
   Any visitEqualityExpr(TIPParser::EqualityExprContext *ctx) override;
   Any visitParenExpr(TIPParser::ParenExprContext *ctx) override;
   Any visitNumExpr(TIPParser::NumExprContext *ctx) override;
@@ -47,7 +46,8 @@ public:
   Any visitAccessExpr(TIPParser::AccessExprContext *ctx) override;
   Any visitDeclaration(TIPParser::DeclarationContext *ctx) override;
   Any visitNameDeclaration(TIPParser::NameDeclarationContext *ctx) override;
-  Any visitAssignmentStmt(TIPParser::AssignmentStmtContext *ctx) override;
+  Any visitVariableAssignment(TIPParser::VariableAssignmentContext *ctx) override;
+  Any visitPointerAssignment(TIPParser::PointerAssignmentContext *ctx) override;
   Any visitBlockStmt(TIPParser::BlockStmtContext *ctx) override;
   Any visitWhileStmt(TIPParser::WhileStmtContext *ctx) override;
   Any visitIfStmt(TIPParser::IfStmtContext *ctx) override;

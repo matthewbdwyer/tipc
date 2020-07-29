@@ -320,15 +320,6 @@ Any ASTBuilder::visitNameDeclaration(TIPParser::NameDeclarationContext *ctx) {
   return "";
 }
 
-Any ASTBuilder::visitAssignmentStmt(TIPParser::AssignmentStmtContext *ctx) {
-  visit(ctx->expr(0));
-  auto lhs = std::move(visitedExpr);
-  visit(ctx->expr(1));
-  auto rhs = std::move(visitedExpr);
-  visitedStmt = std::make_unique<ASTAssignStmt>(std::move(lhs), std::move(rhs));
-  return "";
-}
-
 Any ASTBuilder::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
   std::vector<std::unique_ptr<ASTStmt>> bStmts;
   for (auto s : ctx->statement()) {
@@ -382,4 +373,22 @@ Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ASTReturnStmt>(std::move(visitedExpr));
   return "";
+}
+
+Any ASTBuilder::visitVariableAssignment(TIPParser::VariableAssignmentContext *ctx) {
+    visit(ctx->expr(0));
+    auto lhs = std::move(visitedExpr);
+    visit(ctx->expr(1));
+    auto rhs = std::move(visitedExpr);
+    visitedStmt = std::make_unique<ASTVariableAssignStmt>(std::move(lhs), std::move(rhs));
+    return "";
+}
+
+Any ASTBuilder::visitPointerAssignment(TIPParser::PointerAssignmentContext *ctx) {
+    visit(ctx->expr(0));
+    auto lhs = std::move(visitedExpr);
+    visit(ctx->expr(1));
+    auto rhs = std::move(visitedExpr);
+    visitedStmt = std::make_unique<ASTPointerAssignStmt>(std::move(lhs), std::move(rhs));
+    return "";
 }
