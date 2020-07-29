@@ -22,7 +22,14 @@ void PrettyPrinter::endVisitNode(ASTNode * element) {
 
 void PrettyPrinter::endVisit(ASTProgram * element) {
   std::string programString = "";
+  bool skip = true;
   for (auto &fn : element->getFunctions()) {
+    if (skip) {
+      programString = visitResults.back() + programString;
+      visitResults.pop_back();
+      skip = false;
+      continue;
+    }
     programString = visitResults.back() + "\n" + programString;
     visitResults.pop_back();
   }
