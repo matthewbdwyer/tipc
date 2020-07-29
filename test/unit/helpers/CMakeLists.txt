@@ -15,4 +15,4 @@ target_include_directories(test_helpers
         ${CMAKE_SOURCE_DIR}/src/types/concrete
         ${CMAKE_SOURCE_DIR}/src/types/constraints
 )
-target_link_libraries(test_helpers tip_lib types_lib)
+target_link_libraries(test_helpers ast types)

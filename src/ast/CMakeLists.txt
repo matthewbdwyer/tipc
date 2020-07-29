@@ -1,7 +1,4 @@
-#add_library(ast STATIC)
-# TIP GRAMMAR HERE FIRST MAKES SENSE
-antlr_target(TIPGrammar TIP.g4 VISITOR)
-add_library(ast STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS})
+add_library(ast STATIC)
 target_sources(ast PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/treetypes/AST.h
 		${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTAccessExpr.cpp

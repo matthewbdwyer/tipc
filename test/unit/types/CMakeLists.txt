@@ -1,4 +1,4 @@
-add_executable(types_test )
+add_executable(types_test)
 target_sources(types_test
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlphaTest.cpp
@@ -19,4 +19,4 @@ target_include_directories(types_test
         ${CMAKE_SOURCE_DIR}/src/types/solver
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete
 )
-target_link_libraries(types_test types_lib tip_lib test_helpers)
+target_link_libraries(types_test antlr4_static dummy ${llvm_libs} ast codegen prettyprint symboltable types test_helpers)

@@ -19,4 +19,5 @@ target_sources(unit_tests PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTableTest.cpp
 )
 target_include_directories(unit_tests PUBLIC helpers)
-target_link_libraries(unit_tests tip_lib test_helpers)
+#target_link_libraries(unit_tests ast symboltable test_helpers)
+target_link_libraries(unit_tests antlr4_static dummy ${llvm_libs} ast codegen prettyprint symboltable types test_helpers)

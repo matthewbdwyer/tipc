@@ -1,5 +1,5 @@
-add_library(types_lib STATIC constraints/AppearingFieldsVisitor.cpp constraints/AppearingFieldsVisitor.h)
-target_sources(types_lib PUBLIC
+add_library(types STATIC constraints/AppearingFieldsVisitor.cpp constraints/AppearingFieldsVisitor.h)
+target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipCons.cpp
@@ -29,7 +29,7 @@ target_sources(types_lib PUBLIC
         #${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.cpp
         #${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
         )
-target_include_directories(types_lib PUBLIC
+target_include_directories(types PUBLIC
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/ast
         ${CMAKE_SOURCE_DIR}/src/ast/treetypes
