@@ -3,7 +3,6 @@
 #include "TipVar.h"
 #include "TipCons.h"
 #include <string>
-#include <any>
 
 class TipAlpha: public TipVar {
 public:
