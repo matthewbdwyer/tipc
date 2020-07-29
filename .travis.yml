@@ -1,5 +1,9 @@
 language: c++
 
+addons:
+  apt:
+    packages: lcov
+
 jobs:
   include:
     - os: linux
@@ -18,3 +22,14 @@ script:
   - echo running unit tests...
   - ./test/unit/unit_tests
   - ./test/unit/types/types_test
+  - echo running system tests...
+  - cd test/system
+  - ./run.sh
+
+after_success:
+  - lcov --capture --directory build/src -output-file tipc.coverage.info
+  - lcov --remove /tmp/tipc.coverage.info '/usr/include/*' -o tipc.coverage.info
+  - lcov --remove /tmp/tipc.coverage.info '*.h' -o tipc.coverage.info
+  - lcov --remove /tmp/tipc.coverage.info '*.def' -o tipc.coverage.info
+  - lcov --list tipc.coverage.info
+  - bash <(curl -s https://codecov.io/bash) -f tipc.coverage.info || echo "Codecov did not collect coverage reports"

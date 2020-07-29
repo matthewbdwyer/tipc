@@ -1,3 +1,5 @@
+CODECOV_TOKEN="3799f38b-f5ba-49b3-9f51-ac1002ff5342"
+
 Coverage
 - ensure that we get consistent coverage information
   * it seems to fluctuate
