@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/matthewbdwyer/tipc.svg?branch=devel)](https://travis-ci.com/matthewbdwyer/tipc)
 
-[![codecov.io](https://codecov.io/github/matthewbdwyer/tipc/coverage.svg?branch=devel)](https://codecov.io/github/matthewbdwyer/tipc?branch=devel)
+[![codecov.io](https://codecov.io/gh/matthewbdwyer/tipc/coverage.svg?branch=devel)](https://codecov.io/gh/matthewbdwyer/tipc?branch=devel)
 
 # tipc
 A compiler from TIP to llvm bitcode
