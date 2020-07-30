@@ -29,9 +29,9 @@ script:
 
 after_success:
   - lcov --capture --directory build/src -output-file coverage.info
-  - lcov --remove /tmp/tipc.coverage.info '/usr/include/*' -o coverage.info
-  - lcov --remove /tmp/tipc.coverage.info '*.h' -o coverage.info
-  - lcov --remove /tmp/tipc.coverage.info '*.def' -o coverage.info
+  - lcov --remove coverage.info '/usr/include/*' -o coverage.info
+  - lcov --remove coverage.info '*.h' -o coverage.info
+  - lcov --remove coverage.info '*.def' -o coverage.info
   - lcov --list coverage.info
   - export CODECOV_TOKEN="3799f38b-f5ba-49b3-9f51-ac1002ff5342"
   - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
