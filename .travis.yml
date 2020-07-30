@@ -24,6 +24,8 @@ script:
   - ./test/unit/unit_tests
   - ./test/unit/types/types_test
   - echo running system tests...
+  - cd ../rtlib
+  - ./build.sh
   - cd ../test/system
   - ./run.sh
 
