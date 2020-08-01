@@ -46,8 +46,7 @@ public:
   Any visitAccessExpr(TIPParser::AccessExprContext *ctx) override;
   Any visitDeclaration(TIPParser::DeclarationContext *ctx) override;
   Any visitNameDeclaration(TIPParser::NameDeclarationContext *ctx) override;
-  Any visitVariableAssignment(TIPParser::VariableAssignmentContext *ctx) override;
-  Any visitPointerAssignment(TIPParser::PointerAssignmentContext *ctx) override;
+  Any visitAssignStmt(TIPParser::AssignStmtContext *ctx) override;
   Any visitBlockStmt(TIPParser::BlockStmtContext *ctx) override;
   Any visitWhileStmt(TIPParser::WhileStmtContext *ctx) override;
   Any visitIfStmt(TIPParser::IfStmtContext *ctx) override;

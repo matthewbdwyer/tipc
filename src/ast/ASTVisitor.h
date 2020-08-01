@@ -36,10 +36,8 @@ public:
   virtual void endVisit(ASTDeclNode * element) {}
   virtual bool visit(ASTDeclStmt * element) { return true; }
   virtual void endVisit(ASTDeclStmt * element) {}
-  virtual bool visit(ASTPointerAssignStmt * element) { return true; }
-  virtual void endVisit(ASTPointerAssignStmt * element) {}
-  virtual bool visit(ASTVariableAssignStmt * element) { return true; }
-  virtual void endVisit(ASTVariableAssignStmt * element) {}
+  virtual bool visit(ASTAssignStmt * element) { return true; }
+  virtual void endVisit(ASTAssignStmt * element) {}
   virtual bool visit(ASTWhileStmt * element) { return true; }
   virtual void endVisit(ASTWhileStmt * element) {}
   virtual bool visit(ASTIfStmt * element) { return true; }

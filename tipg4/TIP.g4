@@ -21,18 +21,23 @@ nameDeclaration : IDENTIFIER ;
 
 // Expressions in TIP are ordered to capture precedence.
 // We adopt the C convention that orders operators as:
-//   postfix, unary, multiplicative, additive, relational,
-//   equality, 
+//   postfix, unary, multiplicative, additive, relational, and equality 
 //
 // NB: # creates rule label that can be accessed in visitor
 //
-// When we have complex rules we introduce a placeholder rule label,
-// e.g., #recordRule, and use the associated independent expr rule
-// to define the syntax, e.g., #recordExpr.
+// ANTLR4 can automatically refactor direct left-recursion so we
+// place all recursive rules as options in a single rule.  This
+// means that we have some complex rules here that might otherwise
+// be separated out, e.g., funAppExpr, and that we can't factor out
+// other useful concepts, e.g., defining a rule for the subset of
+// expressions that can be used as an l-value.  We prefer a clean 
+// grammar, which simplifies AST construction, and work around these
+// issues elsewhere in the compiler, e.g.,  introducing an assignable expr
+// weeding pass. 
 //
 expr : expr '(' (expr (',' expr)*)? ')' 	#funAppExpr
-     | expr '.' IDENTIFIER			#accessExpr
-     | '*' expr					#deRefExpr
+     | expr '.' IDENTIFIER 			#accessExpr
+     | '*' expr 				#deRefExpr
      | SUB NUMBER				#negNumber
      | '&' varExpr				#refExpr
      | expr op=(MUL | DIV) expr 		#multiplicativeExpr
@@ -57,18 +62,14 @@ fieldExpr : IDENTIFIER ':' expr ;
 ////////////////////// TIP Statements ////////////////////////// 
 
 statement : blockStmt
-    | assignmentStmt
+    | assignStmt
     | whileStmt
     | ifStmt
     | outputStmt
     | errorStmt
 ;
 
-assignmentStmt : pointerAssignment | variableAssignment ;
-
-variableAssignment : expr '=' expr ';' ;
-
-pointerAssignment : '*' expr '=' expr ';' ;
+assignStmt : expr '=' expr ';' ;
 
 blockStmt : '{' (statement*) '}' ;
 

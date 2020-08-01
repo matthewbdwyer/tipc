@@ -375,20 +375,11 @@ Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   return "";
 }
 
-Any ASTBuilder::visitVariableAssignment(TIPParser::VariableAssignmentContext *ctx) {
+Any ASTBuilder::visitAssignStmt(TIPParser::AssignStmtContext *ctx) {
     visit(ctx->expr(0));
     auto lhs = std::move(visitedExpr);
     visit(ctx->expr(1));
     auto rhs = std::move(visitedExpr);
-    visitedStmt = std::make_unique<ASTVariableAssignStmt>(std::move(lhs), std::move(rhs));
-    return "";
-}
-
-Any ASTBuilder::visitPointerAssignment(TIPParser::PointerAssignmentContext *ctx) {
-    visit(ctx->expr(0));
-    auto lhs = std::move(visitedExpr);
-    visit(ctx->expr(1));
-    auto rhs = std::move(visitedExpr);
-    visitedStmt = std::make_unique<ASTPointerAssignStmt>(std::move(lhs), std::move(rhs));
+    visitedStmt = std::make_unique<ASTAssignStmt>(std::move(lhs), std::move(rhs));
     return "";
 }

@@ -4,7 +4,7 @@
 TipAlpha::TipAlpha(std::string x): x(x) {};
 
 std::ostream &TipAlpha::print(std::ostream &out) const {
-    out << "\u03B1";
+    out << "\u03B1" << x;
     return out;
 }
 

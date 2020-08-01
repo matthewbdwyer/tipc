@@ -715,7 +715,7 @@ llvm::Value* ASTDeclStmt::codegen() {
   return localAlloca;
 }
 
-llvm::Value* ASTVariableAssignStmt::codegen() {
+llvm::Value* ASTAssignStmt::codegen() {
   // trigger code generation for l-value expressions
   lValueGen = true;
   Value *lValue = getLHS()->codegen();
@@ -732,6 +732,8 @@ llvm::Value* ASTVariableAssignStmt::codegen() {
 
   return Builder.CreateStore(rValue, lValue);
 }
+
+
 
 llvm::Value* ASTBlockStmt::codegen() {
   Value *lastStmt = nullptr;
@@ -941,9 +943,4 @@ llvm::Value* ASTErrorStmt::codegen() {
 llvm::Value* ASTReturnStmt::codegen() {
   Value *argVal = getArg()->codegen();
   return Builder.CreateRet(argVal);
-}
-
-// TODO
-llvm::Value *ASTPointerAssignStmt::codegen() {
-    return nullptr;
 }

@@ -35,8 +35,7 @@ public:
   virtual void endVisit(ASTAccessExpr * element) override;
   virtual void endVisit(ASTDeclNode * element) override;
   virtual void endVisit(ASTDeclStmt * element) override;
-  virtual void endVisit(ASTVariableAssignStmt * element) override;
-  virtual void endVisit(ASTPointerAssignStmt * element) override;
+  virtual void endVisit(ASTAssignStmt * element) override;
   virtual bool visit(ASTBlockStmt * element) override;
   virtual void endVisit(ASTBlockStmt * element) override;
   virtual bool visit(ASTWhileStmt * element) override;

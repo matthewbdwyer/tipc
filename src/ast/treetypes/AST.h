@@ -11,7 +11,7 @@
 
 #include "ASTAccessExpr.h"
 #include "ASTAllocExpr.h"
-#include "ASTVariableAssignStmt.h"
+#include "ASTAssignStmt.h"
 #include "ASTBinaryExpr.h"
 #include "ASTBlockStmt.h"
 #include "ASTDeRefExpr.h"
@@ -28,7 +28,6 @@
 #include "ASTNullExpr.h"
 #include "ASTNumberExpr.h"
 #include "ASTOutputStmt.h"
-#include "ASTPointerAssignStmt.h"
 #include "ASTProgram.h"
 #include "ASTRecordExpr.h"
 #include "ASTRefExpr.h"

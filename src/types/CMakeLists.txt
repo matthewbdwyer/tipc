@@ -1,4 +1,4 @@
-add_library(types STATIC constraints/AppearingFieldsVisitor.cpp constraints/AppearingFieldsVisitor.h)
+add_library(types)
 target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.h

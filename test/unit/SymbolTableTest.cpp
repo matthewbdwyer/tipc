@@ -96,6 +96,32 @@ TEST_CASE("Symbol Table: locals params ", "[Symbol]") {
     REQUIRE(found!=std::string::npos);
 }
 
+TEST_CASE("SymbolTable: fields", "[SymbolTable]") {
+    std::stringstream stream;
+    stream << R"(
+      main(){
+        var rec1, rec2;
+        rec1 = {a:1, b:2, c:3};
+        rec2 = {d:4, e:5, f:6};
+        return 0;
+      }
+    )";
+
+    std::stringstream outputStream;
+    auto ast = ASTHelper::build_ast(stream);
+
+    auto symbols = SymbolTable::build(ast.get(), outputStream);
+    // There should be no error messages emitted
+    REQUIRE(symbols != std::nullopt);
+
+    SymbolTable::print(symbols.value().get(), outputStream);
+    std::string output = outputStream.str();
+
+    std::size_t found = output.find("Fields : {a, b, c, d, e, f}");
+    REQUIRE(found!=std::string::npos);
+}
+
+
 /******************** symbol errors *******************/
 
 TEST_CASE("Symbol Table: local undeclared", "[Symbol]") {

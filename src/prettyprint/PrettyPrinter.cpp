@@ -218,7 +218,7 @@ void PrettyPrinter::endVisit(ASTDeclStmt * element) {
   visitResults.push_back(declString);
 }
 
-void PrettyPrinter::endVisit(ASTVariableAssignStmt * element) {
+void PrettyPrinter::endVisit(ASTAssignStmt * element) {
   std::string rhsString = visitResults.back();
   visitResults.pop_back();
   std::string lhsString = visitResults.back();
@@ -316,13 +316,5 @@ void PrettyPrinter::endVisit(ASTReturnStmt * element) {
 
 std::string PrettyPrinter::indent() const {
   return std::string(indentLevel*indentSize, indentChar);
-}
-
-void PrettyPrinter::endVisit(ASTPointerAssignStmt *element) {
-    std::string rhsString = visitResults.back();
-    visitResults.pop_back();
-    std::string lhsString = visitResults.back();
-    visitResults.pop_back();
-    visitResults.push_back(indent() + "*" + lhsString + " = " + rhsString + ";");
 }
 
