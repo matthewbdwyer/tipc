@@ -1,25 +1,20 @@
 #include "TipRecord.h"
 
-TipRecord::TipRecord(std::vector<std::shared_ptr<TipType>> inits,
-                     std::vector<std::string> names) : 
-       inits(inits), names(names) { }
+TipRecord::TipRecord(std::vector<std::shared_ptr<TipType>> inits, std::vector<std::string> names)
+  : TipCons(inits), names(names) { }
 
-
-int TipRecord::arity() {
-    return inits.size();
-}
 
 std::ostream& TipRecord::print(std::ostream &out) const {
     out << "{";
     bool first = true;
     int i = 0;
-    for(auto &init : inits) {
+    for(auto &init : arguments) {
         if(first) {
-            out << names.at(i++) << ":" << init.get();
+            out << names.at(i++) << ":" << *init;
             first = false;
             continue;
         }
-        out << ", " << names.at(i++) << ":" << init.get();
+        out << ", " << names.at(i++) << ":" << *init;
     }
     out << "}";
     return out;
@@ -27,23 +22,34 @@ std::ostream& TipRecord::print(std::ostream &out) const {
 
 // This does not obey the semantics of alpha init values 
 bool TipRecord::operator==(const TipType &other) const {
-    if(auto tipRecord = dynamic_cast<const TipRecord *>(&other)) {
-        if(inits.size() != tipRecord->inits.size()) {
+    auto tipRecord = dynamic_cast<const TipRecord *>(&other);
+    if(!tipRecord) {
+        return false;
+    }
+
+    if(arity() != tipRecord->arity()) {
+        return false;
+    }
+
+    for(int i = 0; i < arity(); i++) {
+        if(*(arguments.at(i)) != *(tipRecord->arguments.at(i))) {
             return false;
         }
-
-        for(int i = 0; i < inits.size(); i++) {
-            if(*(inits.at(i)) != *(tipRecord->inits.at(i))) {
-                return false;
-            }
-        }
-
-        return true;
     }
-    return false;
+
+    return true;
 }
 
 bool TipRecord::operator!=(const TipType &other) const {
     return !(*this == other);
+}
+
+std::vector<std::shared_ptr<TipType>>& TipRecord::getInits() {
+    return arguments;
+}
+
+
+std::vector<std::string> const & TipRecord::getNames() const {
+    return names;
 }
 

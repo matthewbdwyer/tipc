@@ -12,6 +12,8 @@ public:
     ASTNode * node;
     bool operator==(const TipType& other) const override;
     bool operator!=(const TipType& other) const override;
+
+protected:
     std::ostream& print(std::ostream &out) const override;
 };
 

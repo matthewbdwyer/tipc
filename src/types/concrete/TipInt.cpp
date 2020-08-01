@@ -4,10 +4,12 @@
 TipInt::TipInt() { }
 
 bool TipInt::operator==(const TipType &other) const {
-    if(auto t = dynamic_cast<TipInt const *>(&other)) {
-        return true;
+    auto otherTipInt = dynamic_cast<TipInt const *>(&other);
+    if(!otherTipInt) {
+        return false;
     }
-    return false;
+
+    return true;
 }
 
 bool TipInt::operator!=(const TipType &other) const {

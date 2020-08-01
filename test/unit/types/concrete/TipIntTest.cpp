@@ -16,7 +16,7 @@ TEST_CASE("TipInt: test TipInt is a TipType" "[tip_int]") {
 
 TEST_CASE("TipInt: test args is empty", "[tip_int]") {
     TipInt t;
-    REQUIRE(t.arguments.empty());
+    REQUIRE(t.getArguments().empty());
 }
 
 TEST_CASE("TipInt: test toString returns int", "[tip_int]") {

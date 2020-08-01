@@ -19,13 +19,13 @@ public:
     ~Unifier();
 
     void solve();
-    void unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2);
+    void unify(TipType * t1, TipType * t2);
 private:
-    bool isTipVar(std::shared_ptr<TipType>);
-    bool isProperType(std::shared_ptr<TipType>);
-    bool isCons(std::shared_ptr<TipType>);
-    void throwUnifyException(std::shared_ptr<TipType> TipType1, std::shared_ptr<TipType> TipType2);
+    static bool isTypeVariable(TipType *TipType);
+    static bool isProperType(TipType *);
+    static bool isCons(TipType *);
+    void throwUnifyException(TipType * TipType1, TipType * TipType2);
     std::vector<TypeConstraint> constraints;
-    std::shared_ptr<UnionFind<std::shared_ptr<TipType>>> unionFind;
+    std::unique_ptr<UnionFind<TipType>> unionFind;
 };
 

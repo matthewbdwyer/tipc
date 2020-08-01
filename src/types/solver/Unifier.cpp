@@ -4,45 +4,52 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <utility>
 
-// TODO: use dynamic pointer cast.
 Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(constrs)) {
-    std::vector<std::shared_ptr<TipType>> TipTypes;
-    for(TypeConstraint t : constraints) {
-        auto l = t.lhs;
-        auto r = t.rhs;
-        TipTypes.push_back(l);
-        TipTypes.push_back(r);
+    std::vector<TipType *> types;
+    for(TypeConstraint constraint : constraints) {
+        auto lhs = constraint.lhs.get();
+        auto rhs = constraint.rhs.get();
+        types.push_back(lhs);
+        types.push_back(rhs);
 
-        if(auto f1 = dynamic_cast<TipCons *>(l.get())) {
-            for(auto a : f1->arguments) TipTypes.push_back(a);
+        if(auto f1 = dynamic_cast<TipCons *>(lhs)) {
+            for(auto &a : f1->getArguments()) {
+                types.push_back(a.get());
+            }
         }
-        if(auto f2 = dynamic_cast<TipCons *>(r.get())) {
-            for(auto a : f2->arguments) TipTypes.push_back(a);
+        if(auto f2 = dynamic_cast<TipCons *>(rhs)) {
+            for(auto &a : f2->getArguments()) {
+                types.push_back(a.get());
+            }
         }
     }
 
     // Deduplicate TipTypes.
-    std::vector<std::shared_ptr<TipType>> unique;
-    for(auto t : TipTypes) {
+    std::vector<TipType *> unique;
+    for(auto type : types) {
         bool add = true;
-        for(auto u : unique) {
-            if(*t == *u) add = false;
+        for(auto &u : unique) {
+            if(*type == *u) {
+                add = false;
+            }
         }
-        if(add) unique.push_back(t);
+        if(add) {
+            unique.push_back(type);
+        }
     }
 
-    unionFind = std::make_shared<UnionFind<std::shared_ptr<TipType>>>(unique);
+    unionFind = std::make_unique<UnionFind<TipType>>(unique);
 }
 
 void Unifier::solve() {
     for(TypeConstraint constraint: constraints) {
-        unify(constraint.lhs, constraint.rhs);
+        unify(constraint.lhs.get(), constraint.rhs.get());
     }
 }
 
-void Unifier::unify(std::shared_ptr<TipType> TipType1, std::shared_ptr<TipType> TipType2) {
-    //std::cout << "unifying " << TipType1->toString() << " and " << TipType2->toString() << std::endl;
+void Unifier::unify(TipType * TipType1, TipType * TipType2) {
     auto rep1 = unionFind->find(TipType1);
     auto rep2 = unionFind->find(TipType2);
 
@@ -50,23 +57,23 @@ void Unifier::unify(std::shared_ptr<TipType> TipType1, std::shared_ptr<TipType> 
        return;
     }
 
-    if(isTipVar(rep1) && isTipVar(rep2)) {
+    if(isTypeVariable(rep1) && isTypeVariable(rep2)) {
         unionFind->quick_union(rep1, rep2);
-    } else if(isTipVar(rep1) && isProperType(rep2)) {
+    } else if(isTypeVariable(rep1) && isProperType(rep2)) {
         unionFind->quick_union(rep1, rep2);
-    } else if(isProperType(rep1) && isTipVar(rep2)) {
+    } else if(isProperType(rep1) && isTypeVariable(rep2)) {
         unionFind->quick_union(rep2, rep1);
     } else if(isCons(rep1) && isCons(rep2)) {
-        auto f1 = std::dynamic_pointer_cast<TipCons>(rep1);
-        auto f2 = std::dynamic_pointer_cast<TipCons>(rep2);
-        if(!f1->do_match(f2)) {
+        auto f1 = dynamic_cast<TipCons *>(rep1);
+        auto f2 = dynamic_cast<TipCons *>(rep2);
+        if(!f1->doMatch(f2)) {
             throwUnifyException(f1, f2);
         }
 
         unionFind->quick_union(rep1, rep2);
-        for(int i = 0; i < f1->arguments.size(); i++) {
-            auto a1 = f1->arguments.at(i);
-            auto a2 = f2->arguments.at(i);
+        for(int i = 0; i < f1->getArguments().size(); i++) {
+            auto a1 = f1->getArguments().at(i).get();
+            auto a2 = f2->getArguments().at(i).get();
             unify(a1, a2);
         }
     } else {
@@ -78,7 +85,7 @@ Unifier::~Unifier() {
 
 }
 
-void Unifier::throwUnifyException(std::shared_ptr<TipType> TipType1, std::shared_ptr<TipType> TipType2) {
+void Unifier::throwUnifyException(TipType * TipType1, TipType * TipType2) {
     std::stringstream s;
     s << "Cannot unify " << TipType1 << "and " << TipType2 <<
         "(respective roots are: " << unionFind->find(TipType1) << " and " <<
@@ -86,14 +93,14 @@ void Unifier::throwUnifyException(std::shared_ptr<TipType> TipType1, std::shared
     throw UnificationError(s.str().c_str());
 }
 
-bool Unifier::isTipVar(std::shared_ptr<TipType> TipType) {
-     return std::dynamic_pointer_cast<TipVar>(TipType) != nullptr;
+bool Unifier::isTypeVariable(TipType * TipType) {
+     return dynamic_cast<TipVar *>(TipType) != nullptr;
 }
 
-bool Unifier::isProperType(std::shared_ptr<TipType> TipType) {
-    return std::dynamic_pointer_cast<TipVar>(TipType) == nullptr;
+bool Unifier::isProperType(TipType * TipType) {
+    return dynamic_cast<TipVar *>(TipType) == nullptr;
 }
 
-bool Unifier::isCons(std::shared_ptr<TipType> TipType) {
-    return std::dynamic_pointer_cast<TipCons>(TipType) != nullptr;
+bool Unifier::isCons(TipType * TipType) {
+    return dynamic_cast<TipCons *>(TipType) != nullptr;
 }

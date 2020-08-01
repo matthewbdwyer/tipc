@@ -7,14 +7,18 @@
 class TipAlpha: public TipVar {
 public:
     TipAlpha() = default;
-    TipAlpha(std::string x);
-    std::ostream& print(std::ostream &out) const override;
+    TipAlpha(std::string const av);
+
+    std::string const & getAlphaValue() const;
+
     virtual bool operator==(const TipType& other) const override;
     virtual bool operator!=(const TipType& other) const override;
-    friend std::ostream& operator<<(std::ostream& os, const TipType& obj);
+
+protected:
+    std::ostream& print(std::ostream &out) const override;
 
 private:
-    std::string x;
+    std::string const alphaValue;
 
 };
 

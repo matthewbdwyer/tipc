@@ -5,10 +5,12 @@
 TipVar::TipVar(ASTNode * node): node(node) {};
 
 bool TipVar::operator==(const TipType &other) const {
-    if(auto t = dynamic_cast<TipVar const *>(&other)) {
-        return node == t->node;
+    auto otherTipVar = dynamic_cast<TipVar const *>(&other);
+    if(!otherTipVar) {
+        return false;
     }
-    return false;
+
+    return node == otherTipVar->node;
 }
 
 bool TipVar::operator!=(const TipType &other) const {

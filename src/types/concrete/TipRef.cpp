@@ -1,16 +1,16 @@
 #include "TipRef.h"
 #include <sstream>
 
-TipRef::TipRef(std::shared_ptr<TipType> of): of(of) {
-    // TODO: Not yet implemented
-    //arguments.push_back(of.get());
-}
+TipRef::TipRef(std::shared_ptr<TipType> of)
+  : TipCons(std::move(std::vector<std::shared_ptr<TipType>> {of})) { }
 
 bool TipRef::operator==(const TipType &other) const {
-    if(auto t = dynamic_cast<const TipRef *>(&other)) {
-        return *of == *(t->of);
+    auto otherTipRef = dynamic_cast<const TipRef *>(&other);
+    if(!otherTipRef) {
+        return false;
     }
-    return false;
+
+    return *arguments.front() == *otherTipRef->getAddressOfField();
 }
 
 bool TipRef::operator!=(const TipType &other) const {
@@ -18,7 +18,11 @@ bool TipRef::operator!=(const TipType &other) const {
 }
 
 std::ostream& TipRef::print(std::ostream &out) const {
-    out << "&" << *of;
+    out << "&" << *arguments.front();
     return out;
+}
+
+std::shared_ptr<TipType> TipRef::getAddressOfField() const{
+    return arguments.front();
 }
 

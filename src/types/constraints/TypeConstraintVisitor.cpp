@@ -15,9 +15,9 @@
 std::shared_ptr<TipType> TypeConstraintVisitor::astToVar(ASTNode * n) {
   if (auto ve = dynamic_cast<ASTVariableExpr*>(n)) {
     ASTDeclNode * canonical;
-    if (canonical = symbolTable.getLocal(ve->getName(), scope.top())) {
+    if ((canonical = symbolTable.getLocal(ve->getName(), scope.top()))) {
       return std::make_shared<TipVar>(canonical);
-    } else if (canonical = symbolTable.getFunction(ve->getName())) {
+    } else if ((canonical = symbolTable.getFunction(ve->getName()))) {
       return std::make_shared<TipVar>(canonical);
     } 
   } 

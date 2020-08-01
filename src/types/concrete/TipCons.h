@@ -7,11 +7,13 @@
 class TipCons: public TipType {
 public:
     TipCons() = default;
-    std::vector<std::shared_ptr<TipType>> arguments;
-    virtual int arity();
-    bool do_match(std::shared_ptr<TipType> t);
+
+    const std::vector<std::shared_ptr<TipType>> &getArguments() const;
+    virtual int arity() const;
+    bool doMatch(TipType * t) const;
 
 protected:
     TipCons(std::vector<std::shared_ptr<TipType>> arguments);
+    std::vector<std::shared_ptr<TipType>> arguments ;
 };
 

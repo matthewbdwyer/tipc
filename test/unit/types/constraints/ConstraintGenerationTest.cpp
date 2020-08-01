@@ -15,14 +15,14 @@ static void printConstraints(std::vector<TypeConstraint> &constraints) {
     }
 }
 
-std::vector<std::shared_ptr<TypeConstraint>> collected;
+static std::vector<std::shared_ptr<TypeConstraint>> collected;
 
-void collectConstraints(std::shared_ptr<TipType> t1, 
+static void collectConstraints(std::shared_ptr<TipType> t1,
                         std::shared_ptr<TipType> t2) {
   collected.push_back(std::make_shared<TypeConstraint>(t1,t2));
 }
 
-void runtest(std::stringstream &program, std::vector<std::string> constraints) {
+static void runtest(std::stringstream &program, std::vector<std::string> constraints) {
     auto ast = ASTHelper::build_ast(program);
     std::stringstream outputStream;
     auto symbols = SymbolTable::build(ast.get(), outputStream);
@@ -106,11 +106,11 @@ TEST_CASE("TypeConstraintVisitor: if ", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-            "[[0]] = int",		// const is int
+            "[[0]] = int",          // const is int
             "[[x]] = [[0]]",		// operands have same type
             "[[(x > 0)]] = int",	// binexpr is int
             "[[x]] = [[(x > 0)]]", 	// operand and binexpr have same type
-            "[[1]] = int",		// const is int
+            "[[1]] = int",          // const is int
             "[[x]] = [[1]]",		// operands have same type
             "[[(x + 1)]] = int",	// type of binexpr
             "[[x]] = [[(x + 1)]]",	// operand and binexpr have same type
@@ -135,11 +135,11 @@ TEST_CASE("TypeConstraintVisitor: while ", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-            "[[0]] = int",		// const is int
+            "[[0]] = int",          // const is int
             "[[x]] = [[0]]",		// operands have same type
             "[[(x > 0)]] = int",	// binexpr is int
             "[[x]] = [[(x > 0)]]", 	// operand and binexpr have same type
-            "[[1]] = int",		// const is int
+            "[[1]] = int",          // const is int
             "[[x]] = [[1]]",		// operands have same type
             "[[(x - 1)]] = int",	// type of binexpr
             "[[x]] = [[(x - 1)]]",	// operand and binexpr have same type
@@ -164,11 +164,11 @@ TEST_CASE("TypeConstraintVisitor: error, output", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-            "[[input]] = int",		// input value is int
-            "[[x]] = [[input]]",	// sides of assignment have same type
-            "[[x]] = int", 		// output arg is int
-            "[[x]] = int", 		// error arg is int
-            "[[0]] = int", 		// int constant
+            "[[input]] = int",    // input value is int
+            "[[x]] = [[input]]",  // sides of assignment have same type
+            "[[x]] = int",        // output arg is int
+            "[[x]] = int",        // error arg is int
+            "[[0]] = int",        // int constant
             "[[bar]] = () -> [[0]]"
     };
 
@@ -187,9 +187,9 @@ TEST_CASE("TypeConstraintVisitor: funs with params", "[TypeConstraintVisitor]") 
     )";
 
     std::vector<std::string> expected {
-            "[[foo]] = ([[x]]) -> [[x]]",	// function with arg
-            "[[7]] = int", 			// int constant
-            "[[foo]] = ([[7]]) -> [[foo(7)]]",	// function application
+            "[[foo]] = ([[x]]) -> [[x]]",       // function with arg
+            "[[7]] = int",                      // int constant
+            "[[foo]] = ([[7]]) -> [[foo(7)]]",  // function application
             "[[bar]] = () -> [[foo(7)]]"
     };
 
@@ -205,10 +205,10 @@ TEST_CASE("TypeConstraintVisitor: main", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-      "[[0]] = int", 			// int constant in return
-      "[[x]] = int", 			// main arg
-      "[[0]] = int", 			// main return
-      "[[main]] = ([[x]]) -> [[0]]",	// main with arg
+      "[[0]] = int",                  // int constant in return
+      "[[x]] = int",                  // main arg
+      "[[0]] = int",                  //  main return
+      "[[main]] = ([[x]]) -> [[0]]",  // main with arg
     };
 
     runtest(program, expected);
@@ -227,13 +227,13 @@ TEST_CASE("TypeConstraintVisitor: record expr", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-      "[[4]] = int",				// int constant
-      "[[13]] = int",				// int constant
-      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]]}",	// uber record
-      "[[r]] = [[{f:4, g:13}]]",		// assignment
-      "[[0]] = int",				// int constant return
-      "[[0]] = int",				// main return
-      "[[main]] = () -> [[0]]"			// main declaration
+      "[[4]] = int",				            // int constant
+      "[[13]] = int",				            // int constant
+      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]]}",  // uber record
+      "[[r]] = [[{f:4, g:13}]]",                // assignment
+      "[[0]] = int",                            // int constant return
+      "[[0]] = int",                            // main return
+      "[[main]] = () -> [[0]]"                  // main declaration
     };
 
     runtest(program, expected);
@@ -251,13 +251,13 @@ TEST_CASE("TypeConstraintVisitor: access expr", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-      "[[4]] = int",				// int constant
-      "[[13]] = int",				// int constant
-      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]]}",	// uber record
-      "[[r]] = [[{f:4, g:13}]]",		// assignment
-      "[[r]] = {f:\u03B1f, g:[[r.g]]}",		// field access
-      "[[r.g]] = int",				// main return
-      "[[main]] = () -> [[r.g]]"		// main declaration
+      "[[4]] = int",                            // int constant
+      "[[13]] = int",                           // int constant
+      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]]}",  // uber record
+      "[[r]] = [[{f:4, g:13}]]",                // assignment
+      "[[r]] = {f:\u03B1<f>, g:[[r.g]]}",       // field access
+      "[[r.g]] = int",                          // main return
+      "[[main]] = () -> [[r.g]]"                // main declaration
     };
 
     runtest(program, expected);
@@ -278,16 +278,16 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-      "[[4]] = int",					// int constant
-      "[[13]] = int",					// int constant
-      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]], n:\u03B1n}",	// uber record
-      "[[r]] = [[{f:4, g:13}]]",			// assignment
-      "[[null]] = &\u03B1null",				// null
-      "[[13]] = int",					// int constant
-      "[[{n:null, f:13}]] = {f:[[13]], g:\u03B1g, n:[[null]]}",	// uber record
-      "[[r]] = [[{n:null, f:13}]]",			// assignment
-      "[[0]] = int",					// int constant
-      "[[foo]] = () -> [[0]]"				// fun declaration
+      "[[4]] = int",                                               // int constant
+      "[[13]] = int",                                              // int constant
+      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]], n:\u03B1<n>}",        // uber record
+      "[[r]] = [[{f:4, g:13}]]",                                   // assignment
+      "[[null]] = &\u03B1<null>",                                  // null
+      "[[13]] = int",                                              // int constant
+      "[[{n:null, f:13}]] = {f:[[13]], g:\u03B1<g>, n:[[null]]}",  // uber record
+      "[[r]] = [[{n:null, f:13}]]",                                // assignment
+      "[[0]] = int",                                               // int constant
+      "[[foo]] = () -> [[0]]"				                       // fun declaration
     };
 
     runtest(program, expected);
@@ -307,25 +307,25 @@ TEST_CASE("TypeConstraintVisitor: complex records", "[TypeConstraintVisitor]") {
     )";
 
     std::vector<std::string> expected {
-      "[[4]] = int",						// int constant
-      "[[{f:4}]] = {f:[[4]], p:\u03B1p, q:\u03B1q}",		// uber record
-      "[[k]] = [[{f:4}]]",					// assignment
-      "[[4]] = int",						// int constant
-      "[[5]] = int",						// int constant
-      "[[{p:4, q:5}]] = {f:\u03B1f, p:[[4]], q:[[5]]}",		// uber record
-      "[[alloc {p:4, q:5}]] = &[[{p:4, q:5}]]",			// alloc is ref to init
-      "[[n]] = [[alloc {p:4, q:5}]]",				// assignment
-      "[[n]] = &[[*n]]",				        // deref
-      "[[44]] = int",						// int constant
-      "[[&k]] = &[[k]]",					// address of
-      "[[{p:44, q:&k}]] = {f:\u03B1f, p:[[44]], q:[[&k]]}",	// uber record
-      "[[n]] = &[[{p:44, q:&k}]]",				// assign through ptr
-      "[[n]] = {f:\u03B1f, p:\u03B1p, q:[[n.q]]}",		// field access
-      "[[n.q]] = &[[*n.q]]",					// deref ptr
-      "[[*n.q]] = {f:[[*n.q.f]], p:\u03B1p, q:\u03B1q}",	// field access
-      "[[*n.q.f]] = &[[**n.q.f]]",				// deref ptr
-      "[[**n.q.f]] = int",					// main return value
-      "[[main]] = () -> [[**n.q.f]]"				// main declaration
+      "[[4]] = int",                                           // int constant
+      "[[{f:4}]] = {f:[[4]], p:\u03B1<p>, q:\u03B1<q>}",       // uber record
+      "[[k]] = [[{f:4}]]",                                     // assignment
+      "[[4]] = int",                                           // int constant
+      "[[5]] = int",                                           // int constant
+      "[[{p:4, q:5}]] = {f:\u03B1<f>, p:[[4]], q:[[5]]}",      // uber record
+      "[[alloc {p:4, q:5}]] = &[[{p:4, q:5}]]",                // alloc is ref to init
+      "[[n]] = [[alloc {p:4, q:5}]]",                          // assignment
+      "[[n]] = &[[*n]]",				                       // deref
+      "[[44]] = int",                                          // int constant
+      "[[&k]] = &[[k]]",					                   // address of
+      "[[{p:44, q:&k}]] = {f:\u03B1<f>, p:[[44]], q:[[&k]]}",  // uber record
+      "[[n]] = &[[{p:44, q:&k}]]",				               // assign through ptr
+      "[[n]] = {f:\u03B1<f>, p:\u03B1<p>, q:[[n.q]]}",		   // field access
+      "[[n.q]] = &[[*n.q]]",					               // deref ptr
+      "[[*n.q]] = {f:[[*n.q.f]], p:\u03B1<p>, q:\u03B1<q>}",   // field access
+      "[[*n.q.f]] = &[[**n.q.f]]",                             // deref ptr
+      "[[**n.q.f]] = int",                                     // main return value
+      "[[main]] = () -> [[**n.q.f]]"                           // main declaration
     };
 
     runtest(program, expected);
