@@ -8,6 +8,7 @@
 #include "ASTBuilder.h"
 #include "PrettyPrinter.h"
 #include "SymbolTable.h"
+#include "CheckAssignable.h"
 
 #include "llvm/Support/CommandLine.h"
 #include "llvm/IR/LegacyPassManager.h"
@@ -67,7 +68,7 @@ int main(int argc, const char *argv[]) {
   TIPParser::ProgramContext *tree = parser.program();
 
   if (*parseError) {
-    cerr << "tipc parse error\n";
+    std::cerr << "tipc parse error\n";
     exit (EXIT_FAILURE);
   }
 
@@ -79,6 +80,11 @@ int main(int argc, const char *argv[]) {
     // Build Symbol Table
     if (auto maybeSymTable = SymbolTable::build(ast.get(), std::cerr); maybeSymTable) {
       auto symbols = std::move(maybeSymTable.value());
+
+      if (!CheckAssignable::check(ast.get(), std::cerr)) {
+        std::cerr << "tipc semantic error\n";
+        exit (EXIT_FAILURE);
+      }
 
       if (ppretty) {
         PrettyPrinter::print(ast.get(), std::cout, ' ', 2);
@@ -117,12 +123,12 @@ int main(int argc, const char *argv[]) {
         result.keep();
       }
     } else {
-      cerr << "tipc Symbol Table build error\n";
+      std::cerr << "tipc semantic error\n";
       exit (EXIT_FAILURE);
     }
 
   } else {
-    cerr << "tipc AST build error\n";
+    std::cerr << "tipc internal error\n";
     exit (EXIT_FAILURE);
   }
 }

@@ -14,8 +14,8 @@ public:
   PrettyPrinter(std::ostream &os, char indentChar, int indentSize) :
           os(os), indentChar(indentChar), indentSize(indentSize) {}
 
-  static void print(ASTProgram* p, std::ostream &s, char c, int n);
-  void print2(ASTNode *p, std::ostream &s, char c, int n);
+  static void print(ASTProgram* p, std::ostream &os, char c, int n);
+  static void print2(ASTNode *p, std::ostream &os, char c, int n);
   virtual void endVisitNode(ASTNode * element);
 
   virtual void endVisit(ASTProgram * element) override;

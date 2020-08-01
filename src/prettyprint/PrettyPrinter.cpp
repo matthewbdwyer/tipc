@@ -2,14 +2,15 @@
 #include <iostream>
 #include <sstream>
 
-void PrettyPrinter::print(ASTProgram *p, std::ostream &s, char c, int n) {
-   PrettyPrinter visitor(s, c, n);
-   p->accept(&visitor);
+void PrettyPrinter::print(ASTProgram *p, std::ostream &os, char c, int n) {
+  PrettyPrinter visitor(os, c, n);
+  p->accept(&visitor);
 }
 
-void PrettyPrinter::print2(ASTNode *node, std::ostream &s, char c, int n) {
-    PrettyPrinter visitor(s, c, n);
-    node->accept(&visitor);
+void PrettyPrinter::print2(ASTNode *node, std::ostream &os, char c, int n) {
+  PrettyPrinter visitor(os, c, n);
+  node->accept(&visitor);
+  os << visitor.visitResults.back();
 }
 
 void PrettyPrinter::endVisitNode(ASTNode * element) {

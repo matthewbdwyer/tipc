@@ -11,8 +11,7 @@
 
 std::string Stringifier::stringify(ASTNode * node) {
     std::stringstream stream;
-    PrettyPrinter prettyPrinter(stream, ' ', 2);
-    prettyPrinter.print2(node, stream, ' ', 2);
+    PrettyPrinter::print2(node, stream, ' ', 2);
     return stream.str();
 }
 

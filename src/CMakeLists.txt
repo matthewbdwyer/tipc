@@ -30,6 +30,7 @@ target_include_directories(tipc PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/ast/treetypes
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen
         ${CMAKE_CURRENT_SOURCE_DIR}/symboltable
+        ${CMAKE_CURRENT_SOURCE_DIR}/weeding
         ${CMAKE_CURRENT_SOURCE_DIR}/prettyprint
         ${CMAKE_CURRENT_SOURCE_DIR}/types/concrete
         ${CMAKE_CURRENT_SOURCE_DIR}/types/constraints

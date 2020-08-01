@@ -9,8 +9,7 @@ void CheckAssignable::endVisit(ASTAssignStmt* element) {
   if (dynamic_cast<ASTAccessExpr*>(element->getLHS())) return;
 
   std::stringstream errorStream;
-  PrettyPrinter pp(errorStream, ' ', 2);
-  pp.print2(element->getLHS(), errorStream, ' ', 2);
+  PrettyPrinter::print2(element->getLHS(), errorStream, ' ', 2);
 
   errorString += "Assignment Error: expression " + errorStream.str() + " not an l-value\n";
 }
@@ -20,9 +19,9 @@ bool CheckAssignable::check(ASTProgram* p, std::ostream &os) {
   p->accept(&visitor);
 
   // Return check result based on whether an error has been recorded
-  bool errorFound = (visitor.errorString == "");
-  if (errorFound) {
+  bool ok = (visitor.errorString == "");
+  if (!ok) {
     os << visitor.errorString;
   }
-  return errorFound;
+  return ok;
 }
