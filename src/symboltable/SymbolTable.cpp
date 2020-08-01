@@ -6,8 +6,6 @@
 #include <iostream>
 #include <sstream>
 
-bool symTableBuildError = false;
-
 std::optional<std::unique_ptr<SymbolTable>> 
       SymbolTable::build(ASTProgram* p, std::ostream &s) {
   std::stringstream errorStream;

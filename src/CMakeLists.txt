@@ -19,11 +19,12 @@ target_sources(tipc PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tipc.cpp)
 add_subdirectory(ast)
 add_subdirectory(codegen)
 add_subdirectory(prettyprint)
+add_subdirectory(weeding)
 add_subdirectory(symboltable)
 add_subdirectory(types)
 add_library(dummy STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS})
 target_link_libraries(dummy antlr4_static)
-target_link_libraries(tipc antlr4_static dummy ${llvm_libs} ast codegen prettyprint symboltable types coverage_config)
+target_link_libraries(tipc antlr4_static dummy ${llvm_libs} ast codegen prettyprint weeding symboltable types coverage_config)
 target_include_directories(tipc PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/ast
         ${CMAKE_CURRENT_SOURCE_DIR}/ast/treetypes

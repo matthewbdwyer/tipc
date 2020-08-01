@@ -5,6 +5,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/ast)
 include_directories(${PROJECT_SOURCE_DIR}/src/ast/treetypes)
 include_directories(${PROJECT_SOURCE_DIR}/src/prettyprint)
 include_directories(${PROJECT_SOURCE_DIR}/src/symboltable)
+include_directories(${PROJECT_SOURCE_DIR}/src/weeding)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/helpers)
 include_directories(external/catch2)
 
@@ -17,7 +18,8 @@ target_sources(unit_tests PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTableTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/CheckAssignableTest.cpp
 )
 target_include_directories(unit_tests PUBLIC helpers)
 #target_link_libraries(unit_tests ast symboltable test_helpers)
-target_link_libraries(unit_tests antlr4_static dummy ${llvm_libs} ast codegen prettyprint symboltable types test_helpers)
+target_link_libraries(unit_tests antlr4_static dummy ${llvm_libs} ast codegen prettyprint weeding symboltable types test_helpers)

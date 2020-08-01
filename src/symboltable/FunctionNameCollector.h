@@ -10,7 +10,6 @@
 class FunctionNameCollector : public ASTVisitor {
   // stream used to emit error messages
   std::ostream &s;
-  bool buildError = false;
 public:
   FunctionNameCollector(std::ostream &s) : s(s) {}
   // this map is public so that the static method can access it

@@ -7,9 +7,9 @@ void PrettyPrinter::print(ASTProgram *p, std::ostream &s, char c, int n) {
    p->accept(&visitor);
 }
 
-void PrettyPrinter::print2(ASTNode *p, std::ostream &s, char c, int n) {
+void PrettyPrinter::print2(ASTNode *node, std::ostream &s, char c, int n) {
     PrettyPrinter visitor(s, c, n);
-    visitor.endVisitNode(p);
+    node->accept(&visitor);
 }
 
 void PrettyPrinter::endVisitNode(ASTNode * element) {
