@@ -4,6 +4,7 @@
 #include "TipType.h"
 #include <string>
 #include <vector>
+#include <ostream>
 
 class TipRecord: public TipCons {
 public:
