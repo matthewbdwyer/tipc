@@ -5,7 +5,6 @@ target_sources(types_test
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipIntTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRefTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVarTest.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AppearingFieldsVisitorTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintGenerationTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solvers/UnionFindTest.cpp
@@ -18,5 +17,6 @@ target_include_directories(types_test
         ${CMAKE_SOURCE_DIR}/src/types/constraints
         ${CMAKE_SOURCE_DIR}/src/types/solver
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete
+        ${CMAKE_CURRENT_SOURCE_DIR}/../helpers
 )
 target_link_libraries(types_test antlr4_static dummy ${llvm_libs} ast codegen prettyprint symboltable types test_helpers)

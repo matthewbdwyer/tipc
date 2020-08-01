@@ -3,317 +3,255 @@
 #include "TipFunction.h"
 #include "TipAlpha.h"
 #include "TipRef.h"
+#include "TipRecord.h"
 #include "TipInt.h"
-#include <memory>
 
-/**
- * Any given Term can be shared by multiple constraints. As such, we use a shared_ptr.
+/*
+ * Utility function that creates type variables and uses declaration nodes
+ * as a canonical representative for program variables.  There are two case
+ * that need to be checked: if the variable is local to a function or if
+ * it is a function value.
  */
-TypeConstraintVisitor::TypeConstraintVisitor(SymbolTable &table, std::set<std::string> &appearingFields)
-  : symbolTable(table), appearingFields(appearingFields) {};
+std::shared_ptr<TipType> TypeConstraintVisitor::astToVar(ASTNode * n) {
+  if (auto ve = dynamic_cast<ASTVariableExpr*>(n)) {
+    ASTDeclNode * canonical;
+    if (canonical = symbolTable.getLocal(ve->getName(), scope.top())) {
+      return std::make_shared<TipVar>(canonical);
+    } else if (canonical = symbolTable.getFunction(ve->getName())) {
+      return std::make_shared<TipVar>(canonical);
+    } 
+  } 
 
-std::vector<TypeConstraint> TypeConstraintVisitor::get_constraints() {
-    return constraints;
+  return std::make_shared<TipVar>(n);
 }
-
-void TypeConstraintVisitor::endVisit(ASTProgram * element) {
-    auto main = element->findFunctionByName(ENTRYPOINT_NAME);
-    if(main == nullptr) {
-        // TODO (nphair): Figure out what we want to do here.
-        return;
-    }
-
-    for(auto formal : main->getFormals()) {
-        auto name = symbolTable.getLocal(formal->getName(), main->getDecl());
-        auto var = std::make_shared<TipVar>(name);
-        auto tipInt = std::make_shared<TipInt>();
-        TypeConstraint typeConstraint(var, tipInt);
-        constraints.push_back(typeConstraint);
-    }
-    auto returnStatement = main->getStmts().back();
-    auto var = std::make_shared<TipVar>(returnStatement);
-    auto tipInt = std::make_shared<TipInt>();
-
-    TypeConstraint constraint(var, tipInt);
-    constraints.push_back(constraint);
-}
-
 
 bool TypeConstraintVisitor::visit(ASTFunction * element) {
     scope.push(element->getDecl());
     return true;
 }
 
+/*
+ * Type rules for "main(X1, ..., Xn) { ... return E; }":
+ *   [[X1]] = [[Xn]] = [[E]] = int
+ * To express this we will equate all type variables to int.
+ *
+ * Type rules for "X(X1, ..., Xn) { ... return E; }":
+ *   [[X]] = ([[X1]], ..., [[Xn]]) -> [[E]]
+ */
 void TypeConstraintVisitor::endVisit(ASTFunction * element) {
-    auto node = std::make_shared<TipVar>(element);
-
-    auto ret = visitResults.top();
-    for(auto &_ : element->getStmts()) {
-        visitResults.pop();
-    }
-
-    for(auto &_ : element->getDeclarations()) {
-        visitResults.pop();
-    }
-
+  if (element->getName() == "main") {
     std::vector<std::shared_ptr<TipType>> formals;
-    for(auto &_ : element->getFormals()) {
-        formals.push_back(visitResults.top());
-        visitResults.pop();
+    for(auto f : element->getFormals()) {
+      formals.push_back(astToVar(f));
+      // all formals are int
+      process(astToVar(f), std::make_shared<TipInt>());
     }
-    auto tipFunction = std::make_shared<TipFunction>(formals, ret);
 
-    TypeConstraint constraint(visitResults.top(), tipFunction);
-    visitResults.pop();
-    constraints.push_back(constraint);
-    visitResults.push(node);
-    scope.pop();
+    // Return is the last statement and must be int
+    auto ret = dynamic_cast<ASTReturnStmt*>(element->getStmts().back());
+    process(astToVar(ret->getArg()), std::make_shared<TipInt>());
+
+    process(astToVar(element->getDecl()),
+            std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
+  } else {
+    std::vector<std::shared_ptr<TipType>> formals;
+    for(auto f : element->getFormals()) {
+      formals.push_back(astToVar(f));
+    }
+
+    // Return is the last statement 
+    auto ret = dynamic_cast<ASTReturnStmt*>(element->getStmts().back());
+
+    process(astToVar(element->getDecl()),
+            std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
+  }
 }
 
+/*
+ * Type rules for "I":  
+ *   [[I]] = int
+ */
 void TypeConstraintVisitor::endVisit(ASTNumberExpr * element) {
-    auto node = std::make_shared<TipVar>(element);
-
-    TypeConstraint constraint(node, std::make_shared<TipInt>());
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  process(astToVar(element), std::make_shared<TipInt>());
 }
 
-void TypeConstraintVisitor::endVisit(ASTVariableExpr * element) {
-    ASTDeclNode * canonical;
-    if((canonical = symbolTable.getLocal(element->getName(), scope.top()))) {
-        visitResults.push(std::make_shared<TipVar>(canonical));
-    } else if((canonical = symbolTable.getFunction(element->getName()))) {
-        visitResults.push(std::make_shared<TipVar>(canonical));
-    } else {
-        assert(0);
-    }
-}
-
+/*
+ * Type rules for "E1 op E2":
+ *   [[E1]] = [[E2]]
+ *   [[E1 op E2]] = int
+ * and if "op" is not equality or disequality
+ *   [[E1]] = [[E1 op E2]]
+ * which by transitivity also equates
+ *   [[E2]] = [[E1 op E2]]
+ */
 void TypeConstraintVisitor::endVisit(ASTBinaryExpr  * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto e2 = visitResults.top();
-    visitResults.pop();
-    auto e1 = visitResults.top();
-    visitResults.pop();
-    auto tipInt = std::make_shared<TipInt>();
+  auto op = element->getOp();
 
-    TypeConstraint constraint1(e1, e2);
-    TypeConstraint constraint2(e1, node);
-    TypeConstraint constraint3(e1, tipInt);
-    TypeConstraint constraint4(e2, node);
-    TypeConstraint constraint5(e2, tipInt);
-    TypeConstraint constraint6(node, tipInt);
+  // operands have the same type
+  process(astToVar(element->getLeft()), astToVar(element->getRight()));
 
-    if(element->getOp() == "==") {
-        constraints.push_back(constraint1);
-        constraints.push_back(constraint6);
-    } else {
-        constraints.push_back(constraint1);
-        constraints.push_back(constraint2);
-        constraints.push_back(constraint3);
-        constraints.push_back(constraint4);
-        constraints.push_back(constraint5);
-        constraints.push_back(constraint6);
-    }
-    visitResults.push(node);
+  // result type is integer
+  process(astToVar(element), std::make_shared<TipInt>());
+
+  if (op != "==" && op != "!=") {
+    // operand and result have same type
+    process(astToVar(element->getLeft()), astToVar(element));
+  }
 }
 
+/*
+ * Type rules for "input":
+ *  [[input]] = int
+ */
 void TypeConstraintVisitor::endVisit(ASTInputExpr * element) {
-    auto node = std::make_shared<TipVar>(element);
-
-    TypeConstraint constraint(node, std::make_shared<TipInt>());
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  process(astToVar(element), std::make_shared<TipInt>());
 }
 
+/*
+ * Type Rules for "E(E1, ..., En)":
+ *  [[E]] = ([[E1]], ..., [[En]]) -> [[E(E1, ..., En)]]
+ */
 void TypeConstraintVisitor::endVisit(ASTFunAppExpr  * element) {
-    auto node = std::make_shared<TipVar>(element);
-    std::vector<std::shared_ptr<TipType>> actuals;
-    for(auto _ : element->getActuals()) {
-        actuals.push_back(visitResults.top());
-        visitResults.pop();
-    }
-    auto function = std::make_shared<TipFunction>(actuals, node);
-    auto application = visitResults.top();
-    visitResults.pop();
-
-    TypeConstraint constraint(application, function);
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  std::vector<std::shared_ptr<TipType>> actuals;
+  for(auto a : element->getActuals()) {
+    actuals.push_back(astToVar(a));
+  }
+  process(astToVar(element->getFunction()),
+          std::make_shared<TipFunction>(actuals, astToVar(element)));
 }
 
+/*
+ * Type Rules for "alloc E":
+ *   [[alloc E]] = &[[E]]
+ */
 void TypeConstraintVisitor::endVisit(ASTAllocExpr * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto initializer = visitResults.top();
-    visitResults.pop();
-    auto tipRef = std::make_shared<TipRef>(initializer);
-
-    TypeConstraint constraint(node, tipRef);
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  process(astToVar(element), 
+          std::make_shared<TipRef>(astToVar(element->getInitializer())));
 }
 
-
+/*
+ * Type Rules for "&X":
+ *   [[&X]] = &[[X]]
+ */
 void TypeConstraintVisitor::endVisit(ASTRefExpr * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto var = visitResults.top();
-    visitResults.pop();
-    auto tipRef = std::make_shared<TipRef>(var);
-
-    TypeConstraint constraint(node, tipRef);
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  process(astToVar(element), 
+          std::make_shared<TipRef>(astToVar(element->getVar())));
 }
 
+/*
+ * Type Rules for "*E":
+ *   [[E]] = &[[*E]]
+ */
 void TypeConstraintVisitor::endVisit(ASTDeRefExpr * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto tipRef = std::make_shared<TipRef>(node);
-    auto dereferenced = visitResults.top();
-    visitResults.pop();
-
-    TypeConstraint constraint(dereferenced, tipRef);
-    constraints.push_back(constraint);
-
-    visitResults.push(node);
+  process(astToVar(element->getPtr()), 
+          std::make_shared<TipRef>(astToVar(element)));
 }
 
+/*
+ * Type Rules for "null":
+ *   [[null]] = & \alpha
+ */
 void TypeConstraintVisitor::endVisit(ASTNullExpr * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto tipAlpha = std::make_shared<TipAlpha>("");
-    auto tipRef = std::make_shared<TipRef>(tipAlpha);
-
-    TypeConstraint constraint(node, tipRef);
-    constraints.push_back(constraint);
-
-    visitResults.push(node);
+  process(astToVar(element), 
+          std::make_shared<TipRef>(std::make_shared<TipAlpha>("null")));
 }
 
-// Variable Declarations make no constraints.
-void TypeConstraintVisitor::endVisit(ASTDeclStmt * element) {
-    auto node = std::make_shared<TipVar>(element);
-    for(auto &_ : element->getVars()) {
-        visitResults.pop();
-    }
-    visitResults.push(node);
-}
-
-// No need to to a symbol table lookup. These are the canonical forms.
-void TypeConstraintVisitor::endVisit(ASTDeclNode * element) {
-    auto node = std::make_shared<TipVar>(element);
-    visitResults.push(node);
-}
-
+/* 
+ * Type rules for "E1 = E":
+ *   [[E1]] = [[E2]]
+ *
+ * Type rules for "*E1 = E2":
+ *   [[E1]] = &[[E2]]
+ * 
+ * Note that these are slightly more general than the rules in the SPA book.
+ * The first allows for record expressions on the left hand side and the second
+ * allows for more complex assignments, e.g., "**p = &x"
+ */
 void TypeConstraintVisitor::endVisit(ASTAssignStmt  * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto rhs = visitResults.top();
-    visitResults.pop();
-    auto _lhs = visitResults.top();
-    if(auto tipVar = std::dynamic_pointer_cast<TipVar>(_lhs)) {
-        if(auto deref = dynamic_cast<ASTDeRefExpr *>(tipVar->node)) {
-            auto lhs = std::make_shared<TipVar>(deref->getPtr());
-            auto r = std::make_shared<TipRef>(rhs);
-
-            TypeConstraint constraint(lhs, r);
-            constraints.push_back(constraint);
-            visitResults.pop();
-            visitResults.push(node);
-            return;
-        }
-    }
-    visitResults.pop();
-
-    TypeConstraint constraint(_lhs, rhs);
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  // If this is an assignment through a pointer, use the second rule above
+  if (auto lptr = dynamic_cast<ASTDeRefExpr*>(element->getLHS())) {
+    process(astToVar(lptr->getPtr()), 
+            std::make_shared<TipRef>(astToVar(element->getRHS())));
+  } else {
+    process(astToVar(element->getLHS()), astToVar(element->getRHS()));
+  }
 }
 
+/* 
+ * Type rules for "while (E) S":
+ *   [[E]] = int
+ */
 void TypeConstraintVisitor::endVisit(ASTWhileStmt * element) {
-    auto node = std::make_shared<TipVar>(element);
-    visitResults.pop();
-    auto condition = visitResults.top();
-    visitResults.pop();
-
-    TypeConstraint constraint(condition, std::make_shared<TipInt>());
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  process(astToVar(element->getCondition()), std::make_shared<TipInt>());
 }
 
+/* 
+ * Type rules for "if (E) S1 else S2":
+ *   [[E]] = int
+ */
 void TypeConstraintVisitor::endVisit(ASTIfStmt * element) {
-    auto node = std::make_shared<TipVar>(element);
-    if (element->getElse() != nullptr) {
-        visitResults.pop();
-    }
-    visitResults.pop();
-    auto condition = visitResults.top();
-    visitResults.pop();
-
-    TypeConstraint constraint(condition, std::make_shared<TipInt>());
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  process(astToVar(element->getCondition()), std::make_shared<TipInt>());
 }
 
+/* 
+ * Type rules for "output E":
+ *   [[E]] = int
+ */
 void TypeConstraintVisitor::endVisit(ASTOutputStmt * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto argument = visitResults.top();
-    visitResults.pop();
-    auto tipInt = std::make_shared<TipInt>();
-
-    TypeConstraint constraint(argument, tipInt);
-    constraints.push_back(constraint);
-    visitResults.push(node);
+  process(astToVar(element->getArg()), std::make_shared<TipInt>());
 }
 
-void TypeConstraintVisitor::endVisit(ASTReturnStmt * element) {
-    auto var = std::make_shared<TipVar>(element);
-    visitResults.pop();
-    visitResults.push(var);
-}
-
-void TypeConstraintVisitor::endVisit(ASTFieldExpr  * element) {
-    // NOT IMPLEMENTED.
-    assert(0);
-}
-
+/*
+ * Type rule for "{ X1:E1, ..., Xn:En }":
+ *   [[{ X1:E1, ..., Xn:En }]] = { f1:v1, ..., fn:vn }
+ * where fi is the ith field in the program's uber record
+ * and vi = [[Ei]] if fi = Xi and \alpha otherwise
+ */
 void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
-    // NOT IMPLEMENTED.
-    assert(0);
-}
-
-// TODO (nphair). Uh-oh, keys in a record don't map to decl nodes. They should,
-// they are identifiers.
-void TypeConstraintVisitor::endVisit(ASTAccessExpr * element) {
-    assert(0);
-    //auto node = std::make_shared<TipVar>(element);
-    //auto record = visitResults.top();
-    //visitResults.pop();
-
-    //std::vector<std::shared_ptr<TipType>> fields;
-    //for(auto &field : appearingFields) {
-    //    if(field == element->getField()) {
-    //        //fields.push_back(std::make_shared<TipVar>(symbolTable.getLocal(field));
-    //    } else {
-    //        fields.push_back(std::make_shared<TipAlpha>());
-    //    }
-    //}
-    //visitResults.pop();
-}
-
-void TypeConstraintVisitor::endVisit(ASTErrorStmt * element) {
-    auto node = std::make_shared<TipVar>(element);
-    auto argument = visitResults.top();
-    visitResults.pop();
-    auto tipInt = std::make_shared<TipInt>();
-
-    TypeConstraint constraint(argument, tipInt);
-    constraints.push_back(constraint);
-    visitResults.push(node);
-}
-
-void TypeConstraintVisitor::endVisit(ASTBlockStmt * element) {
-    auto node = std::make_shared<TipVar>(element);
-    for(auto &_ : element->getStmts()) {
-        visitResults.pop();
+  auto allFields = symbolTable.getFields();
+  std::vector<std::shared_ptr<TipType>> fieldTypes;
+  for (auto f : allFields) {
+    bool matched = false;
+    for (auto fe : element->getFields()) {
+      if (f == fe->getField()) {
+        fieldTypes.push_back(astToVar(fe->getInitializer()));
+        matched = true;
+        break;
+      }
     }
-    visitResults.push(node);
+    if (matched) continue;
+
+    // TBD : Do we need to generate uniquely named alphas?
+    fieldTypes.push_back(std::make_shared<TipAlpha>(f));
+  } 
+  process(astToVar(element), std::make_shared<TipRecord>(fieldTypes, allFields));
+}
+
+/*
+ * Type rule for "E.X":
+ *   [[E]] = { f1:v1, ..., fn:vn }
+ * where fi is the ith field in the program's uber record
+ * and vi = [[E.X]] if fi = X and \alpha otherwise
+ */
+void TypeConstraintVisitor::endVisit(ASTAccessExpr * element) {
+  auto allFields = symbolTable.getFields();
+  std::vector<std::shared_ptr<TipType>> fieldTypes;
+  for (auto f : allFields) {
+    if (f == element->getField()) {
+      fieldTypes.push_back(astToVar(element));
+    } else {
+      fieldTypes.push_back(std::make_shared<TipAlpha>(f));
+    }
+  } 
+  process(astToVar(element->getRecord()), 
+          std::make_shared<TipRecord>(fieldTypes, allFields));
+}
+
+/* 
+ * Type rules for "error E":
+ *   [[E]] = int
+ */
+void TypeConstraintVisitor::endVisit(ASTErrorStmt * element) {
+  process(astToVar(element->getArg()), std::make_shared<TipInt>());
 }
 
