@@ -48,14 +48,14 @@ bootstrap_ubuntu_dependencies() {
 }
 
 
-# TODO (nphair): Set TIPCLANG here.
 bootstrap_ubuntu_env() {
-  :
+  echo export TIPCLANG=$(which clang-$LLVM_VERSION) >> ~/.bashrc
 }
 
 
 bootstrap_ubuntu() {
   bootstrap_ubuntu_dependencies
+  bootstrap_ubuntu_env
 }
 
 
@@ -72,7 +72,6 @@ bootstrap_linux() {
 bootstrap_mac_env() {
   echo export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake >> ~/.bashrc
   echo export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang >> ~/.bashrc
-  echo bashrc has been updated - be sure to source the file or restart your shell.
 }
 
 bootstrap_mac_dependencies() {
@@ -110,6 +109,7 @@ bootstrap() {
       exit 1
       ;;
   esac
+  echo bashrc has been updated - be sure to source the file or restart your shell.
 
 }
 
