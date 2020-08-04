@@ -17,17 +17,20 @@ install:
 script:
   - . ~/.bashrc
   - mkdir build
-  - cd build
+  - pushd build
   - cmake ../
   - make
   - echo running unit tests...
   - ./test/unit/unit_tests
   - ./test/unit/types/types_test
   - echo running system tests...
-  - cd ../rtlib
+  - popd
+  - pushd rtlib
   - ./build.sh
-  - cd ../test/system
+  - popd
+  - pushd test/system
   - ./run.sh
+  - popd 
 
 after_success:
   - lcov --capture --directory build/src -output-file coverage.info
@@ -35,5 +38,4 @@ after_success:
   - lcov --remove coverage.info '*.h' -o coverage.info
   - lcov --remove coverage.info '*.def' -o coverage.info
   - lcov --list coverage.info
-  - export CODECOV_TOKEN="3799f38b-f5ba-49b3-9f51-ac1002ff5342"
   - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"

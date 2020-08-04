@@ -19,7 +19,7 @@ do
   ((numtests++))
 
   ${TIPC} $i
-  ${TIPCLANG} -w -static $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} >/dev/null 2>/dev/null
   exit_code=${?}
