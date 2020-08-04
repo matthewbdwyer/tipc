@@ -1,134 +1,76 @@
-#include <iostream>
-#include <stdlib.h>
-
-#include "antlr4-runtime.h"
-#include "TIPLexer.h"
-#include "TIPParser.h"
-
-#include "ASTBuilder.h"
-#include "PrettyPrinter.h"
-#include "SymbolTable.h"
-#include "CheckAssignable.h"
-
+#include "FrontEnd.h"
+#include "SemanticAnalysis.h"
+#include "CodeGenerator.h"
+#include "Optimizer.h"
+#include "ParseError.h"
+#include "SemanticError.h"
 #include "llvm/Support/CommandLine.h"
-#include "llvm/IR/LegacyPassManager.h"
-#include "llvm/Transforms/Utils.h"
-#include "llvm/Transforms/InstCombine/InstCombine.h"
-#include "llvm/Transforms/Scalar.h"
-#include "llvm/Transforms/Scalar/GVN.h"
-#include "llvm/Bitcode/BitcodeWriter.h"
-#include "llvm/Support/FileSystem.h"
-#include "llvm/Support/ToolOutputFile.h"
+#include <fstream>
 
-using namespace std;
-using namespace antlr4;
 using namespace llvm;
+using namespace std;
 
 static cl::OptionCategory TIPcat("tipc Options",
                                  "Options for controlling the TIP compilation process.");
-static cl::opt<bool> ppretty("p", cl::desc("pretty print"), cl::cat(TIPcat));
-static cl::opt<bool> psym("s", cl::desc("print symbol table"), cl::cat(TIPcat));
-static cl::opt<bool> disopt("d", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
+static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
+static cl::opt<bool> psym("ps", cl::desc("print symbol table"), cl::cat(TIPcat));
+static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
                                        cl::Required, cl::cat(TIPcat));
 
-// Handle parse errors
-class ErrorListener : public BaseErrorListener {
-  std::shared_ptr<bool> error;
-public:
-  ErrorListener(std::shared_ptr<bool> e) : error(e) {}
-
-  void syntaxError(Recognizer *recognizer, Token *offendingSymbol,
-                   size_t line, size_t charPositionInLine,
-                   const std::string &msg, std::exception_ptr e) {
-    *error = true;
-  }
-};
-
+/*! \brief tipc driver.
+ * 
+ * This function is the entry point for tipc.   It handles command line parsing
+ * using LLVM CommandLine support.  It runs the phases of the compiler in sequence.
+ * If an error is detected, via an exception, it reports the error and exits.  
+ * If there is no error, then the LLVM bitcode is emitted to a file whose name
+ * is the provided source file suffixed by ".bc".
+ */
 int main(int argc, const char *argv[]) {
-  cl::HideUnrelatedOptions(TIPcat); // suppress non TIP options
+  cl::HideUnrelatedOptions(TIPcat); 
   cl::ParseCommandLineOptions(argc, argv, "tipc - a TIP to llvm compiler\n");
 
   std::ifstream stream;
   stream.open(sourceFile);
 
-  ANTLRInputStream input(stream);
-  TIPLexer lexer(&input);
-  CommonTokenStream tokens(&lexer);
-  TIPParser parser(&tokens);
+  /*
+   * Program representations, e.g., ast, analysis results, etc., are 
+   * represented using smart pointers.  The driver "owns" this data and
+   * it permits other components to read the contents by passing
+   * the underlying pointer, i.e., via a call to get(). 
+   */
+  try {
+    auto ast = FrontEnd::parse(stream);  
 
-  std::shared_ptr<bool> parseError = std::make_shared<bool>(false);
-  ErrorListener errorListener(parseError);
-
-  // Add error listeners
-  lexer.addErrorListener(&errorListener);
-  parser.addErrorListener(&errorListener);
-
-  TIPParser::ProgramContext *tree = parser.program();
-
-  if (*parseError) {
-    std::cerr << "tipc parse error\n";
-    exit (EXIT_FAILURE);
-  }
-
-  ASTBuilder ab(&parser);
-  // Build AST
-  if (auto maybeAST = ab.build(tree); maybeAST) {
-    auto ast = std::move(maybeAST.value());
-
-    // Build Symbol Table
-    if (auto maybeSymTable = SymbolTable::build(ast.get(), std::cerr); maybeSymTable) {
-      auto symbols = std::move(maybeSymTable.value());
-
-      if (!CheckAssignable::check(ast.get(), std::cerr)) {
-        std::cerr << "tipc semantic error\n";
-        exit (EXIT_FAILURE);
-      }
+    try {
+      auto analysisResults = SemanticAnalysis::analyze(ast.get());
 
       if (ppretty) {
-        PrettyPrinter::print(ast.get(), std::cout, ' ', 2);
+        FrontEnd::prettyprint(ast.get(), std::cout);
         if (psym) { 
-          SymbolTable::print(symbols.get(), std::cout);
+          analysisResults->getSymbolTable()->print(std::cout);
         }
-      } else {
-        auto theModule = ast->codegen(sourceFile);
-
-        if (!disopt) {
-          // Create a pass manager to simplify generated module
-          auto TheFPM =
-              std::make_unique<legacy::FunctionPassManager>(theModule.get());
-
-          // Promote allocas to registers.
-          TheFPM->add(createPromoteMemoryToRegisterPass());
-          // Do simple "peephole" optimizations
-          TheFPM->add(createInstructionCombiningPass());
-          // Reassociate expressions.
-          TheFPM->add(createReassociatePass());
-          // Eliminate Common SubExpressions.
-          TheFPM->add(createGVNPass());
-          // Simplify the control flow graph (deleting unreachable blocks, etc).
-          TheFPM->add(createCFGSimplificationPass());
-          TheFPM->doInitialization();
-  
-          // run simplification pass on each function
-          for (auto &fun : theModule->getFunctionList()) {
-            TheFPM->run(fun);
-          }
-        }
-
-        std::error_code ec;
-        ToolOutputFile result(sourceFile + ".bc", ec, sys::fs::F_None);
-        WriteBitcodeToFile(*theModule, result.os());
-        result.keep();
       }
-    } else {
-      std::cerr << "tipc semantic error\n";
+
+      auto llvmModule = CodeGenerator::generate(ast.get(), analysisResults.get(), sourceFile);
+
+      if (!disopt) {
+        Optimizer::optimize(llvmModule.get());
+      }
+
+      CodeGenerator::emit(llvmModule.get());
+
+    } catch (SemanticError& e) {
+      cerr << e.what() << endl;
+      cerr << "tipc semantic error" << endl;
       exit (EXIT_FAILURE);
     }
 
-  } else {
-    std::cerr << "tipc internal error\n";
+  } catch (ParseError& e) {
+    cerr << e.what() << endl;
+    cerr << "tipc parse error" << endl;
     exit (EXIT_FAILURE);
-  }
+  }   
+
 }

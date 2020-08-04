@@ -39,7 +39,7 @@ do
   base="$(basename $i .tip)"
   ((numtests++))
 
-  ${TIPC} -d $i
+  ${TIPC} -do $i
   ${TIPCLANG} -w -static $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} >/dev/null 2>/dev/null
@@ -63,7 +63,7 @@ do
   input="$(echo $expected | cut -f2 -d- | cut -f1 -d.)"
   ((numtests++))
 
-  ${TIPC} -d iotests/$executable.tip
+  ${TIPC} iotests/$executable.tip
   ${TIPCLANG} -w -static iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
 
   ./${executable} $input >iotests/$executable.output

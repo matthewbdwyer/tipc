@@ -16,10 +16,10 @@ target_sources(types_test
 )
 target_include_directories(types_test
         PUBLIC
-        ${CMAKE_SOURCE_DIR}/src/types/concrete
-        ${CMAKE_SOURCE_DIR}/src/types/constraints
-        ${CMAKE_SOURCE_DIR}/src/types/solver
+        ${CMAKE_SOURCE_DIR}/src/semantic/types/concrete
+        ${CMAKE_SOURCE_DIR}/src/semantic/types/constraints
+        ${CMAKE_SOURCE_DIR}/src/semantic/types/solver
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete
         ${CMAKE_CURRENT_SOURCE_DIR}/../helpers
 )
-target_link_libraries(types_test antlr4_static dummy ${llvm_libs} ast codegen prettyprint symboltable types test_helpers)
+target_link_libraries(types_test antlr4_static ${llvm_libs} frontend semantic codegen optimizer error test_helpers)

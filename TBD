@@ -1,41 +1,35 @@
 CODECOV_TOKEN="3799f38b-f5ba-49b3-9f51-ac1002ff5342"
 
+TBDs
+- search the code for TODO and TBD comments and resolve them
+
 Coverage
 - ensure that we get consistent coverage information
   * it seems to fluctuate
+- fix system tests which fail now because bootstrap doesn't define TIPCLANG
+- ensure travis ships results to codecov
 - develop targetted tests to achieve 100% non-internal-error stmt coverage
   * if we can't force errors those errors
 
 Testing
-- extend pretty printer tests since they are used to test the builder
-  - small fragments that 
-- design APIs for type checking to support unit testing
+- unit testing is done 
+- system testing is done 
 
 Design
-- do we want all nodes to record a link to their parent in the AST?
-  * this would help with AST transformation
-- think about how to better integrate symbol table into other phases
-  * type checking
-  * code generation (now we don't even use it)
+- incorporate all semantic analysis into a single phase with multiple passes
 
-Record Code gen
-- integrate into current version
-- identify exactly where type checking is needed and how it will be integrated
-  * to ease future work
+Code Gen Upgrade
+- maintain philosophy of assuming type correctness and generating code appropriately
+- for records, always generate code for uber record
+  - fixed layout of fields, all fields hold Int64
+  - default initialize using calloc
 
-sipc
+Documentation
+- look into generating doxygen
+- document each class in doxygen style
+- host on github pages
 
-- update grammar
-- extend parser unit tests
-
-- update AST, AST builder and pretty printer
-  * support for natively in the AST 
-  * introduce a desugaring pass that will replace them with assigns/whiles
-    - this will be a visitor that will move the children to the new structure
-    - must visit declaration statement to add those variables
-    - replace for with a BlockStatement
-    - how do we hook into the For's parent
-- extend pretty print tests
-  * note that the pretty printer will not recover for loops for desuragared ASTs
-
-- test symbol table to see whether it needs any updates
+Update README.md
+- bootstrap and platforms supported
+- discuss design, test, etc. 
+- links to doxygen

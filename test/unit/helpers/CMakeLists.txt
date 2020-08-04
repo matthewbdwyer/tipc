@@ -9,10 +9,11 @@ target_sources(test_helpers
         ${CMAKE_CURRENT_SOURCE_DIR}/ParserHelper.h
         ${CMAKE_CURRENT_SOURCE_DIR}/Stringifier.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Stringifier.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ExceptionContainsWhat.h
 )
 target_include_directories(test_helpers
         PUBLIC
         ${CMAKE_SOURCE_DIR}/src/types/concrete
         ${CMAKE_SOURCE_DIR}/src/types/constraints
 )
-target_link_libraries(test_helpers ast types)
+target_link_libraries(test_helpers frontend semantic)

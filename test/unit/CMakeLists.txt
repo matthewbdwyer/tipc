@@ -1,11 +1,12 @@
 GET_PROPERTY(GrammarIncDir GLOBAL PROPERTY GrammarIncludeDir)
 
 include_directories(${GrammarIncDir})
-include_directories(${PROJECT_SOURCE_DIR}/src/ast)
-include_directories(${PROJECT_SOURCE_DIR}/src/ast/treetypes)
-include_directories(${PROJECT_SOURCE_DIR}/src/prettyprint)
-include_directories(${PROJECT_SOURCE_DIR}/src/symboltable)
-include_directories(${PROJECT_SOURCE_DIR}/src/weeding)
+include_directories(${PROJECT_SOURCE_DIR}/src/error)
+include_directories(${PROJECT_SOURCE_DIR}/src/frontend/ast)
+include_directories(${PROJECT_SOURCE_DIR}/src/frontend/ast/treetypes)
+include_directories(${PROJECT_SOURCE_DIR}/src/frontend/prettyprint)
+include_directories(${PROJECT_SOURCE_DIR}/src/semantic/symboltable)
+include_directories(${PROJECT_SOURCE_DIR}/src/semantic/weeding)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/helpers)
 include_directories(external/catch2)
 
@@ -21,5 +22,4 @@ target_sources(unit_tests PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/CheckAssignableTest.cpp
 )
 target_include_directories(unit_tests PUBLIC helpers)
-#target_link_libraries(unit_tests ast symboltable test_helpers)
-target_link_libraries(unit_tests antlr4_static dummy ${llvm_libs} ast codegen prettyprint weeding symboltable types test_helpers)
+target_link_libraries(unit_tests antlr4_static ${llvm_libs} error frontend semantic codegen test_helpers)

@@ -30,13 +30,11 @@ TEST_CASE("Unifier: Test type-safe program 1", "[Unifier]") {
       }
     )";
 
-
     auto ast = ASTHelper::build_ast(program);
-    std::stringstream outputStream;
-    auto symbols = SymbolTable::build(ast.get(), outputStream);
+    auto symbols = SymbolTable::build(ast.get());
 
     collected.clear();
-    TypeConstraintVisitor visitor(*symbols.value().get(), collectConstraints);
+    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
     ast->accept(&visitor);
 
     Unifier unifier(collected);
@@ -62,11 +60,10 @@ TEST_CASE("Unifier: Test unification error 1", "[Unifier]") {
     )";
 
     auto ast = ASTHelper::build_ast(program);
-    std::stringstream outputStream;
-    auto symbols = SymbolTable::build(ast.get(), outputStream);
+    auto symbols = SymbolTable::build(ast.get());
 
     collected.clear();
-    TypeConstraintVisitor visitor(*symbols.value().get(), collectConstraints);
+    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
     ast->accept(&visitor);
 
     Unifier unifier(collected);
@@ -89,11 +86,10 @@ TEST_CASE("Unifier: Test unification error 2", "[Unifier]") {
     )";
 
     auto ast = ASTHelper::build_ast(program);
-    std::stringstream outputStream;
-    auto symbols = SymbolTable::build(ast.get(), outputStream);
+    auto symbols = SymbolTable::build(ast.get());
 
     collected.clear();
-    TypeConstraintVisitor visitor(*symbols.value().get(), collectConstraints);
+    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
     ast->accept(&visitor);
 
     Unifier unifier(collected);
@@ -113,11 +109,10 @@ TEST_CASE("Unifier: Test unification error 3", "[Unifier]") {
     )";
 
     auto ast = ASTHelper::build_ast(program);
-    std::stringstream outputStream;
-    auto symbols = SymbolTable::build(ast.get(), outputStream);
+    auto symbols = SymbolTable::build(ast.get());
 
     collected.clear();
-    TypeConstraintVisitor visitor(*symbols.value().get(), collectConstraints);
+    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
     ast->accept(&visitor);
 
     Unifier unifier(collected);

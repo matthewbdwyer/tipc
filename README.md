@@ -16,36 +16,44 @@ standard libraries will produce an executable.
 
 ## Dependencies
 
-`tipc` was developed and tested on Ubuntu 18.04 LTS.
-It depends on java8, cpp, cmake, antlr4, clang, and llvm which were installed using:
-  1. `apt install openjdk-8-jdk-headless`
-  2. `apt install cmake pkg-config uuid-dev`
-  3. `apt install antlr4`
-  4. `apt install libllvm-10-ocaml-dev libllvm10 llvm-10 llvm-10-dev llvm-10-doc llvm-10-examples llvm-10-runtime`
-  5. `apt install clang-10`
+`tipc` is implemented in C++17 
+and depends on a number of tools and packages, e.g., 
+[ANTLR4](https:://www.antlr.org),
+[Catch2](https://github.com/catchorg/Catch2),
+[CMake](https://cmake.org/),
+[Java](www.java.com),
+[LLVM](https:://www.llvm.org).
+To simplify dependency management the project provides a 
+`bootstrap` script to install all of the required dependencies
+on linux ubuntu and mac platforms.
 
-We use the `llvm-10` and `clang-10` packages, but other versions of may work as well.  
+## Building `tipc`
 
+After cloning this repository you can build the compiler by moving to
+into the top-level directory and issuing these commands:
+  1. `./bootstrap`
+  2. `mkdir build`
+  3. `cd build`
+  4. `cmake ../src`
+  5. `make`
 
+The build process will download an up to date version of ANTLR4 if needed,
+build the C++ target for ANTLR4, and then build all of `tipc` including its
+substantial body of unit tests.  This may take some time - to speed it 
+up use multiple threads in the `make` commend, e.g., `make -j6`.
 
-## Building the executable
+You may see some warnings, e.g.,
+  * `cmake` policy warnings
+  * compile warnings for ignored type attribute ATN
+These are expected in the current version of the project; we will work to
+resolve them in future releases.
 
-This project uses CMake to manage the build process.  We follow the cmake build model for the [ANTLR4 Cpp target](https://github.com/antlr/antlr4/tree/master/runtime/Cpp/cmake).  The `cmake` directory stores ANTLR4 related cmake files. 
+To run tests ... STOPPED HERE
 
-`tipc` has a `CMakeLists.txt` file in the `src` directory.  This file configures the ANTLR4 and Cpp build process, e.g., source files, targets, libraries, etc.  You will need to adjust the path to the jar file that ANTLR4 uses (`antlr-4.8-complete.jar`) which is hardcoded in `CMakeLists.txt`.   Note that if the normal install of `antlr4` doesn't provide you with this file, then you can download it from the [ANTLR4 download site](https://www.antlr.org/download/antlr-4.8-complete.jar) and place it wherever you like, e.g., `$HOME/lib`.
+## Working with `tipc`
 
-You need to create a `build` directory within which you will build `tipc`.  To get started you should create that, empty, build directory if it doesn't exist.  All of the generated runtime files for ANTLR4 will be built the first time and stored in the build directory; this may take some time.
-
-To build a tipc:
-  1. `mkdir build`
-  2. `cd build`
-  3. `cmake ../src`
-  4. `make`
-
-NB: You may see warnings related to ignored type attribute ATN that are due to some 
-type gymnastics in the current implementation of the ANTLR4 CPP Visitor implementation.
-
-During development you need only run steps 1 and 2 a single time, unless you modify the CmakeLists.txt file.  Just run make in the build directory to rebuild after making changes to your tool source.
+During development you need only run steps 1 and 2 a single time, 
+unless you modify the CmakeLists.txt file.  Just run make in the build directory to rebuild after making changes to your tool source.
 
 Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README describes how to build it and run it using `grun`.
 

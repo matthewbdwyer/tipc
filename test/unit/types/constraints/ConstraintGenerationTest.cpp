@@ -24,11 +24,10 @@ static void collectConstraints(std::shared_ptr<TipType> t1,
 
 static void runtest(std::stringstream &program, std::vector<std::string> constraints) {
     auto ast = ASTHelper::build_ast(program);
-    std::stringstream outputStream;
-    auto symbols = SymbolTable::build(ast.get(), outputStream);
+    auto symbols = SymbolTable::build(ast.get());
 
     collected.clear();
-    TypeConstraintVisitor visitor(*symbols.value().get(), collectConstraints);
+    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
     ast->accept(&visitor);
 
     int i = 0;

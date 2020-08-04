@@ -11,6 +11,6 @@ std::unique_ptr<ASTProgram> ASTHelper::build_ast(std::istream &stream) {
   TIPParser parser(&tokens);
   TIPParser::ProgramContext *tree = parser.program();
   ASTBuilder tb(&parser);
-  return tb.build(tree).value();
+  return tb.build(tree);
 }
 
