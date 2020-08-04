@@ -12,7 +12,7 @@ public:
   }
 
   virtual std::string describe() const override {
-    return "determine if the exception what() message contains \"" + expected + "\".";
+    return "expected exception what() message containing \"" + expected + "\".";
   }
 
 private:

@@ -11,13 +11,10 @@
  */
 class Error: public std::exception {
 public:
-  Error(const std::string & msg) : msg(msg) { 
-std::cout << "Error exception created with message = " << msg << std::endl;
-  } //! Construct error with message
-
+  Error(const std::string & msg) : msg(msg) {} //! Construct error with message
   virtual const char* what() const noexcept; //! Returns message
 private:
-  const std::string &msg;
+  const std::string msg;
 };
 
 

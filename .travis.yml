@@ -21,8 +21,9 @@ script:
   - cmake ../
   - make
   - echo running unit tests...
-  - ./test/unit/unit_tests
-  - ./test/unit/types/types_test
+  - ./test/unit/frontend/frontend_unit_tests
+  - ./test/unit/semantic/semantic_unit_tests
+  - ./test/unit/semantic/types/typeinference_unit_tests
   - echo running system tests...
   - popd
   - pushd rtlib
