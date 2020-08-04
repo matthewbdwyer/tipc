@@ -37,5 +37,4 @@ target_include_directories(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints
         )
-
 target_link_libraries(types coverage_config)

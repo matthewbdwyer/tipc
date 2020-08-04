@@ -6,7 +6,7 @@ SET_PROPERTY(GLOBAL PROPERTY GrammarIncludeDir ${ANTLR_TIPGrammar_OUTPUT_DIR})
 
 # Define a target to force the compilation of the ANTLR4 generated output files.
 add_library(antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS})
-target_link_libraries(antlrgen antlr4_static)
+target_link_libraries(antlrgen antlr4_static coverage_config)
 
 # Build the different front end passes
 add_subdirectory(ast)
@@ -25,4 +25,4 @@ target_include_directories(frontend PUBLIC
         ${CMAKE_SOURCE_DIR}/src/error
         ${ANTLR_TIPGrammar_OUTPUT_DIR}
         )
-target_link_libraries(frontend antlrgen ast prettyprint)
+target_link_libraries(frontend antlrgen ast prettyprint coverage_config)

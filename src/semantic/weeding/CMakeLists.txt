@@ -11,3 +11,4 @@ target_include_directories(weeding
         ${CMAKE_SOURCE_DIR}/src/frontend/prettyprint
         ${CMAKE_SOURCE_DIR}/src/error
         )
+target_link_libraries(weeding coverage_config)

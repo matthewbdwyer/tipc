@@ -1,0 +1,25 @@
+fib(n) 
+{
+  var f1, f2, i;
+  var temp;
+  f1 = 1;
+  f2 = 1;
+  i = n;
+  while ((i > 1)) 
+    {
+      temp = (f1 + f2);
+      f1 = f2;
+      f2 = temp;
+      i = (i - 1);
+    }
+  return f2;
+}
+
+main(n) 
+{
+  return fib(n);
+}
+Functions : {fib, main}
+Fields : {}
+Locals for function fib : {f1, f2, i, n, temp}
+Locals for function main : {n}

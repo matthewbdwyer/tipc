@@ -1,6 +1,7 @@
 #!/bin/bash
-lcov --capture --directory build/src -output-file /tmp/tipc.coverage.info
-lcov --remove /tmp/tipc.coverage.info '/usr/include/*' -o /tmp/tipc.coverage.info
-lcov --remove /tmp/tipc.coverage.info '*.h' -o /tmp/tipc.coverage.info
-lcov --remove /tmp/tipc.coverage.info '*.def' -o /tmp/tipc.coverage.info
-genhtml /tmp/tipc.coverage.info -output-directory coverage.out
+lcov --capture --directory build -output-file coverage.info
+lcov --remove coverage.info '/usr/include/*' -o coverage.info
+lcov --remove coverage.info '/usr/lib/*' -o coverage.info
+lcov --remove coverage.info '*.h' -o coverage.info
+lcov --remove coverage.info '*.hpp' -o coverage.info
+genhtml coverage.info -output-directory coverage.out

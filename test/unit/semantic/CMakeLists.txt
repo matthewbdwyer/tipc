@@ -7,4 +7,4 @@ target_sources(semantic_unit_tests PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/CheckAssignableTest.cpp
 )
 target_include_directories(semantic_unit_tests PUBLIC helpers)
-target_link_libraries(semantic_unit_tests antlr4_static ${llvm_libs} error frontend semantic codegen test_helpers)
+target_link_libraries(semantic_unit_tests antlr4_static ${llvm_libs} error frontend semantic codegen test_helpers coverage_config)

@@ -1,8 +1,8 @@
 main() {
   var z;
   z = input;
-  z = z + 13;
-  if (0 > z)
+  z = z + 3;
+  if (10 > z)
      error z;
   else 
      output z;

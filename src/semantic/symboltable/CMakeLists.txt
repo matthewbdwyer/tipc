@@ -16,3 +16,4 @@ target_include_directories(symboltable
         ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes
         ${CMAKE_SOURCE_DIR}/src/error
         )
+target_link_libraries(symboltable coverage_config)

@@ -9,3 +9,5 @@ target_include_directories(prettyprint
         ${CMAKE_SOURCE_DIR}/src/frontend/ast
         ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes
         )
+target_link_libraries(prettyprint coverage_config)
+

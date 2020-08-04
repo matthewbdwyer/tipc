@@ -60,4 +60,4 @@ target_include_directories(ast PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/treetypes
 		${ANTLR_TIPGrammar_OUTPUT_DIR}
 		)
-target_link_libraries(ast antlr4_static coverage_config)
+target_link_libraries(ast antlr4_static antlrgen coverage_config)

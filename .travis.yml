@@ -34,9 +34,10 @@ script:
   - popd 
 
 after_success:
-  - lcov --capture --directory build/src -output-file coverage.info
+  - lcov --capture --directory build -output-file coverage.info
   - lcov --remove coverage.info '/usr/include/*' -o coverage.info
+  - lcov --remove coverage.info '/usr/lib/*' -o coverage.info
   - lcov --remove coverage.info '*.h' -o coverage.info
-  - lcov --remove coverage.info '*.def' -o coverage.info
+  - lcov --remove coverage.info '*.hpp' -o coverage.info
   - lcov --list coverage.info
   - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"

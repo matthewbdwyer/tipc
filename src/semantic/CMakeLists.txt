@@ -19,4 +19,4 @@ target_include_directories(semantic PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/types/constraints
         ${CMAKE_CURRENT_SOURCE_DIR}/types/solver
         )
-target_link_libraries(semantic weeding symboltable types)
+target_link_libraries(semantic weeding symboltable types coverage_config)
