@@ -2,7 +2,7 @@
 
 #include "ASTExpr.h"
 
-// ASTVariableExpr - class for referencing a variable
+//! \brief Class for referencing a variable.
 class ASTVariableExpr : public ASTExpr {
   std::string NAME;
 public:

@@ -2,7 +2,7 @@
 
 #include "ASTExpr.h"
 
-// ASTNullExpr - class for a null expression
+//! \brief Class for a null expression
 class ASTNullExpr : public ASTExpr {
 public:
   ASTNullExpr() {}

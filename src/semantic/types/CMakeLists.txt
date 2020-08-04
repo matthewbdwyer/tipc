@@ -19,7 +19,6 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraint.h
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnificationError.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnificationError.h
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.h
@@ -31,6 +30,7 @@ target_sources(types PUBLIC
         )
 target_include_directories(types PUBLIC
         ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/error
         ${CMAKE_SOURCE_DIR}/src/frontend/ast
         ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes
         ${CMAKE_SOURCE_DIR}/src/semantic/symboltable

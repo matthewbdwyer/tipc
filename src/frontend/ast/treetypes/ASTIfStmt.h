@@ -3,7 +3,7 @@
 #include "ASTStmt.h"
 #include "ASTExpr.h"
 
-// ASTIfStmt - class for if-then-else
+//! \brief Class for if-then-else.
 class ASTIfStmt : public ASTStmt {
   std::unique_ptr<ASTExpr> COND;
   std::unique_ptr<ASTStmt> THEN, ELSE;

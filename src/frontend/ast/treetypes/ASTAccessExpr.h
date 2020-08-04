@@ -2,7 +2,7 @@
 
 #include "ASTExpr.h"
 
-// ASTAccessExpr - class for a record field access
+//! \brief Class for a record field access
 class ASTAccessExpr : public ASTExpr {
   std::unique_ptr<ASTExpr> RECORD;
   std::string FIELD;

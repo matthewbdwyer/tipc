@@ -2,7 +2,7 @@
 
 #include "ASTExpr.h"
 
-// ASTFunAppExpr - class for function calls.
+//! \brief Class for function calls.
 class ASTFunAppExpr : public ASTExpr {
   std::unique_ptr<ASTExpr> FUN;
   std::vector<std::unique_ptr<ASTExpr>> ACTUALS;

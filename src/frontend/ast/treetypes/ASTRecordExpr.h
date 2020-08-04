@@ -3,7 +3,7 @@
 #include "ASTExpr.h"
 #include "ASTFieldExpr.h"
 
-// ASTRecordExpr - class for defining a record
+//! \brief Class for defining a record.
 class ASTRecordExpr : public ASTExpr {
   std::vector<std::unique_ptr<ASTFieldExpr>> FIELDS;
 public:

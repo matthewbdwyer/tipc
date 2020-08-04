@@ -1,14 +1,10 @@
 #pragma once
 
-#include <exception>
-#include <string>
+#include "SemanticError.h"
 
-class UnificationError: public std::exception {
+class UnificationError: public SemanticError {
 public:
-    UnificationError(const char * msg);
-    virtual const char* what() const throw() override;
-private:
-    const char * msg;
+    UnificationError(const char * msg) : SemanticError(msg) {};
 };
 
 

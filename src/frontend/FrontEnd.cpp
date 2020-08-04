@@ -10,7 +10,7 @@
 using namespace std;
 using namespace antlr4;
 
-//! Lexer and Parser Error Listeners for redirecting ANTLR4 errors to ParseError.
+//! \brief Lexer error listener for redirecting ANTLR4 errors to ParseError.
 class LexerErrorListener : public BaseErrorListener {
 public:
   LexerErrorListener() = default;
@@ -20,6 +20,7 @@ public:
                            const std::string &msg, std::exception_ptr e) override;
 };
 
+//! \brief Parse error listener for redirecting ANTLR4 errors to ParseError.
 class ParserErrorListener : public BaseErrorListener {
 public:
   ParserErrorListener() = default;

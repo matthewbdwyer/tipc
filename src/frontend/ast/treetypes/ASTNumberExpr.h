@@ -2,7 +2,7 @@
 
 #include "ASTExpr.h"
 
-// ASTNumberExpr - expression class for numeric literals
+//! \brief Class for numeric literals.
 class ASTNumberExpr : public ASTExpr {
   int VAL;
 public:

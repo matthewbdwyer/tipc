@@ -2,10 +2,10 @@
 
 #include "Error.h"
 
-/*! \class SemanticError
- *  \brief Class for tipc semantic errors.
+/*! \brief Class for tipc semantic errors.
  *
  * Errors in weeding, symbol processing, or type checking generate instances of this type.
+ * \sa Error
  */
 class SemanticError: public Error {
 public:

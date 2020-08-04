@@ -2,6 +2,24 @@
 
 #include "AST.h"
 
+/*! \brief Base class for AST visitors.
+ *
+ * The AST visitor class abstracts the traversal of an AST.  It works
+ * in concert with the accept methods of ASTNode subtypes.  Each of those
+ * nodes performs a traversal of its children in an order corresponding to
+ * their appearance in the source program.  This class defines default behavior
+ * for the processing performed when the traversal reaches a node of a given type.
+ * By default the visit method returns true, indicating that the children of
+ * the node should also be visited, and the endVisit method does nothing.
+ *
+ * Subtypes of ASTVisitor will selectively override these default methods.
+ * Overriding a visit permits a pre-order processing during traversal and
+ * overriding endVisit permits a post-order processing.
+ *
+ * Subtype of ASTVisitor will also define member data that can be referenced
+ * by overridden methods to communicate information along the traversal to
+ * future method invocations.
+ */
 class ASTVisitor {
 public:
   virtual bool visit(ASTProgram * element) { return true; }

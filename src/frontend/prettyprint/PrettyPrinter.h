@@ -5,8 +5,15 @@
 #include <iostream>
 #include <string>
 
-/**
- * GNU Style PrettyPrinter.
+/*! \brief GNU Style PrettyPrinter.
+ *
+ * Visitor to produce a textual representation of a program represented as an AST.
+ * The visitor is parameterized by the whitespace character and the preferred number
+ * of those characters to use for formatting the program.  The output is written to
+ * a provided std::ostream.
+ *
+ * There are two primary entry points to this class.  The print method prints entire
+ * programs and the print2 method prints any sub-tree of the program.
  */
 class PrettyPrinter: public ASTVisitor {
 public:

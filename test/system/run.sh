@@ -86,9 +86,10 @@ done
 
 
 if [ ${numfailures} -eq "0" ]; then
-  echo "pass"
+  echo -n "all " 
+  echo -n ${numtests}
+  echo " tests passed"
 else
-  echo -n "fail : "
   echo -n ${numfailures}/${numtests}
   echo " tests failed"
 fi

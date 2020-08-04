@@ -10,6 +10,7 @@
 // Forward declare the visitor to resolve circular dependency
 class ASTVisitor;
 
+//! \brief Base class for all AST nodes.
 class ASTNode {
 public:
   virtual ~ASTNode() = default;

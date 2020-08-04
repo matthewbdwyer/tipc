@@ -2,7 +2,7 @@
 
 #include "ASTNode.h"
 
-// DeclNode - class for declaring a name, e.g., function, parameter, variable
+//! \brief Class for declaring a name, e.g., function, parameter, variable
 class ASTDeclNode : public ASTNode {
   std::string NAME;
 public:

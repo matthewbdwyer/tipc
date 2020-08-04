@@ -3,7 +3,7 @@
 #include "ASTStmt.h"
 #include "ASTExpr.h"
 
-// ASTAssignStmt - class for assignment
+//! \brief Class for assignment
 class ASTAssignStmt : public ASTStmt {
   std::unique_ptr<ASTExpr> LHS, RHS;
 public:

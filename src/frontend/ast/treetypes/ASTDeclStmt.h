@@ -3,7 +3,7 @@
 #include "ASTStmt.h"
 #include "ASTDeclNode.h"
 
-// ASTDeclStmt - class for local variable declarations
+//! \brief Class for local variable declarations
 class ASTDeclStmt : public ASTStmt {
   std::vector<std::unique_ptr<ASTDeclNode>> VARS;
 public:

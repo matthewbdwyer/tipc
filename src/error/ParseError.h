@@ -2,10 +2,10 @@
 
 #include "Error.h"
 
-/*! \class ParseError
- *  \brief Class for tipc parse errors.
+/*! \brief Class for tipc parse errors.
  *
  * Errors in lexing or parsing generate instances of this type.
+ * \sa Error
  */
 class ParseError: public Error {
 public:

@@ -1,8 +1,10 @@
 [![Build Status](https://travis-ci.com/matthewbdwyer/tipc.svg?branch=devel)](https://travis-ci.com/matthewbdwyer/tipc)
 [![codecov.io](https://codecov.io/gh/matthewbdwyer/tipc/coverage.svg?branch=devel)](https://codecov.io/gh/matthewbdwyer/tipc?branch=devel)
 
-# tipc
+tipc {#mainpage}
+=========
 A compiler from TIP to llvm bitcode
+
 
 ## TIP Language, Interpreter, and Analyzers
 
@@ -21,21 +23,28 @@ and depends on a number of tools and packages, e.g.,
 [ANTLR4](https:://www.antlr.org),
 [Catch2](https://github.com/catchorg/Catch2),
 [CMake](https://cmake.org/),
+[Doxygen](https://www.doxygen.nl/),
 [Java](www.java.com),
 [LLVM](https:://www.llvm.org).
 To simplify dependency management the project provides a 
 `bootstrap` script to install all of the required dependencies
 on linux ubuntu and mac platforms.
 
-## Building `tipc`
+## Building tipc
+
+The project use (Travis CI)[travis-ci.org] for building and testing and 
+(CodeCov)[codecov.io] for reporting code coverage.  The (.travis.yml)[.travis.yml]
+file provides details of this process.  If you would prefer to build and 
+test manually then read on.
 
 After cloning this repository you can build the compiler by moving to
 into the top-level directory and issuing these commands:
   1. `./bootstrap`
-  2. `mkdir build`
-  3. `cd build`
-  4. `cmake ../src`
-  5. `make`
+  2. `. ~/.bashrc`
+  3. `mkdir build`
+  4. `cd build`
+  5. `cmake ../src`
+  6. `make`
 
 The build process will download an up to date version of ANTLR4 if needed,
 build the C++ target for ANTLR4, and then build all of `tipc` including its
@@ -48,44 +57,76 @@ You may see some warnings, e.g.,
 These are expected in the current version of the project; we will work to
 resolve them in future releases.
 
-To run tests ... STOPPED HERE
+The project includes a number of unit tests grouped into several executables.
+To run them issue the following commands:
+  1. `cd build`
+  2. ./test/unit/frontend/frontend_unit_tests
+  3. ./test/unit/semantic/semantic_unit_tests
+  4. ./test/unit/semantic/types/typeinference_unit_tests
+All of the tests should pass.
 
-## Working with `tipc`
+The project also includes a number of system tests.  These are TIP programs that have built in test oracles that check for the expected results.  To run these tests issue the following commands:
+  1. `cd test/system`
+  2. `./run.sh`
+All of the tests should pass.
 
-During development you need only run steps 1 and 2 a single time, 
-unless you modify the CmakeLists.txt file.  Just run make in the build directory to rebuild after making changes to your tool source.
+## Working with tipc
 
-Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README describes how to build it and run it using `grun`.
+During development you need only run build steps 1 through 5 a single time, 
+unless you modify some CMakeLists.txt file.  
+Just run make in the build directory to rebuild after making changes to the source.
 
-## Limitations
+If you do need to add a source file then you will have to edit the appropriate 
+CMakeLists.txt file to add it.  In this case, you should:
+  1. `cd build`
+  2. `rm CMakeCache.txt`
+  3. `cmake ..`
+which will regenerate the makefiles that you can then run to build.
 
-TIP does not perform type checking.  Instead it relies on running the Scala TIP system to perform this check.  `tipc` relies on the fact that the types are correct and it casts values based on the operators, e.g., an operator that expects a pointer has its operand cast to a pointer.  This can work because TIP has a limited set of types and all of them can be represented as an `int64_t`.  This results in sub-optimal code because there are lots of `inttoptr` and `ptrtoint` casts in the generated LLVM bitcode.
-
-TIP records are not implemented (yet).  Extending `tipc` to support records can still use the above scheme since operators that access records are not overloaded with any other type and records are always heap allocated in TIP and, thus, that address can be represented as a pointer/`int64_t`.
-
-Note that other extensions of TIP, e.g., adding floats, would require having type annotations in `tipc`.  These could be constructed in a simple type annotation pass, as opposed to TIP Scala's type inference analysis, if the types of functions and declared variables were known.   Conveniently, the Scala TIP compiler can emit type annotations for functions and declared variables; run `./tip -types` and use the file with the `.ttip` suffix that is written to the `out` directory.
-
-## Tests
-
-The implementation has a small set of rudimentary tests.  These tests do not accept input, rather they hard code values to exercise the generated code.  Tests are judged correct for `tipc` if the output produced matches that produced when running `./tip -run` for the Scala implementation.  The Scala implementation produces more output than `tipc`, due to messages from running it under `sbt`.  Consequently, test output is only judged relative to values produced by program `output` and `error` statements.  
-
-The script [difftest.sh](./test/difftest.sh) takes the name of a `.tip` program and runs differential testing on it.  If your program reads from input the test script will hang.
-
-To run the current set of differential tests:
-  1. compile and build TIP in `~/TIP`
-  2. create a directory `~/TIP/tipc` to hold test input files
-  3. run `./build.sh` in `.../tipc/rtlib`
-  4. run `./runtests.sh` in `.../tipc/test`
-
-The ANTLR4 grammar is designed to make it possible to perform grammar-based fuzzing using a tool like [grammarinator](https://github.com/renatahodovan/grammarinator).  To make this interesting one must bias the fuzzing towards programs that are syntactically and type correct and that have no input statements.  An even more interesting set of generated tests would aggressively output the results of intermediate computations, e.g., after every assignment.  This is future work.
+Note that the `tipg4` directory has a standalone ANTLR4 grammar.  
+It's README describes how to build it and run it using `grun`.
 
 ## Documentation
 
-The TIP grammar, [tipg4](./tipg4/TIP.g4), is implemented using ANTLR4.  This grammar is free of any semantic actions, though it does use ANTLR4 rule features which allow for control over the tree visitors that form key parts of the compiler.  This allows the structure of the grammar to remain relatively clean, i.e., no grammar factoring or stratification needed.  Relative to the TIP Scala grammar, which is expressed as a PEG grammar, the ANTLR4 grammar consolidates some rules to facilitate the access to parsed structures in tree visitors.
+The TIP grammar, [tipg4](./tipg4/TIP.g4), is implemented using ANTLR4.  This grammar is free of any semantic actions, though it does use ANTLR4 rule features which allow for control over the tree visitors that form key parts of the compiler.  This allows the structure of the grammar to remain relatively clean, i.e., no grammar factoring or stratification needed.  
 
-The `tipc` compiler is pretty straightforward.  It includes a [parse tree visitor](./src/TIPtreeBuild.cpp) that constructs an [AST](./src/TIPtree.h).  The compiler implements two passes over the AST: one to [generate LLVM bitcode](./src/TIPtreeGen.cpp) and one to [pretty print](.src/TIPtreePrint.cpp).   The [main](./src/tipcc.cpp) file parses command line options, chooses which pass to run, and if LLVM code is generated whether to run a set of LLVM passes to improve the bitcode (on by default).
+The `tipc` compiler is has a pretty classic design.  It is comprised of four phases:
+ * [frontend](./src/frontend) takes care of parsing, constructing an AST representation, and pretty printing
+ * [semantic analysis](./src/semantic) that performs assignability, symbol, and type checking
+ * [code generation](./src/codegen) that produces LLVM bitcode from an AST and emits a binary
+ * [optimizion](./src/optimizer) that runs a few LLVM optimization passes to improve the bitcode
 
-`tipc` only produces a bitcode file, `.bc`.  You need to link it with the [runtine library](./rtlib/tip_rtlib.c) which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines.  A [script](./test/build.sh) is available to statically link binaries compiled by `tipc`.
+Doxygen (documentation)[https:://matthewbdwyer.github.io/tipc] for the project is available for the project.  It is a bit of a work in progress.
+
+The `tipc` driver program only produces a bitcode file, `.bc`.  You need to link it with the [runtime library](./rtlib/tip_rtlib.c) which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines.  A [script](./test/system/build.sh) is available to link binaries compiled by `tipc` with the runtime library.
+
+## Goals and Plans
+
+The goal of this project is to provide a starting point for project work in an undergraduate compilers course.  As such it similar to lots of other compiler projects, but there are some differences.
+
+First and foremost, the TIP language includes a number of rich features, e.g., high-order fucntions, type inference, and the `tipc` compiler targets LLVM -- a key component of a production compiler infrastructure.  These choices are intentional and while they create some challenges the project is intended to help demystify complex language features, e.g., parametric polymorphism, by letting them see how they can be realized.
+
+Second, the project attempts to use modern software development practices, e.g., 
+Doxygen for in-code documentation, unit testing with Catch2, continuous integration
+with Travis CI, and code coverage with `lcov`.  
+
+Third, the project intentionally makes heavy use of the (Visitor pattern)[https://en.wikipedia.org/wiki/Visitor_pattern] which is quite appropriate in the context of a compiler.  Our use of it is intended to demonstrate how this type of abstract design element in a system can yield conceptually simplicity and savings in development.   The project currently uses 6 visitors that extend (ASTVisitor)[./src/frontend/ast/ASTVisitor.h] and another visitor from ANTLR4.
+
+Finally, the project is implemented in C++17 using modern features.  For example, all memory allocation uses smart pointers, we use unique pointers where possible and shared pointers as well, to realize the (RAII)[https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization] pattern.  Again this presents some challenges, but addressing them is illustrated in the `tipc` code base and hopefully they provide a good example for students.
+
+The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance.  For the latter, we expect to make a new release of the project in early August every year.  This release will focus on improving the use of modern C++, as we come to better understand the best practices for C++20, and to incorporate better design principles, patterns, and practices.
+
+## Resources
+
+To fully understand this project quite a bit of background is required.   We collect a number of resources that we think can be helpful in that regard.
+
+STOPPED HERE
+
+### C++ Resources
+
+### Unit Testing Resources
+
+### LLVM Resources
 
 To understand this code, and perhaps extend it, you will want to become familiar with the [core LLVM classes](http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-reference).  It can be difficult to absorb all of the information in this type of documentation just by reading it.  A goal-directed strategy where you move back and forth between reading code and reading this documentation seems to work well for many people.
 

@@ -5,7 +5,7 @@
 #include "ASTStmt.h"
 #include "ASTDeclStmt.h"
 
-// ASTFunction - signature, local declarations, and a body
+//! \brief Class for defining the signature, local declarations, and a body of a function.
 class ASTFunction : public ASTNode {
   std::unique_ptr<ASTDeclNode> DECL;
   std::vector<std::unique_ptr<ASTDeclNode>> FORMALS;

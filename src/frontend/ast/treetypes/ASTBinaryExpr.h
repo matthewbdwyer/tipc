@@ -2,7 +2,7 @@
 
 #include "ASTExpr.h"
 
-// ASTBinaryExpr - class for a binary operator.
+//! \brief Class for a binary operator.
 class ASTBinaryExpr : public ASTExpr {
   std::string OP;
   std::unique_ptr<ASTExpr> LEFT, RIGHT;

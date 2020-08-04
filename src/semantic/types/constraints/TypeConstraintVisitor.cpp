@@ -6,7 +6,9 @@
 #include "TipRecord.h"
 #include "TipInt.h"
 
-/*
+/*! \fn astToVar
+ *  \brief Convert an AST node to a type variable.
+ *
  * Utility function that creates type variables and uses declaration nodes
  * as a canonical representative for program variables.  There are two case
  * that need to be checked: if the variable is local to a function or if
@@ -30,7 +32,8 @@ bool TypeConstraintVisitor::visit(ASTFunction * element) {
     return true;
 }
 
-/*
+/*! \brief Type constraints for function definition.
+ *
  * Type rules for "main(X1, ..., Xn) { ... return E; }":
  *   [[X1]] = [[Xn]] = [[E]] = int
  * To express this we will equate all type variables to int.
@@ -67,7 +70,8 @@ void TypeConstraintVisitor::endVisit(ASTFunction * element) {
   }
 }
 
-/*
+/*! \brief Type constraints for numeric literal.
+ *
  * Type rules for "I":  
  *   [[I]] = int
  */
@@ -75,7 +79,8 @@ void TypeConstraintVisitor::endVisit(ASTNumberExpr * element) {
   process(astToVar(element), std::make_shared<TipInt>());
 }
 
-/*
+/*! \brief Type constraints for binary operator.
+ *
  * Type rules for "E1 op E2":
  *   [[E1]] = [[E2]]
  *   [[E1 op E2]] = int
@@ -99,7 +104,8 @@ void TypeConstraintVisitor::endVisit(ASTBinaryExpr  * element) {
   }
 }
 
-/*
+/*! \brief Type constraints for input statement.
+ *
  * Type rules for "input":
  *  [[input]] = int
  */
@@ -107,7 +113,8 @@ void TypeConstraintVisitor::endVisit(ASTInputExpr * element) {
   process(astToVar(element), std::make_shared<TipInt>());
 }
 
-/*
+/*! \brief Type constraints for function application.
+ *
  * Type Rules for "E(E1, ..., En)":
  *  [[E]] = ([[E1]], ..., [[En]]) -> [[E(E1, ..., En)]]
  */
@@ -120,7 +127,8 @@ void TypeConstraintVisitor::endVisit(ASTFunAppExpr  * element) {
           std::make_shared<TipFunction>(actuals, astToVar(element)));
 }
 
-/*
+/*! \brief Type constraints for heap allocation.
+ *
  * Type Rules for "alloc E":
  *   [[alloc E]] = &[[E]]
  */
@@ -129,7 +137,8 @@ void TypeConstraintVisitor::endVisit(ASTAllocExpr * element) {
           std::make_shared<TipRef>(astToVar(element->getInitializer())));
 }
 
-/*
+/*! \brief Type constraints for address of.
+ *
  * Type Rules for "&X":
  *   [[&X]] = &[[X]]
  */
@@ -138,7 +147,8 @@ void TypeConstraintVisitor::endVisit(ASTRefExpr * element) {
           std::make_shared<TipRef>(astToVar(element->getVar())));
 }
 
-/*
+/*! \brief Type constraints for pointer dereference.
+ *
  * Type Rules for "*E":
  *   [[E]] = &[[*E]]
  */
@@ -147,7 +157,8 @@ void TypeConstraintVisitor::endVisit(ASTDeRefExpr * element) {
           std::make_shared<TipRef>(astToVar(element)));
 }
 
-/*
+/*! \brief Type constraints for null literal.
+ *
  * Type Rules for "null":
  *   [[null]] = & \alpha
  */
@@ -156,7 +167,8 @@ void TypeConstraintVisitor::endVisit(ASTNullExpr * element) {
           std::make_shared<TipRef>(std::make_shared<TipAlpha>("null")));
 }
 
-/* 
+/*! \brief Type rules for assignments.
+ *
  * Type rules for "E1 = E":
  *   [[E1]] = [[E2]]
  *
@@ -177,7 +189,8 @@ void TypeConstraintVisitor::endVisit(ASTAssignStmt  * element) {
   }
 }
 
-/* 
+/*! \brief Type constraints for while loop.
+ *
  * Type rules for "while (E) S":
  *   [[E]] = int
  */
@@ -185,7 +198,8 @@ void TypeConstraintVisitor::endVisit(ASTWhileStmt * element) {
   process(astToVar(element->getCondition()), std::make_shared<TipInt>());
 }
 
-/* 
+/*! \brief Type constraints for if statement.
+ *
  * Type rules for "if (E) S1 else S2":
  *   [[E]] = int
  */
@@ -193,7 +207,8 @@ void TypeConstraintVisitor::endVisit(ASTIfStmt * element) {
   process(astToVar(element->getCondition()), std::make_shared<TipInt>());
 }
 
-/* 
+/*! \brief Type constraints for output statement.
+ *
  * Type rules for "output E":
  *   [[E]] = int
  */
@@ -201,7 +216,8 @@ void TypeConstraintVisitor::endVisit(ASTOutputStmt * element) {
   process(astToVar(element->getArg()), std::make_shared<TipInt>());
 }
 
-/*
+/*! \brief Type constraints for record expression.
+ *
  * Type rule for "{ X1:E1, ..., Xn:En }":
  *   [[{ X1:E1, ..., Xn:En }]] = { f1:v1, ..., fn:vn }
  * where fi is the ith field in the program's uber record
@@ -227,7 +243,8 @@ void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
   process(astToVar(element), std::make_shared<TipRecord>(fieldTypes, allFields));
 }
 
-/*
+/*! \brief Type constraints for field access.
+ *
  * Type rule for "E.X":
  *   [[E]] = { f1:v1, ..., fn:vn }
  * where fi is the ith field in the program's uber record
@@ -247,7 +264,8 @@ void TypeConstraintVisitor::endVisit(ASTAccessExpr * element) {
           std::make_shared<TipRecord>(fieldTypes, allFields));
 }
 
-/* 
+/*! \brief Type constraints for error statement.
+ *
  * Type rules for "error E":
  *   [[E]] = int
  */

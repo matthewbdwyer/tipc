@@ -2,7 +2,7 @@
 
 #include "ASTExpr.h"
 
-// InputExpr - class for input expression
+//! \brief Class for input expression.
 class ASTInputExpr : public ASTExpr {
 public:
   ASTInputExpr() {}

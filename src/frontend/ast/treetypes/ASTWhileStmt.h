@@ -3,7 +3,7 @@
 #include "ASTStmt.h"
 #include "ASTExpr.h"
 
-// WhileStmt - class for a while loop
+//! \brief Class for a while loop.
 class ASTWhileStmt : public ASTStmt {
   std::unique_ptr<ASTExpr> COND;
   std::unique_ptr<ASTStmt> BODY;

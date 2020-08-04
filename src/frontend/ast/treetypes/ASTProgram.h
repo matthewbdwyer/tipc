@@ -4,7 +4,7 @@
 
 class SemanticAnalysis;
 
-// ASTProgram - a name and a list of functions
+//! \brief Class for a program which is a name and a list of functions.
 class ASTProgram {
   std::string name;
   std::vector<std::unique_ptr<ASTFunction>> FUNCTIONS;
