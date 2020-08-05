@@ -4,19 +4,8 @@ TBDs
 - search the code for TODO and TBD comments and resolve them
 
 Coverage
-- ensure that we get consistent coverage information
-  * it seems to fluctuate
-- fix system tests which fail now because bootstrap doesn't define TIPCLANG
-- ensure travis ships results to codecov
 - develop targetted tests to achieve 100% non-internal-error stmt coverage
   * if we can't force errors those errors
-
-Testing
-- unit testing is done 
-- system testing is done 
-
-Design
-- incorporate all semantic analysis into a single phase with multiple passes
 
 Code Gen Upgrade
 - maintain philosophy of assuming type correctness and generating code appropriately

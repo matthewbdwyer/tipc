@@ -103,7 +103,7 @@ done
 # Tests to cover argument handling
 ((numtests++))
 ${TIPC} -pp -ps iotests/fib.tip >/tmp/fib.ppps
-diff iotests/fib.pps /tmp/fib.pps >/tmp/fib.diff
+diff iotests/fib.ppps /tmp/fib.ppps >/tmp/fib.diff
 if [[ -s /tmp/fib.diff ]]
 then
   echo -n "Test differences for : " 
