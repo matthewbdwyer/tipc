@@ -16,11 +16,11 @@ This project implements `tipc` which compiles TIP programs into LLVM bitcode.  L
 
 ## Dependencies
 
-`tipc` is implemented in C++17 and depends on a number of tools and packages, e.g., [ANTLR4](https://www.antlr.org), [Catch2](https://github.com/catchorg/Catch2), [CMake](https://cmake.org/), [Doxygen](https://www.doxygen.nl/), [Java](https://www.java.com), [LLVM](https:://www.llvm.org).  To simplify dependency management the project provides a [bootstrap](./bootstrap) script to install all of the required dependencies on linux ubuntu and mac platforms.
+`tipc` is implemented in C++17 and depends on a number of tools and packages, e.g., [ANTLR4](https://www.antlr.org), [Catch2](https://github.com/catchorg/Catch2), [CMake](https://cmake.org/), [Doxygen](https://www.doxygen.nl/), [Java](https://www.java.com), [LLVM](https://www.llvm.org).  To simplify dependency management the project provides a [bootstrap](./bootstrap) script to install all of the required dependencies on linux ubuntu and mac platforms.
 
 ## Building tipc
 
-The project use [Travis CI](https:://travis-ci.org) for building and testing and [CodeCov](https://codecov.io)] for reporting code coverage.  The [.travis.yml](.travis.yml)] file provides details of this process.  If you would prefer to build and test manually then read on.
+The project use [Travis CI](https://travis-ci.org) for building and testing and [CodeCov](https://codecov.io)] for reporting code coverage.  The [.travis.yml](.travis.yml)] file provides details of this process.  If you would prefer to build and test manually then read on.
 
 After cloning this repository you can build the compiler by moving to into the top-level directory and issuing these commands:
   1. `./bootstrap`
@@ -73,9 +73,9 @@ The `tipc` compiler is has a pretty classic design.  It is comprised of four pha
  * [frontend](./src/frontend) takes care of parsing, constructing an AST representation, and pretty printing
  * [semantic analysis](./src/semantic) that performs assignability, symbol, and type checking
  * [code generation](./src/codegen) that produces LLVM bitcode from an AST and emits a binary
- * [optimizion](./src/optimizer) that runs a few LLVM optimization passes to improve the bitcode
+ * [optimization](./src/optimizer) that runs a few LLVM optimization passes to improve the bitcode
 
-Doxygen [documentation](https:://matthewbdwyer.github.io/tipc) for the project is available for the project.  The documentation is a work in progress and will improve over time..
+Doxygen [documentation](https://matthewbdwyer.github.io/tipc) for the project is available for the project.  The documentation is a work in progress and will improve over time..
 
 The `tipc` driver program only produces a bitcode file, `.bc`.  You need to link it with the [runtime library](./rtlib/tip_rtlib.c) which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines.  A [script](./test/system/build.sh) is available to link binaries compiled by `tipc` with the runtime library.
 
