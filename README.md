@@ -134,7 +134,9 @@ STOPPED HERE
 
 ### C++ Resources
 
-### Unit Testing Resources
+### CMake Resources
+
+### Catch2 and Unit Testing Resources
 
 ### LLVM Resources
 
