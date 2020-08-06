@@ -33,7 +33,7 @@ After cloning this repository you can build the compiler by moving to into the t
 The build process will download an up to date version of ANTLR4 if needed, build the C++ target for ANTLR4, and then build all of `tipc` including its substantial body of unit tests.  This may take some time - to speed it up use multiple threads in the `make` commend, e.g., `make -j6`.
 
 You may see some warnings, e.g.,
-  * Cmake policy warnings
+  * CMake policy warnings
   * compile warnings for ignored type attribute ATN
 
 These are expected in the current version of the project; we will work to resolve them in future releases.
@@ -83,7 +83,7 @@ The `tipc` driver program only produces a bitcode file, `.bc`.  You need to link
 
 The goal of this project is to provide a starting point for project work in an undergraduate compilers course.  As such it similar to lots of other compiler projects, but there are some differences.
 
-First and foremost, the TIP language includes a number of rich features, e.g., high-order fucntions, and type inference, and the `tipc` compiler targets LLVM - a key component of a production compiler infrastructure.  These choices are intentional and while they create some challenges the project is intended to help demystify complex language features, e.g., parametric polymorphism, by illustrating how they can be realized.
+First and foremost, the TIP language includes a number of rich features, e.g., high-order functions, and type inference, and the `tipc` compiler targets LLVM - a key component of a production compiler infrastructure.  These choices are intentional and while they create some challenges the project is intended to help demystify complex language features, e.g., parametric polymorphism, by illustrating how they can be realized.
 
 Second, the project attempts to use modern software development practices, e.g., Doxygen for in-code documentation, unit testing with Catch2, continuous integration with Travis CI, and code coverage with `lcov`.  
 
@@ -127,16 +127,35 @@ Killed
 Incorporating a garbage collector is a possible future extension to the runtime library.
 
 ## Resources
-
-To fully understand this project quite a bit of background is required.   We collect a number of resources that we think can be helpful in that regard.
-
-STOPPED HERE
+To fully understand this project quite a bit of background is required.
+We collect a number of resources that we think can be helpful in that regard.
 
 ### C++ Resources
+If you find yourself unfamiliar with certain aspects of the C++ programming
+language we encourage you to explore the *Back To Basics* videos that have
+been presented at [CppCon](https://cppcon.org/). Provided below are links
+to a number of these videos, as well as to other resources that are relevant 
+to this project.
+
+#### Move Semantics
++ [Move Semantics (part 1 of 2)](https://youtu.be/St0MNEU5b0o)
++ [Move Semantics (part 2 of 2)](https://youtu.be/pIzaZbKUw2s)
+
+#### Value Categories
++ [Understanding Value Categories](https://youtu.be/XS2JddPq7GQ)
++ [“New” Value Terminology](https://www.stroustrup.com/terminology.pdf)
+
+#### Smart pointers
++ [Smart Pointers](https://youtu.be/xGDLkt-jBJ4)
 
 ### CMake Resources
++ [CMake docs](https://cmake.org/cmake/help/v3.7/)
++ [More Modern CMake](https://youtu.be/y7ndUhdQuU8)
++ [Oh No! More Modern CMake](https://youtu.be/y9kSr5enrSk)
 
 ### Catch2 and Unit Testing Resources
++ [Catch2 docs](https://github.com/catchorg/Catch2/tree/master/docs)
++ [Modern C++ Testing with Catch2](https://youtu.be/Ob5_XZrFQH0)
 
 ### LLVM Resources
 
