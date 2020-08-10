@@ -15,6 +15,7 @@
 #include "llvm/IR/Verifier.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
+#include "llvm/Support/TypeSize.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/ToolOutputFile.h"
@@ -331,8 +332,10 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
       fieldVector.push_back(field);
   }
 
+
   uberRecordType = StructType::create(TheContext, member_values, "uberRecord");
   ptrToUberRecordType = PointerType::get(uberRecordType, 0);
+
 
   // Code is generated into the module by the other routines
   for (auto const &fn : getFunctions()) {
@@ -631,13 +634,14 @@ llvm::Value* ASTRecordExpr::codegen() {
   //%eg = alloca %struct.will*, align 8
   auto *allocaStruct = Builder.CreateAlloca(ptrToUberRecordType);
 
-  //Next allocate space
-  auto *AllocSize = ConstantExpr::getSizeOf(ptrToUberRecordType);
-
-  //%call = call noalias i8* @malloc(i64, 12) #2
-
   // Use Builder to create the malloc call using pre-defined mallocFun
-  std::vector<Value *> sizeArg(1, AllocSize);
+
+// Begin Matt fix
+  auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
+  std::vector<Value *> sizeArg(1, 
+          ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
+// End Matt fix
+
   auto *malloc = Builder.CreateCall(mallocFun, sizeArg, "mallocedPtr");
 
   //Bitcast the malloc call to theStruct Type
