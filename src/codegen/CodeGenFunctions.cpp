@@ -69,16 +69,19 @@ std::map<std::string, std::vector<std::string>> functionFormalNames;
 // TBD SYMBOL TABLE this could really be a mapping from DeclNode to AllocaInst
 std::map<std::string, AllocaInst *> NamedValues;
 
-//TO-DO: Use typechecking do add to map in the assignment statement
-//Houses structs alloca's. Currently we only support one struct at a time
-std::map<std::string, AllocaInst *> StructValues;
 
-//TO-DO: Use typechecking to find type of structs at run time and add them
-//Keeps track of struct types
-std::map<std::string, Type *> StructTypes;
+/** The UberRecord is a the type of all records
+ *  It has a field for every named field in the program
+ */
+llvm::StructType * uberRecordType;
 
-//Keeps track of the fields associated with a struct
-std::map<std::string, std::vector<ASTFieldExpr*>> FieldMap;
+/** The PtrToUberRecordType
+ *
+ */
+llvm::PointerType * ptrToUberRecordType;
+
+//Vector of fields in an uber record
+std::vector<std::basic_string<char>> fieldVector;
 
 // Permits getFunction to access the current module being compiled
 std::unique_ptr<Module> CurrentModule;
@@ -93,6 +96,7 @@ llvm::Function *inputIntrinsic = nullptr;
 llvm::Function *outputIntrinsic = nullptr;
 llvm::Function *errorIntrinsic = nullptr;
 llvm::Function *mallocFun = nullptr;
+
 
 // A counter to create unique labels
 int labelNum = 0;
@@ -320,6 +324,15 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
                                      "malloc", CurrentModule.get());
   mallocFun->addFnAttr(llvm::Attribute::NoUnwind);
   mallocFun->addAttribute(0, llvm::Attribute::NoAlias);
+
+  std::vector<Type *> member_values;
+  for(auto field : analysis->getSymbolTable()->getFields()){
+      member_values.push_back(IntegerType::getInt64Ty((TheContext)));
+      fieldVector.push_back(field);
+  }
+
+  uberRecordType = StructType::create(TheContext, member_values, "uberRecord");
+  ptrToUberRecordType = PointerType::get(uberRecordType, 0);
 
   // Code is generated into the module by the other routines
   for (auto const &fn : getFunctions()) {
@@ -615,21 +628,11 @@ llvm::Value* ASTDeRefExpr::codegen() {
 //TO-DO: Use typechecking to add struct types to the StructType map
 //TO-DO: Use typechecking to add structs to the Struct map in assign statement
 llvm::Value* ASTRecordExpr::codegen() {
-  //First, we declare type
-  //ArrayType* members_array_ref = ArrayType::get((IntegerType::getInt64Ty(TheContext)),3);
-  std::vector<Type *> member_values;
-  member_values.push_back(IntegerType::getInt64Ty(TheContext));
-  member_values.push_back(IntegerType::getInt64Ty(TheContext));
-  member_values.push_back(IntegerType::getInt64Ty(TheContext));
-  auto *theStruct = StructType::create(TheContext, member_values, "threeI64s");
-  StructTypes["threeI64s"] = theStruct;
-  auto *ptrToTheStruct = PointerType::get(theStruct, 0);
-
   //%eg = alloca %struct.will*, align 8
-  auto *allocaStruct = Builder.CreateAlloca(ptrToTheStruct);
+  auto *allocaStruct = Builder.CreateAlloca(ptrToUberRecordType);
 
   //Next allocate space
-  auto *AllocSize = ConstantExpr::getSizeOf(ptrToTheStruct);
+  auto *AllocSize = ConstantExpr::getSizeOf(ptrToUberRecordType);
 
   //%call = call noalias i8* @malloc(i64, 12) #2
 
@@ -638,31 +641,41 @@ llvm::Value* ASTRecordExpr::codegen() {
   auto *malloc = Builder.CreateCall(mallocFun, sizeArg, "mallocedPtr");
 
   //Bitcast the malloc call to theStruct Type
-  auto *structPtr = Builder.CreatePointerCast(malloc, ptrToTheStruct, "structMalloc");
+  auto *structPtr = Builder.CreatePointerCast(malloc, ptrToUberRecordType, "structMalloc");
 
   //store %struct.will* %0, %struct will** %eg, align 8
   Builder.CreateStore(structPtr, allocaStruct);
 
   int fieldCounter = 0;
-  for (auto const &field : getFields()) {
-      //Ensure there are three ints in the struct
-      if (fieldCounter > 2) {
-          return LogError("Record expressions must be of the following type: {int, int, int}");
-      }
-      //Generate the code for the values in the fields
-      auto fieldCode = field->codegen();
-      auto loadInst = Builder.CreateLoad(ptrToTheStruct,allocaStruct);
 
-      auto *gep = Builder.CreateStructGEP(theStruct, loadInst, fieldCounter, field->getField());
-      Builder.CreateStore(fieldCode, gep);
-      fieldCounter++;
+//  for (auto const &field : getFields()) {
+//      //Generate the code for the values in the fields
+//      auto fieldCode = field->codegen();
+//      auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaStruct);
+//
+//      auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldCounter, field->getField());
+//      Builder.CreateStore(fieldCode, gep);
+//      fieldCounter++;
+//  }
+  std::map<std::basic_string<char>, Value *> usedFields;
+  for(auto const &field : getFields()){
+      usedFields[field->getField()] = field->codegen();
+  }
+  for(auto const &field : fieldVector){
+    auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaStruct);
+    auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldCounter, field);
+    std::map<std::basic_string<char>, Value *>::iterator it;
+    it = usedFields.find(field);
+    if(it != usedFields.end()){
+        Builder.CreateStore(usedFields[field], gep);
+    }
+    else{
+        Builder.CreateStore(ConstantInt::get(Type::getInt64Ty(TheContext), 0), gep);
+    }
+
+    fieldCounter++;
   }
 
-  if(fieldCounter<3) {
-      return LogError("Record expressions must be of the following type: {int, int, int}");
-  }
-  StructValues["onlyStruct"] = allocaStruct;
-  FieldMap["onlyStruct"] = this->getFields();
   return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
 }
 
@@ -673,20 +686,23 @@ llvm::Value* ASTFieldExpr::codegen() {
 //TO-DO: Use typechecking to add structs to the Struct map in assign statement
 //TO-DO: Add if statement to check if struct exists in structmap. Throw error if it doesnt
 llvm::Value* ASTAccessExpr::codegen() {
-  auto ptrToStruct = PointerType::get(StructTypes["threeI64s"], 0);
-  auto loadInst = Builder.CreateLoad(ptrToStruct, StructValues["onlyStruct"]);
+  //Generate record instruction address
+  Value *recordVal = this->getRecord()->codegen();
+  Value *recordAddress = Builder.CreateIntToPtr(recordVal, ptrToUberRecordType);
   auto currField = this->getField();
   int fieldNum = 0;
-  for(auto fields : FieldMap["onlyStruct"]){
-    if(fields->getField() == currField){
+  for(auto field : fieldVector){
+    if( field == currField){
       break;
     }
     ++fieldNum;
   }
-  if(fieldNum>2){
-      LogError("This fields name is non-existant");
+
+  if(fieldNum>=fieldVector.size()){
+      return LogError("This field doesn't exist");
   }
-  auto *gep = Builder.CreateStructGEP(StructTypes["threeI64s"], loadInst, fieldNum, this->getField());
+
+  auto *gep = Builder.CreateStructGEP(uberRecordType, recordAddress, fieldNum, this->getField());
   auto fieldLoad = Builder.CreateLoad(IntegerType::getInt64Ty(TheContext), gep);
   return Builder.CreatePtrToInt(fieldLoad, Type::getInt64Ty(TheContext), "fieldAccess");
 }
