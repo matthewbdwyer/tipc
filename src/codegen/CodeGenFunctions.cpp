@@ -24,6 +24,7 @@
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Scalar/GVN.h"
 #include "llvm/Transforms/Utils.h"
+#include "llvm-c/TargetMachine.h"
 
 using namespace llvm;
 
@@ -199,6 +200,9 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
                                                   std::string programName) {
   // Create module to hold generated code
   auto TheModule = std::make_unique<Module>(programName, TheContext);
+
+  // Set the default target triple for this platform
+  TheModule->setTargetTriple(LLVMGetDefaultTargetTriple());
 
   // Initialize nop declaration
   nop = Intrinsic::getDeclaration(TheModule.get(), Intrinsic::donothing);
