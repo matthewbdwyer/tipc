@@ -1,0 +1,14 @@
+foo(x,y,z){
+    var rec;
+    rec = {l: x, m: y, n: z};
+    return rec;
+}
+
+main(){
+    var a,c;
+
+    a = foo(3,2,4);
+
+    if(a.l!=3) error a.l;
+    return 0;
+}

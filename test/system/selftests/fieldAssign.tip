@@ -1,0 +1,27 @@
+max(a,b){
+    var c;
+    if(a>b) {
+        c = a;
+    }
+    else{
+        c = b;
+    }
+
+    return c;
+}
+
+main(){
+    var rec1, rec2, a, b;
+
+    rec1 = {field1:24, field2:42, field3:5};
+    rec2 = {field1:3, field3:6, field4:8};
+    a = rec1.field1;
+    b = rec2.field1;
+    rec2.field3=a*b;
+    rec1.field1=max(rec1.field2,rec2.field4);
+
+    if(rec2.field3!=72) error rec2.field3;
+    if(rec1.field1!=42) error rec1.field1;
+
+    return 0;
+}
