@@ -72,15 +72,19 @@ std::map<std::string, std::vector<std::string>> functionFormalNames;
 std::map<std::string, AllocaInst *> NamedValues;
 
 
-/** The UberRecord is a the type of all records
+/**
+ * The UberRecord is a the type of all records
  *  It has a field for every named field in the program
  */
 llvm::StructType * uberRecordType;
 
-/** The PtrToUberRecordType
- *
+/**
+ * The type for pointers to UberRecordType
  */
 llvm::PointerType * ptrToUberRecordType;
+
+//Maps field names to their index in the UberRecor
+std::map<std::basic_string<char>, int> fieldIndex;
 
 //Vector of fields in an uber record
 std::vector<std::basic_string<char>> fieldVector;
@@ -97,7 +101,7 @@ llvm::Function *nop = nullptr;
 llvm::Function *inputIntrinsic = nullptr;
 llvm::Function *outputIntrinsic = nullptr;
 llvm::Function *errorIntrinsic = nullptr;
-llvm::Function *mallocFun = nullptr;
+llvm::Function *callocFun = nullptr;
 
 
 // A counter to create unique labels
@@ -322,18 +326,22 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
         ConstantArray::get(inputArrayType, zeros), "_tip_input_array");
   }
 
-  // declare the malloc function
-  std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
-  auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), oneInt, false);
-  mallocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
-                                     "malloc", CurrentModule.get());
-  mallocFun->addFnAttr(llvm::Attribute::NoUnwind);
-  mallocFun->addAttribute(0, llvm::Attribute::NoAlias);
+  // declare the calloc function
+  // the calloc function takes in two ints: the number of items and the size of the items
+  std::vector<Type *> twoInt(2, Type::getInt64Ty(TheContext));
+  auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), twoInt, false);
+  callocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
+                                     "calloc", CurrentModule.get());
+  callocFun->addFnAttr(llvm::Attribute::NoUnwind);
+  callocFun->addAttribute(0, llvm::Attribute::NoAlias);
 
   std::vector<Type *> member_values;
+  int index = 0;
   for(auto field : analysis->getSymbolTable()->getFields()){
       member_values.push_back(IntegerType::getInt64Ty((TheContext)));
       fieldVector.push_back(field);
+      fieldIndex[field] = index;
+      index++;
   }
 
 
@@ -562,9 +570,10 @@ llvm::Value* ASTAllocExpr::codegen() {
 
   // TBD TYPE CHECKING - this needs upating
   // Since we do not support records all allocs are for 8 bytes, i.e., int64_t
-  std::vector<Value *> oneArg(
-      1, ConstantInt::get(Type::getInt64Ty(TheContext), 8));
-  auto *allocInst = Builder.CreateCall(mallocFun, oneArg, "allocPtr");
+  std::vector<Value *> twoArg;
+  twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 1));
+  twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 8));
+  auto *allocInst = Builder.CreateCall(callocFun, twoArg, "allocPtr");
   auto *castPtr = Builder.CreatePointerCast(
       allocInst, Type::getInt64PtrTy(TheContext), "castPtr");
   // Initialize with argument
@@ -632,85 +641,87 @@ llvm::Value* ASTDeRefExpr::codegen() {
   }
 }
 
-//TO-DO: Use typechecking to add struct types to the StructType map
-//TO-DO: Use typechecking to add structs to the Struct map in assign statement
+/* {field1 : val1, ..., fieldN, valN} record expression
+ *
+ * Builds an instance of the UberRecord using the declared fields
+ */
 llvm::Value* ASTRecordExpr::codegen() {
-  //%eg = alloca %struct.will*, align 8
-  auto *allocaStruct = Builder.CreateAlloca(ptrToUberRecordType);
+  //Allocate the a pointer to an uber record
+  auto *allocaRecord = Builder.CreateAlloca(ptrToUberRecordType);
 
-  // Use Builder to create the malloc call using pre-defined mallocFun
-
-// Begin Matt fix
+  // Use Builder to create the calloc call using pre-defined callocFun
   auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
-  std::vector<Value *> sizeArg(1, 
-          ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
-// End Matt fix
+  std::vector<Value *> callocArgs;
+  callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 1));
+  callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
+  auto *calloc = Builder.CreateCall(callocFun, callocArgs, "callocedPtr");
 
-  auto *malloc = Builder.CreateCall(mallocFun, sizeArg, "mallocedPtr");
+  //Bitcast the calloc call to theStruct Type
+  auto *recordPtr = Builder.CreatePointerCast(calloc, ptrToUberRecordType, "recordCalloc");
 
-  //Bitcast the malloc call to theStruct Type
-  auto *structPtr = Builder.CreatePointerCast(malloc, ptrToUberRecordType, "structMalloc");
+  //Store the ptr to the record in the record alloc
+  Builder.CreateStore(recordPtr, allocaRecord);
 
-  //store %struct.will* %0, %struct will** %eg, align 8
-  Builder.CreateStore(structPtr, allocaStruct);
+  //Load allocaRecord
+  auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaRecord);
 
-  int fieldCounter = 0;
-
-//  for (auto const &field : getFields()) {
-//      //Generate the code for the values in the fields
-//      auto fieldCode = field->codegen();
-//      auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaStruct);
-//
-//      auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldCounter, field->getField());
-//      Builder.CreateStore(fieldCode, gep);
-//      fieldCounter++;
-//  }
-  std::map<std::basic_string<char>, Value *> usedFields;
+  //For each field, generate GEP for location of field in the uberRecord
+  //Generate the code for the field and store it in the GEP
   for(auto const &field : getFields()){
-      usedFields[field->getField()] = field->codegen();
-  }
-  for(auto const &field : fieldVector){
-    auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaStruct);
-    auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldCounter, field);
-    std::map<std::basic_string<char>, Value *>::iterator it;
-    it = usedFields.find(field);
-    if(it != usedFields.end()){
-        Builder.CreateStore(usedFields[field], gep);
-    }
-    else{
-        Builder.CreateStore(ConstantInt::get(Type::getInt64Ty(TheContext), 0), gep);
-    }
-
-    fieldCounter++;
+      auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldIndex[field->getField()], field->getField());
+      auto value = field->codegen();
+      Builder.CreateStore(value, gep);
   }
 
-  return Builder.CreatePtrToInt(structPtr, Type::getInt64Ty(TheContext), "recordPtr");
+  //Return int64 pointer to the record
+  return Builder.CreatePtrToInt(recordPtr, Type::getInt64Ty(TheContext), "recordPtr");
 }
 
+/* field : val field expression
+ *
+ * Expression for generating the code for the value of a field
+ */
 llvm::Value* ASTFieldExpr::codegen() {
   return this->getInitializer()->codegen();
 }
 
-//TO-DO: Use typechecking to add structs to the Struct map in assign statement
-//TO-DO: Add if statement to check if struct exists in structmap. Throw error if it doesnt
+/* record.field Access Expression
+ *
+ * On the LHS of the expression, returns the location
+ * of the field being accessed
+ * On the RHS of the expression, returns the value
+ * of the field being accessed
+ */
 llvm::Value* ASTAccessExpr::codegen() {
+    bool isLValue = lValueGen;
+
+    if (isLValue) {
+        // This flag is reset here so that sub-expressions are treated as r-values
+        lValueGen = false;
+    }
+
+    //Get current field and check if it exists
+    auto currField = this->getField();
+    if(fieldIndex.count(currField) == 0){
+        return LogError("This field doesn't exist");
+    }
+
   //Generate record instruction address
   Value *recordVal = this->getRecord()->codegen();
   Value *recordAddress = Builder.CreateIntToPtr(recordVal, ptrToUberRecordType);
-  auto currField = this->getField();
-  int fieldNum = 0;
-  for(auto field : fieldVector){
-    if( field == currField){
-      break;
-    }
-    ++fieldNum;
+
+  //Generate the field index
+  auto index = fieldIndex[currField];
+
+  //Generate the location of the field
+  auto *gep = Builder.CreateStructGEP(uberRecordType, recordAddress, index, currField);
+
+  //If LHS, return location of field
+  if(isLValue){
+      return gep;
   }
 
-  if(fieldNum>=fieldVector.size()){
-      return LogError("This field doesn't exist");
-  }
-
-  auto *gep = Builder.CreateStructGEP(uberRecordType, recordAddress, fieldNum, this->getField());
+  //Load value at GEP and return it
   auto fieldLoad = Builder.CreateLoad(IntegerType::getInt64Ty(TheContext), gep);
   return Builder.CreatePtrToInt(fieldLoad, Type::getInt64Ty(TheContext), "fieldAccess");
 }
