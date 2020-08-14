@@ -2,7 +2,7 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-std::vector<ASTDeclNode*> ASTDeclStmt::getVars() {
+std::vector<ASTDeclNode*> ASTDeclStmt::getVars() const {
   return rawRefs(VARS);
 }
 
@@ -13,4 +13,18 @@ void ASTDeclStmt::accept(ASTVisitor * visitor) {
     }
   }
   visitor->endVisit(this);
+}
+
+std::ostream& ASTDeclStmt::print(std::ostream &out) const {
+  out << "var ";
+  bool skip = true;
+  for (auto &id : getVars()) {
+    if (skip) {
+      skip = false;
+      out << id;
+    } 
+    out << ", " << id;
+  } 
+  out << ";";
+  return out;
 }

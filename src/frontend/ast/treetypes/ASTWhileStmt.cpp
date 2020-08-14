@@ -8,3 +8,8 @@ void ASTWhileStmt::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTWhileStmt::print(std::ostream &out) const {
+  out << "while (" << getCondition() << ") " << getBody();
+  return out;
+}

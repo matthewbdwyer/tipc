@@ -1,11 +1,10 @@
 main() {
-  var x,y,z;
+  var x, y, z;
   x = alloc 42;
   z = &x;
   if (**z != 42) error **z;
-  y = alloc null;
-  *y = 13;
-  z = &y;
-  if (**z != 13) error **z;
+  y = alloc *z;
+  *x = 13;
+  if (**y != 13) error **y;
   return 0;
 }

@@ -2,7 +2,6 @@
 
 #include "ASTProgram.h"
 #include "SymbolTable.h"
-#include "CheckAssignable.h"
 #include <memory>
 
 /*! \class SemanticAnalysis
@@ -11,13 +10,12 @@
  * This class provides the analyze method to run a set of semantic analyses, including
  * l-value checking for assignment statements, proper use of symbols, and type checking.   
  * \sa SymbolTable
- * \sa CheckAssignable
- * TBD reference type class
+ *
+ * The class does not currently record the inferred types for each expression in
+ * the program, but this could be added as an extension.
  */
 class SemanticAnalysis {
   std::unique_ptr<SymbolTable> symTable;
-
-  // TBD type results
 
 public:
   SemanticAnalysis(std::unique_ptr<SymbolTable> symTable) : symTable(std::move(symTable)) {}
@@ -35,6 +33,4 @@ public:
   static std::unique_ptr<SemanticAnalysis> analyze(ASTProgram* ast); 
 
   SymbolTable* getSymbolTable(); 
-
-  // TBD SymbolTable* getTypes(); 
 };

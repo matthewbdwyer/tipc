@@ -9,7 +9,10 @@ class ASTDeclStmt : public ASTStmt {
 public:
   ASTDeclStmt(std::vector<std::unique_ptr<ASTDeclNode>> VARS) 
           : VARS(std::move(VARS)) {}
-  std::vector<ASTDeclNode*> getVars();
+  std::vector<ASTDeclNode*> getVars() const;
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

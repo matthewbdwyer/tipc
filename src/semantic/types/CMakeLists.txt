@@ -1,5 +1,7 @@
 add_library(types)
 target_sources(types PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/TypeInference.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/TypeInference.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipCons.cpp
@@ -36,5 +38,6 @@ target_include_directories(types PUBLIC
         ${CMAKE_SOURCE_DIR}/src/semantic/symboltable
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints
+        ${CMAKE_CURRENT_SOURCE_DIR}/solver
         )
 target_link_libraries(types coverage_config)

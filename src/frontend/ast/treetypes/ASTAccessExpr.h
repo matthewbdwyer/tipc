@@ -9,8 +9,11 @@ class ASTAccessExpr : public ASTExpr {
 public:
   ASTAccessExpr(std::unique_ptr<ASTExpr> RECORD, const std::string &FIELD)
       : RECORD(std::move(RECORD)), FIELD(FIELD) {}
-  std::string getField() { return FIELD; }
-  ASTExpr* getRecord() { return RECORD.get(); }
+  std::string getField() const { return FIELD; }
+  ASTExpr* getRecord() const { return RECORD.get(); }
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

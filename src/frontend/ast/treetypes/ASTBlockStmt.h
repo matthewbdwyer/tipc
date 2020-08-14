@@ -8,7 +8,10 @@ class ASTBlockStmt : public ASTStmt {
 public:
   ASTBlockStmt(std::vector<std::unique_ptr<ASTStmt>> STMTS)
       : STMTS(std::move(STMTS)) {}
-  std::vector<ASTStmt*> getStmts();
+  std::vector<ASTStmt*> getStmts() const;
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

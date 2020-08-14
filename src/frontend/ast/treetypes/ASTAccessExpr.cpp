@@ -7,3 +7,8 @@ void ASTAccessExpr::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTAccessExpr::print(std::ostream &out) const {
+  out << getRecord() << "." << getField();
+  return out;
+}

@@ -18,11 +18,14 @@ public:
            std::vector<std::unique_ptr<ASTStmt>> BODY)
       : DECL(std::move(DECL)), FORMALS(std::move(FORMALS)), 
         DECLS(std::move(DECLS)), BODY(std::move(BODY)) {}
-  ASTDeclNode* getDecl() { return DECL.get(); };
-  std::string getName() { return DECL->getName(); };
-  std::vector<ASTDeclNode*> getFormals();
-  std::vector<ASTDeclStmt*> getDeclarations();
-  std::vector<ASTStmt*> getStmts();
+  ASTDeclNode* getDecl() const { return DECL.get(); };
+  std::string getName() const { return DECL->getName(); };
+  std::vector<ASTDeclNode*> getFormals() const;
+  std::vector<ASTDeclStmt*> getDeclarations() const;
+  std::vector<ASTStmt*> getStmts() const;
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

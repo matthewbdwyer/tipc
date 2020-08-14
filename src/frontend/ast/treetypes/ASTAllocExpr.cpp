@@ -7,3 +7,8 @@ void ASTAllocExpr::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTAllocExpr::print(std::ostream &out) const {
+  out << "alloc " << getInitializer();
+  return out;
+}

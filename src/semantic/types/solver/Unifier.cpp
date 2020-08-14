@@ -6,6 +6,10 @@
 #include <vector>
 #include <utility>
 
+namespace {
+  bool verbose = true;
+};
+
 Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(constrs)) {
     std::vector<TipType *> types;
     for(TypeConstraint constraint : constraints) {
@@ -26,6 +30,10 @@ Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(co
         }
     }
 
+    if (verbose) {
+      std::cout << "Unifier initialized with types:\n";
+    }
+
     // Deduplicate TipTypes.
     std::vector<TipType *> unique;
     for(auto type : types) {
@@ -36,6 +44,9 @@ Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(co
             }
         }
         if(add) {
+            if (verbose) {
+              std::cout << "  " << type << std::endl;
+            }
             unique.push_back(type);
         }
     }
@@ -50,6 +61,9 @@ void Unifier::solve() {
 }
 
 void Unifier::unify(TipType * TipType1, TipType * TipType2) {
+    if (verbose) {
+      std::cout << "unifying " << TipType1 << " and " << TipType2 << std::endl;
+    }
     auto rep1 = unionFind->find(TipType1);
     auto rep2 = unionFind->find(TipType2);
 
@@ -87,8 +101,8 @@ Unifier::~Unifier() {
 
 void Unifier::throwUnifyException(TipType * TipType1, TipType * TipType2) {
     std::stringstream s;
-    s << "Cannot unify " << TipType1 << "and " << TipType2 <<
-        "(respective roots are: " << unionFind->find(TipType1) << " and " <<
+    s << "Cannot unify " << TipType1 << " and " << TipType2 <<
+        " (respective roots are: " << unionFind->find(TipType1) << " and " <<
         unionFind->find(TipType2) << ")";
     throw UnificationError(s.str().c_str());
 }

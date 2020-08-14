@@ -7,20 +7,6 @@ void PrettyPrinter::print(ASTProgram *p, std::ostream &os, char c, int n) {
   p->accept(&visitor);
 }
 
-void PrettyPrinter::print2(ASTNode *node, std::ostream &os, char c, int n) {
-  PrettyPrinter visitor(os, c, n);
-  node->accept(&visitor);
-  os << visitor.visitResults.back();
-}
-
-void PrettyPrinter::endVisitNode(ASTNode * element) {
-    element->accept(this);
-    for (auto &x : visitResults) {
-        os << x;
-    }
-    os.flush();
-}
-
 void PrettyPrinter::endVisit(ASTProgram * element) {
   std::string programString = "";
   bool skip = true;

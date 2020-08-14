@@ -2,7 +2,7 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-std::vector<ASTFieldExpr*> ASTRecordExpr::getFields() {
+std::vector<ASTFieldExpr*> ASTRecordExpr::getFields() const {
   return rawRefs(FIELDS);
 }
 
@@ -14,3 +14,18 @@ void ASTRecordExpr::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTRecordExpr::print(std::ostream &out) const {
+  out << "{";
+  bool skip = true;
+  for (auto &f : getFields()) {
+    if (skip) {
+      skip = false;
+      out << f;
+    } 
+    out << ", " << f;
+  } 
+  out << "}";
+  return out;
+}
+

@@ -7,3 +7,8 @@ void ASTErrorStmt::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTErrorStmt::print(std::ostream &out) const {
+  out << "error " << getArg() << ";";
+  return out;
+}

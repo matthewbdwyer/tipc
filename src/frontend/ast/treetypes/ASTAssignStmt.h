@@ -9,8 +9,11 @@ class ASTAssignStmt : public ASTStmt {
 public:
   ASTAssignStmt(std::unique_ptr<ASTExpr> LHS, std::unique_ptr<ASTExpr> RHS)
       : LHS(std::move(LHS)), RHS(std::move(RHS)) {}
-  ASTExpr* getLHS() { return LHS.get(); }
-  ASTExpr* getRHS() { return RHS.get(); }
+  ASTExpr* getLHS() const { return LHS.get(); }
+  ASTExpr* getRHS() const { return RHS.get(); }
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

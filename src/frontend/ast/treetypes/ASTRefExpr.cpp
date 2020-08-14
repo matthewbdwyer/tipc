@@ -7,3 +7,8 @@ void ASTRefExpr::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTRefExpr::print(std::ostream &out) const {
+  out << "&" << getVar();
+  return out;
+}

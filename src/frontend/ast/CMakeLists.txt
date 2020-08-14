@@ -58,6 +58,7 @@ target_sources(ast PUBLIC
 target_include_directories(ast PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/
 		${CMAKE_CURRENT_SOURCE_DIR}/treetypes
+		${CMAKE_SOURCE_DIR}/src/frontend/prettyprint
 		${ANTLR_TIPGrammar_OUTPUT_DIR}
 		)
 target_link_libraries(ast antlr4_static antlrgen coverage_config)

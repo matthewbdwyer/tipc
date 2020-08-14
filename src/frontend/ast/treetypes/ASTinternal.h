@@ -13,7 +13,7 @@
  * \return a vector of the underlying pointers.
  */
 template<typename T>
-std::vector<T*> rawRefs(std::vector<std::unique_ptr<T>> &v) {
+std::vector<T*> rawRefs(const std::vector<std::unique_ptr<T>> &v) {
   std::vector<T*> r;
 
   /*

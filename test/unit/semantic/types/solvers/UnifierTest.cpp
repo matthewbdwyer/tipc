@@ -10,10 +10,10 @@
 #include "TipInt.h"
 #include "ASTVariableExpr.h"
 
-static std::vector<TypeConstraint> collected;
+// These elements types are used for ahead-of-time constraint collection 
+std::vector<TypeConstraint> collected;
 
-static void collectConstraints(std::shared_ptr<TipType> t1,
-                        std::shared_ptr<TipType> t2) {
+void collectConstraints(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     collected.push_back(TypeConstraint(t1,t2));
 }
 
@@ -40,6 +40,58 @@ TEST_CASE("Unifier: Test type-safe program 1", "[Unifier]") {
     Unifier unifier(collected);
     REQUIRE_NOTHROW(unifier.solve());
 }
+
+TEST_CASE("Unifier: record2", "[Unifier]") {
+    std::stringstream program;
+    program << R"(
+main() {
+    var n, r1;
+    n = alloc {p: 4, q: 2};
+    *n = {p:5, q: 6};
+    r1 = *n.p; // output 5
+    if (r1!=5) error r1;
+    return 0;
+}
+    )";
+
+    auto ast = ASTHelper::build_ast(program);
+    auto symbols = SymbolTable::build(ast.get());
+
+    collected.clear();
+    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
+    ast->accept(&visitor);
+
+    Unifier unifier(collected);
+    REQUIRE_NOTHROW(unifier.solve());
+}
+
+TEST_CASE("Unifier: record4", "[Unifier]") {
+    std::stringstream program;
+    program << R"(
+main() {
+    var n, k, r1;
+    k = {a: 1, b: 2};
+    n = {c: &k, d: 4};
+    r1 = (*(n.c).a); // output 1
+    if(r1!=1) error r1;
+    return 0;
+}
+    )";
+
+    auto ast = ASTHelper::build_ast(program);
+    auto symbols = SymbolTable::build(ast.get());
+
+    collected.clear();
+    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
+    ast->accept(&visitor);
+
+    Unifier unifier(collected);
+    REQUIRE_NOTHROW(unifier.solve());
+}
+
+
+
+
 
 TEST_CASE("Unifier: Test unification error 1", "[Unifier]") {
     std::stringstream program;

@@ -9,8 +9,11 @@ class ASTFieldExpr : public ASTExpr {
 public:
   ASTFieldExpr(const std::string &FIELD, std::unique_ptr<ASTExpr> INIT)
       : FIELD(FIELD), INIT(std::move(INIT)) {}
-  std::string getField() { return FIELD; }
-  ASTExpr* getInitializer() { return INIT.get(); }
+  std::string getField() const { return FIELD; }
+  ASTExpr* getInitializer() const { return INIT.get(); }
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

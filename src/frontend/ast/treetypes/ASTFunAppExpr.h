@@ -10,8 +10,11 @@ public:
   ASTFunAppExpr(std::unique_ptr<ASTExpr> FUN,
                 std::vector<std::unique_ptr<ASTExpr>> ACTUALS)
       : FUN(std::move(FUN)), ACTUALS(std::move(ACTUALS)) {}
-  ASTExpr* getFunction() { return FUN.get(); }
-  std::vector<ASTExpr*> getActuals();
+  ASTExpr* getFunction() const { return FUN.get(); }
+  std::vector<ASTExpr*> getActuals() const;
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

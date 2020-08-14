@@ -17,7 +17,7 @@ bool FunctionNameCollector::visit(ASTFunction * element) {
   if (fMap.count(decl->getName()) == 0) {
     fMap.insert(std::pair<std::string, ASTDeclNode*>(decl->getName(), decl));
   } else {
-    throw SemanticError("Symbol Error: function name " + decl->getName() + " already declared\n");
+    throw SemanticError("Symbol error on line " + std::to_string(decl->getLine()) + ": function name " + decl->getName() + " already declared\n");
   }
   return false;
 }

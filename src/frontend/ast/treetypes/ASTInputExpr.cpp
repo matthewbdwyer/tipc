@@ -4,3 +4,8 @@
 void ASTInputExpr::accept(ASTVisitor * visitor) {
   visitor->endVisit(this);
 }
+
+std::ostream& ASTInputExpr::print(std::ostream &out) const {
+  out << "input";
+  return out;
+}

@@ -11,9 +11,12 @@ public:
   ASTIfStmt(std::unique_ptr<ASTExpr> COND, std::unique_ptr<ASTStmt> THEN,
             std::unique_ptr<ASTStmt> ELSE)
       : COND(std::move(COND)), THEN(std::move(THEN)), ELSE(std::move(ELSE)) {}
-  ASTExpr* getCondition() { return COND.get(); }
-  ASTStmt* getThen() { return THEN.get(); }
-  ASTStmt* getElse() { return ELSE.get(); }
+  ASTExpr* getCondition() const { return COND.get(); }
+  ASTStmt* getThen() const { return THEN.get(); }
+  ASTStmt* getElse() const { return ELSE.get(); }
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

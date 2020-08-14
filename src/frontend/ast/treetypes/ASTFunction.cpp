@@ -2,15 +2,15 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-std::vector<ASTDeclNode*> ASTFunction::getFormals() {
+std::vector<ASTDeclNode*> ASTFunction::getFormals() const {
   return rawRefs(FORMALS);
 }
 
-std::vector<ASTDeclStmt*> ASTFunction::getDeclarations() {
+std::vector<ASTDeclStmt*> ASTFunction::getDeclarations() const {
   return rawRefs(DECLS);
 }
 
-std::vector<ASTStmt*> ASTFunction::getStmts() {
+std::vector<ASTStmt*> ASTFunction::getStmts() const {
   return rawRefs(BODY);
 }
 
@@ -28,4 +28,19 @@ void ASTFunction::accept(ASTVisitor * visitor) {
     }
   }
   visitor->endVisit(this);
+}
+
+//! \brief Print an abbreviated unique string for the function
+std::ostream& ASTFunction::print(std::ostream &out) const {
+  out << getDecl() << "(";
+  bool skip = true;
+  for (auto &p : getFormals()) {
+    if (skip) {
+      skip = false;
+      out << p;
+    }
+    out << ", " << p;
+  }
+  out << "{ ... }";
+  return out;
 }

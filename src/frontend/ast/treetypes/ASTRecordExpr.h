@@ -9,7 +9,10 @@ class ASTRecordExpr : public ASTExpr {
 public:
   ASTRecordExpr(std::vector<std::unique_ptr<ASTFieldExpr>> FIELDS)
       : FIELDS(std::move(FIELDS)) {}
-  std::vector<ASTFieldExpr*> getFields();
+  std::vector<ASTFieldExpr*> getFields() const;
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;
+
+protected:
+  std::ostream& print(std::ostream &out) const override;
 };

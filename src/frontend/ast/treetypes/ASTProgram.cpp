@@ -2,7 +2,7 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-std::vector<ASTFunction*> ASTProgram::getFunctions() {
+std::vector<ASTFunction*> ASTProgram::getFunctions() const {
   return rawRefs(FUNCTIONS);
 }
 

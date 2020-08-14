@@ -12,14 +12,28 @@
 #include <unordered_set>
 #include <vector>
 
+/*! \brief Solve type constraints using term-unification.
+ *
+ * Constraints are collected * ahead-of-time and then processed collectively 
+ * performing term-unification.
+ *
+ * A possible extension is to unify constraints on-the-fly as they are collected.
+ */
 class Unifier {
 public:
     Unifier() = delete;
+
+    //! \brief Constructor for solving constraints collected ahead-of-time
     Unifier(std::vector<TypeConstraint>);
+
     ~Unifier();
 
+    //! \brief Solve a set of collected constraints
     void solve();
+
+    //! \brief Unify the terms representing two types
     void unify(TipType * t1, TipType * t2);
+
 private:
     static bool isTypeVariable(TipType *TipType);
     static bool isProperType(TipType *);

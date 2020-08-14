@@ -127,6 +127,10 @@ Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
 
   visitedFunction = std::make_unique<ASTFunction>(
       std::move(fName), std::move(fParams), std::move(fDecls), std::move(fBody));
+
+  // Set source location 
+  visitedFunction->setLocation(ctx->getStart()->getLine(), 
+                               ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -134,6 +138,10 @@ Any ASTBuilder::visitNegNumber(TIPParser::NegNumberContext *ctx) {
   int val = std::stoi(ctx->NUMBER()->getText());
   val = -val;
   visitedExpr = std::make_unique<ASTNumberExpr>(val);
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -156,8 +164,11 @@ Any ASTBuilder::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
   visit(ctx->expr(1));
   auto rhs = std::move(visitedExpr);
 
-  visitedExpr =
-      std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+  visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -170,8 +181,11 @@ Any ASTBuilder::visitRelationalExpr(TIPParser::RelationalExprContext *ctx) {
   visit(ctx->expr(1));
   auto rhs = std::move(visitedExpr);
 
-  visitedExpr =
-      std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+  visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -185,8 +199,11 @@ Any ASTBuilder::visitMultiplicativeExpr(
   visit(ctx->expr(1));
   auto rhs = std::move(visitedExpr);
 
-  visitedExpr =
-      std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+  visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -199,8 +216,11 @@ Any ASTBuilder::visitEqualityExpr(TIPParser::EqualityExprContext *ctx) {
   visit(ctx->expr(1));
   auto rhs = std::move(visitedExpr);
 
-  visitedExpr =
-      std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+  visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -213,17 +233,29 @@ Any ASTBuilder::visitParenExpr(TIPParser::ParenExprContext *ctx) {
 Any ASTBuilder::visitNumExpr(TIPParser::NumExprContext *ctx) {
   int val = std::stoi(ctx->NUMBER()->getText());
   visitedExpr = std::make_unique<ASTNumberExpr>(val);
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitVarExpr(TIPParser::VarExprContext *ctx) {
   std::string name = ctx->IDENTIFIER()->getText();
   visitedExpr = std::make_unique<ASTVariableExpr>(name);
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitInputExpr(TIPParser::InputExprContext *ctx) {
   visitedExpr = std::make_unique<ASTInputExpr>();
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -244,29 +276,49 @@ Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
   }
 
   visitedExpr = std::make_unique<ASTFunAppExpr>(std::move(fExpr), std::move(fArgs));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
   visit(ctx->expr());
   visitedExpr = std::make_unique<ASTAllocExpr>(std::move(visitedExpr));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
   visit(ctx->varExpr());
   visitedExpr = std::make_unique<ASTRefExpr>(std::move(visitedExpr));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
   visit(ctx->expr());
   visitedExpr = std::make_unique<ASTDeRefExpr>(std::move(visitedExpr));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitNullExpr(TIPParser::NullExprContext *ctx) {
   visitedExpr = std::make_unique<ASTNullExpr>();
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -278,6 +330,10 @@ Any ASTBuilder::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
   }
 
   visitedExpr = std::make_unique<ASTRecordExpr>(std::move(rFields));
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -285,6 +341,10 @@ Any ASTBuilder::visitFieldExpr(TIPParser::FieldExprContext *ctx) {
   std::string fName = ctx->IDENTIFIER()->getText();
   visit(ctx->expr());
   visitedFieldExpr = std::make_unique<ASTFieldExpr>(fName, std::move(visitedExpr));
+
+  // Set source location 
+  visitedFieldExpr->setLocation(ctx->getStart()->getLine(), 
+                                ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -295,6 +355,10 @@ Any ASTBuilder::visitAccessExpr(TIPParser::AccessExprContext *ctx) {
   auto rExpr = std::move(visitedExpr);
 
   visitedExpr = std::make_unique<ASTAccessExpr>(std::move(rExpr), fName);
+
+  // Set source location 
+  visitedExpr->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -305,12 +369,20 @@ Any ASTBuilder::visitDeclaration(TIPParser::DeclarationContext *ctx) {
     dVars.push_back(std::move(visitedDeclNode));
   }
   visitedDeclStmt = std::make_unique<ASTDeclStmt>(std::move(dVars));
+
+  // Set source location 
+  visitedDeclStmt->setLocation(ctx->getStart()->getLine(), 
+                               ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitNameDeclaration(TIPParser::NameDeclarationContext *ctx) {
   std::string name = ctx->IDENTIFIER()->getText();
   visitedDeclNode = std::make_unique<ASTDeclNode>(name);
+
+  // Set source location 
+  visitedDeclNode->setLocation(ctx->getStart()->getLine(), 
+                               ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -321,6 +393,10 @@ Any ASTBuilder::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
     bStmts.push_back(std::move(visitedStmt));
   }
   visitedStmt = std::make_unique<ASTBlockStmt>(std::move(bStmts));
+
+  // Set source location 
+  visitedStmt->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -330,6 +406,10 @@ Any ASTBuilder::visitWhileStmt(TIPParser::WhileStmtContext *ctx) {
   visit(ctx->statement());
   auto body = std::move(visitedStmt);
   visitedStmt = std::make_unique<ASTWhileStmt>(std::move(cond), std::move(body));
+
+  // Set source location 
+  visitedStmt->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -347,25 +427,41 @@ Any ASTBuilder::visitIfStmt(TIPParser::IfStmtContext *ctx) {
   }
 
   visitedStmt = std::make_unique<ASTIfStmt>(std::move(cond), std::move(thenBody),
-                                          std::move(elseBody));
+                                            std::move(elseBody));
+
+  // Set source location 
+  visitedStmt->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitOutputStmt(TIPParser::OutputStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ASTOutputStmt>(std::move(visitedExpr));
+
+  // Set source location 
+  visitedStmt->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ASTErrorStmt>(std::move(visitedExpr));
+
+  // Set source location 
+  visitedStmt->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
 Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ASTReturnStmt>(std::move(visitedExpr));
+
+  // Set source location 
+  visitedStmt->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
   return "";
 }
 
@@ -375,5 +471,9 @@ Any ASTBuilder::visitAssignStmt(TIPParser::AssignStmtContext *ctx) {
     visit(ctx->expr(1));
     auto rhs = std::move(visitedExpr);
     visitedStmt = std::make_unique<ASTAssignStmt>(std::move(lhs), std::move(rhs));
+
+  // Set source location 
+  visitedStmt->setLocation(ctx->getStart()->getLine(), 
+                           ctx->getStart()->getCharPositionInLine());
     return "";
 }

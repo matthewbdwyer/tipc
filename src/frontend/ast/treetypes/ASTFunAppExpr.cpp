@@ -2,7 +2,7 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-std::vector<ASTExpr*> ASTFunAppExpr::getActuals() {
+std::vector<ASTExpr*> ASTFunAppExpr::getActuals() const {
   return rawRefs(ACTUALS);
 }
 
@@ -14,4 +14,18 @@ void ASTFunAppExpr::accept(ASTVisitor * visitor) {
     }
   }
   visitor->endVisit(this);
+}
+
+std::ostream& ASTFunAppExpr::print(std::ostream &out) const {
+  out << getFunction() << "(";
+  bool skip = true;
+  for (auto &arg : getActuals()) {
+    if (skip) {
+      skip = false;
+      out << arg;
+    }
+    out << ", " << arg;
+  }
+  out << ")";
+  return out;
 }

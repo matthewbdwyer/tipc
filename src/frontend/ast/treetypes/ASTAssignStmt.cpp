@@ -8,3 +8,8 @@ void ASTAssignStmt::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTAssignStmt::print(std::ostream &out) const {
+  out << getLHS() << " = " << getRHS();
+  return out;
+}

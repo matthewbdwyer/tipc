@@ -8,3 +8,8 @@ void ASTBinaryExpr::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTBinaryExpr::print(std::ostream &out) const {
+  out << getLeft() << " " << getOp() << " " << getRight();
+  return out;
+}

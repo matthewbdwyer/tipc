@@ -15,8 +15,6 @@ target_include_directories(semantic PUBLIC
         ${CMAKE_SOURCE_DIR}/src/ast/treetypes
         ${CMAKE_CURRENT_SOURCE_DIR}/weeding
         ${CMAKE_CURRENT_SOURCE_DIR}/symboltable
-        ${CMAKE_CURRENT_SOURCE_DIR}/types/concrete
-        ${CMAKE_CURRENT_SOURCE_DIR}/types/constraints
-        ${CMAKE_CURRENT_SOURCE_DIR}/types/solver
+        ${CMAKE_CURRENT_SOURCE_DIR}/types
         )
 target_link_libraries(semantic weeding symboltable types coverage_config)

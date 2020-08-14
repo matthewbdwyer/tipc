@@ -5,13 +5,12 @@
 #include "TipVar.h"
 #include "TipAlpha.h"
 #include "TipRecord.h"
-#include "PrettyPrinter.h"
 #include <sstream>
 
 
 std::string Stringifier::stringify(ASTNode * node) {
     std::stringstream stream;
-    PrettyPrinter::print2(node, stream, ' ', 2);
+    stream << node;
     return stream.str();
 }
 

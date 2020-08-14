@@ -9,10 +9,11 @@ void CheckAssignable::endVisit(ASTAssignStmt* element) {
   if (dynamic_cast<ASTDeRefExpr*>(element->getLHS())) return;
   if (dynamic_cast<ASTAccessExpr*>(element->getLHS())) return;
 
-  std::stringstream errorStream;
-  PrettyPrinter::print2(element->getLHS(), errorStream, ' ', 2);
+  std::ostringstream oss;
+  oss << "Assignment error on line " << element->getLine() << ": ";
+  oss << element->getLHS() << " not an l-value\n";
 
-  throw SemanticError("Assignment error: " + errorStream.str() + " not an l-value\n");
+  throw SemanticError(oss.str());
 }
 
 void CheckAssignable::check(ASTProgram* p) {

@@ -7,3 +7,8 @@ void ASTOutputStmt::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTOutputStmt::print(std::ostream &out) const {
+  out << "output " << getArg() << ";";
+  return out;
+}
