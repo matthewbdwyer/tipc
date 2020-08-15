@@ -17,7 +17,7 @@ void ASTFunAppExpr::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTFunAppExpr::print(std::ostream &out) const {
-  out << getFunction() << "(";
+  out << *getFunction() << "(";
   bool skip = true;
   for (auto &arg : getActuals()) {
     if (skip) {
