@@ -93,11 +93,13 @@ Finally, the project is implemented in C++17 using modern features.  For example
 
 The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance.  For the latter, we expect to make a new release of the project in early August every year.  This release will focus on improving the use of modern C++, as we come to better understand the best practices for C++20, and to incorporate better design principles, patterns, and practices.
 
-## Limitations
+## Differences from TIP and Limitations
 
 Other than issues related to the efficiency of the code that it generates, the `tipc` compiler has two limitations.
 
-First, it implements a variant of the TIP language semantics with respect to records.   `tipc` implements the unification-based type inference algorithm used in the [Scala implementation](https://github.com/cs-au-dk/TIP/).  This yields a type system that ensures that any expression appearing in the record position of a field access expression is in fact a record, but it does not infer precise record typing.  Instead the strategy used is to define an *uber* record that consists of all of the fields referenced across the program.  Code generation for records will allocate an uber record, default initialize all of its fields, and then explicitly initialize fields present in a record expression.   This can lead to some unexpected behavior.  Consider this TIP program:
+First, it implements a variant of the TIP language semantics in a few ways.  It implements the `!=` operator which allows us to conveniently write self-contained system tests and it implements the [C operator precedence rules](https://en.cppreference.com/w/c/language/operator_precedence), whereas the original TIP uses a few different rules.  This surfaces in the interplay between pointer dereference and field access.  An expression `*r.f` is interpreted as `*(r.f)` according t the C precedence rules and as `(*r).f` according to the [TIP Scala](https://github.com/cs-au-dk/TIP) implementation.  If in doubt, add parentheses to express your meaning.
+
+The more important difference is the treatment of records.  `tipc` implements the unification-based type inference algorithm used in the [Scala implementation](https://github.com/cs-au-dk/TIP/).  This yields a type system that ensures that any expression appearing in the record position of a field access expression is in fact a record, but it does not infer precise record typing.  Instead the strategy used is to define an *uber* record that consists of all of the fields referenced across the program.  Code generation for records will allocate an uber record, default initialize all of its fields, and then explicitly initialize fields present in a record expression.   This can lead to some unexpected behavior.  Consider this TIP program:
 ```
 main() { var r; r = {g:1}; return access(r); }
 access(r) { return r.f; }
