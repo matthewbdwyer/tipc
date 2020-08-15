@@ -135,6 +135,48 @@ TEST_CASE("Unifier: Unify constraints on the fly", "[Unifier, On-the-fly]") {
         REQUIRE_NOTHROW(ast->accept(&visitor));
     }
 
+    SECTION("Test type-safe record2") {
+        std::stringstream program;
+        program << R"(
+main() {
+    var n, r1;
+    n = alloc {p: 4, q: 2};
+    *n = {p:5, q: 6};
+    r1 = (*n).p; // output 5
+    output r1;
+    return 0;
+}    
+         )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintUnifyVisitor visitor(symbols.get());
+        REQUIRE_NOTHROW(ast->accept(&visitor));
+    }
+
+    SECTION("Test type-safe record4") {
+        std::stringstream program;
+        program << R"(
+main() {
+    var n, k, r1;
+    k = {a: 1, b: 2};
+    n = {c: &k, d: 4};
+    r1 = ((*(n.c)).a); // output 1
+    output r1;
+    return 0;
+}
+         )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintUnifyVisitor visitor(symbols.get());
+        REQUIRE_NOTHROW(ast->accept(&visitor));
+    }
+
+
+
     SECTION("Test unification error 1") {
         std::stringstream program;
         program << R"(
