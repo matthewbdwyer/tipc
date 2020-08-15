@@ -23,6 +23,7 @@ std::ostream& ASTFunAppExpr::print(std::ostream &out) const {
     if (skip) {
       skip = false;
       out << *arg;
+      continue;
     }
     out << ", " << *arg;
   }

@@ -22,6 +22,7 @@ std::ostream& ASTDeclStmt::print(std::ostream &out) const {
     if (skip) {
       skip = false;
       out << *id;
+      continue;
     } 
     out << ", " << *id;
   } 

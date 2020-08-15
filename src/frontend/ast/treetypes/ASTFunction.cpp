@@ -38,6 +38,7 @@ std::ostream& ASTFunction::print(std::ostream &out) const {
     if (skip) {
       skip = false;
       out << *p;
+      continue;
     }
     out << ", " << *p;
   }

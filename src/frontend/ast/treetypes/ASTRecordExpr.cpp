@@ -22,6 +22,7 @@ std::ostream& ASTRecordExpr::print(std::ostream &out) const {
     if (skip) {
       skip = false;
       out << *f;
+      continue;
     } 
     out << ", " << *f;
   } 
