@@ -71,9 +71,9 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
 
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     std::stringstream s;
-    s << "Cannot unify " << *t1 << "and " << *t2 <<
-        "(respective roots are: " << unionFind->find(t1) << " and " <<
-        unionFind->find(t2) << ")";
+    s << "Type error cannot unify " << *t1 << " and " << *t2 <<
+        " (respective roots are: " << *unionFind->find(t1) << " and " <<
+        *unionFind->find(t2) << ")";
     throw UnificationError(s.str().c_str());
 }
 

@@ -250,8 +250,6 @@ TEST_CASE("TypeConstraintVisitor: access expr", "[TypeConstraintVisitor]") {
     runtest(program, expected);
 }
 
-
-
 TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
     std::stringstream program;
     program << R"(
@@ -275,6 +273,42 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
       "[[r]] = [[{n:null, f:13}]]",                                // assignment
       "[[0]] = int",                                               // int constant
       "[[foo]] = () -> [[0]]"				                       // fun declaration
+    };
+
+    runtest(program, expected);
+}
+
+TEST_CASE("TypeConstraintVisitor: record2", "[TypeConstraintVisitor]") {
+    std::stringstream program;
+    program << R"(
+main() {
+    var n, r1;
+    n = alloc {p: 4, q: 2};
+    *n = {p:5, q: 6};
+    r1 = (*n).p;
+    output r1;
+    return 0;
+}
+    )";
+
+    std::vector<std::string> expected {
+      "[[4]] = int",                                    // int constant
+      "[[2]] = int",                                    // int constant
+      "[[{p:4, q:2}]] = {p:[[4]], q:[[2]]}",        	// uber record
+      "[[alloc {p:4, q:2}]] = &[[{p:4, q:2}]]",        	// uber record
+      "[[n]] = [[alloc {p:4, q:2}]]",                   // assignment
+      "[[n]] = &[[*n]]",				// deref
+      "[[5]] = int",                                    // int constant
+      "[[6]] = int",                                    // int constant
+      "[[{p:5, q:6}]] = {p:[[5]], q:[[6]]}",        	// uber record
+      "[[n]] = &[[{p:5, q:6}]]",			// assign through ptr
+      "[[n]] = &[[*n]]",				// deref
+      "[[*n]] = {p:[[*n.p]], q:\u03B1<q>}",       	// field access
+      "[[r1]] = [[*n.p]]",				// assign 
+      "[[r1]] = int",					// output
+      "[[0]] = int",                                    // return int constant
+      "[[0]] = int",                                    // int constant
+      "[[main]] = () -> [[0]]"				// fun declaration
     };
 
     runtest(program, expected);
