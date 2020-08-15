@@ -9,6 +9,6 @@ void ASTAllocExpr::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTAllocExpr::print(std::ostream &out) const {
-  out << "alloc " << getInitializer();
+  out << "alloc " << *getInitializer();
   return out;
 }

@@ -9,6 +9,6 @@ void ASTFieldExpr::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTFieldExpr::print(std::ostream &out) const {
-  out << getField() << ":" << getInitializer();
+  out << getField() << ":" << *getInitializer();
   return out;
 }

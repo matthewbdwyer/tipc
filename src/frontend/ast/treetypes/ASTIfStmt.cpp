@@ -13,10 +13,10 @@ void ASTIfStmt::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTIfStmt::print(std::ostream &out) const {
-  out << "if (" << getCondition() << ") ";
-  out << getThen();
+  out << "if (" << *getCondition() << ") ";
+  out << *getThen();
   if (getElse() != nullptr) {
-     out << " else " << getElse();
+     out << " else " << *getElse();
   }
   return out;
 }

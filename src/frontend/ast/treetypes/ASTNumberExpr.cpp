@@ -7,7 +7,6 @@ void ASTNumberExpr::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTNumberExpr::print(std::ostream &out) const {
-  std::cout << "ASTNumberExpr::print = " << getValue();
   out << getValue();
   return out;
 }

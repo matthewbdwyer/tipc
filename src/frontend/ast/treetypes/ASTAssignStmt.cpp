@@ -10,6 +10,6 @@ void ASTAssignStmt::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTAssignStmt::print(std::ostream &out) const {
-  out << getLHS() << " = " << getRHS();
+  out << *getLHS() << " = " << *getRHS();
   return out;
 }

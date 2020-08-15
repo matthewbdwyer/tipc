@@ -21,9 +21,9 @@ std::ostream& ASTRecordExpr::print(std::ostream &out) const {
   for (auto &f : getFields()) {
     if (skip) {
       skip = false;
-      out << f;
+      out << *f;
     } 
-    out << ", " << f;
+    out << ", " << *f;
   } 
   out << "}";
   return out;

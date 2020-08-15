@@ -9,7 +9,7 @@ void ASTReturnStmt::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTReturnStmt::print(std::ostream &out) const {
-  out << "return " << getArg() << ";";
+  out << "return " << *getArg() << ";";
   return out;
 }
 

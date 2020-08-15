@@ -18,7 +18,7 @@ void ASTBlockStmt::accept(ASTVisitor * visitor) {
 std::ostream& ASTBlockStmt::print(std::ostream &out) const {
   out << "{ ";
   for (auto &s : getStmts()) {
-    out << s << " ";
+    out << *s << " ";
   }
   out << "}";
   return out;

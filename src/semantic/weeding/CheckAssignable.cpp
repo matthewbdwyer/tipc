@@ -11,7 +11,7 @@ void CheckAssignable::endVisit(ASTAssignStmt* element) {
 
   std::ostringstream oss;
   oss << "Assignment error on line " << element->getLine() << ": ";
-  oss << element->getLHS() << " not an l-value\n";
+  oss << *element->getLHS() << " not an l-value\n";
 
   throw SemanticError(oss.str());
 }

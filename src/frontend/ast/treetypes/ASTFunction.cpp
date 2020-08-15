@@ -32,14 +32,14 @@ void ASTFunction::accept(ASTVisitor * visitor) {
 
 //! \brief Print an abbreviated unique string for the function
 std::ostream& ASTFunction::print(std::ostream &out) const {
-  out << getDecl() << "(";
+  out << *getDecl() << "(";
   bool skip = true;
   for (auto &p : getFormals()) {
     if (skip) {
       skip = false;
-      out << p;
+      out << *p;
     }
-    out << ", " << p;
+    out << ", " << *p;
   }
   out << "{ ... }";
   return out;

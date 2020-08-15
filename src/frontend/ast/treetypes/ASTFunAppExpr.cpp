@@ -22,9 +22,9 @@ std::ostream& ASTFunAppExpr::print(std::ostream &out) const {
   for (auto &arg : getActuals()) {
     if (skip) {
       skip = false;
-      out << arg;
+      out << *arg;
     }
-    out << ", " << arg;
+    out << ", " << *arg;
   }
   out << ")";
   return out;

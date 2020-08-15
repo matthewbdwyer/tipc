@@ -21,9 +21,9 @@ std::ostream& ASTDeclStmt::print(std::ostream &out) const {
   for (auto &id : getVars()) {
     if (skip) {
       skip = false;
-      out << id;
+      out << *id;
     } 
-    out << ", " << id;
+    out << ", " << *id;
   } 
   out << ";";
   return out;

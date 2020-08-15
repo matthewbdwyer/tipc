@@ -9,6 +9,6 @@ void ASTErrorStmt::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTErrorStmt::print(std::ostream &out) const {
-  out << "error " << getArg() << ";";
+  out << "error " << *getArg() << ";";
   return out;
 }

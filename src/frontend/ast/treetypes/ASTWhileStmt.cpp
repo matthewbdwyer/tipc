@@ -10,6 +10,6 @@ void ASTWhileStmt::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTWhileStmt::print(std::ostream &out) const {
-  out << "while (" << getCondition() << ") " << getBody();
+  out << "while (" << *getCondition() << ") " << *getBody();
   return out;
 }

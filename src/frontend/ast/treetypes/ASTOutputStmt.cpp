@@ -9,6 +9,6 @@ void ASTOutputStmt::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTOutputStmt::print(std::ostream &out) const {
-  out << "output " << getArg() << ";";
+  out << "output " << *getArg() << ";";
   return out;
 }
