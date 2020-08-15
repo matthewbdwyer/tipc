@@ -10,36 +10,31 @@
 #include <map>
 #include <string>
 #include <unordered_set>
+#include "UnionFind.h"
 #include <vector>
 
-/*! \brief Solve type constraints using term-unification.
+/*!
+ * \class Unifier
  *
- * Constraints are collected * ahead-of-time and then processed collectively 
- * performing term-unification.
+ * \brief Class used to solve type constraints and establish typability.
  *
- * A possible extension is to unify constraints on-the-fly as they are collected.
+ * Make uses of a union-find data structure. This class is clever in its calls
+ * to union and will throw a UnificationError anytime two terms cannot be unified.
  */
 class Unifier {
 public:
-    Unifier() = delete;
+    Unifier();
+    explicit Unifier(std::vector<TypeConstraint>);
+    ~Unifier() = default;
 
-    //! \brief Constructor for solving constraints collected ahead-of-time
-    Unifier(std::vector<TypeConstraint>);
-
-    ~Unifier();
-
-    //! \brief Solve a set of collected constraints
     void solve();
-
-    //! \brief Unify the terms representing two types
-    void unify(TipType * t1, TipType * t2);
-
+    void unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2);
 private:
-    static bool isTypeVariable(TipType *TipType);
-    static bool isProperType(TipType *);
-    static bool isCons(TipType *);
-    void throwUnifyException(TipType * TipType1, TipType * TipType2);
+    static bool isTypeVariable(std::shared_ptr<TipType>);
+    static bool isProperType(std::shared_ptr<TipType>);
+    static bool isCons(std::shared_ptr<TipType>);
+    void throwUnifyException(std::shared_ptr<TipType> TipType1, std::shared_ptr<TipType> TipType2);
     std::vector<TypeConstraint> constraints;
-    std::unique_ptr<UnionFind<TipType>> unionFind;
+    std::unique_ptr<UnionFind> unionFind;
 };
 

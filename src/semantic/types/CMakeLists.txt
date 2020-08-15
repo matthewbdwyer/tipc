@@ -1,7 +1,7 @@
 add_library(types)
 target_sources(types PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/TypeInference.h
         ${CMAKE_CURRENT_SOURCE_DIR}/TypeInference.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/TypeInference.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlpha.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipCons.cpp
@@ -17,15 +17,24 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipType.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVar.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVar.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintCollector.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintCollector.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintHandler.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintUnifier.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintUnifier.h
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraint.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraint.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintCollectVisitor.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintCollectVisitor.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintUnifyVisitor.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintUnifyVisitor.h
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.h
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnificationError.h
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.tpp
         # TODO: Used for closing terms.
         #${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.cpp
         #${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h

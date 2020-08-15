@@ -10,7 +10,7 @@
 
 std::string Stringifier::stringify(ASTNode * node) {
     std::stringstream stream;
-    stream << node;
+    stream << *node;
     return stream.str();
 }
 

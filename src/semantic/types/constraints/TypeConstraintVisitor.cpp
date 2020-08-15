@@ -6,6 +6,9 @@
 #include "TipRecord.h"
 #include "TipInt.h"
 
+TypeConstraintVisitor::TypeConstraintVisitor(SymbolTable* st, std::unique_ptr<ConstraintHandler> handler)
+  : symbolTable(st), constraintHandler(std::move(handler)) {};
+
 /*! \fn astToVar
  *  \brief Convert an AST node to a type variable.
  *
@@ -44,29 +47,29 @@ bool TypeConstraintVisitor::visit(ASTFunction * element) {
 void TypeConstraintVisitor::endVisit(ASTFunction * element) {
   if (element->getName() == "main") {
     std::vector<std::shared_ptr<TipType>> formals;
-    for(auto f : element->getFormals()) {
+    for(auto &f : element->getFormals()) {
       formals.push_back(astToVar(f));
       // all formals are int
-      process(astToVar(f), std::make_shared<TipInt>());
+      constraintHandler->handle(astToVar(f), std::make_shared<TipInt>());
     }
 
     // Return is the last statement and must be int
     auto ret = dynamic_cast<ASTReturnStmt*>(element->getStmts().back());
-    process(astToVar(ret->getArg()), std::make_shared<TipInt>());
+    constraintHandler->handle(astToVar(ret->getArg()), std::make_shared<TipInt>());
 
-    process(astToVar(element->getDecl()),
-            std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
+    constraintHandler->handle(astToVar(element->getDecl()),
+                              std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
   } else {
     std::vector<std::shared_ptr<TipType>> formals;
-    for(auto f : element->getFormals()) {
+    for(auto &f : element->getFormals()) {
       formals.push_back(astToVar(f));
     }
 
     // Return is the last statement 
     auto ret = dynamic_cast<ASTReturnStmt*>(element->getStmts().back());
 
-    process(astToVar(element->getDecl()),
-            std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
+    constraintHandler->handle(astToVar(element->getDecl()),
+                              std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
   }
 }
 
@@ -76,7 +79,7 @@ void TypeConstraintVisitor::endVisit(ASTFunction * element) {
  *   [[I]] = int
  */
 void TypeConstraintVisitor::endVisit(ASTNumberExpr * element) {
-  process(astToVar(element), std::make_shared<TipInt>());
+    constraintHandler->handle(astToVar(element), std::make_shared<TipInt>());
 }
 
 /*! \brief Type constraints for binary operator.
@@ -93,14 +96,14 @@ void TypeConstraintVisitor::endVisit(ASTBinaryExpr  * element) {
   auto op = element->getOp();
 
   // operands have the same type
-  process(astToVar(element->getLeft()), astToVar(element->getRight()));
+  constraintHandler->handle(astToVar(element->getLeft()), astToVar(element->getRight()));
 
   // result type is integer
-  process(astToVar(element), std::make_shared<TipInt>());
+  constraintHandler->handle(astToVar(element), std::make_shared<TipInt>());
 
   if (op != "==" && op != "!=") {
     // operand and result have same type
-    process(astToVar(element->getLeft()), astToVar(element));
+    constraintHandler->handle(astToVar(element->getLeft()), astToVar(element));
   }
 }
 
@@ -110,7 +113,7 @@ void TypeConstraintVisitor::endVisit(ASTBinaryExpr  * element) {
  *  [[input]] = int
  */
 void TypeConstraintVisitor::endVisit(ASTInputExpr * element) {
-  process(astToVar(element), std::make_shared<TipInt>());
+  constraintHandler->handle(astToVar(element), std::make_shared<TipInt>());
 }
 
 /*! \brief Type constraints for function application.
@@ -120,11 +123,11 @@ void TypeConstraintVisitor::endVisit(ASTInputExpr * element) {
  */
 void TypeConstraintVisitor::endVisit(ASTFunAppExpr  * element) {
   std::vector<std::shared_ptr<TipType>> actuals;
-  for(auto a : element->getActuals()) {
+  for(auto &a : element->getActuals()) {
     actuals.push_back(astToVar(a));
   }
-  process(astToVar(element->getFunction()),
-          std::make_shared<TipFunction>(actuals, astToVar(element)));
+  constraintHandler->handle(astToVar(element->getFunction()),
+                            std::make_shared<TipFunction>(actuals, astToVar(element)));
 }
 
 /*! \brief Type constraints for heap allocation.
@@ -133,8 +136,8 @@ void TypeConstraintVisitor::endVisit(ASTFunAppExpr  * element) {
  *   [[alloc E]] = &[[E]]
  */
 void TypeConstraintVisitor::endVisit(ASTAllocExpr * element) {
-  process(astToVar(element), 
-          std::make_shared<TipRef>(astToVar(element->getInitializer())));
+  constraintHandler->handle(astToVar(element),
+                            std::make_shared<TipRef>(astToVar(element->getInitializer())));
 }
 
 /*! \brief Type constraints for address of.
@@ -143,8 +146,8 @@ void TypeConstraintVisitor::endVisit(ASTAllocExpr * element) {
  *   [[&X]] = &[[X]]
  */
 void TypeConstraintVisitor::endVisit(ASTRefExpr * element) {
-  process(astToVar(element), 
-          std::make_shared<TipRef>(astToVar(element->getVar())));
+  constraintHandler->handle(astToVar(element),
+                            std::make_shared<TipRef>(astToVar(element->getVar())));
 }
 
 /*! \brief Type constraints for pointer dereference.
@@ -153,8 +156,8 @@ void TypeConstraintVisitor::endVisit(ASTRefExpr * element) {
  *   [[E]] = &[[*E]]
  */
 void TypeConstraintVisitor::endVisit(ASTDeRefExpr * element) {
-  process(astToVar(element->getPtr()), 
-          std::make_shared<TipRef>(astToVar(element)));
+  constraintHandler->handle(astToVar(element->getPtr()),
+                            std::make_shared<TipRef>(astToVar(element)));
 }
 
 /*! \brief Type constraints for null literal.
@@ -163,8 +166,8 @@ void TypeConstraintVisitor::endVisit(ASTDeRefExpr * element) {
  *   [[null]] = & \alpha
  */
 void TypeConstraintVisitor::endVisit(ASTNullExpr * element) {
-  process(astToVar(element), 
-          std::make_shared<TipRef>(std::make_shared<TipAlpha>("null")));
+  constraintHandler->handle(astToVar(element),
+                            std::make_shared<TipRef>(std::make_shared<TipAlpha>("null")));
 }
 
 /*! \brief Type rules for assignments.
@@ -182,10 +185,10 @@ void TypeConstraintVisitor::endVisit(ASTNullExpr * element) {
 void TypeConstraintVisitor::endVisit(ASTAssignStmt  * element) {
   // If this is an assignment through a pointer, use the second rule above
   if (auto lptr = dynamic_cast<ASTDeRefExpr*>(element->getLHS())) {
-    process(astToVar(lptr->getPtr()), 
-            std::make_shared<TipRef>(astToVar(element->getRHS())));
+    constraintHandler->handle(astToVar(lptr->getPtr()),
+                              std::make_shared<TipRef>(astToVar(element->getRHS())));
   } else {
-    process(astToVar(element->getLHS()), astToVar(element->getRHS()));
+    constraintHandler->handle(astToVar(element->getLHS()), astToVar(element->getRHS()));
   }
 }
 
@@ -195,7 +198,7 @@ void TypeConstraintVisitor::endVisit(ASTAssignStmt  * element) {
  *   [[E]] = int
  */
 void TypeConstraintVisitor::endVisit(ASTWhileStmt * element) {
-  process(astToVar(element->getCondition()), std::make_shared<TipInt>());
+  constraintHandler->handle(astToVar(element->getCondition()), std::make_shared<TipInt>());
 }
 
 /*! \brief Type constraints for if statement.
@@ -204,7 +207,7 @@ void TypeConstraintVisitor::endVisit(ASTWhileStmt * element) {
  *   [[E]] = int
  */
 void TypeConstraintVisitor::endVisit(ASTIfStmt * element) {
-  process(astToVar(element->getCondition()), std::make_shared<TipInt>());
+  constraintHandler->handle(astToVar(element->getCondition()), std::make_shared<TipInt>());
 }
 
 /*! \brief Type constraints for output statement.
@@ -213,7 +216,7 @@ void TypeConstraintVisitor::endVisit(ASTIfStmt * element) {
  *   [[E]] = int
  */
 void TypeConstraintVisitor::endVisit(ASTOutputStmt * element) {
-  process(astToVar(element->getArg()), std::make_shared<TipInt>());
+  constraintHandler->handle(astToVar(element->getArg()), std::make_shared<TipInt>());
 }
 
 /*! \brief Type constraints for record expression.
@@ -226,9 +229,9 @@ void TypeConstraintVisitor::endVisit(ASTOutputStmt * element) {
 void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
   auto allFields = symbolTable->getFields();
   std::vector<std::shared_ptr<TipType>> fieldTypes;
-  for (auto f : allFields) {
+  for (auto &f : allFields) {
     bool matched = false;
-    for (auto fe : element->getFields()) {
+    for (auto &fe : element->getFields()) {
       if (f == fe->getField()) {
         fieldTypes.push_back(astToVar(fe->getInitializer()));
         matched = true;
@@ -240,7 +243,7 @@ void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
     // TBD : Do we need to generate uniquely named alphas?
     fieldTypes.push_back(std::make_shared<TipAlpha>(f));
   } 
-  process(astToVar(element), std::make_shared<TipRecord>(fieldTypes, allFields));
+  constraintHandler->handle(astToVar(element), std::make_shared<TipRecord>(fieldTypes, allFields));
 }
 
 /*! \brief Type constraints for field access.
@@ -253,15 +256,15 @@ void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
 void TypeConstraintVisitor::endVisit(ASTAccessExpr * element) {
   auto allFields = symbolTable->getFields();
   std::vector<std::shared_ptr<TipType>> fieldTypes;
-  for (auto f : allFields) {
+  for (auto &f : allFields) {
     if (f == element->getField()) {
       fieldTypes.push_back(astToVar(element));
     } else {
       fieldTypes.push_back(std::make_shared<TipAlpha>(f));
     }
   } 
-  process(astToVar(element->getRecord()), 
-          std::make_shared<TipRecord>(fieldTypes, allFields));
+  constraintHandler->handle(astToVar(element->getRecord()),
+                            std::make_shared<TipRecord>(fieldTypes, allFields));
 }
 
 /*! \brief Type constraints for error statement.
@@ -270,6 +273,6 @@ void TypeConstraintVisitor::endVisit(ASTAccessExpr * element) {
  *   [[E]] = int
  */
 void TypeConstraintVisitor::endVisit(ASTErrorStmt * element) {
-  process(astToVar(element->getArg()), std::make_shared<TipInt>());
+  constraintHandler->handle(astToVar(element->getArg()), std::make_shared<TipInt>());
 }
 

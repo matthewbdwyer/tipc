@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "TipInt.h"
 #include "TipVar.h"
+#include <vector>
 
 TEST_CASE("TipVar: test TipVars objects with the same underlying node are equal" "[TipVar]") {
     ASTNumberExpr n(42);
@@ -15,12 +16,6 @@ TEST_CASE("TipVar: test TipVars objects with different underlying node are not e
     TipVar var(&n);
     TipVar var2(&n1);
     REQUIRE_FALSE(var == var2);
-}
-
-TEST_CASE("TipVar: test TipVar is a Var" "[TipVar]") {
-    ASTNumberExpr n(42);
-    TipVar var(&n);
-    REQUIRE_FALSE(nullptr == dynamic_cast<TipVar *>(&var));
 }
 
 TEST_CASE("TipVar: test TipVar is a TipType" "[TipVar]") {

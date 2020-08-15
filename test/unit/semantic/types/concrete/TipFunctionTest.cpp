@@ -39,7 +39,7 @@ TEST_CASE("TipFunction: Test equality" "[TipFunction]") {
         std::vector<std::shared_ptr<TipType>> paramsB {std::make_shared<TipInt>()};
         auto retB = std::make_shared<TipInt>();
         TipFunction tipFunctionB(paramsB, retB);
-        REQUIRE_FALSE(tipFunctionA == tipFunctionB);
+        REQUIRE(tipFunctionA != tipFunctionB);
     }
 
     SECTION("Not equal when arguments differ by type") {
@@ -49,7 +49,7 @@ TEST_CASE("TipFunction: Test equality" "[TipFunction]") {
         };
         auto retB = std::make_shared<TipInt>();
         TipFunction tipFunctionB(paramsB, retB);
-        REQUIRE_FALSE(tipFunctionA == tipFunctionB);
+        REQUIRE(tipFunctionA != tipFunctionB);
     }
 
     SECTION("Not equal when return values differ by type") {
@@ -59,7 +59,7 @@ TEST_CASE("TipFunction: Test equality" "[TipFunction]") {
         };
         auto retB = std::make_shared<TipRef>(std::make_shared<TipInt>());
         TipFunction tipFunctionB(paramsB, retB);
-        REQUIRE_FALSE(tipFunctionA == tipFunctionB);
+        REQUIRE(tipFunctionA != tipFunctionB);
     }
 }
 

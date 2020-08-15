@@ -1,175 +1,208 @@
 #include "catch.hpp"
 #include "ASTHelper.h"
+#include "ASTVariableExpr.h"
+#include "TipFunction.h"
+#include "TipInt.h"
+#include "TypeConstraintCollectVisitor.h"
+#include "TypeConstraintUnifyVisitor.h"
 #include "TypeConstraintVisitor.h"
 #include "UnificationError.h"
 #include "Unifier.h"
 #include <iostream>
-#include <sstream>
-#include "Stringifier.h"
-#include "TipFunction.h"
-#include "TipInt.h"
-#include "ASTVariableExpr.h"
+#include <Unifier.h>
 
-// These elements types are used for ahead-of-time constraint collection 
-std::vector<TypeConstraint> collected;
+TEST_CASE("Unifier: Collect and then unify constraints", "[Unifier, Collect]") {
 
-void collectConstraints(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
-    collected.push_back(TypeConstraint(t1,t2));
-}
-
-TEST_CASE("Unifier: Test type-safe program 1", "[Unifier]") {
-    std::stringstream program;
-    program << R"(
-      short() {
-        var x, y, z;
-        x = input;
-        y = alloc x;
-        *y = x;
-        z = *y;
-        return z;
-      }
-    )";
-
-    auto ast = ASTHelper::build_ast(program);
-    auto symbols = SymbolTable::build(ast.get());
-
-    collected.clear();
-    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
-    ast->accept(&visitor);
-
-    Unifier unifier(collected);
-    REQUIRE_NOTHROW(unifier.solve());
-}
-
-TEST_CASE("Unifier: record2", "[Unifier]") {
-    std::stringstream program;
-    program << R"(
-main() {
-    var n, r1;
-    n = alloc {p: 4, q: 2};
-    *n = {p:5, q: 6};
-    r1 = *n.p; // output 5
-    if (r1!=5) error r1;
-    return 0;
-}
-    )";
-
-    auto ast = ASTHelper::build_ast(program);
-    auto symbols = SymbolTable::build(ast.get());
-
-    collected.clear();
-    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
-    ast->accept(&visitor);
-
-    Unifier unifier(collected);
-    REQUIRE_NOTHROW(unifier.solve());
-}
-
-TEST_CASE("Unifier: record4", "[Unifier]") {
-    std::stringstream program;
-    program << R"(
-main() {
-    var n, k, r1;
-    k = {a: 1, b: 2};
-    n = {c: &k, d: 4};
-    r1 = (*(n.c).a); // output 1
-    if(r1!=1) error r1;
-    return 0;
-}
-    )";
-
-    auto ast = ASTHelper::build_ast(program);
-    auto symbols = SymbolTable::build(ast.get());
-
-    collected.clear();
-    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
-    ast->accept(&visitor);
-
-    Unifier unifier(collected);
-    REQUIRE_NOTHROW(unifier.solve());
-}
-
-
-
-
-
-TEST_CASE("Unifier: Test unification error 1", "[Unifier]") {
-    std::stringstream program;
-    program << R"(
-        bar(g,x) {
-            var r;
-            if (x==0){
-                r=g;
-            } else {
-                r=bar(2,0);
+    SECTION("Test type-safe program 1") {
+        std::stringstream program;
+        program << R"(
+            short() {
+              var x, y, z;
+              x = input;
+              y = alloc x;
+              *y = x;
+              z = *y;
+              return z;
             }
-            return r+1;
-        }
+         )";
 
-        main() {
-            return bar(null,1);
-        }
-    )";
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
 
-    auto ast = ASTHelper::build_ast(program);
-    auto symbols = SymbolTable::build(ast.get());
+        TypeConstraintCollectVisitor visitor(symbols.get());
+        ast->accept(&visitor);
 
-    collected.clear();
-    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
-    ast->accept(&visitor);
+        Unifier unifier(visitor.getCollectedConstraints());
+        REQUIRE_NOTHROW(unifier.solve());
+    }
 
-    Unifier unifier(collected);
-    REQUIRE_THROWS_AS(unifier.solve(), UnificationError);
+    SECTION("Test unification error 1") {
+        std::stringstream program;
+        program << R"(
+            bar(g,x) {
+                var r;
+                if (x==0){
+                    r=g;
+                } else {
+                    r=bar(2,0);
+                }
+                return r+1;
+            }
+
+            main() {
+                return bar(null,1);
+            }
+        )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintCollectVisitor visitor(symbols.get());
+        ast->accept(&visitor);
+
+        Unifier unifier(visitor.getCollectedConstraints());
+        REQUIRE_THROWS_AS(unifier.solve(), UnificationError);
+    }
+
+    SECTION("Test unification error 2") {
+        std::stringstream program;
+        program << R"(
+            foo(p) {
+                return *p;
+            }
+
+            main() {
+                var x;
+                x = 5;
+                x = foo;
+                return 4;
+            }
+        )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintCollectVisitor visitor(symbols.get());
+        ast->accept(&visitor);
+
+        Unifier unifier(visitor.getCollectedConstraints());
+        REQUIRE_THROWS_AS(unifier.solve(), UnificationError);
+    }
+
+    SECTION("Test unification error 3") {
+        std::stringstream program;
+        program << R"(
+            main() {
+                var x, y;
+                x = 5;
+                y = 10;
+                x = &y;
+                return 4;
+            }
+        )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintCollectVisitor visitor(symbols.get());
+        ast->accept(&visitor);
+
+        Unifier unifier(visitor.getCollectedConstraints());
+        REQUIRE_THROWS_AS(unifier.solve(), UnificationError);
+    }
+
 }
 
-TEST_CASE("Unifier: Test unification error 2", "[Unifier]") {
-    std::stringstream program;
-    program << R"(
-        foo(p) {
-            return *p;
-        }
+TEST_CASE("Unifier: Unify constraints on the fly", "[Unifier, On-the-fly]") {
 
-        main() {
-            var x;
-            x = 5;
-            x = foo;
-            return 4;
-        }
-    )";
+    SECTION("Test type-safe program 1") {
+        std::stringstream program;
+        program << R"(
+            short() {
+              var x, y, z;
+              x = input;
+              y = alloc x;
+              *y = x;
+              z = *y;
+              return z;
+            }
+         )";
 
-    auto ast = ASTHelper::build_ast(program);
-    auto symbols = SymbolTable::build(ast.get());
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
 
-    collected.clear();
-    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
-    ast->accept(&visitor);
+        TypeConstraintUnifyVisitor visitor(symbols.get());
+        REQUIRE_NOTHROW(ast->accept(&visitor));
+    }
 
-    Unifier unifier(collected);
-    REQUIRE_THROWS_AS(unifier.solve(), UnificationError);
+    SECTION("Test unification error 1") {
+        std::stringstream program;
+        program << R"(
+            bar(g,x) {
+                var r;
+                if (x==0){
+                    r=g;
+                } else {
+                    r=bar(2,0);
+                }
+                return r+1;
+            }
+
+            main() {
+                return bar(null,1);
+            }
+        )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintUnifyVisitor visitor(symbols.get());
+        REQUIRE_THROWS_AS(ast->accept(&visitor), UnificationError);
+    }
+
+    SECTION("Test unification error 2") {
+        std::stringstream program;
+        program << R"(
+            foo(p) {
+                return *p;
+            }
+
+            main() {
+                var x;
+                x = 5;
+                x = foo;
+                return 4;
+            }
+        )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintUnifyVisitor visitor(symbols.get());
+        REQUIRE_THROWS_AS(ast->accept(&visitor), UnificationError);
+    }
+
+    SECTION("Test unification error 3") {
+        std::stringstream program;
+        program << R"(
+            main() {
+                var x, y;
+                x = 5;
+                y = 10;
+                x = &y;
+                return 4;
+            }
+        )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintUnifyVisitor visitor(symbols.get());
+        REQUIRE_THROWS_AS(ast->accept(&visitor), UnificationError);
+    }
+
 }
 
-TEST_CASE("Unifier: Test unification error 3", "[Unifier]") {
-    std::stringstream program;
-    program << R"(
-        main() {
-            var x, y;
-            x = 5;
-            y = 10;
-            x = &y;
-            return 4;
-        }
-    )";
-
-    auto ast = ASTHelper::build_ast(program);
-    auto symbols = SymbolTable::build(ast.get());
-
-    collected.clear();
-    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
-    ast->accept(&visitor);
-
-    Unifier unifier(collected);
-    REQUIRE_THROWS_AS(unifier.solve(), UnificationError);
-}
 
 TEST_CASE("Unifier: Test unifying TipCons with different arities", "[Unifier]") {
     std::vector<std::shared_ptr<TipType>> paramsA {std::make_shared<TipInt>()};
@@ -184,7 +217,7 @@ TEST_CASE("Unifier: Test unifying TipCons with different arities", "[Unifier]") 
     std::vector<TypeConstraint> constraints {constraint};
 
     Unifier unifier(constraints);
-    REQUIRE_THROWS_AS(unifier.unify(tipFunctionA.get(), tipFunctionB.get()), UnificationError);
+    REQUIRE_THROWS_AS(unifier.unify(tipFunctionA, tipFunctionB), UnificationError);
 }
 
 TEST_CASE("Unifier: Test unifying TipCons with the same arity", "[Unifier]") {
@@ -198,9 +231,8 @@ TEST_CASE("Unifier: Test unifying TipCons with the same arity", "[Unifier]") {
     std::vector<TypeConstraint> constraints {constraint};
 
     Unifier unifier(constraints);
-    REQUIRE_NOTHROW(unifier.unify(tipFunctionA.get(), tipFunctionB.get()));
+    REQUIRE_NOTHROW(unifier.unify(tipFunctionA, tipFunctionB));
 }
-
 
 TEST_CASE("Unifier: Test unifying proper types with a type variable", "[Unifier]") {
     ASTVariableExpr variableExpr("foo");
@@ -211,7 +243,7 @@ TEST_CASE("Unifier: Test unifying proper types with a type variable", "[Unifier]
     std::vector<TypeConstraint> constraints {constraint};
 
     Unifier unifier(constraints);
-    REQUIRE_NOTHROW(unifier.unify(tipVar.get(), tipInt.get()));
+    REQUIRE_NOTHROW(unifier.unify(tipVar, tipInt));
 }
 
 TEST_CASE("Unifier: Test unifying two different type variables", "[Unifier]") {
@@ -225,5 +257,5 @@ TEST_CASE("Unifier: Test unifying two different type variables", "[Unifier]") {
     std::vector<TypeConstraint> constraints {constraint};
 
     Unifier unifier(constraints);
-    REQUIRE_NOTHROW(unifier.unify(tipVarA.get(), tipVarB.get()));
+    REQUIRE_NOTHROW(unifier.unify(tipVarA, tipVarB));
 }

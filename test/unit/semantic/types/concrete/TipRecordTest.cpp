@@ -63,7 +63,7 @@ TEST_CASE("TipRecord: Test equality" "[TipRecord]") {
         std::vector<std::string> namesB {"foo", "bar"};
         TipRecord tipRecordB(initsB, namesB);
 
-        REQUIRE_FALSE(tipRecordA == tipRecordB);
+        REQUIRE(tipRecordA != tipRecordB);
     }
 
     SECTION("Not equal when arguments differ by type") {
@@ -74,7 +74,13 @@ TEST_CASE("TipRecord: Test equality" "[TipRecord]") {
         std::vector<std::string> namesB {"foo", "bar"};
         TipRecord tipRecordB(initsB, namesB);
 
-        REQUIRE_FALSE(tipRecordA == tipRecordB);
+        REQUIRE(tipRecordA != tipRecordB);
+    }
+
+    SECTION("Not equal when argument types differ") {
+        TipInt tipInt;
+
+        REQUIRE(tipRecordA != tipInt);
     }
 }
 

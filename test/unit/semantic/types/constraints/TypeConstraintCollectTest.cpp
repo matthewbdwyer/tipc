@@ -1,13 +1,9 @@
 #include "ASTHelper.h"
 #include "Stringifier.h"
 #include "SymbolTable.h"
-#include "TipAlpha.h"
-#include "TipInt.h"
-#include "TipRef.h"
-#include "TypeConstraintVisitor.h"
+#include "TypeConstraintCollectVisitor.h"
 #include "catch.hpp"
 #include <iostream>
-#include <sstream>
 
 static void printConstraints(std::vector<TypeConstraint> &constraints) {
     for(auto &tc : constraints) {
@@ -15,29 +11,21 @@ static void printConstraints(std::vector<TypeConstraint> &constraints) {
     }
 }
 
-static std::vector<std::shared_ptr<TypeConstraint>> collected;
-
-static void collectConstraints(std::shared_ptr<TipType> t1,
-                        std::shared_ptr<TipType> t2) {
-  collected.push_back(std::make_shared<TypeConstraint>(t1,t2));
-}
-
 static void runtest(std::stringstream &program, std::vector<std::string> constraints) {
     auto ast = ASTHelper::build_ast(program);
     auto symbols = SymbolTable::build(ast.get());
 
-    collected.clear();
-    TypeConstraintVisitor visitor(symbols.get(), collectConstraints);
+    TypeConstraintCollectVisitor visitor(symbols.get());
     ast->accept(&visitor);
 
     int i = 0;
-    for (auto c : collected) {
+    for (auto c : visitor.getCollectedConstraints()) {
       auto expected = constraints.at(i);
-      auto actual = Stringifier::stringify(c.get());
+      auto actual = Stringifier::stringify(&c);
       REQUIRE(expected == actual);
       i++;
     }
-    REQUIRE(collected.size() == constraints.size());
+    REQUIRE(visitor.getCollectedConstraints().size() == constraints.size());
 }
 
 TEST_CASE("TypeConstraintVisitor: const, input, alloc, assign through ptr", "[TypeConstraintVisitor]") {

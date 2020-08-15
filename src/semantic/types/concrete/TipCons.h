@@ -10,7 +10,7 @@ public:
 
     const std::vector<std::shared_ptr<TipType>> &getArguments() const;
     virtual int arity() const;
-    bool doMatch(TipType * t) const;
+    bool doMatch(TipType const * t) const;
 
 protected:
     TipCons(std::vector<std::shared_ptr<TipType>> arguments);

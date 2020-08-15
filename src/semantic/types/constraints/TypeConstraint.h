@@ -2,6 +2,11 @@
 
 #include "TipType.h"
 
+/*!
+ * \class TypeConstraint
+ *
+ * \brief A simple type constraint representation.
+ */
 class TypeConstraint {
 public:
     TypeConstraint() = delete;
