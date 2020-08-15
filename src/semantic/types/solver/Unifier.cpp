@@ -69,6 +69,135 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     }
 }
 
+
+/*
+NICK : this logic should be migrated to the methods in the TipType
+hierarchy.  I added the declarations in TipType, but didn't go further.
+
+
+// When this is moved to TipType hierarchy this should be a void
+// function that makes the substitutions "in place".  That is we
+// should modify the arguments in the TipCons rather than completely
+// reconstructing the TipCons.  If we can
+// do it this way then we can treat all TipCons subtypes the same.
+//
+// At least this would be the simplest way to go if it works.
+// The other choice is to build some general TipType visitor 
+// mechanism that can rebuild them from the ground up to perform
+// the substitution.  In this case we have to handle substitution 
+// for all of the TipTypes (I think)
+std::shared_ptr<TipType> subst(std::shared_ptr<TipType> t,
+                               std::shared_ptr<TipVar> v,
+                               std::shared_ptr<TipType> s) {
+  if (isVariable(t)) {
+    if (t == v) {
+      return s;
+    } 
+  } else if (isCons(t)) {
+    auto c = std::dynamic_pointer_cast<TipCons>(t);
+     
+    for (auto a : c->getArguments()) {
+      for (auto v : freeVars(a)) {
+        free.insert(v);
+      } 
+    }
+  } else if (isMu(t)) {
+  } 
+
+  // No substitution needed
+  return t;
+}
+
+std::set<std::shared_ptr<TipVar>> freeVars(std::shared_ptr<TipType> t) {
+  std::set<std::shared_ptr<TipVar>> free;
+
+  if (isTypeVariable(t)) {
+    free.insert(t);
+
+  } else if (isCons(t)) {
+    auto c = std::dynamic_pointer_cast<TipCons>(t);
+    // map through the constructor to accumulate the variables
+    for (auto a : c->getArguments()) {
+      for (auto v : freeVars(a)) {
+        free.insert(v);
+      } 
+    }
+
+  } else if (isMu(t)) {
+    auto m = std::dynamic_pointer_cast<TipMu>(t);
+    for (auto v : freeVars(m->getT())) {
+      free.insert(v);
+    } 
+  } 
+
+  return free;
+}
+*/
+
+/*! \fn close
+ *  \brief Close a type expression replacing all type variables with primitives.
+ *
+ * Closure uses the solution to the type equations stored in the union-find
+ * structure after solving.  
+ *
+ */
+std::share_ptr<TipType> close(std::shared_ptr<TipType> type, 
+                              std::vector<std::shared_ptr<TipVar>> visited) {
+  if (isTypeVariable(type)) {
+    auto v = std::dynamic_pointer_cast<TipVar>(type);
+    if ( (visited.find(v) == visited.end()) && (unionFind->find(v) != v) ) {
+      // No cyclic reference to v and it does not map to itself
+      visited.push_back(v);
+      auto closedV = close(unionFind->find(v), visited);
+
+// This is inherited from the Scala code
+// I don't understand how checking for newV in closedV->freeVars() detects a cycle
+
+      auto newV = std::shared_ptr<TipAlpha>(v);
+      if (closedV->freeVars().find(newV) == visited.end()) {
+        // No cyclic reference in closed type
+        return closedV;
+      } else {
+        // Cyclic reference requires a mu type constructor
+        closedV->subst(v, newV);
+        return std::shared_ptr<TipMu>(newV, closedV);
+      }
+    } else {
+      // Unconstrained quantified type variable
+      return std::shared_ptr<TipAlpha>(v);
+    } 
+  } else if (isCons(type)) {
+    auto c = std::dynamic_pointer_cast<TipCons>(type);
+    // close each argument of the constructor
+
+/* Scala code that needs to be mapped to our data types
+c.fv.foldLeft(t: Term[A]) { (acc, v) =>
+  acc.subst(v, closeRec(v, env, visited))
+}
+*/
+
+
+  } else if (isMu(type)) {
+    return std::shared_ptr<TipMu>(m.v, close(m.t, visited));
+  } else {
+    return type;
+  }
+};
+
+/*! \brief Looks up the inferred type in the type solution.
+ *
+ * Here we want to produce an inferred type that is "closed" in the
+ * sense that all variables in the type definition are replaced with
+ * their base types.
+ *
+ * TBD: When we have self-referential types we need a Mu
+ */ 
+std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipVar> v) {
+  std::vector<std::shared_ptr<TipVar>> visited;
+  auto vType = close(unionFind->find(v), visited);
+  return vType;
+}
+
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     std::stringstream s;
     s << "Type error cannot unify " << *t1 << " and " << *t2 <<
@@ -87,6 +216,10 @@ bool Unifier::isProperType(std::shared_ptr<TipType> type) {
 
 bool Unifier::isCons(std::shared_ptr<TipType> type) {
     return std::dynamic_pointer_cast<TipCons>(type) != nullptr;
+}
+
+bool Unifier::isMu(std::shared_ptr<TipType> type) {
+    return std::dynamic_pointer_cast<TipMu>(type) != nullptr;
 }
 
 

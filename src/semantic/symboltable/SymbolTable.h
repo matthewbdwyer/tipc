@@ -23,8 +23,31 @@ public:
               std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> lMap,
               std::vector<std::string> fSet)
       : functionNames(fMap), localNames(lMap), fieldNames(fSet) {}
+
+  /*! \brief Return the declaration node for a given function name.
+   * \param s The Function name
+   * \return The declaration node of the function
+   */
   ASTDeclNode* getFunction(std::string s);
+
+  /*! \brief Return the declaration nodes for functions in the program.
+   */
+  std::vector<ASTDeclNode*> getFunctions();
+
+  /*! \brief Return the declaration node for local or a parameter in a function.
+   * \param s The local or parameter name
+   * \param f The declaration node of the function
+   * \return The declaration node of the local or parameter
+   */
   ASTDeclNode* getLocal(std::string s, ASTDeclNode* f);
+
+  /*! \brief Return the declaration nodes for locals and parameters in a function.
+   * \param f The declaration node of the function.
+   */
+  std::vector<ASTDeclNode*> getLocals(ASTDeclNode* f);
+
+  /*! \brief Returns the record field names referenced in the program.
+   */
   std::vector<std::string> getFields();
 
   /*! \fn build

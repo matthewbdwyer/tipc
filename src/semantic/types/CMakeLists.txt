@@ -35,9 +35,8 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.h
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.h
-        # TODO: Used for closing terms.
-        #${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.cpp
-        #${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
         )
 target_include_directories(types PUBLIC
         ${CMAKE_SOURCE_DIR}/src

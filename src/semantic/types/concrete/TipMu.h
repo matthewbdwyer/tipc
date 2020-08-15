@@ -2,22 +2,26 @@
 
 #include <string>
 #include "TipType.h"
-#include "Mu.h"
-#include "Var.h"
-#include "Term.h"
-#include "../../AST.h"
+#include "TipVar.h"
 
-class TipMu: public TipType, public Mu {
+class TipMu: public TipType {
 public:
     TipMu() = delete;
-    TipMu(std::shared_ptr<Var> v, std::shared_ptr<Term> t);
-    std::string toString() override ;
-    std::ostream& print(std::ostream &out) const override;
-    bool operator==(const Term& other) const override;
-    bool operator!=(const Term& other) const override;
+    TipMu(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t);
 
-    std::shared_ptr<Var> v;
-    std::shared_ptr<Term> t;
+    std::ostream& print(std::ostream &out) const override;
+    bool operator==(const TipType& other) const override;
+    bool operator!=(const TipType& other) const override;
+
+    std::shared_ptr<TipVar> getV() const { return v; }
+    std::shared_ptr<TipVar> getT() const { return t; }
+
+private:
+    std::shared_ptr<TipVar> v;
+    std::shared_ptr<TipType> t;
+
+protected:
+    std::ostream& print(std::ostream &out) const override;
 };
 
 

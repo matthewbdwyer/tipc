@@ -18,8 +18,9 @@
  *
  * \brief Class used to solve type constraints and establish typability.
  *
- * Make uses of a union-find data structure. This class is clever in its calls
- * to union and will throw a UnificationError anytime two terms cannot be unified.
+ * Make uses of a union-find data structure. This class will throw a 
+ * UnificationError anytime two terms cannot be unified, either because
+ * their constructor or arity mismatch.
  */
 class Unifier {
 public:
@@ -29,6 +30,13 @@ public:
 
     void solve();
     void unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2);
+ 
+    /*! \brief Returns the inferred type for a given type variable.
+     *
+     * Calls should follow a call to solve that produces a union find
+     * structure reflecting the inferred set of types. 
+     */
+    std::shared_ptr<TipType> inferred(std::shared_ptr<TipVar> v);
 private:
     static bool isTypeVariable(std::shared_ptr<TipType>);
     static bool isProperType(std::shared_ptr<TipType>);

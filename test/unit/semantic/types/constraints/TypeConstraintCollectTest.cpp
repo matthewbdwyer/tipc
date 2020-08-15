@@ -201,6 +201,22 @@ TEST_CASE("TypeConstraintVisitor: main", "[TypeConstraintVisitor]") {
     runtest(program, expected);
 }
 
+TEST_CASE("TypeConstraintVisitor: poly", "[TypeConstraintVisitor]") {
+    std::stringstream program;
+    program << R"(
+      poly(p) {
+        return *p;
+      }
+    )";
+
+    std::vector<std::string> expected {
+      "[[p]] = &[[*p]]",              // deref
+      "[[poly]] = ([[p]]) -> [[*p]]", // function with param
+    };
+
+    runtest(program, expected);
+}
+
 
 TEST_CASE("TypeConstraintVisitor: record expr", "[TypeConstraintVisitor]") {
     std::stringstream program;
@@ -210,7 +226,6 @@ TEST_CASE("TypeConstraintVisitor: record expr", "[TypeConstraintVisitor]") {
           r = {f: 4, g: 13};
           return 0;
       }
-
     )";
 
     std::vector<std::string> expected {

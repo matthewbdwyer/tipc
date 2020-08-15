@@ -9,4 +9,6 @@
 void TypeInference::inferandcheck(ASTProgram* ast, SymbolTable* symbols) {
   TypeConstraintUnifyVisitor visitor(symbols);
   ast->accept(&visitor);
+
+  
 }

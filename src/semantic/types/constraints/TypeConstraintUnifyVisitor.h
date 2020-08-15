@@ -7,7 +7,7 @@
 
 /*! \class TypeConstraintUnifyVisitor
  *
- *  \brief Visitor generates type constraints and processes them.
+ *  \brief Visitor generates type constraints and unifies them on-the-fly.
  */
 class TypeConstraintUnifyVisitor: public TypeConstraintVisitor {
 public:

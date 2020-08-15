@@ -20,6 +20,14 @@ ASTDeclNode* SymbolTable::getFunction(std::string s) {
   return func->second;
 }
 
+std::vector<ASTDeclNode*> SymbolTable::getFunctions() {
+  std::vector<ASTDeclNode*> funDecls;
+  for (auto &pair : functionNames) {
+    funDecls.push_back(pair.second); 
+  }
+  return funDecls;
+}
+
 ASTDeclNode* SymbolTable::getLocal(std::string s, ASTDeclNode* f) {
   auto lMap = localNames.find(f)->second;
   auto local = lMap.find(s);
@@ -28,6 +36,16 @@ ASTDeclNode* SymbolTable::getLocal(std::string s, ASTDeclNode* f) {
   }
   return local->second;
 }
+
+std::vector<ASTDeclNode*> SymbolTable::getLocals(ASTDeclNode* f) {
+  auto lMap = localNames.find(f)->second;
+  std::vector<ASTDeclNode*> localDecls;
+  for (auto &pair : lMap) {
+    localDecls.push_back(pair.second); 
+  }
+  return localDecls;
+}
+
 
 std::vector<std::string> SymbolTable::getFields() {
   return fieldNames;
