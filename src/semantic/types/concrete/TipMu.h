@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Term.h"
 #include "TipType.h"
 #include "TipVar.h"
 #include <string>

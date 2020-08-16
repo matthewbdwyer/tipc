@@ -36,7 +36,7 @@ public:
      * Calls should follow a call to solve that produces a union find
      * structure reflecting the inferred set of types. 
      */
-    //std::shared_ptr<TipType> inferred(std::shared_ptr<TipVar> v);
+    std::shared_ptr<TipType> inferred(std::shared_ptr<TipVar> v);
 private:
     static bool isCons(std::shared_ptr<TipType>);
     static bool isMu(std::shared_ptr<TipType> type);

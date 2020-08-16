@@ -189,6 +189,7 @@ std::shared_ptr<TipType> Unifier::close(std::shared_ptr<TipType> type,
   }
 };
 */
+
 /*! \brief Looks up the inferred type in the type solution.
  *
  * Here we want to produce an inferred type that is "closed" in the
@@ -197,12 +198,12 @@ std::shared_ptr<TipType> Unifier::close(std::shared_ptr<TipType> type,
  *
  * TBD: When we have self-referential types we need a Mu
  */ 
-//std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipVar> v) {
-//  std::vector<std::shared_ptr<TipVar>> visited;
-//  // TODO
-//  //auto vType = close(unionFind->find(v), visited);
-//  //return vType;
-//}
+std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipVar> v) {
+  std::vector<std::shared_ptr<TipVar>> visited;
+  // TODO
+  //auto vType = close(unionFind->find(v), visited);
+  //return vType;
+}
 
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     std::stringstream s;
