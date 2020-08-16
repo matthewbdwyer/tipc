@@ -21,3 +21,15 @@ std::ostream &TipVar::print(std::ostream &out) const {
     out << "[[" << *node << "@" << node->getLine() << ":" << node->getColumn() << "]]";
     return out;
 }
+
+std::set<std::shared_ptr<TipVar>> TipVar::freeVars() const {
+    //std::set<std::shared_ptr<TipVar>> fv;
+    //fv.emplace(shared_from_this());
+    //return std::move(fv);
+}
+
+void TipVar::subst(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t) {
+    // TODO
+}
+
+

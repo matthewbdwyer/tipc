@@ -1,27 +1,30 @@
 #pragma once
 
-#include <string>
+#include "Term.h"
 #include "TipType.h"
 #include "TipVar.h"
+#include <string>
 
 class TipMu: public TipType {
 public:
     TipMu() = delete;
     TipMu(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t);
 
-    std::ostream& print(std::ostream &out) const override;
+    std::set<std::shared_ptr<TipVar>> freeVars() const override;
+    void subst(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t) override;
+
+    const std::shared_ptr<TipVar> &getV() const;
+    const std::shared_ptr<TipType> &getT() const;
+
     bool operator==(const TipType& other) const override;
     bool operator!=(const TipType& other) const override;
 
-    std::shared_ptr<TipVar> getV() const { return v; }
-    std::shared_ptr<TipVar> getT() const { return t; }
+protected:
+    std::ostream& print(std::ostream &out) const override;
 
 private:
     std::shared_ptr<TipVar> v;
     std::shared_ptr<TipType> t;
-
-protected:
-    std::ostream& print(std::ostream &out) const override;
 };
 
 

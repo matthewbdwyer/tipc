@@ -10,6 +10,10 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipFunction.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipInt.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipInt.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecord.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecord.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRef.cpp
@@ -35,8 +39,6 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.h
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
         )
 target_include_directories(types PUBLIC
         ${CMAKE_SOURCE_DIR}/src

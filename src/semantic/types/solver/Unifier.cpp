@@ -1,4 +1,6 @@
 #include "TipCons.h"
+#include "TipMu.h"
+#include "TipAlpha.h"
 #include "UnificationError.h"
 #include "Unifier.h"
 #include <iostream>
@@ -141,11 +143,14 @@ std::set<std::shared_ptr<TipVar>> freeVars(std::shared_ptr<TipType> t) {
  * structure after solving.  
  *
  */
-std::share_ptr<TipType> close(std::shared_ptr<TipType> type, 
+
+/*
+std::shared_ptr<TipType> Unifier::close(std::shared_ptr<TipType> type,
                               std::vector<std::shared_ptr<TipVar>> visited) {
   if (isTypeVariable(type)) {
     auto v = std::dynamic_pointer_cast<TipVar>(type);
-    if ( (visited.find(v) == visited.end()) && (unionFind->find(v) != v) ) {
+    auto wasVisited = std::find(visited.begin(), visited.end(), v) != visited.end();
+    if (wasVisited && (unionFind->find(v) != v)) {
       // No cyclic reference to v and it does not map to itself
       visited.push_back(v);
       auto closedV = close(unionFind->find(v), visited);
@@ -170,11 +175,11 @@ std::share_ptr<TipType> close(std::shared_ptr<TipType> type,
     auto c = std::dynamic_pointer_cast<TipCons>(type);
     // close each argument of the constructor
 
-/* Scala code that needs to be mapped to our data types
-c.fv.foldLeft(t: Term[A]) { (acc, v) =>
-  acc.subst(v, closeRec(v, env, visited))
-}
-*/
+// Scala code that needs to be mapped to our data types
+//c.fv.foldLeft(t: Term[A]) { (acc, v) =>
+//  acc.subst(v, closeRec(v, env, visited))
+//}
+///
 
 
   } else if (isMu(type)) {
@@ -183,7 +188,7 @@ c.fv.foldLeft(t: Term[A]) { (acc, v) =>
     return type;
   }
 };
-
+*/
 /*! \brief Looks up the inferred type in the type solution.
  *
  * Here we want to produce an inferred type that is "closed" in the
@@ -192,11 +197,12 @@ c.fv.foldLeft(t: Term[A]) { (acc, v) =>
  *
  * TBD: When we have self-referential types we need a Mu
  */ 
-std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipVar> v) {
-  std::vector<std::shared_ptr<TipVar>> visited;
-  auto vType = close(unionFind->find(v), visited);
-  return vType;
-}
+//std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipVar> v) {
+//  std::vector<std::shared_ptr<TipVar>> visited;
+//  // TODO
+//  //auto vType = close(unionFind->find(v), visited);
+//  //return vType;
+//}
 
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     std::stringstream s;
@@ -221,5 +227,4 @@ bool Unifier::isCons(std::shared_ptr<TipType> type) {
 bool Unifier::isMu(std::shared_ptr<TipType> type) {
     return std::dynamic_pointer_cast<TipMu>(type) != nullptr;
 }
-
 

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "AST.h"
+#include <set>
+
+class TipVar;
 
 class TipType {
 public:

@@ -19,7 +19,6 @@ protected:
 
 private:
     std::string const alphaValue;
-
 };
 
 
