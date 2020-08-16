@@ -4,6 +4,11 @@
 #include "TipVar.h"
 #include <string>
 
+/*!
+ * \class TipMu
+ *
+ * \brief Class representing a recursive type
+ */
 class TipMu: public TipType {
 public:
     TipMu() = delete;

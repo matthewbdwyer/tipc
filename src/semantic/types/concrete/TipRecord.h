@@ -6,6 +6,11 @@
 #include <vector>
 #include <ostream>
 
+/*!
+ * \class TipRecord
+ *
+ * \brief A proper type representing a record
+ */
 class TipRecord: public TipCons {
 public:
     TipRecord() = delete;

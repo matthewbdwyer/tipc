@@ -5,6 +5,11 @@
 #include <string>
 #include <memory>
 
+/*!
+ * \class TipVar
+ *
+ * \brief Class representing a type variable
+ */
 class TipVar: public TipType, std::enable_shared_from_this<TipVar> {
 public:
     TipVar() = default;

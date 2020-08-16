@@ -4,6 +4,11 @@
 #include <set>
 #include <vector>
 
+/*!
+ * \class TipCons
+ *
+ * \brief Abstract base class for all proper types
+ */
 class TipCons: public TipType {
 public:
     TipCons() = default;

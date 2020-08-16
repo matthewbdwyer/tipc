@@ -5,6 +5,11 @@
 
 class TipVar;
 
+/*!
+ * \class TipType
+ *
+ * \brief Abstract base class of all types
+ */
 class TipType {
 public:
     virtual bool operator==(const TipType& other) const = 0;
