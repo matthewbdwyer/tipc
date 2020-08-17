@@ -12,7 +12,7 @@
 #include "TypeConstraintVisitor.h"
 #include "TypeConstraint.h"
 
-/*! \class TypeConstraintVisitor
+/*! \class TypeConstraintCollectVisitor
  *
  *  \brief Visitor generates type constraints and collects them.
  */
