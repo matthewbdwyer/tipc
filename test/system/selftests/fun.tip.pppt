@@ -1,0 +1,35 @@
+f() 
+{
+  return 3;
+}
+
+g() 
+{
+  var x;
+  x = f();
+  return x;
+}
+
+h(h1) 
+{
+  var y, r;
+  y = h1;
+  r = y();
+  return r;
+}
+
+main() 
+{
+  if ((h(f) != 3)) 
+    error h(f);
+  if ((f() != 3)) 
+    error f();
+  if ((h(g) != 3)) 
+    error h(g);
+  return 0;
+}
+Functions : {f : () -> int, g : () -> int, h : (() -> int) -> int, main : () -> int}
+Locals for function f : {}
+Locals for function g : {x : int}
+Locals for function h : {h1 : () -> int, r : int, y : () -> int}
+Locals for function main : {}

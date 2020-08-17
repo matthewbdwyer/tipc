@@ -13,7 +13,8 @@ using namespace std;
 static cl::OptionCategory TIPcat("tipc Options",
                                  "Options for controlling the TIP compilation process.");
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
-static cl::opt<bool> psym("ps", cl::desc("print symbol table"), cl::cat(TIPcat));
+static cl::opt<bool> psym("ps", cl::desc("print symbol"), cl::cat(TIPcat));
+static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes -ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
@@ -48,7 +49,9 @@ int main(int argc, const char *argv[]) {
 
       if (ppretty) {
         FrontEnd::prettyprint(ast.get(), std::cout);
-        if (psym) { 
+        if (ptypes) { 
+          analysisResults->getTypeResults()->print(std::cout);
+        } else if (psym) {
           analysisResults->getSymbolTable()->print(std::cout);
         }
       }

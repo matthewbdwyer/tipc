@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTFunction.h"
+#include <ostream>
 
 class SemanticAnalysis;
 
@@ -22,4 +23,11 @@ public:
   ASTFunction * findFunctionByName(std::string);
   void accept(ASTVisitor * visitor);
   std::unique_ptr<llvm::Module> codegen(SemanticAnalysis* st, std::string name);
+
+  friend std::ostream& operator<<(std::ostream& os, const ASTProgram& obj) {
+    return obj.print(os);
+  }
+
+protected:
+  std::ostream& print(std::ostream &out) const;
 };

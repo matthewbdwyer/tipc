@@ -1,0 +1,32 @@
+f() 
+{
+  return 1;
+}
+
+g(x) 
+{
+  return (x + 3);
+}
+
+h() 
+{
+  var x;
+  x = f();
+  return ((x + -7) * 4);
+}
+
+main() 
+{
+  if ((g(f()) != 4)) 
+    error g(f());
+  if ((h() != -24)) 
+    error h();
+  if ((g((-1 * h())) != 27)) 
+    error g((-1 * h()));
+  return 0;
+}
+Functions : {f : () -> int, g : (int) -> int, h : () -> int, main : () -> int}
+Locals for function f : {}
+Locals for function g : {x : int}
+Locals for function h : {x : int}
+Locals for function main : {}

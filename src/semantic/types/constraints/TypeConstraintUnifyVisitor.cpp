@@ -1,7 +1,6 @@
 #include "TypeConstraintUnifyVisitor.h"
 #include "ConstraintUnifier.h"
 
-
 TypeConstraintUnifyVisitor::TypeConstraintUnifyVisitor(SymbolTable *pTable)
   : TypeConstraintVisitor(pTable, std::move(buildConstraintHandler())) { }
 

@@ -1,0 +1,56 @@
+ite(n) 
+{
+  var r;
+  if ((n > 0)) 
+    {
+      r = 1;
+    }
+  else
+    {
+      r = 2;
+    }
+  return r;
+}
+
+it(n) 
+{
+  var r;
+  r = 2;
+  if ((n > 0)) 
+    r = 1;
+  return r;
+}
+
+nite(a, b) 
+{
+  var r;
+  if ((a == 0)) 
+    if ((b > 0)) 
+      r = b;
+    else
+      r = a;
+  else
+    if ((0 > b)) 
+      r = (0 - a);
+    else
+      r = (0 - b);
+  return r;
+}
+
+main() 
+{
+  if ((ite(7) != 1)) 
+    error ite(7);
+  if ((it(-7) != 2)) 
+    error it(-7);
+  if ((nite(0, 7) != 7)) 
+    error nite(0, 7);
+  if ((nite(-1, 7) != -7)) 
+    error nite(-1, 7);
+  return 0;
+}
+Functions : {it : (int) -> int, ite : (int) -> int, main : () -> int, nite : (int,int) -> int}
+Locals for function it : {n : int, r : int}
+Locals for function ite : {n : int, r : int}
+Locals for function main : {}
+Locals for function nite : {a : int, b : int, r : int}

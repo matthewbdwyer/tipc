@@ -8,12 +8,16 @@ std::unique_ptr<SemanticAnalysis> SemanticAnalysis::analyze(ASTProgram* ast) {
 
   CheckAssignable::check(ast);
 
-  TypeInference::inferandcheck(ast, symTable.get());
+  auto typeResults = TypeInference::check(ast, symTable.get());
 
-  return std::make_unique<SemanticAnalysis>(std::move(symTable));
+  return std::make_unique<SemanticAnalysis>(std::move(symTable), std::move(typeResults));
 }
 
 SymbolTable* SemanticAnalysis::getSymbolTable() {
   return symTable.get();
+}; 
+
+TypeInference* SemanticAnalysis::getTypeResults() {
+  return typeResults.get();
 }; 
 

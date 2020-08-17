@@ -1,7 +1,10 @@
+#include "UnionFind.h"
 #include <iostream>
 #include <assert.h>
-#include "UnionFind.h"
-#include "UnionFind.h"
+
+namespace { // Anonymous namespace for local helpers
+bool verbose = false;
+}
 
 UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
     for(auto &term : seed) {
@@ -11,12 +14,20 @@ UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
 
 // TODO (nphair): Add path compression - its practically free performance.
 std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
+    if (verbose) {
+      std::cout << "UnionFind looking for representive of " << *t << std::endl;
+    }
+
     // Effectively a noop if the term is already in the map.
     smart_insert(t);
 
     auto parent = t;
     while(*get_parent(parent) != *parent) {
         parent = get_parent(parent);
+    }
+
+    if (verbose) {
+      std::cout << "UnionFind found representative " << *parent << std::endl;
     }
 
     return parent;
@@ -50,11 +61,21 @@ void UnionFind::smart_insert(std::shared_ptr<TipType> t) {
     if(t == nullptr) {
         throw std::invalid_argument("Refusing to insert a nullptr into the map.");
     }
+    
+    if (verbose) {
+      std::cout << "UnionFind inserting term " << *t;
+    }
 
     for(auto const &edge : edges) {
         if(*t == *edge.first) {
+            if (verbose) {
+              std::cout << " ; already in the graph as " << *edge.first << std::endl; 
+            } 
             return;
         }
+    }
+    if (verbose) {
+      std::cout << " ; adding new edge\n"; 
     }
     edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t, t));
 }

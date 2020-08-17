@@ -1,4 +1,5 @@
 #include "TipVar.h"
+#include "TipAlpha.h"
 #include "TipTypeVisitor.h"
 #include <sstream>
 #include <iostream>
@@ -7,7 +8,8 @@ TipVar::TipVar(ASTNode * node): node(node) {};
 
 bool TipVar::operator==(const TipType &other) const {
     auto otherTipVar = dynamic_cast<TipVar const *>(&other);
-    if(!otherTipVar) {
+    auto otherTipAlpha = dynamic_cast<TipAlpha const *>(&other);
+    if(!otherTipVar || otherTipAlpha) {
         return false;
     }
 

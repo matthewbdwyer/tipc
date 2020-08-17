@@ -1,0 +1,16 @@
+main() 
+{
+  var x1, x2, y, z;
+  x1 = 42;
+  x2 = 13;
+  y = &x1;
+  z = &y;
+  if ((**z != 42)) 
+    error **z;
+  y = &x2;
+  if ((**z != 13)) 
+    error **z;
+  return 0;
+}
+Functions : {main : () -> int}
+Locals for function main : {x1 : int, x2 : int, y : &int, z : &&int}

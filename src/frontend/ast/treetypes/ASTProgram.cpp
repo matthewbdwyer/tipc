@@ -23,3 +23,8 @@ void ASTProgram::accept(ASTVisitor * visitor) {
   }
   visitor->endVisit(this);
 }
+
+std::ostream& ASTProgram::print(std::ostream &out) const {
+  out << getName();
+  return out;
+}

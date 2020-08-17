@@ -1,24 +1,13 @@
-CODECOV_TOKEN="3799f38b-f5ba-49b3-9f51-ac1002ff5342"
-
 TBDs
 - search the code for TODO and TBD comments and resolve them
-
-Coverage
-- develop targetted tests to achieve 100% non-internal-error stmt coverage
-  * if we can't force errors those errors
-
-Code Gen Upgrade
-- maintain philosophy of assuming type correctness and generating code appropriately
-- for records, always generate code for uber record
-  - fixed layout of fields, all fields hold Int64
-  - default initialize using calloc
+- fix line and column off by one issues
+- pretty print types
+- logging
 
 Documentation
-- look into generating doxygen
 - document each class in doxygen style
-- host on github pages
+- host on gh pages in repo
 
 Update README.md
-- bootstrap and platforms supported
-- discuss design, test, etc. 
 - links to doxygen
+- info for CLion setup

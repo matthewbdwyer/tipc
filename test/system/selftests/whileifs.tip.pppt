@@ -1,0 +1,43 @@
+nestedloopsifs(a, b, c) 
+{
+  var x, y, z;
+  x = a;
+  y = (b + c);
+  z = 42;
+  if ((x == 10)) 
+    {
+      while ((x > 0)) 
+        {
+          if ((y == 0)) 
+            {
+              z = (z - 4);
+            }
+          else
+            {
+              while ((x > y)) 
+                {
+                  z = (z - y);
+                  y = (y + 2);
+                }
+            }
+          x = (x - 2);
+        }
+    }
+  return (z + x);
+}
+
+main() 
+{
+  if ((nestedloopsifs(0, 42, 42) != 42)) 
+    error nestedloopsifs(0, 42, 42);
+  if ((nestedloopsifs(0, 0, 0) != 42)) 
+    error nestedloopsifs(0, 0, 0);
+  if ((nestedloopsifs(10, 2, -2) != 22)) 
+    error nestedloopsifs(10, 2, -2);
+  if ((nestedloopsifs(10, -2, -2) != 28)) 
+    error nestedloopsifs(10, -2, -2);
+  return 0;
+}
+Functions : {main : () -> int, nestedloopsifs : (int,int,int) -> int}
+Locals for function main : {}
+Locals for function nestedloopsifs : {a : int, b : int, c : int, x : int, y : int, z : int}

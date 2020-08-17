@@ -9,6 +9,22 @@
 #include <sstream>
 #include <utility>
 
+namespace { // Anonymous namespace for local helper functions
+
+bool verbose = false;
+int vindent = 0;
+ 
+std::string indent() {  return std::string(vindent, ' '); }
+
+bool contains(std::set<std::shared_ptr<TipVar>> s, std::shared_ptr<TipVar> t) {
+  for (auto e : s) {
+    if (e.get() == t.get()) return true;
+  } 
+  return false;
+}
+
+}
+
 Unifier::Unifier() : unionFind(std::move(std::make_unique<UnionFind>())) {}
 
 Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(constrs)) {
@@ -41,10 +57,17 @@ void Unifier::solve() {
 }
 
 void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
+    if (verbose) {
+      std::cout << "Unifying " << *t1 << " and " << *t2 << std::endl;
+    }
     auto rep1 = unionFind->find(t1);
     auto rep2 = unionFind->find(t2);
 
-    if(rep1 == rep2) {
+    if (verbose) {
+      std::cout << "  Unify with representations " << *rep1 << " and " << *rep2 << std::endl;
+    }
+
+    if(*rep1 == *rep2) {
        return;
     }
 
@@ -70,10 +93,10 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     } else {
         throwUnifyException(t1,t2);
     }
-}
 
-namespace {
-  bool verbose = false;
+    if (verbose) {
+      std::cout << "  Representations unified to " << *unionFind->find(rep1) << std::endl;
+    }
 }
 
 /*! \fn close
@@ -89,16 +112,18 @@ namespace {
 std::shared_ptr<TipType> Unifier::close(
         std::shared_ptr<TipType> type, std::set<std::shared_ptr<TipVar>> visited) {
 
+  if (verbose) {
+    vindent+=2;
+  }
+
   if (isVar(type)) {
     auto v = std::dynamic_pointer_cast<TipVar>(type);
 
     if (verbose) {
-      std::cout << "Unifier closing variable: " << *v << std::endl;
+      std::cout << indent() << "Unifier closing variable: " << *v << std::endl;
     }
 
-    auto wasVisited = 
-            std::find(visited.begin(), visited.end(), v) != visited.end();
-    if (wasVisited && (unionFind->find(type) != v)) {
+    if (!contains(visited, v) && (unionFind->find(type) != v)) {
       // No cyclic reference to v and it does not map to itself
       visited.insert(v);
       auto closedV = close(unionFind->find(type), visited);
@@ -107,65 +132,67 @@ std::shared_ptr<TipType> Unifier::close(
       // alpha with the node.
       auto newV = (isAlpha(v)) ? v : std::make_shared<TipAlpha>(v->getNode());
       auto freeV = TypeVars::collect(closedV.get());
-      if (freeV.find(newV) == freeV.end()) {
-        // No cyclic reference in closed type
-        return closedV;
-      } else {
+      if (contains(freeV,newV)) {
         // Cyclic reference requires a mu type constructor
         auto substClosedV = Substituter::substitute(closedV.get(), v.get(), newV);
-        return std::make_shared<TipMu>(newV, substClosedV);
+        auto mu = std::make_shared<TipMu>(newV, substClosedV);
+
+        if (verbose) {
+          std::cout << indent() << "Done closing variable with " << *mu << std::endl;
+          vindent-=2;
+        }
+
+        return mu;
+
+      } else {
+        // No cyclic reference in closed type
+        if (verbose) {
+          std::cout << indent() << "Done closing variable with " << *closedV << std::endl;
+          vindent-=2;
+        }
+        return closedV;
       }
     } else {
       // Unconstrained type variable
-      return std::make_shared<TipAlpha>(v->getNode());
+      auto alpha = std::make_shared<TipAlpha>(v->getNode());
+
+      if (verbose) {
+        std::cout << indent() << "Done closing variable with " << *alpha << std::endl;
+        vindent-=2;
+      }
+
+      return alpha;
     } 
 
   } else if (isCons(type)) {
     auto c = std::dynamic_pointer_cast<TipCons>(type);
 
     if (verbose) {
-      std::cout << "Unifier closing constructor: " << *c << std::endl;
+      std::cout << indent() << "Unifier closing constructor: " << *c << std::endl;
     }
 
     // close each argument of the constructor for each free variable
     auto freeV = TypeVars::collect(c.get());
 
-    if (verbose) {
-      std::cout << "Found free variables: " << std::endl;
-      for (auto v : freeV) {
-        std::cout << "  " << *v << std::endl;
-      }
-    }
-
     std::vector<std::shared_ptr<TipType>> temp;
     auto current = c->getArguments();
     for (auto v : freeV) {
       for (auto a : current) {
-         if (verbose) {
-           std::cout << "Closing " << *v << std::endl;
-         }
          auto closedV = close(unionFind->find(v), visited);
-         if (verbose) {
-           std::cout << "Done closing " << *v << " with " << *closedV << std::endl;
-         }
-
-         if (verbose) {
-           std::cout << "Substituting in " << *a << ": " << *v << " for " << *closedV << std::endl;
-         }
          auto subst = Substituter::substitute(a.get(), v.get(), closedV);
-         if (verbose) {
-           std::cout << "Done substituting  in " << *a << " yielding " << *subst << std::endl;
-         }
          temp.push_back(subst);
       }
+
       current = temp;
+      temp.clear();
     }
 
     // replace arguments with current
     c->setArguments(current);
 
     if (verbose) {
-      std::cout << "Unifier done closing constructor with " << *c << std::endl;
+      std::cout << indent() << "Unifier done closing constructor with " << *c << std::endl;
+      vindent-=2;
     }
  
     return c;
@@ -174,12 +201,17 @@ std::shared_ptr<TipType> Unifier::close(
     auto m = std::dynamic_pointer_cast<TipMu>(type);
 
     if (verbose) {
-      std::cout << "Unifier closing mu: " << *m << std::endl;
+      std::cout << indent() << "Unifier done closing mu with " << *m << std::endl;
+      vindent-=2;
     }
 
     return std::make_shared<TipMu>(m->getV(), close(m->getT(), visited));
 
   } 
+
+  if (verbose) {
+    vindent-=2;
+  }
 
   // TBD : I think this is unreachable
   return type;

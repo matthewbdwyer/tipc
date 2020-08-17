@@ -1,0 +1,12 @@
+main() 
+{
+  var n, r1;
+  n = alloc {p:4, q:2};
+  *n = {p:5, q:6};
+  r1 = *n.p;
+  if ((r1 != 5)) 
+    error r1;
+  return 0;
+}
+Functions : {main : () -> int}
+Locals for function main : {n : &{p:int, q:α<*n.p:q>}, r1 : int}

@@ -112,6 +112,25 @@ then
   ((numfailures++))
 fi 
 
+# Type checking at the system level
+for i in selftests/*.tip
+do
+  base="$(basename $i .tip)"
+  ((numtests++))
+
+  ${TIPC} -pp -pt $i >/tmp/$base.pppt
+  diff $i.pppt /tmp/$base.pppt >/tmp/$base.diff
+  if [[ -s /tmp/$i.diff ]]
+  then
+    echo -n "Test differences for : " 
+    echo $i
+    cat fib.diff
+    ((numfailures++))
+  fi 
+  rm /tmp/$base.pppt
+  rm /tmp/$base.diff
+done
+
 if [ ${numfailures} -eq "0" ]; then
   echo -n "all " 
   echo -n ${numtests}

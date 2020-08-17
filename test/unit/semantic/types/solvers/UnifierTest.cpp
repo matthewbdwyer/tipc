@@ -4,6 +4,7 @@
 #include "TipFunction.h"
 #include "TipInt.h"
 #include "TipRef.h"
+#include "TipAlpha.h"
 #include "TypeConstraintCollectVisitor.h"
 #include "TypeConstraintUnifyVisitor.h"
 #include "TypeConstraintVisitor.h"
@@ -61,7 +62,7 @@ TEST_CASE("Unifier: Collect and then unify constraints", "[Unifier, Collect]") {
     SECTION("Test type-safe poly") {
         std::stringstream program;
         program << R"(
-// poly is (&\alpha) -> \alpha, p is &\alpha
+// poly is (&\alpha<*p>) -> \alpha<*p>, p is &\alpha<*p>
 poly(p){
     return *p;
 }
@@ -80,9 +81,18 @@ poly(p){
         auto fType = std::make_shared<TipVar>(fDecl); 
         auto pType = std::make_shared<TipVar>(symbols->getLocal("p",fDecl));
 
-        std::cout << "poly is " << *unifier.inferred(fType) << std::endl;
-        std::cout << "p is " << *unifier.inferred(pType) << std::endl;
+        auto polyInferred = unifier.inferred(fType);
+        auto polyFun = std::dynamic_pointer_cast<TipFunction>(polyInferred); 
+        REQUIRE(polyFun != nullptr); // function type
+        REQUIRE(polyFun->getParams().size() == 1); // single parameter
+        auto polyArg = polyFun->getParams().back();
+        auto polyArgRef = std::dynamic_pointer_cast<TipRef>(polyArg); 
+        REQUIRE(polyArgRef != nullptr); // param is ref
+        auto polyArgAddressOfField = polyArgRef->getAddressOfField();
+        REQUIRE(std::dynamic_pointer_cast<TipAlpha>(polyArgAddressOfField)); // param is ref of an alpha
 
+        auto pInferred = unifier.inferred(pType);
+        REQUIRE(*pInferred == *polyArg); // p is the parameter type
     }
 
     SECTION("Test unification error 1") {
