@@ -1,4 +1,5 @@
 #include "TipRef.h"
+#include "TipTypeVisitor.h"
 #include <sstream>
 
 TipRef::TipRef(std::shared_ptr<TipType> of)
@@ -26,3 +27,11 @@ std::shared_ptr<TipType> TipRef::getAddressOfField() const{
     return arguments.front();
 }
 
+void TipRef::accept(TipTypeVisitor * visitor) {
+  if (visitor->visit(this)) {
+    for (auto a : arguments) {
+       a->accept(visitor);
+    }
+  }
+  visitor->endVisit(this);
+}

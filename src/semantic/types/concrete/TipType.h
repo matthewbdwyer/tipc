@@ -1,10 +1,15 @@
 #pragma once
 
-#include "AST.h"
-#include <set>
+#include <ostream>
+#include <memory>
 
-class TipVar;
+// Forward declare the visitor to resolve circular dependency
+class TipTypeVisitor;
 
+/*! \brief Base type for TIP type hierararchy.
+ *
+ * Defines equality comparisons, output operator, and accept for visitor.
+ */
 class TipType {
 public:
     virtual bool operator==(const TipType& other) const = 0;
@@ -14,18 +19,7 @@ public:
         return obj.print(os);
     }
 
-    /*! \brief Return the set of free type variables in this type.
-     */
-    virtual std::set<std::shared_ptr<TipVar>> freeVars() const = 0;
-
-    /*! \brief Substitute t for v in this type.
-     *
-     * Perform an in-place update of this type replacing all occurrences of variable v
-     * with type t.
-     * \param v The variable to be replaced.
-     * \param t The type substitution.
-     */
-    virtual void subst(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t) = 0;
+    virtual void accept(TipTypeVisitor *visitor) = 0;
 
 protected:
     virtual std::ostream& print(std::ostream &out) const = 0;

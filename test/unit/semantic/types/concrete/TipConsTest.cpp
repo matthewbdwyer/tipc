@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "TipCons.h"
 #include "TipVar.h"
+#include "TipTypeVisitor.h"
 
 class MockCons1: public TipCons {
 public:
@@ -8,6 +9,7 @@ public:
     bool operator==(const TipType &other) const override { return true; }
     bool operator!=(const TipType &other) const override { return false; }
     std::ostream &print(std::ostream &out) const override { return out; }
+    void accept(TipTypeVisitor *visitor) override {};
 };
 
 class MockCons2: public TipCons {
@@ -16,6 +18,7 @@ public:
     bool operator==(const TipType &other) const override { return true; }
     bool operator!=(const TipType &other) const override { return false; }
     std::ostream &print(std::ostream &out) const override { return out; }
+    void accept(TipTypeVisitor *visitor) override {};
 };
 
 TEST_CASE("TipCons: Test doMatch considers arity" "[TipCons]") {

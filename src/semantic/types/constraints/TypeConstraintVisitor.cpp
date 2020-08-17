@@ -167,7 +167,7 @@ void TypeConstraintVisitor::endVisit(ASTDeRefExpr * element) {
  */
 void TypeConstraintVisitor::endVisit(ASTNullExpr * element) {
   constraintHandler->handle(astToVar(element),
-                            std::make_shared<TipRef>(std::make_shared<TipAlpha>("null")));
+                            std::make_shared<TipRef>(std::make_shared<TipAlpha>(element)));
 }
 
 /*! \brief Type rules for assignments.
@@ -240,8 +240,7 @@ void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
     }
     if (matched) continue;
 
-    // TBD : Do we need to generate uniquely named alphas?
-    fieldTypes.push_back(std::make_shared<TipAlpha>(f));
+    fieldTypes.push_back(std::make_shared<TipAlpha>(element, f));
   } 
   constraintHandler->handle(astToVar(element), std::make_shared<TipRecord>(fieldTypes, allFields));
 }
@@ -260,7 +259,7 @@ void TypeConstraintVisitor::endVisit(ASTAccessExpr * element) {
     if (f == element->getField()) {
       fieldTypes.push_back(astToVar(element));
     } else {
-      fieldTypes.push_back(std::make_shared<TipAlpha>(f));
+      fieldTypes.push_back(std::make_shared<TipAlpha>(element, f));
     }
   } 
   constraintHandler->handle(astToVar(element->getRecord()),

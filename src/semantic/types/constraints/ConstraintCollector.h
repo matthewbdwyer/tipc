@@ -2,6 +2,7 @@
 #include "ConstraintHandler.h"
 #include "TypeConstraint.h"
 
+#include <vector>
 
 /*!
  * \class ConstraintCollector

@@ -46,20 +46,43 @@ TEST_CASE("Unifier: Collect and then unify constraints", "[Unifier, Collect]") {
         auto fDecl = symbols->getFunction("short"); 
         auto fType = std::make_shared<TipVar>(fDecl); 
 
-std::cout << "Function type is " << *fType << std::endl;
-std::cout << "  expected type is " << *funRetInt << std::endl;
-std::cout << "  infered type is " << *unifier.inferred(fType) << std::endl;
-
-        REQUIRE(unifier.inferred(fType) == funRetInt);
+        REQUIRE(*unifier.inferred(fType) == *funRetInt);
 
         auto xType = std::make_shared<TipVar>(symbols->getLocal("x",fDecl));
-        REQUIRE(unifier.inferred(xType) == intType);
+        REQUIRE(*unifier.inferred(xType) == *intType);
 
         auto yType = std::make_shared<TipVar>(symbols->getLocal("y",fDecl));
-        REQUIRE(unifier.inferred(yType) == ptrToInt);
+        REQUIRE(*unifier.inferred(yType) == *ptrToInt);
 
         auto zType = std::make_shared<TipVar>(symbols->getLocal("z",fDecl));
-        REQUIRE(unifier.inferred(zType) == intType);
+        REQUIRE(*unifier.inferred(zType) == *intType);
+    }
+
+    SECTION("Test type-safe poly") {
+        std::stringstream program;
+        program << R"(
+// poly is (&\alpha) -> \alpha, p is &\alpha
+poly(p){
+    return *p;
+}
+         )";
+
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintCollectVisitor visitor(symbols.get());
+        ast->accept(&visitor);
+
+        Unifier unifier(visitor.getCollectedConstraints());
+        REQUIRE_NOTHROW(unifier.solve());
+
+        auto fDecl = symbols->getFunction("poly"); 
+        auto fType = std::make_shared<TipVar>(fDecl); 
+        auto pType = std::make_shared<TipVar>(symbols->getLocal("p",fDecl));
+
+        std::cout << "poly is " << *unifier.inferred(fType) << std::endl;
+        std::cout << "p is " << *unifier.inferred(pType) << std::endl;
+
     }
 
     SECTION("Test unification error 1") {

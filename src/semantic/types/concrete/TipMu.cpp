@@ -1,7 +1,6 @@
 #include "TipMu.h"
-#include "assert.h"
+#include "TipTypeVisitor.h"
 #include <iostream>
-#include <utility>
 
 TipMu::TipMu(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t): v(std::move(v)), t(std::move(t)) { }
 
@@ -29,10 +28,10 @@ std::ostream &TipMu::print(std::ostream &out) const {
     return out;
 }
 
-std::set<std::shared_ptr<TipVar>> TipMu::freeVars() const {
-
-}
-
-void TipMu::subst(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t) {
-
+void TipMu::accept(TipTypeVisitor * visitor) {
+  if (visitor->visit(this)) {
+    v->accept(visitor);
+    t->accept(visitor);
+  }
+  visitor->endVisit(this);
 }

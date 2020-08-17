@@ -1,4 +1,5 @@
 #include "TipFunction.h"
+#include "TipTypeVisitor.h"
 #include <sstream>
 
 TipFunction::TipFunction(std::vector<std::shared_ptr<TipType>> params, std::shared_ptr<TipType> ret):
@@ -19,7 +20,6 @@ std::vector<std::shared_ptr<TipType>> TipFunction::getParams() const {
 std::shared_ptr<TipType> TipFunction::getReturnValue() const {
     return arguments.back();
 }
-
 
 std::ostream &TipFunction::print(std::ostream &out) const {
     out << "(";
@@ -52,4 +52,13 @@ bool TipFunction::operator==(const TipType &other) const {
 
 bool TipFunction::operator!=(const TipType &other) const {
     return !(*this == other);
+}
+
+void TipFunction::accept(TipTypeVisitor * visitor) {
+  if (visitor->visit(this)) {
+    for (auto a : arguments) {
+       a->accept(visitor);
+    }
+  }
+  visitor->endVisit(this);
 }

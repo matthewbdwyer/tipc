@@ -5,19 +5,21 @@
 #include <string>
 #include <memory>
 
-class TipVar: public TipType, std::enable_shared_from_this<TipVar> {
+class TipVar: public TipType {
 public:
     TipVar() = default;
     TipVar(ASTNode * node);
 
-    std::set<std::shared_ptr<TipVar>> freeVars() const override;
-    void subst(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t) override;
-
-    ASTNode * node;
     bool operator==(const TipType& other) const override;
     bool operator!=(const TipType& other) const override;
 
+    ASTNode* getNode() const { return node; }
+
+    void accept(TipTypeVisitor *visitor);
+
 protected:
     std::ostream& print(std::ostream &out) const override;
+
+    ASTNode * node;
 };
 

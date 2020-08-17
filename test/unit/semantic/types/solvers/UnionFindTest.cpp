@@ -19,7 +19,7 @@ static std::vector<std::shared_ptr<TipType>> intsToTipVars(std::vector<int> &val
 static void cleanup(std::vector<std::shared_ptr<TipType>> &values) {
     for(auto &value : values) {
         auto tipVar = std::dynamic_pointer_cast<TipVar>(value);
-        delete tipVar->node;
+        delete tipVar->getNode();
     }
 }
 
@@ -55,9 +55,9 @@ TEST_CASE("UnionFind: Test find", "[UnionFind]") {
     unionFind.quick_union(nine, four);
 
     auto actualRootOfFour = std::dynamic_pointer_cast<TipVar>(unionFind.find(four));
-    auto actualIntOfRootOfFour = dynamic_cast<ASTNumberExpr *>(actualRootOfFour->node)->getValue();
+    auto actualIntOfRootOfFour = dynamic_cast<ASTNumberExpr *>(actualRootOfFour->getNode())->getValue();
     auto actualRootOfNine = std::dynamic_pointer_cast<TipVar>(unionFind.find(nine));
-    auto actualIntOfRootOfNine = dynamic_cast<ASTNumberExpr *>(actualRootOfNine->node)->getValue();
+    auto actualIntOfRootOfNine = dynamic_cast<ASTNumberExpr *>(actualRootOfNine->getNode())->getValue();
 
     REQUIRE(8 == actualIntOfRootOfFour);
     REQUIRE(8 == actualIntOfRootOfNine);

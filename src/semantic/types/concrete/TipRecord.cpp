@@ -1,4 +1,5 @@
 #include "TipRecord.h"
+#include "TipTypeVisitor.h"
 
 TipRecord::TipRecord(std::vector<std::shared_ptr<TipType>> inits, std::vector<std::string> names)
   : TipCons(inits), names(names) { }
@@ -53,3 +54,11 @@ std::vector<std::string> const & TipRecord::getNames() const {
     return names;
 }
 
+void TipRecord::accept(TipTypeVisitor * visitor) {
+  if (visitor->visit(this)) {
+    for (auto a : arguments) {
+       a->accept(visitor);
+    }
+  }
+  visitor->endVisit(this);
+}

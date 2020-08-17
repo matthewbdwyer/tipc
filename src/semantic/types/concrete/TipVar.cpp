@@ -1,4 +1,5 @@
 #include "TipVar.h"
+#include "TipTypeVisitor.h"
 #include <sstream>
 #include <iostream>
 
@@ -10,7 +11,7 @@ bool TipVar::operator==(const TipType &other) const {
         return false;
     }
 
-    return node == otherTipVar->node;
+    return node == otherTipVar->getNode();
 }
 
 bool TipVar::operator!=(const TipType &other) const {
@@ -18,18 +19,10 @@ bool TipVar::operator!=(const TipType &other) const {
 }
 
 std::ostream &TipVar::print(std::ostream &out) const {
-    out << "[[" << *node << "@" << node->getLine() << ":" << node->getColumn() << "]]";
+    out << "[[" << *node << "]]";
     return out;
 }
 
-std::set<std::shared_ptr<TipVar>> TipVar::freeVars() const {
-    //std::set<std::shared_ptr<TipVar>> fv;
-    //fv.emplace(shared_from_this());
-    //return std::move(fv);
+void TipVar::accept(TipTypeVisitor * visitor) {
+  visitor->endVisit(this);
 }
-
-void TipVar::subst(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t) {
-    // TODO
-}
-
-

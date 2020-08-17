@@ -257,7 +257,7 @@ TEST_CASE("TypeConstraintVisitor: access expr", "[TypeConstraintVisitor]") {
       "[[13]] = int",                           // int constant
       "[[{f:4, g:13}]] = {f:[[4]], g:[[13]]}",  // uber record
       "[[r]] = [[{f:4, g:13}]]",                // assignment
-      "[[r]] = {f:\u03B1<f>, g:[[r.g]]}",       // field access
+      "[[r]] = {f:\u03B1<r.g:f>, g:[[r.g]]}",       // field access
       "[[r.g]] = int",                          // main return
       "[[main]] = () -> [[r.g]]"                // main declaration
     };
@@ -280,11 +280,11 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
     std::vector<std::string> expected {
       "[[4]] = int",                                               // int constant
       "[[13]] = int",                                              // int constant
-      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]], n:\u03B1<n>}",        // uber record
+      "[[{f:4, g:13}]] = {f:[[4]], g:[[13]], n:\u03B1<{f:4, g:13}:n>}",        // uber record
       "[[r]] = [[{f:4, g:13}]]",                                   // assignment
       "[[null]] = &\u03B1<null>",                                  // null
       "[[13]] = int",                                              // int constant
-      "[[{n:null, f:13}]] = {f:[[13]], g:\u03B1<g>, n:[[null]]}",  // uber record
+      "[[{n:null, f:13}]] = {f:[[13]], g:\u03B1<{n:null, f:13}:g>, n:[[null]]}",  // uber record
       "[[r]] = [[{n:null, f:13}]]",                                // assignment
       "[[0]] = int",                                               // int constant
       "[[foo]] = () -> [[0]]"				                       // fun declaration
@@ -318,9 +318,45 @@ main() {
       "[[{p:5, q:6}]] = {p:[[5]], q:[[6]]}",        	// uber record
       "[[n]] = &[[{p:5, q:6}]]",			// assign through ptr
       "[[n]] = &[[*n]]",				// deref
-      "[[*n]] = {p:[[*n.p]], q:\u03B1<q>}",       	// field access
+      "[[*n]] = {p:[[*n.p]], q:\u03B1<*n.p:q>}",       	// field access
       "[[r1]] = [[*n.p]]",				// assign 
       "[[r1]] = int",					// output
+      "[[0]] = int",                                    // return int constant
+      "[[0]] = int",                                    // int constant
+      "[[main]] = () -> [[0]]"				// fun declaration
+    };
+
+    runtest(program, expected);
+}
+
+TEST_CASE("TypeConstraintVisitor: record4", "[TypeConstraintVisitor]") {
+    std::stringstream program;
+    program << R"(
+main() {
+    var n, k, r1;
+    k = {a: 1, b: 2};
+    n = {c: &k, d: 4};
+    r1 = ((*(n.c)).a); // output 1
+    output r1;
+    return 0;
+}
+
+    )";
+
+    std::vector<std::string> expected {
+      "[[1]] = int",                                    // int constant
+      "[[2]] = int",                                    // int constant
+      "[[{a:1, b:2}]] = {a:[[1]], b:[[2]], c:\u03B1<{a:1, b:2}:c>, d:\u03B1<{a:1, b:2}:d>}", // record
+      "[[k]] = [[{a:1, b:2}]]",				// assign
+      "[[&k]] = &[[k]]",                                // address of
+      "[[4]] = int",                                    // int constant
+      "[[{c:&k, d:4}]] = {a:\u03B1<{c:&k, d:4}:a>, b:\u03B1<{c:&k, d:4}:b>, c:[[&k]], d:[[4]]}", // record
+      "[[n]] = [[{c:&k, d:4}]]",			// assign
+      "[[n]] = {a:\u03B1<n.c:a>, b:\u03B1<n.c:b>, c:[[n.c]], d:\u03B1<n.c:d>}", // access
+      "[[n.c]] = &[[*n.c]]",			        // assign through ptr
+      "[[*n.c]] = {a:[[*n.c.a]], b:\u03B1<*n.c.a:b>, c:\u03B1<*n.c.a:c>, d:\u03B1<*n.c.a:d>}", // access
+      "[[r1]] = [[*n.c.a]]",				// assign 
+      "[[r1]] = int",				        // output
       "[[0]] = int",                                    // return int constant
       "[[0]] = int",                                    // int constant
       "[[main]] = () -> [[0]]"				// fun declaration
@@ -344,21 +380,21 @@ TEST_CASE("TypeConstraintVisitor: complex records", "[TypeConstraintVisitor]") {
 
     std::vector<std::string> expected {
       "[[4]] = int",                                           // int constant
-      "[[{f:4}]] = {f:[[4]], p:\u03B1<p>, q:\u03B1<q>}",       // uber record
+      "[[{f:4}]] = {f:[[4]], p:\u03B1<{f:4}:p>, q:\u03B1<{f:4}:q>}",       // uber record
       "[[k]] = [[{f:4}]]",                                     // assignment
       "[[4]] = int",                                           // int constant
       "[[5]] = int",                                           // int constant
-      "[[{p:4, q:5}]] = {f:\u03B1<f>, p:[[4]], q:[[5]]}",      // uber record
+      "[[{p:4, q:5}]] = {f:\u03B1<{p:4, q:5}:f>, p:[[4]], q:[[5]]}",      // uber record
       "[[alloc {p:4, q:5}]] = &[[{p:4, q:5}]]",                // alloc is ref to init
       "[[n]] = [[alloc {p:4, q:5}]]",                          // assignment
       "[[n]] = &[[*n]]",				                       // deref
       "[[44]] = int",                                          // int constant
       "[[&k]] = &[[k]]",					                   // address of
-      "[[{p:44, q:&k}]] = {f:\u03B1<f>, p:[[44]], q:[[&k]]}",  // uber record
-      "[[n]] = &[[{p:44, q:&k}]]",				               // assign through ptr
-      "[[n]] = {f:\u03B1<f>, p:\u03B1<p>, q:[[n.q]]}",		   // field access
+      "[[{p:44, q:&k}]] = {f:\u03B1<{p:44, q:&k}:f>, p:[[44]], q:[[&k]]}",  // uber record
+      "[[n]] = &[[{p:44, q:&k}]]",			       // assign through ptr
+      "[[n]] = {f:\u03B1<n.q:f>, p:\u03B1<n.q:p>, q:[[n.q]]}",	// field access
       "[[n.q]] = &[[*n.q]]",					               // deref ptr
-      "[[*n.q]] = {f:[[*n.q.f]], p:\u03B1<p>, q:\u03B1<q>}",   // field access
+      "[[*n.q]] = {f:[[*n.q.f]], p:\u03B1<*n.q.f:p>, q:\u03B1<*n.q.f:q>}",   // field access
       "[[*n.q.f]] = &[[**n.q.f]]",                             // deref ptr
       "[[**n.q.f]] = int",                                     // main return value
       "[[main]] = () -> [[**n.q.f]]"                           // main declaration

@@ -6,19 +6,32 @@
 
 class TipAlpha: public TipVar {
 public:
-    TipAlpha() = default;
-    TipAlpha(std::string const av);
+    TipAlpha() = delete;
 
-    std::string const & getAlphaValue() const;
+    /*! \brief Constructor for all non-record nodes
+     *
+     * \param node The expression or decl node
+     */
+    TipAlpha(ASTNode *node); 
+
+    /*! \brief Constructor for record or access exprs
+     *
+     * \param node The record or access expr
+     * \param name The field name
+     */
+    TipAlpha(ASTNode *node, std::string const name); 
+
+    std::string const & getName() const;
 
     virtual bool operator==(const TipType& other) const override;
     virtual bool operator!=(const TipType& other) const override;
 
+    void accept(TipTypeVisitor *visitor);
+
 protected:
     std::ostream& print(std::ostream &out) const override;
 
-private:
-    std::string const alphaValue;
+    std::string const name;
 };
 
 

@@ -38,7 +38,7 @@ std::string Stringifier::stringify(TipType * tipType) {
         }
         stream << params.str() << ") -> " << stringify(n->getReturnValue().get());
     } else if(auto n = dynamic_cast<TipVar *>(tipType)) {
-        stream << "[[" << stringify(n->node) << "]]";
+        stream << *n;
     } else if(auto n = dynamic_cast<TipRecord *>(tipType)) {
         stream << "{";
         bool first = true;

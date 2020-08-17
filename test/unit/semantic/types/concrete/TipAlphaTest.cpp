@@ -1,35 +1,33 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "TipAlpha.h"
+#include "ASTNumberExpr.h"
 #include <sstream>
 
 TEST_CASE("TipAlpha: Test TipAlphas are compared by their underlying objects" "[TipAlpha]") {
-    TipAlpha tipAlphaA;
-    TipAlpha tipAlphaB;
+    ASTNumberExpr num(13);
+    TipAlpha tipAlphaA(&num);
+    TipAlpha tipAlphaB(&num);
     REQUIRE(tipAlphaA == tipAlphaB);
 }
 
-TEST_CASE("TipAlpha: Test TipAlphas are compared by their underlying objects 2" "[TipAlpha]") {
-    TipAlpha tipAlphaA("foo");
-    TipAlpha tipAlphaB("bar");
-    REQUIRE(tipAlphaA != tipAlphaB);
-}
-
 TEST_CASE("TipAlpha: Test getter" "[TipAlpha]") {
-    TipAlpha tipAlphaA("foo");
-    TipAlpha tipAlphaB("bar");
+    ASTNumberExpr num1(13);
+    ASTNumberExpr num2(42);
+    TipAlpha tipAlphaA(&num1);
+    TipAlpha tipAlphaB(&num2);
 
-    std::string expectedValueA("foo");
-    std::string expectedValueB("bar");
-
-    REQUIRE(expectedValueA == tipAlphaA.getAlphaValue());
-    REQUIRE(expectedValueB == tipAlphaB.getAlphaValue());
+    auto node1 = dynamic_cast<ASTNumberExpr*>(tipAlphaA.getNode());
+    auto node2 = dynamic_cast<ASTNumberExpr*>(tipAlphaB.getNode());
+    REQUIRE(node1->getValue() == 13);
+    REQUIRE(node2->getValue() == 42);
 }
 
 TEST_CASE("TipAlpha: Test output stream" "[TipAlpha]") {
-    TipAlpha tipAlphaA("foo");
+    ASTNumberExpr num(13);
+    TipAlpha tipAlphaA(&num);
 
-    std::string expectedValueA("\u03B1<foo>");
+    std::string expectedValueA("\u03B1<13>");
 
     std::stringstream stream;
     stream << tipAlphaA;

@@ -21,6 +21,7 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipType.h
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVar.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVar.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipTypeVisitor.h
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintCollector.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintCollector.h
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/ConstraintHandler.h
@@ -39,6 +40,10 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.h
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/solver/TypeVars.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/solver/TypeVars.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/solver/Substituter.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/solver/Substituter.h
         )
 target_include_directories(types PUBLIC
         ${CMAKE_SOURCE_DIR}/src
