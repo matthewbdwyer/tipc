@@ -11,7 +11,7 @@
 
 namespace { // Anonymous namespace for local helper functions
 
-bool verbose = false;
+bool verbose = true;
 int vindent = 0;
  
 std::string indent() {  return std::string(vindent, ' '); }

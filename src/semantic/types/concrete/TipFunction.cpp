@@ -25,7 +25,7 @@ std::ostream &TipFunction::print(std::ostream &out) const {
     out << "(";
     int end_of_args = arguments.size() - 1;
     for(int i = 0; i < end_of_args; i++) {
-        out << *arguments.at(0) << (i == end_of_args - 1 ? "" : ",");
+        out << *arguments.at(i) << (i == end_of_args - 1 ? "" : ",");
     }
     out << ") -> " << *arguments.back();
     return out;
