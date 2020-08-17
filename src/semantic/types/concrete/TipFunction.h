@@ -6,6 +6,11 @@
 #include <vector>
 #include <memory>
 
+/*!
+ * \class TipFunction
+ *
+ * \brief A proper type representing a function
+ */
 class TipFunction: public TipCons {
 public:
     TipFunction() = delete;

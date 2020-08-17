@@ -6,7 +6,8 @@
 // Forward declare the visitor to resolve circular dependency
 class TipTypeVisitor;
 
-/*! \brief Base type for TIP type hierararchy.
+/*! \class TipType
+ * \brief Abstract base class of all types
  *
  * Defines equality comparisons, output operator, and accept for visitor.
  */

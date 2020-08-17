@@ -4,6 +4,9 @@
 #include "TipCons.h"
 #include <string>
 
+/*! \class TipAlpha
+ *  \brief Class for free type variables
+ */
 class TipAlpha: public TipVar {
 public:
     TipAlpha() = delete;

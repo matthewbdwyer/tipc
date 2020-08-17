@@ -2,6 +2,11 @@
 #include "TipType.h"
 #include "TipCons.h"
 
+/*!
+ * \class TipRef
+ *
+ * \brief A proper type representing a reference
+ */
 class TipRef: public TipCons {
 public:
     TipRef() = delete;

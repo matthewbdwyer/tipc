@@ -3,7 +3,10 @@
 #include "TipType.h"
 #include <vector>
 
-/*! \brief Base type for all type constructors.
+/*!
+ * \class TipCons
+ *
+ * \brief Abstract base class for all proper types
  *
  * This virtual type adds common functionality for composite types
  * that have type sub-expressions.  

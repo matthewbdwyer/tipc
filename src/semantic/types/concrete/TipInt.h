@@ -4,6 +4,11 @@
 #include "TipCons.h"
 #include <string>
 
+/*!
+ * \class TipInt
+ *
+ * \brief A proper type representing an int
+ */
 class TipInt: public TipCons {
 public:
     TipInt();

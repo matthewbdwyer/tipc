@@ -25,3 +25,8 @@ cmake-build-debug
 
 # Lcov
 gen/
+
+html/
+latex/
+xml/
+*.info
