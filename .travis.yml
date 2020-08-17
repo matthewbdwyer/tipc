@@ -5,20 +5,46 @@ addons:
     packages: 
     - lcov
     - doxygen
+    - graphviz
     - python3
     - python3-pip
 
+stages:
+  - test
+  - deploy
+
 jobs:
   include:
-    - os: linux
+    - name: "Ubuntu Build"
+      stage: test
+      os: linux
       dist: bionic
-    - os: osx
+      after_script:
+        - lcov --capture --directory build -output-file coverage.info
+        - lcov --remove coverage.info '/usr/include/*' -o coverage.info
+        - lcov --remove coverage.info '/usr/lib/*' -o coverage.info
+        - lcov --remove coverage.info '*.h' -o coverage.info
+        - lcov --remove coverage.info '*.hpp' -o coverage.info
+        - lcov --list coverage.info
+        - bash <(curl -s https://codecov.io/bash) -f coverage.info -F codecoverage || echo "Codecov did not collect coverage reports"
+    - name: "macOS Build"
+      stage: test
+      os: osx
       osx_image: xcode11
+    - name: "Documentation Build"
+      stage: test
+      os: linux
+      dist: bionic
+      install:
+        - pip3 install setuptools
+        - pip3 install coverxygen
+      script:
+        - doxygen
+        - python3 -m coverxygen --xml-dir xml/ --src-dir . --output doc-coverage.info --kind class
+        - bash <(curl -s https://codecov.io/bash) -f doc-coverage.info -F doccoverage || echo "Codecov did not collect coverage reports"
 
 install:
   - bash bootstrap
-  - pip3 install setuptools
-  - pip3 install coverxygen
 
 script:
   - . ~/.bashrc
@@ -38,16 +64,3 @@ script:
   - pushd test/system
   - ./run.sh
   - popd 
-
-after_success:
-  - lcov --capture --directory build -output-file coverage.info
-  - lcov --remove coverage.info '/usr/include/*' -o coverage.info
-  - lcov --remove coverage.info '/usr/lib/*' -o coverage.info
-  - lcov --remove coverage.info '*.h' -o coverage.info
-  - lcov --remove coverage.info '*.hpp' -o coverage.info
-  - lcov --list coverage.info
-  - bash <(curl -s https://codecov.io/bash) -f coverage.info -cF codecoverage || echo "Codecov did not collect coverage reports"
-  - echo generating doccoverage
-  - doxygen
-  - python3 -m coverxygen --xml-dir xml/ --src-dir . --output doc-coverage.info --kind class
-  - bash <(curl -s https://codecov.io/bash) -f doc-coverage.info -cF doccoverage
