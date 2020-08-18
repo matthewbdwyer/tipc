@@ -64,7 +64,6 @@ script:
   - pushd test/system
   - ./run.sh
   - popd 
-  - doxygen Doxyfile
 
 deploy:
   provider: pages
