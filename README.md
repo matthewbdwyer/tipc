@@ -66,6 +66,15 @@ which will regenerate the makefiles that you can then run, by typing `make`, to 
 
 Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README describes how to build it in isolation and run it using the ANTLR4 jar file.
 
+### CLion
+
+[CLion](https://www.jetbrains.com/clion/) is a C and C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools,
+or as a standalone tool [here](https://www.jetbrains.com/help/clion/installation-guide.html#standalone). Once installed, you can start a 30 day trial license or, as a student,
+you can get a free educational license [here](https://www.jetbrains.com/community/education/#students).
+
+If you are building for the first time with CLion, follow steps 1 and 2 from the command line to install any needed tipc dependencies. The project can now be built or rebuilt
+by clicking the "Build" button in the toolbar.
+
 ## Documentation
 
 The TIP grammar, [tipg4](./tipg4/TIP.g4), is implemented using ANTLR4.  This grammar is free of any semantic actions, though it does use ANTLR4 rule features which allow for control over the tree visitors that form key parts of the compiler.  This allows the structure of the grammar to remain relatively clean, i.e., no grammar factoring or stratification needed.  
