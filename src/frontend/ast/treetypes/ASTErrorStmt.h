@@ -3,7 +3,8 @@
 #include "ASTStmt.h"
 #include "ASTExpr.h"
 
-//! \brief Class for a error statement
+/*! \brief Class for a error statement
+ */
 class ASTErrorStmt : public ASTStmt {
   std::unique_ptr<ASTExpr> ARG;
 public:

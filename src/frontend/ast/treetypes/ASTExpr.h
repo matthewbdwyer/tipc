@@ -2,7 +2,8 @@
 
 #include "ASTNode.h"
 
-//! \brief Base class for all expression subtypes
+/*! \brief Abstract class for all expression subtypes
+ */
 class ASTExpr : public ASTNode {
 public:
   ~ASTExpr() = default;

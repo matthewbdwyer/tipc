@@ -2,7 +2,8 @@
 
 #include "ASTExpr.h"
 
-//! \brief Class for dereferencing a pointer expression
+/*! \brief Class for dereferencing a pointer expression
+ */
 class ASTDeRefExpr : public ASTExpr {
   std::unique_ptr<ASTExpr> PTR;
 public:

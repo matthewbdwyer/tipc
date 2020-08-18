@@ -2,7 +2,8 @@
 
 #include "ASTExpr.h"
 
-//! \brief Class for referencing the address of a variable.
+/*! \brief Class for referencing the address of a variable.
+ */
 class ASTRefExpr : public ASTExpr {
   std::unique_ptr<ASTExpr> VAR;
 public:

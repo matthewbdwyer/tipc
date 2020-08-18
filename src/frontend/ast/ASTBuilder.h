@@ -26,6 +26,11 @@ private:
 public:
   ASTBuilder(TIPParser *parser);
 
+  /*! \fn build
+   *  \brief Builds an instance of ASTProgram from an ANTLR4 parse tree.
+   *
+   * The caller obtains "ownership" of the resulting ASTProgram.
+   */
   std::unique_ptr<ASTProgram> build(TIPParser::ProgramContext *ctx);
 
   Any visitFunction(TIPParser::FunctionContext *ctx) override;

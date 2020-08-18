@@ -2,7 +2,8 @@
 
 #include "ASTExpr.h"
 
-//! \brief Class for alloc expression
+/*! \brief Class for alloc expression
+ */
 class ASTAllocExpr : public ASTExpr {
   std::unique_ptr<ASTExpr> INIT;
 public:

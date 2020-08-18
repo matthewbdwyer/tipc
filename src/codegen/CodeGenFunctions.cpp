@@ -41,6 +41,18 @@ using namespace llvm;
  * to transform the code to SSA form, via the PromoteMemToReg pass,
  * and especially the CFGSimplification pass, which removes nops and
  * dead blocks.
+ *
+ * The philosophy of these code generation routines is to rely on the fact
+ * that the program is type correct, which is checked in a previous pass.
+ * This allows the code generator to infer the type of values accessed
+ * in memory based on the nature of the expression, e.g., if we are generating
+ * code for "*p" then "p" must be a pointer.  This approach is facilitated
+ * by choosing a uniform representation of all types in memory, Int64, and
+ * then as needed inserting type conversions into the generated code to convert
+ * them to the appropriate type for an operator.
+ *
+ * This results in some suboptimal code, but we rely on the powerful LLVM
+ * optimization passes to clean most of it up.  
  */
 
 namespace {
@@ -52,15 +64,12 @@ namespace {
 LLVMContext TheContext;
 IRBuilder<> Builder(TheContext);
 
-// Functions are represented with indices into a table; this permits them to be passed as values
+/* 
+ * Functions are represented with indices into a table. 
+ * This permits function values to be passed, i.e, as Int64 indices. 
+ */
 std::map<std::string, int> functionIndex;
 
-/* TBD UPDATE TYPE CHECKER
- * We currently rely on the fact that all function parameters are integer
- * type, so we don't need to indicate the type explicitly.  Ultimately, we will
- * want to use the type information by dropping this data structure and using
- * type infor in the code generation routine.
- */
 std::map<std::string, std::vector<std::string>> functionFormalNames;
 
 /*
@@ -68,9 +77,7 @@ std::map<std::string, std::vector<std::string>> functionFormalNames;
  * to their LLVM values.  The structure is built when entering a
  * scope and cleared when exiting a scope.
  */
-// TBD SYMBOL TABLE this could really be a mapping from DeclNode to AllocaInst
 std::map<std::string, AllocaInst *> NamedValues;
-
 
 /**
  * The UberRecord is a the type of all records
@@ -83,10 +90,10 @@ llvm::StructType * uberRecordType;
  */
 llvm::PointerType * ptrToUberRecordType;
 
-//Maps field names to their index in the UberRecor
+// Maps field names to their index in the UberRecor
 std::map<std::basic_string<char>, int> fieldIndex;
 
-//Vector of fields in an uber record
+// Vector of fields in an uber record
 std::vector<std::basic_string<char>> fieldVector;
 
 // Permits getFunction to access the current module being compiled
@@ -135,7 +142,6 @@ GlobalVariable *tipInputArray = nullptr;
  */
 llvm::Function *getFunction(std::string Name) {
   // Lookup the symbol to access the formal parameter list
-  // TBD TYPE CHECKER - update this
   auto formals = functionFormalNames[Name];
 
   /*
@@ -230,7 +236,6 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
     for (auto const &fn : getFunctions()) {
       functionIndex[fn->getName()] = funIndex++;
 
-      // TBD TYPE CHECK - drop this once we have type information
       auto formals = fn->getFormals();
       std::vector<std::string> names;
       std::transform(formals.begin(), formals.end(), 
@@ -335,6 +340,12 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
   callocFun->addFnAttr(llvm::Attribute::NoUnwind);
   callocFun->addAttribute(0, llvm::Attribute::NoAlias);
 
+  /* We create a single unified record structure that is capable of representing
+   * all records in a TIP program.  While wasteful of memory, this approach is 
+   * compatible with the limited type checking provided for records in TIP.
+   *
+   * We refer to this single unified record structure as the "uber record"
+   */
   std::vector<Type *> member_values;
   int index = 0;
   for(auto field : analysis->getSymbolTable()->getFields()){
@@ -343,11 +354,8 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
       fieldIndex[field] = index;
       index++;
   }
-
-
   uberRecordType = StructType::create(TheContext, member_values, "uberRecord");
   ptrToUberRecordType = PointerType::get(uberRecordType, 0);
-
 
   // Code is generated into the module by the other routines
   for (auto const &fn : getFunctions()) {
@@ -384,7 +392,6 @@ llvm::Value* ASTFunction::codegen() {
   if (getName() == "main") {
     int argIdx = 0;
     // Note that the args are not in the LLVM function decl, so we use the AST formals
-    // TBD TYPE CHECK update
     for (auto &argName : functionFormalNames[getName()]) {
       // Create an alloca for this argument and store its value
       AllocaInst *argAlloc = CreateEntryBlockAlloca(TheFunction, argName);
@@ -471,7 +478,8 @@ llvm::Value* ASTBinaryExpr::codegen() {
  * First lookup the variable in the symbol table for names and
  * if that fails, then look in the symbol table for functions.
  *
- * This relies on the fact that TIP programs do not permit duplicate names.
+ * This relies on the fact that TIP programs have been checked to
+ * ensure that names obey the scope rules.
  */
 llvm::Value* ASTVariableExpr::codegen() {
   auto nv = NamedValues.find(getName());
@@ -687,10 +695,8 @@ llvm::Value* ASTFieldExpr::codegen() {
 
 /* record.field Access Expression
  *
- * On the LHS of the expression, returns the location
- * of the field being accessed
- * On the RHS of the expression, returns the value
- * of the field being accessed
+ * In an l-value context this returns the location of the field being accessed
+ * In an r-value context this returns the value of the field being accessed
  */
 llvm::Value* ASTAccessExpr::codegen() {
     bool isLValue = lValueGen;

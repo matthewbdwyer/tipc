@@ -8,7 +8,6 @@
  * AST type hierarchy.
  */
 
-
 #include "ASTAccessExpr.h"
 #include "ASTAllocExpr.h"
 #include "ASTAssignStmt.h"

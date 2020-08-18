@@ -2,7 +2,8 @@
 
 #include "ASTExpr.h"
 
-//! \brief Class for numeric literals.
+/*! \brief Class for numeric literals.
+ */
 class ASTNumberExpr : public ASTExpr {
   int VAL;
 public:

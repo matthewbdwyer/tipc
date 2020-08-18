@@ -2,7 +2,8 @@
 
 #include "ASTNode.h"
 
-//! \brief Base class for all statement nodes.
+/*! \brief Base class for all statement nodes.
+ */
 class ASTStmt : public ASTNode {
 public:
   ~ASTStmt() = default;

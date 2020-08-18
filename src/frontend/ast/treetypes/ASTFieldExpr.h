@@ -2,7 +2,8 @@
 
 #include "ASTExpr.h"
 
-//! \brief Class for the field of a record
+/*! \brief Class for the field of a record
+ */
 class ASTFieldExpr : public ASTExpr {
   std::string FIELD;
   std::unique_ptr<ASTExpr> INIT;

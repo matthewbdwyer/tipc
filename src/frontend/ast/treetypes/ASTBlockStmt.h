@@ -2,7 +2,8 @@
 
 #include "ASTStmt.h"
 
-//! \brief Class for block of statements
+/*! \brief Class for block of statements
+ */
 class ASTBlockStmt : public ASTStmt {
   std::vector<std::unique_ptr<ASTStmt>> STMTS;
 public:

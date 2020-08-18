@@ -14,6 +14,10 @@
  *
  * There are two primary entry points to this class.  The print method prints entire
  * programs and the print2 method prints any sub-tree of the program.
+ *
+ * This visitor uses primarily a post-order traversal of the AST, by overriding
+ * endVisit methods, and therefore uses a LIFO protocol for storing and accessing
+ * values computed during the traversal, i.e., in visitResults.
  */
 class PrettyPrinter: public ASTVisitor {
 public:

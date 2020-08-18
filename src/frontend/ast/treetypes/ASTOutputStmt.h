@@ -3,7 +3,8 @@
 #include "ASTStmt.h"
 #include "ASTExpr.h"
 
-//! \brief Class for an output statement.
+/*! \brief Class for an output statement.
+ */
 class ASTOutputStmt : public ASTStmt {
   std::unique_ptr<ASTExpr> ARG;
 public:

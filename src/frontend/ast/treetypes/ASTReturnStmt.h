@@ -3,7 +3,8 @@
 #include "ASTStmt.h"
 #include "ASTExpr.h"
 
-//! \brief Class for a return statement.
+/*! \brief Class for a return statement.
+ */
 class ASTReturnStmt : public ASTStmt {
   std::unique_ptr<ASTExpr> ARG;
 public:
