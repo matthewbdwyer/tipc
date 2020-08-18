@@ -24,7 +24,7 @@ std::ostream& ASTRecordExpr::print(std::ostream &out) const {
       out << *f;
       continue;
     } 
-    out << ", " << *f;
+    out << "," << *f;
   } 
   out << "}";
   return out;

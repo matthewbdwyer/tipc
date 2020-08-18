@@ -85,25 +85,26 @@ void TypeConstraintVisitor::endVisit(ASTNumberExpr * element) {
 /*! \brief Type constraints for binary operator.
  *
  * Type rules for "E1 op E2":
- *   [[E1]] = [[E2]]
  *   [[E1 op E2]] = int
  * and if "op" is not equality or disequality
- *   [[E1]] = [[E1 op E2]]
- * which by transitivity also equates
- *   [[E2]] = [[E1 op E2]]
+ *   [[E1]] = [[E2]] = int
+ * otherwise
+ *   [[E1]] = [[E2]]
  */
 void TypeConstraintVisitor::endVisit(ASTBinaryExpr  * element) {
   auto op = element->getOp();
-
-  // operands have the same type
-  constraintHandler->handle(astToVar(element->getLeft()), astToVar(element->getRight()));
+  auto intType = std::make_shared<TipInt>();
 
   // result type is integer
-  constraintHandler->handle(astToVar(element), std::make_shared<TipInt>());
+  constraintHandler->handle(astToVar(element), intType);
 
   if (op != "==" && op != "!=") {
-    // operand and result have same type
-    constraintHandler->handle(astToVar(element->getLeft()), astToVar(element));
+    // operands are integer
+    constraintHandler->handle(astToVar(element->getLeft()), intType);
+    constraintHandler->handle(astToVar(element->getRight()), intType);
+  } else {
+    // operands have the same type
+    constraintHandler->handle(astToVar(element->getLeft()), astToVar(element->getRight()));
   }
 }
 

@@ -92,7 +92,7 @@ TEST_CASE("TipRecord: Test output stream" "[TipRecord]") {
     std::vector<std::string> names {"foo", "bar"};
     TipRecord tipRecord(inits, names);
 
-    auto expectedValue = "{foo:int, bar:&int}";
+    auto expectedValue = "{foo:int,bar:&int}";
     std::stringstream stream;
     stream << tipRecord;
     std::string actualValue = stream.str();

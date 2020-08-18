@@ -61,7 +61,7 @@ TEST_CASE("Check Assignable: binary lhs", "[Symbol]") {
     auto ast = ASTHelper::build_ast(stream);
     REQUIRE_THROWS_MATCHES(CheckAssignable::check(ast.get()),
                            SemanticError,
-                           ContainsWhat("(x + 1) not an l-value"));
+                           ContainsWhat("(x+1) not an l-value"));
 }
 
 TEST_CASE("Check Assignable: function lhs", "[Symbol]") {
@@ -88,5 +88,5 @@ TEST_CASE("Check Assignable: record lhs", "[Symbol]") {
     auto ast = ASTHelper::build_ast(stream);
     REQUIRE_THROWS_MATCHES(CheckAssignable::check(ast.get()),
                            SemanticError,
-                           ContainsWhat("{f:0, g:1} not an l-value"));
+                           ContainsWhat("{f:0,g:1} not an l-value"));
 }

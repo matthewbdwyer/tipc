@@ -10,6 +10,6 @@ void ASTBinaryExpr::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTBinaryExpr::print(std::ostream &out) const {
-  out << "(" << *getLeft() << " " << getOp() << " " << *getRight() << ")";
+  out << "(" << *getLeft() << getOp() << *getRight() << ")";
   return out;
 }

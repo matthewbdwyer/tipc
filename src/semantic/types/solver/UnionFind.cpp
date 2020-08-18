@@ -6,6 +6,14 @@ namespace { // Anonymous namespace for local helpers
 bool verbose = false;
 }
 
+void UnionFind::print() {
+    std::cout << "UnionFind graph:\n";
+    for(auto &p : edges) {
+      std::cout << "  edges[" << *p.first << "] = " << *p.second << std::endl;
+    }
+    std::cout << std::endl;
+}
+
 UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
     for(auto &term : seed) {
         smart_insert(term);
@@ -35,9 +43,26 @@ std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
 
 // TODO (nphair): Weight the subtrees and be smarter about our unioning.
 void UnionFind::quick_union(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
+    smart_insert(t1);
+    smart_insert(t2);
+
     auto t1_root = find(t1);
     auto t2_root = find(t2);
-    edges[t1_root] = t2_root;
+//    edges[t1_root] = t2_root;
+
+    // semantics-based insert
+    for(auto const &edge : edges) {
+        if(*t1_root == *edge.first) {
+            edges.erase(edge.first);
+            edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t1_root, t2_root));
+            break;
+        }
+    }
+
+    if (verbose) {
+      std::cout << "UnionFind union " << *t1 << " and " << *t2;
+      std::cout << " by setting edges[" << *t1_root << "] to " << *t2_root << std::endl;
+    }
 }
 
 bool UnionFind::connected(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
@@ -79,3 +104,4 @@ void UnionFind::smart_insert(std::shared_ptr<TipType> t) {
     }
     edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t, t));
 }
+

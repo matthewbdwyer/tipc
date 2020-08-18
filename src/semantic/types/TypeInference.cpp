@@ -25,32 +25,32 @@ std::shared_ptr<TipType> TypeInference::getInferredType(ASTDeclNode *node) {
 };
 
 void TypeInference::print(std::ostream &s) {
-  s << "Functions : {"; 
+  s << "\nFunctions : {\n"; 
   auto skip = true;
   for (auto f : symbols->getFunctions()) {
     if (skip) {
       skip = false;
-      s << f->getName() << " : " << *getInferredType(f);
+      s << "  " << f->getName() << " : " << *getInferredType(f);
       continue;
     }
-    s << ", " + f->getName() << " : " << *getInferredType(f); 
+    s << ",\n  " + f->getName() << " : " << *getInferredType(f); 
   }
-  s << "}\n";
+  s << "\n}\n";
 
   for (auto f : symbols->getFunctions()) {
-    s << "Locals for function " + f->getName() + " : {";
+    s << "\nLocals for function " + f->getName() + " : {\n";
     skip = true;
     for (auto l : symbols->getLocals(f)) {
       auto lT = getInferredType(l);
       if (skip) {
         skip = false;
-        s << l->getName() << " : " << *lT;
+        s << "  " << l->getName() << " : " << *lT;
         continue;
       }
-      s << ", " + l->getName() << " : " << *lT;
+      s << ",\n  " + l->getName() << " : " << *lT;
       s << std::flush;
     }
-    s << "}\n";
+    s << "\n}\n";
   }
 }
 

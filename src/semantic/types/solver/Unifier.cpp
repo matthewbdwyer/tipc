@@ -11,7 +11,7 @@
 
 namespace { // Anonymous namespace for local helper functions
 
-bool verbose = true;
+bool verbose = false;
 int vindent = 0;
  
 std::string indent() {  return std::string(vindent, ' '); }
@@ -64,7 +64,7 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     auto rep2 = unionFind->find(t2);
 
     if (verbose) {
-      std::cout << "  Unify with representations " << *rep1 << " and " << *rep2 << std::endl;
+      std::cout << "  Unifying with representatives " << *rep1 << " and " << *rep2 << std::endl;
     }
 
     if(*rep1 == *rep2) {
@@ -95,7 +95,8 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     }
 
     if (verbose) {
-      std::cout << "  Representations unified to " << *unionFind->find(rep1) << std::endl;
+      std::cout << "  Unified representative is " << *unionFind->find(t1) << std::endl;
+      std::cout << "  Unified double check " << *unionFind->find(t2) << std::endl;
     }
 }
 

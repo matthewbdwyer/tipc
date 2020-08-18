@@ -15,7 +15,7 @@ std::ostream& TipRecord::print(std::ostream &out) const {
             first = false;
             continue;
         }
-        out << ", " << names.at(i++) << ":" << *init;
+        out << "," << names.at(i++) << ":" << *init;
     }
     out << "}";
     return out;

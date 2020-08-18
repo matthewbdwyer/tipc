@@ -9,6 +9,6 @@ void ASTDeRefExpr::accept(ASTVisitor * visitor) {
 }
 
 std::ostream& ASTDeRefExpr::print(std::ostream &out) const {
-  out << "*" << *getPtr();
+  out << "(*" << *getPtr() << ")";
   return out;
 }

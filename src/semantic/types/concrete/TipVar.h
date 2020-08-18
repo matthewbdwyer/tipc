@@ -23,6 +23,7 @@ public:
     void accept(TipTypeVisitor *visitor);
 
 protected:
+    //! \brief Type variables printed as ASTNode@line:col
     std::ostream& print(std::ostream &out) const override;
 
     ASTNode * node;
