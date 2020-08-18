@@ -1,0 +1,74 @@
+// lists have a header cell
+mklist() {
+  return alloc {next:null, value:0};
+}
+
+append(l, e) {
+  var current;
+  current = l;
+  while ((*current).next != null) {
+    current = (*current).next;
+  }
+  // current has no next
+  (*current).next = alloc {next:null, value:e};
+  return l;
+}
+
+// If index is negative then return first element.
+// If index is beyond end of list then return last element.
+// Indices from 1
+atindex(l, i) {
+  var index, current;
+  current = l;
+  if (i > -1) {
+    index = 0;
+    while (i > index) {
+      if ((*current).next == null) {
+         // exit the loop
+         index = i;
+      } else {
+         current = (*current).next;
+         index = index + 1;
+      }
+    }
+  } 
+  return current; 
+}
+
+// Print the list elements and return the number printed
+print(l) {
+  var current, num;
+  num = 0;
+  current = l;
+  while ((*current).next != null) {
+    current = (*current).next;
+    output (*current).value;
+    num = num + 1;
+  }
+  return num;
+}
+
+main(offset) {
+  var list1, list2;
+  list1 = mklist();
+  list2 = mklist();
+
+  list1 = append(list1, 2+offset);
+  list1 = append(list1, 4+offset);
+  list1 = append(list1, 8+offset);
+
+  list2 = append(list2, 4);
+  list2 = append(list2, 9);
+  list2 = append(list2, 16);
+
+  output print(list1);
+
+  output print(list2);
+
+  output (*(atindex(list1,3))).value;
+
+  output (*(atindex(list2,1))).value;
+
+  return 0;
+}
+
