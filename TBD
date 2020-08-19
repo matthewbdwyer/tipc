@@ -10,9 +10,3 @@ Testing
   build it as a unit test?
 - how can CheckAssignable.cpp be covered and not the .h file
 - drop print routine from UnionFind 
-
-Documentation
-- host on gh pages in repo
-
-Update README.md
-- links to doxygen

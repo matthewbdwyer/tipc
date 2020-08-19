@@ -80,10 +80,6 @@ std::shared_ptr<TipType> Copier::copy(std::shared_ptr<TipType> t) {
   return visitor.getResult();
 }
 
-std::shared_ptr<TipType> Copier::getResult() {
-  return visitedTypes.back();
-}
-
 void Copier::endVisit(TipVar * element) {
   visitedTypes.push_back(std::make_shared<TipVar>(element->getNode()));
 }

@@ -41,8 +41,8 @@ int main(int argc, char *argv[]) {
   std::ifstream stream;
   stream.open(sourceFile);
 
-  loguru::init(argc, argv);
   if(debug) {
+    loguru::init(argc, argv);
     loguru::g_stderr_verbosity = 1;
   }
 

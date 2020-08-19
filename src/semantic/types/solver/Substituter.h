@@ -7,7 +7,11 @@
 class Substituter: public TipTypeVisitor {
   TipVar* target;
   std::shared_ptr<TipType> substitution;
+
+protected:
   std::vector<std::shared_ptr<TipType>> visitedTypes;
+  Substituter() = default;
+
 public:
   Substituter(TipVar *t, std::shared_ptr<TipType> s) : target(t), substitution(s) {}
 
@@ -43,13 +47,10 @@ public:
  * to just copy that node rather than perform a substitution.
  */
 class Copier: public Substituter {
-  std::vector<std::shared_ptr<TipType>> visitedTypes;
 public:
   Copier() = default;
 
   static std::shared_ptr<TipType> copy(std::shared_ptr<TipType> s);
-
-  std::shared_ptr<TipType> getResult();
 
   virtual void endVisit(TipVar * element) override;
 };
