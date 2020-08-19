@@ -14,13 +14,13 @@ using namespace std;
 static cl::OptionCategory TIPcat("tipc Options",
                                  "Options for controlling the TIP compilation process.");
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
-static cl::opt<bool> psym("ps", cl::desc("print symbol"), cl::cat(TIPcat));
-static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes -ps)"), cl::cat(TIPcat));
+static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
+static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
-static cl::opt<bool> debug("d", cl::desc("turn on debug output"), cl::cat(TIPcat));
-static cl::opt<std::string> logfile("o",
+static cl::opt<bool> debug("verbose", cl::desc("enable log messages"), cl::cat(TIPcat));
+static cl::opt<std::string> logfile("log",
                                    cl::value_desc("logfile"),
-                                   cl::desc("log all messages to logfile"),
+                                   cl::desc("log all messages to logfile (enables --verbose)"),
                                    cl::cat(TIPcat));
 static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
@@ -41,14 +41,13 @@ int main(int argc, char *argv[]) {
   std::ifstream stream;
   stream.open(sourceFile);
 
-  if(debug) {
+  bool logging = !logfile.getValue().empty();
+  if(debug || logging) {
     loguru::init(argc, argv);
-    loguru::g_stderr_verbosity = 1;
-  }
-
-  if(!logfile.getValue().empty()) {
-    loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
-    loguru::add_file(logfile.getValue().c_str(), loguru::Append, loguru::Verbosity_MAX);
+    loguru::g_stderr_verbosity = logging ? loguru::Verbosity_OFF : 1;
+    if (logging) {
+      loguru::add_file(logfile.getValue().c_str(), loguru::Append, loguru::Verbosity_MAX);
+    }
   }
 
     /*
