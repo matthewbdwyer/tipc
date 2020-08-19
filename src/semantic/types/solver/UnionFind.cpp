@@ -1,6 +1,8 @@
 #include "UnionFind.h"
-#include <iostream>
+
+#include "loguru.hpp"
 #include <assert.h>
+#include <iostream>
 
 namespace { // Anonymous namespace for local helpers
 bool verbose = false;
@@ -24,9 +26,7 @@ UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
  * Add path compression instead of iterative parent lookup.
  */
 std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
-    if (verbose) {
-      std::cout << "UnionFind find representive of " << *t << std::endl;
-    }
+    LOG_S(1) << "UnionFind looking for representive of " << *t;
 
     // Effectively a noop if the term is already in the map.
     smart_insert(t);
@@ -36,9 +36,7 @@ std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
         parent = get_parent(parent);
     }
 
-    if (verbose) {
-      std::cout << "UnionFind found representative " << *parent << std::endl;
-    }
+    LOG_S(1) << "UnionFind found representative " << *parent;
 
     return parent;
 }
@@ -91,21 +89,16 @@ void UnionFind::smart_insert(std::shared_ptr<TipType> t) {
         throw std::invalid_argument("Refusing to insert a nullptr into the map.");
     }
     
-    if (verbose) {
-      std::cout << "UnionFind inserting term " << *t;
-    }
+    LOG_S(1) << "UnionFind inserting term " << *t;
 
     for(auto const &edge : edges) {
         if(*t == *edge.first) {
-            if (verbose) {
-              std::cout << " ; already in the graph as " << *edge.first << std::endl; 
-            } 
+            LOG_S(1) << " ; already in the graph as " << *edge.first;
             return;
         }
     }
-    if (verbose) {
-      std::cout << " ; adding new edge\n"; 
-    }
+
+    LOG_S(1) << " ; adding new edge\n";
     edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t, t));
 }
 

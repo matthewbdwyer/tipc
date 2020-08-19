@@ -17,4 +17,10 @@ target_include_directories(semantic PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/symboltable
         ${CMAKE_CURRENT_SOURCE_DIR}/types
         )
-target_link_libraries(semantic weeding symboltable types coverage_config)
+target_link_libraries(semantic
+        weeding
+        symboltable
+        types
+        coverage_config
+        loguru
+        )

@@ -69,6 +69,20 @@ message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
+# Logging.
+add_library(loguru)
+target_sources(loguru PUBLIC
+        ${CMAKE_SOURCE_DIR}/externals/loguru/loguru.cpp
+        ${CMAKE_SOURCE_DIR}/externals/loguru/loguru.hpp
+        )
+find_package(Threads REQUIRED)
+target_link_libraries(loguru ${CMAKE_THREAD_LIBS_INIT})
+if(NOT WIN32)
+  target_link_libraries(loguru dl)
+endif()
+add_definitions(-DLOGURU_WITH_STREAMS=1 -DLOGURU_VERBOSE_SCOPE_ENDINGS=0)
+include_directories(${CMAKE_SOURCE_DIR}/externals/loguru)
+
 ######## build target including unit tests ###########
 add_subdirectory(src)
 
