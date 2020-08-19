@@ -55,4 +55,4 @@ target_include_directories(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints
         ${CMAKE_CURRENT_SOURCE_DIR}/solver
         )
-target_link_libraries(types coverage_config)
+target_link_libraries(types coverage_config loguru)

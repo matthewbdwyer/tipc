@@ -17,7 +17,9 @@ target_link_libraries(tipc
         optimizer 
         antlr4_static 
         ${llvm_libs} 
-        coverage_config)
+        coverage_config
+        loguru
+        )
 target_include_directories(tipc PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/error
         ${CMAKE_CURRENT_SOURCE_DIR}/frontend
