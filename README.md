@@ -70,10 +70,7 @@ Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README de
 
 [CLion](https://www.jetbrains.com/clion/) is a C and C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools, or as a standalone tool [here](https://www.jetbrains.com/help/clion/installation-guide.html#standalone). Once installed, you can start a 30 day trial license or, as a student, you can get a free educational license [here](https://www.jetbrains.com/community/education/#students).
 
-If you are building for the first time with CLion, follow the first two steps of the installation process:
-  1. `./bootstrap`
-  2. `. ~/.bashrc`
-to install any needed tipc dependencies. The project can now be built or rebuilt by clicking the "Build" button in the toolbar.
+If you are building for the first time with CLion, follow the first two steps of the installation process to install any needed tipc dependencies. The project can now be built or rebuilt by clicking the "Build" button in the toolbar.
 
 ## Documentation
 
