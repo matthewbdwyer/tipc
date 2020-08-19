@@ -1,0 +1,168 @@
+#include "catch.hpp"
+#include "ASTHelper.h"
+#include "GeneralHelper.h"
+
+#include <iostream>
+
+TEST_CASE("ASTPrinterTest: function printers", "[ASTNodePrint]") {
+    std::stringstream stream;
+    stream << R"(
+      fun(a) { return a; }
+      foo() { return 1; }
+      bar(x, y) { return x+1; }
+    )";
+
+    std::vector<std::string> expected {
+      "fun(a) {...}",
+      "foo() {...}",
+      "bar(x,y) {...}"
+    };
+
+    auto ast = ASTHelper::build_ast(stream);
+
+    int i = 0;
+    for (auto f : ast->getFunctions()) {
+      stream = std::stringstream();
+      stream << *f;
+      auto actual = stream.str();
+      REQUIRE(actual == expected.at(i++));
+    }
+}
+
+TEST_CASE("ASTPrinterTest: statement printers", "[ASTNodePrint]") {
+    std::stringstream stream;
+    stream << R"(
+      fun() {
+        var x, /* comment */ y, z;
+        x = 
+            0;
+        if (x == 0) 
+          y = 0;
+        if (y == z) y=1; else y    =    2;
+        while (x == 0) 
+          z = 0;
+        { 
+           x = y + z; 
+           y = 13;
+        } 
+        error       z;
+        return z;
+      }
+    )";
+
+    std::vector<std::string> expected {
+      "var x, y, z;",
+      "x = 0;",
+      "if ((x==0)) y = 0;",
+      "if ((y==z)) y = 1; else y = 2;",
+      "while ((x==0)) z = 0;",
+      "{ x = (y+z); y = 13; }",
+      "error z;",
+      "return z;"
+    };
+
+    auto ast = ASTHelper::build_ast(stream);
+
+    auto f = ast->findFunctionByName("fun");
+
+    int i = 0;
+    for (auto d : f->getDeclarations()) {
+      stream = std::stringstream();
+      stream << *d;
+      auto actual = stream.str();
+      REQUIRE(actual == expected.at(i++));
+    }
+
+    for (auto s : f->getStmts()) {
+      stream = std::stringstream();
+      stream << *s;
+      auto actual = stream.str();
+      REQUIRE(actual == expected.at(i++));
+    }
+
+}
+
+TEST_CASE("ASTPrinterTest: expression printers", "[ASTNodePrint]") {
+    std::stringstream stream;
+    stream << R"(
+      foo(a) { return a;}
+      fun() {
+        var x, y, z;
+        x = y + 0;
+        y = input;
+        z = {next:null, val:42};
+        y = z.val;
+        x = (*z).next;
+        x = &z;
+        z = -3;
+        z = (42);
+        x = alloc null;
+        y = x + y - z * 3 / 1;
+        y = foo(x);
+        return 0;
+      }
+    )";
+
+    std::vector<std::string> expected {
+      "(y+0)",
+      "input",
+      "{next:null,val:42}",
+      "(z.val)",
+      "((*z).next)",
+      "&z",
+      "-3",
+      "42",
+      "alloc null",
+      "((x+y)-((z*3)/1))",
+      "foo(x)"
+    };
+
+    auto ast = ASTHelper::build_ast(stream);
+
+    auto f = ast->findFunctionByName("fun");
+
+    int i = 0;
+    int numStmts = f->getStmts().size() - 1;  // skip the return
+    for (auto s : f->getStmts()) {
+      auto a = dynamic_cast<ASTAssignStmt*>(s);
+      stream = std::stringstream();
+      stream << *a->getRHS();
+      auto actual = stream.str();
+      REQUIRE(actual == expected.at(i++));
+      if (i == numStmts) break;
+    }
+}
+
+TEST_CASE("ASTPrinterTest: condiional expression printers", "[ASTNodePrint]") {
+    std::stringstream stream;
+    stream << R"(
+      fun() {
+        var x, y, z;
+        if (x == y) x = 0;
+        if (x != y) x = 0;
+        if (x > y) x = 0;
+        return 0;
+      }
+    )";
+
+    std::vector<std::string> expected {
+      "(x==y)",
+      "(x!=y)",
+      "(x>y)"
+    };
+
+    auto ast = ASTHelper::build_ast(stream);
+
+    auto f = ast->findFunctionByName("fun");
+
+    int i = 0;
+    int numStmts = f->getStmts().size() - 1;  // skip the return
+    for (auto s : f->getStmts()) {
+      auto ifstmt = dynamic_cast<ASTIfStmt*>(s);
+      stream = std::stringstream();
+      stream << *ifstmt->getCondition();
+      auto actual = stream.str();
+      REQUIRE(actual == expected.at(i++));
+      if (i == numStmts) break;
+    }
+}

@@ -40,8 +40,8 @@ std::ostream& ASTFunction::print(std::ostream &out) const {
       out << *p;
       continue;
     }
-    out << ", " << *p;
+    out << "," << *p;
   }
-  out << "{ ... }";
+  out << ") {...}";
   return out;
 }

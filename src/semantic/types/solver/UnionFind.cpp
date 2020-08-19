@@ -8,14 +8,6 @@ namespace { // Anonymous namespace for local helpers
 bool verbose = false;
 }
 
-void UnionFind::print() {
-    std::cout << "UnionFind graph:\n";
-    for(auto &p : edges) {
-      std::cout << "  edges[" << *p.first << "] = " << *p.second << std::endl;
-    }
-    std::cout << std::endl;
-}
-
 UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
     for(auto &term : seed) {
         smart_insert(term);

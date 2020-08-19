@@ -1,12 +1,9 @@
 TBDs
 - search the code for TODO and TBD comments and resolve them
-- logging
 
 Testing
-- front end test that uses output streaming for all node types
 - substituter code may be unreachable, i.e., substitutions by
   definition don't have vars, mu's never need substituting?
 - TipMu is uncovered - this is not possible due to the polymorphic tests
   build it as a unit test?
 - how can CheckAssignable.cpp be covered and not the .h file
-- drop print routine from UnionFind 
