@@ -12,7 +12,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/semantic/symboltable)
 include_directories(${PROJECT_SOURCE_DIR}/src/semantic/weeding)
 
 # The Catch2 framework and project specific helpers are used in unit tests
-include_directories(external/catch2)
+include_directories(${CMAKE_SOURCE_DIR}/externals/catch2)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/helpers)
 add_subdirectory(helpers)
 
