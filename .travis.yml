@@ -17,10 +17,11 @@ jobs:
       dist: bionic
       after_success:
         - lcov --capture --directory build -output-file coverage.info
-        - lcov --remove coverage.info '/usr/include/*' -o coverage.info
-        - lcov --remove coverage.info '/usr/lib/*' -o coverage.info
+        - lcov --remove coverage.info '/usr/*' -o coverage.info
         - lcov --remove coverage.info '*.h' -o coverage.info
         - lcov --remove coverage.info '*.hpp' -o coverage.info
+        - lcov --remove coverage.info '*/externals/*' -o coverage.info
+        - lcov --remove coverage.info '*/antlr4cpp_generated_src/*' -o coverage.info
         - lcov --list coverage.info
         - bash <(curl -s https://codecov.io/bash) -f coverage.info -F codecoverage || echo "Codecov did not collect coverage reports"
     - name: "macOS Build"
