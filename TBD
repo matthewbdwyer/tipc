@@ -1,13 +1,18 @@
 TBDs
 - search the code for TODO and TBD comments and resolve them
-- fix line and column off by one issues
-- pretty print types
 - logging
 
+Testing
+- front end test that uses output streaming for all node types
+- substituter code may be unreachable, i.e., substitutions by
+  definition don't have vars, mu's never need substituting?
+- TipMu is uncovered - this is not possible due to the polymorphic tests
+  build it as a unit test?
+- how can CheckAssignable.cpp be covered and not the .h file
+- drop print routine from UnionFind 
+
 Documentation
-- document each class in doxygen style
 - host on gh pages in repo
 
 Update README.md
 - links to doxygen
-- info for CLion setup

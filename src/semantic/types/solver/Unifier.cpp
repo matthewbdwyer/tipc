@@ -11,11 +11,21 @@
 #include <sstream>
 #include <utility>
 
+/*
+ * This code makes use of the dangerous combination of smart pointers and
+ * standard libraries.  After several painful debugging sessions things are
+ * working, but this code should be refactored to better integrate these.
+ * We really need to use the underlying notion of equality on TipType to
+ * perform the operations below and when using smart pointers we end up
+ * having to do things explicitly while accessing and dereferencing the
+ * managed pointer. 
+ */
+
 namespace { // Anonymous namespace for local helper functions
 
 bool contains(std::set<std::shared_ptr<TipVar>> s, std::shared_ptr<TipVar> t) {
   for (auto e : s) {
-    if (e.get() == t.get()) return true;
+    if (*e.get() == *t.get()) return true;
   } 
   return false;
 }
@@ -59,7 +69,7 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     auto rep1 = unionFind->find(t1);
     auto rep2 = unionFind->find(t2);
 
-    LOG_S(1) << "  Unifying with representatives " << *rep1 << " and " << *rep2;
+    LOG_S(1) << "Unifying with representatives " << *rep1 << " and " << *rep2;
 
     if(*rep1 == *rep2) {
        return;
@@ -88,8 +98,7 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
         throwUnifyException(t1,t2);
     }
 
-    LOG_S(1) << "  Unified representative is " << *unionFind->find(t1);
-    LOG_S(1) << "  Unified double check " << *unionFind->find(t2);
+    LOG_S(1) << "Unifying representatives to " << *unionFind->find(t1);
 }
 
 /*! \fn close
@@ -115,6 +124,7 @@ std::shared_ptr<TipType> Unifier::close(
     if (!contains(visited, v) && (unionFind->find(type) != v)) {
       // No cyclic reference to v and it does not map to itself
       visited.insert(v);
+
       auto closedV = close(unionFind->find(type), visited);
 
       // If the variable is an alpha, then reuse it else create a new
@@ -126,26 +136,26 @@ std::shared_ptr<TipType> Unifier::close(
         auto substClosedV = Substituter::substitute(closedV.get(), v.get(), newV);
         auto mu = std::make_shared<TipMu>(newV, substClosedV);
 
-        LOG_S(1) << "Done closing variable with " << *mu;
+        LOG_S(1) << "Unifier closed var with " << *mu;
         return mu;
 
       } else {
         // No cyclic reference in closed type
-        LOG_S(1) << "Done closing variable with " << *closedV;
+        LOG_S(1) << "Unifier closed var with " << *closedV;
         return closedV;
       }
     } else {
-      // Unconstrained type variable
+      // Unconstrained type variable - should we start with fresh names to make output cleaner?
       auto alpha = std::make_shared<TipAlpha>(v->getNode());
 
-      LOG_S(1) << "Done closing variable with " << *alpha;
+      LOG_S(1) << "Unifier closed var with " << *alpha;
       return alpha;
     } 
 
   } else if (isCons(type)) {
     auto c = std::dynamic_pointer_cast<TipCons>(type);
 
-    LOG_S(1) << "Unifier closing constructor: " << *c;
+    LOG_S(1) << "Unifier closing cons " << *c;
 
     // close each argument of the constructor for each free variable
     auto freeV = TypeVars::collect(c.get());
@@ -154,11 +164,10 @@ std::shared_ptr<TipType> Unifier::close(
     auto current = c->getArguments();
     for (auto v : freeV) {
       for (auto a : current) {
-         auto closedV = close(unionFind->find(v), visited);
-         auto subst = Substituter::substitute(a.get(), v.get(), closedV);
-         temp.push_back(subst);
+        auto closedV = close(v, visited);
+        auto subst = Substituter::substitute(a.get(), v.get(), closedV);
+        temp.push_back(subst);
       }
-
       current = temp;
       temp.clear();
     }
@@ -166,20 +175,22 @@ std::shared_ptr<TipType> Unifier::close(
     // replace arguments with current
     c->setArguments(current);
 
-    LOG_S(1) << "Unifier done closing constructor with " << *c;
+    LOG_S(1) << "Unifier closed cons with " << *c;
 
     return c;
 
   } else if (isMu(type)) {
     auto m = std::dynamic_pointer_cast<TipMu>(type);
 
-    LOG_S(1) << "Unifier done closing mu with " << *m;
+    LOG_S(1) << "Unifier closing mu " << *m;
 
-    return std::make_shared<TipMu>(m->getV(), close(m->getT(), visited));
+    auto closedMu = std::make_shared<TipMu>(m->getV(), close(m->getT(), visited));
 
+    LOG_S(1) << "Unifier closed mu with " << *closedMu;
+
+    return closedMu;
   } 
 
-  // TBD : I think this is unreachable
   return type;
 }
 

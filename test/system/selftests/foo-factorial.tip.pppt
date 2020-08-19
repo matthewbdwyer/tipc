@@ -1,0 +1,40 @@
+foo(p, x) 
+{
+  var f, q;
+  if ((*p == 0)) 
+    {
+      f = 1;
+    }
+  else
+    {
+      q = alloc 0;
+      *q = (*p - 1);
+      f = (*p * x(q, x));
+    }
+  return f;
+}
+
+main() 
+{
+  var n;
+  n = 7;
+  if ((5040 != foo(&n, foo))) 
+    error foo(&n, foo);
+  return 0;
+}
+
+Functions : {
+  foo : (&int,(int,α<foo>) -> &int) -> int,
+  main : (int
+}
+
+Locals for function foo : {
+  f : int,
+  p : &int,
+  q : &int,
+  x : (&int,(int,α<foo>) -> &int) -> int
+}
+
+Locals for function main : {
+  n : int
+}

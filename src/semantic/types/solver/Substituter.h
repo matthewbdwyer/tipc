@@ -37,3 +37,20 @@ public:
   virtual void endVisit(TipVar * element) override;
 };
 
+/*! \brief Makes a copy of a TipType
+ *
+ * This subtype of the Substituter overrides the behavior for TipVar
+ * to just copy that node rather than perform a substitution.
+ */
+class Copier: public Substituter {
+  std::vector<std::shared_ptr<TipType>> visitedTypes;
+public:
+  Copier() = default;
+
+  static std::shared_ptr<TipType> copy(std::shared_ptr<TipType> s);
+
+  std::shared_ptr<TipType> getResult();
+
+  virtual void endVisit(TipVar * element) override;
+};
+

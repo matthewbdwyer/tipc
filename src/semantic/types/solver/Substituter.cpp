@@ -63,8 +63,29 @@ void Substituter::endVisit(TipRef * element) {
  */
 void Substituter::endVisit(TipVar * element) {
   if (*element == *target) {
-    visitedTypes.push_back(substitution);
+    auto copy = Copier::copy(substitution);
+    visitedTypes.push_back(copy);
   } else {
     visitedTypes.push_back(std::make_shared<TipVar>(element->getNode()));
   }
 }
+
+/*
+ * The Copier inherits all of the methods above from Substituter, but
+ * it overrides the behavior for TipVar.
+ */
+std::shared_ptr<TipType> Copier::copy(std::shared_ptr<TipType> t) {
+  Copier visitor;
+  t->accept(&visitor);
+  return visitor.getResult();
+}
+
+std::shared_ptr<TipType> Copier::getResult() {
+  return visitedTypes.back();
+}
+
+void Copier::endVisit(TipVar * element) {
+  visitedTypes.push_back(std::make_shared<TipVar>(element->getNode()));
+}
+
+

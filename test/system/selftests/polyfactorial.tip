@@ -1,0 +1,17 @@
+// polymorphic recursive factorial function
+foo(n,f) { 
+    var r;
+    if (n==0) { 
+      r=1; 
+    } else { 
+      r = n * f(n-1,f);
+    }
+    return r;
+}
+
+main() {
+    var n;
+    n = 7;
+    if (5040 != foo(n,foo)) error foo(n,foo);
+    return 0;
+}

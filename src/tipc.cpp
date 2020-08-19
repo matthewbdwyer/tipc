@@ -65,11 +65,12 @@ int main(int argc, char *argv[]) {
 
       if (ppretty) {
         FrontEnd::prettyprint(ast.get(), std::cout);
-        if (ptypes) { 
-          analysisResults->getTypeResults()->print(std::cout);
-        } else if (psym) {
-          analysisResults->getSymbolTable()->print(std::cout);
-        }
+      }
+
+      if (ptypes) { 
+        analysisResults->getTypeResults()->print(std::cout);
+      } else if (psym) {
+        analysisResults->getSymbolTable()->print(std::cout);
       }
 
       auto llvmModule = CodeGenerator::generate(ast.get(), analysisResults.get(), sourceFile);
