@@ -6,6 +6,7 @@ target_sources(typeinference_unit_tests
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipConsTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipFunctionTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipIntTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMuTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecordTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRefTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVarTest.cpp
@@ -13,8 +14,6 @@ target_sources(typeinference_unit_tests
         ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solvers/UnifierTest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/solvers/UnionFindTest.cpp
-        # TODO
-        #${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMuTest.cpp
 )
 target_include_directories(typeinference_unit_tests
         PUBLIC
