@@ -21,7 +21,7 @@ This project implements `tipc` which compiles TIP programs into LLVM bitcode.  L
 
 ## Building tipc
 
-The project use [Travis CI](https://travis-ci.org) for building and testing and [CodeCov](https://codecov.io)] for reporting code coverage.  The [.travis.yml](.travis.yml)] file provides details of this process.  If you would prefer to build and test manually then read on.
+The project use [Travis CI](https://travis-ci.org) for building and testing and [CodeCov](https://codecov.io) for reporting code and documentation coverage.  The [.travis.yml](.travis.yml) file provides details of this process.  If you would prefer to build and test manually then read on.
 
 After cloning this repository you can build the compiler by moving to into the top-level directory and issuing these commands:
   1. `./bootstrap`
@@ -39,17 +39,17 @@ You may see some warnings, e.g.,
 
 These are expected in the current version of the project; we will work to resolve them in future releases.
 
-The project includes a number of unit tests grouped into several executables.  To run them issue the following commands:
-  1. `cd build`
-  2. `./test/unit/frontend/frontend_unit_tests`
-  3. `./test/unit/semantic/semantic_unit_tests`
-  4. `./test/unit/semantic/types/typeinference_unit_tests`
+The project includes more than 300 unit tests grouped into several executables.  To run them issue the following commands:
+  - `cd build`
+  - `./test/unit/frontend/frontend_unit_tests`
+  - `./test/unit/semantic/semantic_unit_tests`
+  - `./test/unit/semantic/types/typeinference_unit_tests`
 
-The project also includes a number of system tests.  These are TIP programs that have built in test oracles that check for the expected results.  Unlike the unit tests, these test require linking with the runtime library so you need to build that.  To run system tests issue the following commands:
-  1. `cd rtlib`
-  2. `./build.sh`
-  3. `cd ../test/system`
-  4. `./run.sh`
+The project also includes more than 70 system tests.  These are TIP programs that have built in test oracles that check for the expected results.  Unlike the unit tests, these test require linking with the runtime library so you need to build that.  To run system tests issue the following commands:
+  - `cd rtlib`
+  - `./build.sh`
+  - `cd ../test/system`
+  - `./run.sh`
 
 All of the tests should pass.
 
@@ -58,9 +58,9 @@ All of the tests should pass.
 During development you need only run build steps 1 through 5 a single time, unless you modify some `CMakeLists.txt` file.  Just run make in the build directory to rebuild after making changes to the source.
 
 If you do need to add a source file then you will have to edit the appropriate CMakeLists.txt file to add it.  In this case, you should:
-  1. `cd build`
-  2. `rm CMakeCache.txt`
-  3. `cmake ..`
+  - `cd build`
+  - `rm CMakeCache.txt`
+  - `cmake ..`
 
 which will regenerate the makefiles that you can then run, by typing `make`, to build.
 
@@ -68,12 +68,9 @@ Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README de
 
 ### CLion
 
-[CLion](https://www.jetbrains.com/clion/) is a C and C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools,
-or as a standalone tool [here](https://www.jetbrains.com/help/clion/installation-guide.html#standalone). Once installed, you can start a 30 day trial license or, as a student,
-you can get a free educational license [here](https://www.jetbrains.com/community/education/#students).
+[CLion](https://www.jetbrains.com/clion/) is a C and C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools, or as a standalone tool [here](https://www.jetbrains.com/help/clion/installation-guide.html#standalone). Once installed, you can start a 30 day trial license or, as a student, you can get a free educational license [here](https://www.jetbrains.com/community/education/#students).
 
-If you are building for the first time with CLion, follow steps 1 and 2 from the command line to install any needed tipc dependencies. The project can now be built or rebuilt
-by clicking the "Build" button in the toolbar.
+If you are building for the first time with CLion, follow the first two steps of the installation process to install any needed tipc dependencies. The project can now be built or rebuilt by clicking the "Build" button in the toolbar.
 
 ## Documentation
 
