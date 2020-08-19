@@ -1,15 +1,10 @@
-#include "ASTHelper.h"
-#include "Stringifier.h"
-#include "SymbolTable.h"
 #include "TypeConstraintCollectVisitor.h"
+
+#include "ASTHelper.h"
+#include "SymbolTable.h"
 #include "catch.hpp"
 #include <iostream>
-
-static void printConstraints(std::vector<TypeConstraint> &constraints) {
-    for(auto &tc : constraints) {
-        std::cout << Stringifier::stringify(&tc) << std::endl;
-    }
-}
+#include <sstream>
 
 static void runtest(std::stringstream &program, std::vector<std::string> constraints) {
     auto ast = ASTHelper::build_ast(program);
@@ -18,26 +13,29 @@ static void runtest(std::stringstream &program, std::vector<std::string> constra
     TypeConstraintCollectVisitor visitor(symbols.get());
     ast->accept(&visitor);
 
-    int i = 0;
-    for (auto c : visitor.getCollectedConstraints()) {
-      auto expected = constraints.at(i);
-      auto actual = Stringifier::stringify(&c);
-      REQUIRE(expected == actual);
-      i++;
+    auto collected = visitor.getCollectedConstraints();
+    for(int i = 0; i < collected.size(); i++) {
+        std::stringstream stream;
+        stream << constraints.at(i);
+        auto actual = stream.str();
+        auto expected = constraints.at(i);
+        REQUIRE(expected == actual);
     }
+
     REQUIRE(visitor.getCollectedConstraints().size() == constraints.size());
 }
 
 TEST_CASE("TypeConstraintVisitor: const, input, alloc, assign through ptr", "[TypeConstraintVisitor]") {
     std::stringstream program;
-    program << R"(short() {
-var x, y, z;
-x = input;
-y = alloc x;
-*y = x;
-z = *y;
-return z;
-}
+    program << R"(
+      short() {
+        var x, y, z;
+        x = input;
+        y = alloc x;
+        *y = x;
+        z = *y;
+        return z;
+      }
     )";
 
     /*

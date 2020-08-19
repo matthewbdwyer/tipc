@@ -3,13 +3,11 @@ target_sources(test_helpers
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/ASTHelper.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ASTHelper.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ExceptionContainsWhat.h
         ${CMAKE_CURRENT_SOURCE_DIR}/GeneralHelper.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/GeneralHelper.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ParserHelper.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ParserHelper.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/Stringifier.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Stringifier.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/ExceptionContainsWhat.h
 )
 target_include_directories(test_helpers
         PUBLIC
