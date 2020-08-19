@@ -1,13 +1,12 @@
 TBDs
 - search the code for TODO and TBD comments and resolve them
-- fix line and column off by one issues
-- pretty print types
 - logging
 
+Testing
+- do a bit better in type checking
+
 Documentation
-- document each class in doxygen style
 - host on gh pages in repo
 
 Update README.md
 - links to doxygen
-- info for CLion setup

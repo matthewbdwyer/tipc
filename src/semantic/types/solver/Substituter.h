@@ -37,3 +37,25 @@ public:
   virtual void endVisit(TipVar * element) override;
 };
 
+/*
+ * Copy type to eliminate potential recursion for multiple 
+ * nested substitutions.
+ */
+class Copier: public TipTypeVisitor {
+  std::vector<std::shared_ptr<TipType>> visitedTypes;
+public:
+  Copier() = default;
+
+  static std::shared_ptr<TipType> copy(std::shared_ptr<TipType> s);
+
+  std::shared_ptr<TipType> getResult();
+
+  virtual void endVisit(TipAlpha * element) override;
+  virtual void endVisit(TipFunction * element) override;
+  virtual void endVisit(TipInt * element) override;
+  virtual void endVisit(TipMu * element) override;
+  virtual void endVisit(TipRecord * element) override;
+  virtual void endVisit(TipRef * element) override;
+  virtual void endVisit(TipVar * element) override;
+};
+

@@ -63,8 +63,77 @@ void Substituter::endVisit(TipRef * element) {
  */
 void Substituter::endVisit(TipVar * element) {
   if (*element == *target) {
-    visitedTypes.push_back(substitution);
+    auto copy = Copier::copy(substitution);
+    visitedTypes.push_back(copy);
   } else {
     visitedTypes.push_back(std::make_shared<TipVar>(element->getNode()));
   }
 }
+
+/*
+ * The copier is almost completely redundant with the substituter.
+ * It would be nice to eliminate that.
+ */
+std::shared_ptr<TipType> Copier::copy(std::shared_ptr<TipType> t) {
+  Copier visitor;
+  t->accept(&visitor);
+  return visitor.getResult();
+}
+
+std::shared_ptr<TipType> Copier::getResult() {
+  return visitedTypes.back();
+}
+
+void Copier::endVisit(TipAlpha * element) {
+  visitedTypes.push_back(std::make_shared<TipAlpha>(element->getNode(), element->getName()));
+}
+
+void Copier::endVisit(TipFunction * element) {
+  std::vector<std::shared_ptr<TipType>> argTypes;
+  for (auto &arg : element->getArguments()) {
+    argTypes.push_back(std::move(visitedTypes.back()));
+    visitedTypes.pop_back();
+  }
+  std::shared_ptr<TipType> retType = argTypes.back();
+  argTypes.pop_back();
+  visitedTypes.push_back(std::make_shared<TipFunction>(argTypes, retType));
+}
+
+void Copier::endVisit(TipInt * element) {
+  // Zero element in visitedTypes (a special case of Cons)
+  visitedTypes.push_back(std::make_shared<TipInt>());
+}
+
+void Copier::endVisit(TipMu * element) {
+  // Two elements in visitedTypes
+  auto tType = visitedTypes.back();
+  visitedTypes.pop_back();
+
+  // The second element on the LIFO is always a TipVar
+  auto vType = std::dynamic_pointer_cast<TipVar>(visitedTypes.back());
+  visitedTypes.pop_back();
+
+  visitedTypes.push_back(std::make_shared<TipMu>(vType, tType));
+}
+
+void Copier::endVisit(TipRecord * element) {
+  std::vector<std::shared_ptr<TipType>> initTypes;
+  for (auto &init : element->getArguments()) {
+    initTypes.push_back(std::move(visitedTypes.back()));
+    visitedTypes.pop_back();
+  }
+  visitedTypes.push_back(std::make_shared<TipRecord>(initTypes, element->getNames()));
+}
+
+void Copier::endVisit(TipRef * element) {
+  // One element in visitedTypes (a special case of Cons)
+  auto pointedToType = visitedTypes.back();
+  visitedTypes.pop_back();
+  visitedTypes.push_back(std::make_shared<TipRef>(pointedToType));
+}
+
+void Copier::endVisit(TipVar * element) {
+  visitedTypes.push_back(std::make_shared<TipVar>(element->getNode()));
+}
+
+

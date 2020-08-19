@@ -1,0 +1,18 @@
+// Unecessary complicated polymorphic recursive factorial function
+foo(p,x) { 
+    var f,q; 
+    if (*p==0) { f=1; } 
+    else { 
+        q = alloc 0;
+        *q = (*p)-1;
+        f=(*p)*((x)(q,x));
+    }
+    return f;
+}
+
+main() {
+    var n;
+    n = 7;
+    if (5040 != foo(&n,foo)) error foo(&n,foo);
+    return 0;
+}
