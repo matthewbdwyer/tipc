@@ -1,6 +1,0 @@
-[submodule "externals/CMake-codecov"]
-	path = externals/CMake-codecov
-	url = git://github.com/RWTH-HPC/CMake-codecov.git
-[submodule "externals/loguru"]
-	path = externals/loguru
-	url = https://github.com/emilk/loguru.git
