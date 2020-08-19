@@ -20,7 +20,7 @@ public:
 
     ASTNode* getNode() const { return node; }
 
-    void accept(TipTypeVisitor *visitor);
+    void accept(TipTypeVisitor *visitor) override;
 
 protected:
     //! \brief Type variables printed as ASTNode@line:col

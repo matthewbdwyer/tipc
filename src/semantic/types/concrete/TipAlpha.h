@@ -26,10 +26,10 @@ public:
 
     std::string const & getName() const;
 
-    virtual bool operator==(const TipType& other) const override;
-    virtual bool operator!=(const TipType& other) const override;
+    bool operator==(const TipType& other) const override;
+    bool operator!=(const TipType& other) const override;
 
-    void accept(TipTypeVisitor *visitor);
+    void accept(TipTypeVisitor *visitor) override;
 
 protected:
     std::ostream& print(std::ostream &out) const override;
