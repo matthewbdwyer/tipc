@@ -39,25 +39,20 @@ You may see some warnings, e.g.,
 
 These are expected in the current version of the project; we will work to resolve them in future releases.
 
-The project includes more than 300 unit tests grouped into several executables.  To run them issue the following commands:
-  - `cd build`
-  - `./test/unit/frontend/frontend_unit_tests`
-  - `./test/unit/semantic/semantic_unit_tests`
-  - `./test/unit/semantic/types/typeinference_unit_tests`
-
-The project also includes more than 70 system tests.  These are TIP programs that have built in test oracles that check for the expected results.  Unlike the unit tests, these test require linking with the runtime library so you need to build that.  To run system tests issue the following commands:
-  - `cd rtlib`
-  - `./build.sh`
-  - `cd ../test/system`
-  - `./run.sh`
+The project includes more than 300 unit tests grouped into several executables. The project also 
+includes more than 70 system tests. These are TIP programs that have built in test oracles that check 
+for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.
+You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for
+more information.  
 
 All of the tests should pass.
 
 ## Working with tipc
 
-During development you need only run build steps 1 through 5 a single time, unless you modify some `CMakeLists.txt` file.  Just run make in the build directory to rebuild after making changes to the source.
+During development you need only run build steps 1 through 5 a single time, unless you modify some `CMakeLists.txt` file. 
+Just run `make` in the build directory to rebuild after making changes to the source.
 
-If you do need to add a source file then you will have to edit the appropriate CMakeLists.txt file to add it.  In this case, you should:
+If you do need to add a source file then you will have to edit the appropriate `CMakeLists.txt` file to add it.  In this case, you should:
   - `cd build`
   - `rm CMakeCache.txt`
   - `cmake ..`
@@ -66,11 +61,26 @@ which will regenerate the makefiles that you can then run, by typing `make`, to 
 
 Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README describes how to build it in isolation and run it using the ANTLR4 jar file.
 
+### The bin directory
+To facilitate development of `tipc` we have collected a number of helper scripts into 
+the `bin` directory of the project. Among them are scripts to run the entire test bed (`runtests.sh`),
+to run a code coverage analysis (`gencov.sh`), and to generate the project documentation (`gendocs.sh`).
+Please see the `README` in the bin directory for example usages.  
+
 ### CLion
 
 [CLion](https://www.jetbrains.com/clion/) is a C and C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools, or as a standalone tool [here](https://www.jetbrains.com/help/clion/installation-guide.html#standalone). Once installed, you can start a 30 day trial license or, as a student, you can get a free educational license [here](https://www.jetbrains.com/community/education/#students).
 
 If you are building for the first time with CLion, follow the first two steps of the installation process to install any needed tipc dependencies. The project can now be built or rebuilt by clicking the "Build" button in the toolbar.
+
+#### Troubleshooting
+When working with CLion you might see the output become cluttered with messages about 
+failing to merge `gcov` files. This happens when `gcov` files linger from previous
+runs. To cleanup these messages, simply remove the `gcov` files. You can do
+that quickly with the following one-line.
+```bash
+find . -name '*gcda' -delete
+```
 
 ## Documentation
 
