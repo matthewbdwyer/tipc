@@ -12,5 +12,14 @@ main()
     error **z;
   return 0;
 }
-Functions : {main : () -> int}
-Locals for function main : {x1 : int, x2 : int, y : &int, z : &&int}
+
+Functions : {
+  main : () -> int
+}
+
+Locals for function main : {
+  x1 : int,
+  x2 : int,
+  y : &int,
+  z : &&int
+}

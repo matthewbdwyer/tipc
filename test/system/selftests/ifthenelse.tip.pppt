@@ -49,8 +49,30 @@ main()
     error nite(-1, 7);
   return 0;
 }
-Functions : {it : (int) -> int, ite : (int) -> int, main : () -> int, nite : (int,int) -> int}
-Locals for function it : {n : int, r : int}
-Locals for function ite : {n : int, r : int}
-Locals for function main : {}
-Locals for function nite : {a : int, b : int, r : int}
+
+Functions : {
+  it : (int) -> int,
+  ite : (int) -> int,
+  main : () -> int,
+  nite : (int,int) -> int
+}
+
+Locals for function it : {
+  n : int,
+  r : int
+}
+
+Locals for function ite : {
+  n : int,
+  r : int
+}
+
+Locals for function main : {
+
+}
+
+Locals for function nite : {
+  a : int,
+  b : int,
+  r : int
+}

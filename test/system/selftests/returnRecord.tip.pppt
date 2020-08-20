@@ -13,6 +13,20 @@ main()
     error a.l;
   return 0;
 }
-Functions : {foo : (int,int,int) -> {l:α<a.l>, m:α<a.l:m>, n:α<a.l:n>}, main : () -> int}
-Locals for function foo : {rec : {l:α<a.l>, m:α<a.l:m>, n:α<a.l:n>}, x : α<a.l>, y : α<a.l>, z : int}
-Locals for function main : {a : {l:α<a.l>, m:α<a.l:m>, n:α<a.l:n>}, c : α<c>}
+
+Functions : {
+  foo : (int,int,int) -> {l:int,m:int,n:int},
+  main : () -> int
+}
+
+Locals for function foo : {
+  rec : {l:int,m:int,n:int},
+  x : int,
+  y : int,
+  z : int
+}
+
+Locals for function main : {
+  a : {l:int,m:int,n:int},
+  c : α<c>
+}

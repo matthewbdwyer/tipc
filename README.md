@@ -28,7 +28,7 @@ After cloning this repository you can build the compiler by moving to into the t
   2. `. ~/.bashrc`
   3. `mkdir build`
   4. `cd build`
-  5. `cmake ../ `
+  5. `cmake ..`
   6. `make`
 
 The build process will download an up to date version of ANTLR4 if needed, build the C++ target for ANTLR4, and then build all of `tipc` including its substantial body of unit tests.  This may take some time - to speed it up use multiple threads in the `make` commend, e.g., `make -j6`.
@@ -77,7 +77,7 @@ If you are building for the first time with CLion, follow the first two steps of
 When working with CLion you might see the output become cluttered with messages about 
 failing to merge `gcov` files. This happens when `gcov` files linger from previous
 runs. To cleanup these messages, simply remove the `gcov` files. You can do
-that quickly with the following one-line.
+that quickly with the following one-liner.
 ```bash
 find . -name '*gcda' -delete
 ```

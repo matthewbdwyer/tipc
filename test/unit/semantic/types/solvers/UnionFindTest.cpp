@@ -1,11 +1,12 @@
 #include "catch.hpp"
 #include "ASTNumberExpr.h"
 #include "TipVar.h"
+#include "UnionFind.h"
 #include <memory>
 #include <utility>
 #include <vector>
-#include <UnionFind.h>
-
+#include <iostream>
+#include <sstream>
 
 static std::vector<std::shared_ptr<TipType>> intsToTipVars(std::vector<int> &values) {
     std::vector<std::shared_ptr<TipType>> pointers;

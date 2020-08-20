@@ -25,8 +25,26 @@ main()
     error g((-1 * h()));
   return 0;
 }
-Functions : {f : () -> int, g : (int) -> int, h : () -> int, main : () -> int}
-Locals for function f : {}
-Locals for function g : {x : int}
-Locals for function h : {x : int}
-Locals for function main : {}
+
+Functions : {
+  f : () -> int,
+  g : (int) -> int,
+  h : () -> int,
+  main : () -> int
+}
+
+Locals for function f : {
+
+}
+
+Locals for function g : {
+  x : int
+}
+
+Locals for function h : {
+  x : int
+}
+
+Locals for function main : {
+
+}

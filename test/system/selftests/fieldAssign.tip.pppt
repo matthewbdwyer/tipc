@@ -27,6 +27,21 @@ main()
     error rec1.field1;
   return 0;
 }
-Functions : {main : () -> int, max : (int,int) -> int}
-Locals for function main : {a : int, b : int, rec1 : {field1:int, field2:α<rec1.field1:field2>, field3:α<rec1.field1:field3>, field4:α<rec1.field1:field4>}, rec2 : {field1:α<rec2.field3:field1>, field2:α<rec2.field3:field2>, field3:int, field4:α<rec2.field3:field4>}}
-Locals for function max : {a : int, b : int, c : int}
+
+Functions : {
+  main : () -> int,
+  max : (int,int) -> int
+}
+
+Locals for function main : {
+  a : int,
+  b : int,
+  rec1 : {field1:int,field2:int,field3:int,field4:α<(rec1.field1)>},
+  rec2 : {field1:int,field2:α<(rec2.field3)>,field3:int,field4:int}
+}
+
+Locals for function max : {
+  a : int,
+  b : int,
+  c : int
+}

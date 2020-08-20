@@ -9,5 +9,12 @@ main()
     error x;
   return 0;
 }
-Functions : {main : () -> int}
-Locals for function main : {x : int, y : &int}
+
+Functions : {
+  main : () -> int
+}
+
+Locals for function main : {
+  x : int,
+  y : &int
+}

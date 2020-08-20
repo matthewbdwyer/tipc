@@ -5,12 +5,14 @@
 #include "TipInt.h"
 #include "TipRef.h"
 #include "TipAlpha.h"
+#include "TipMu.h"
 #include "TypeConstraintCollectVisitor.h"
 #include "TypeConstraintUnifyVisitor.h"
 #include "TypeConstraintVisitor.h"
 #include "UnificationError.h"
 #include "Unifier.h"
 #include <iostream>
+#include <sstream>
 #include <Unifier.h>
 
 TEST_CASE("Unifier: Collect and then unify constraints", "[Unifier, Collect]") {
@@ -372,4 +374,39 @@ TEST_CASE("Unifier: Test unifying two different type variables", "[Unifier]") {
 
     Unifier unifier(constraints);
     REQUIRE_NOTHROW(unifier.unify(tipVarA, tipVarB));
+}
+
+TEST_CASE("Unifier: Test closing mu ", "[Unifier]") {
+    // Some building block types for setting up test
+    ASTVariableExpr variableExprG("g");
+    auto theAlphaG = std::make_shared<TipAlpha>(&variableExprG);
+
+    auto theInt = std::make_shared<TipInt>();
+
+    ASTVariableExpr variableExprFoo("foo");
+    auto theVarFoo = std::make_shared<TipVar>(&variableExprFoo);
+
+    // mu alpha<f> . (alpha<f>, alpha<g>) -> alpha<g>
+    ASTVariableExpr variableExprF("f");
+    auto theAlphaF = std::make_shared<TipAlpha>(&variableExprF);
+
+    std::vector<std::shared_ptr<TipType>> params {theAlphaF, theAlphaG};
+    auto theFunction = std::make_shared<TipFunction>(params, theAlphaG);
+
+    auto theMu = std::make_shared<TipMu>(theAlphaF, theFunction);
+
+    // unify alpha<g> with int
+    // unify var<foo> with theMu
+    TypeConstraint constraint1(theAlphaG, theInt);
+    TypeConstraint constraint2(theVarFoo, theMu);
+    std::vector<TypeConstraint> constraints {constraint1, constraint2};
+    Unifier unifier(constraints);
+
+    // closing the mu should produce: mu alpha<f> . (alpha<f>, int) -> int
+    auto closed = unifier.inferred(theMu);
+
+    std::stringstream ss;
+    ss << *closed;
+
+    REQUIRE_NOTHROW(ss.str() == "\u03bc\u03B1<f>.(\u03B1<f>,int) -> int");
 }

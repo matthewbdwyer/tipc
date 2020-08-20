@@ -30,7 +30,22 @@ main()
     error rec.c;
   return 0;
 }
-Functions : {bar : (int) -> int, foo : (int) -> int, main : () -> int}
-Locals for function bar : {n : int}
-Locals for function foo : {b : int, n : int}
-Locals for function main : {rec : {a:α<rec.c:a>, b:α<rec.c:b>, c:int}}
+
+Functions : {
+  bar : (int) -> int,
+  foo : (int) -> int,
+  main : () -> int
+}
+
+Locals for function bar : {
+  n : int
+}
+
+Locals for function foo : {
+  b : int,
+  n : int
+}
+
+Locals for function main : {
+  rec : {a:int,b:int,c:int}
+}
