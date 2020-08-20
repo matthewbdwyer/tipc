@@ -1,7 +1,13 @@
 #!/bin/bash
 
-TIPC=../../build/src/tipc
-RTLIB=../../rtlib
+declare -r ROOT_DIR=${TRAVIS_BUILD_DIR:-$(git rev-parse --show-toplevel)}
+declare -r TIPC=${ROOT_DIR}/build/src/tipc
+declare -r RTLIB=${ROOT_DIR}/rtlib
+
+if [ -z "${TIPCLANG}" ]; then
+  echo error: TIPCLANG env var must be set
+  exit 1
+fi
 
 numtests=0
 numfailures=0

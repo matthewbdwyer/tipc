@@ -15,15 +15,7 @@ jobs:
       stage: test
       os: linux
       dist: bionic
-      after_success:
-        - lcov --capture --directory build -output-file coverage.info
-        - lcov --remove coverage.info '/usr/*' -o coverage.info
-        - lcov --remove coverage.info '*.h' -o coverage.info
-        - lcov --remove coverage.info '*.hpp' -o coverage.info
-        - lcov --remove coverage.info '*/externals/*' -o coverage.info
-        - lcov --remove coverage.info '*/antlr4cpp_generated_src/*' -o coverage.info
-        - lcov --list coverage.info
-        - bash <(curl -s https://codecov.io/bash) -f coverage.info -F codecoverage || echo "Codecov did not collect coverage reports"
+      after_success: ./bin/gencov.sh
     - name: "macOS Build"
       stage: test
       os: osx
@@ -35,11 +27,7 @@ jobs:
       install:
         - pip3 install setuptools
         - pip3 install coverxygen
-      script:
-        - pushd docs
-        - doxygen
-        - ./builddocs
-        - popd
+      script: ./bin/gendocs.sh
       deploy:
         provider: pages
         skip_cleanup: true
@@ -49,23 +37,13 @@ jobs:
           branch: devel
 
 install:
-  - bash bootstrap
+  - ./bin/bootstrap.sh
 
 script:
   - . ~/.bashrc
   - mkdir build
   - pushd build
   - cmake ../
-  - make
-  - echo running unit tests...
-  - ./test/unit/frontend/frontend_unit_tests
-  - ./test/unit/semantic/semantic_unit_tests
-  - ./test/unit/semantic/types/typeinference_unit_tests
-  - echo running system tests...
+  - make -j2
   - popd
-  - pushd rtlib
-  - ./build.sh
-  - popd
-  - pushd test/system
-  - ./run.sh
-  - popd 
+  - ./bin/runtests.sh

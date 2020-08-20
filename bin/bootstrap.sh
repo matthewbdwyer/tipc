@@ -3,7 +3,6 @@ declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=8
 declare -r LLVM_VERSION=10
 
-
 echoerr() { 
   echo "$@" 1>&2; 
 }
