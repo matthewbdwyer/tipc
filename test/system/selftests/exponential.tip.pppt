@@ -31,7 +31,26 @@ main()
     error exprec(2, expiter(2, 4));
   return 0;
 }
-Functions : {expiter : (int,int) -> int, exprec : (int,int) -> int, main : () -> int}
-Locals for function expiter : {a : int, i : int, n : int, v : int}
-Locals for function exprec : {a : int, n : int, r : int}
-Locals for function main : {}
+
+Functions : {
+  expiter : (int,int) -> int,
+  exprec : (int,int) -> int,
+  main : () -> int
+}
+
+Locals for function expiter : {
+  a : int,
+  i : int,
+  n : int,
+  v : int
+}
+
+Locals for function exprec : {
+  a : int,
+  n : int,
+  r : int
+}
+
+Locals for function main : {
+
+}

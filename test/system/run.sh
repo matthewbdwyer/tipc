@@ -120,16 +120,21 @@ do
 
   ${TIPC} -pp -pt $i >/tmp/$base.pppt
   diff $i.pppt /tmp/$base.pppt >/tmp/$base.diff
-  if [[ -s /tmp/$i.diff ]]
+  if [[ -s /tmp/$base.diff ]]
   then
     echo -n "Test differences for : " 
     echo $i
-    cat fib.diff
+    cat /tmp/$base.diff
     ((numfailures++))
   fi 
   rm /tmp/$base.pppt
   rm /tmp/$base.diff
 done
+
+# Logging test 
+#   kick the tires on logging to make sure there are null pointer derefs
+${TIPC} -pt -log=/dev/null selftests/polyfactorial.tip >/dev/null 2>/dev/null
+((numtests++))
 
 if [ ${numfailures} -eq "0" ]; then
   echo -n "all " 

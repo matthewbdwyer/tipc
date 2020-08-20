@@ -39,6 +39,20 @@ main()
     error fib(9);
   return 0;
 }
-Functions : {fib : (int) -> int, main : () -> int}
-Locals for function fib : {f1 : int, f2 : int, i : int, n : int, temp : int}
-Locals for function main : {}
+
+Functions : {
+  fib : (int) -> int,
+  main : () -> int
+}
+
+Locals for function fib : {
+  f1 : int,
+  f2 : int,
+  i : int,
+  n : int,
+  temp : int
+}
+
+Locals for function main : {
+
+}

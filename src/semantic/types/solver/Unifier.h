@@ -42,11 +42,13 @@ public:
      */
     void solve();
 
-    /*! \brief Returns the inferred type for a given type variable.
-     * Can only be called after solve produces a union find
-     * structure reflecting the inferred set of types. 
+    /*! \brief Returns the inferred type for a given type.
+     * \pre The unifier has computed a solution.
+     * This will close the type by replacing any variables that
+     * are bound to proper types in the inferred solution with that 
+     * proper type. 
      */
-    std::shared_ptr<TipType> inferred(std::shared_ptr<TipVar> v);
+    std::shared_ptr<TipType> inferred(std::shared_ptr<TipType> t);
 private:
     static bool isCons(std::shared_ptr<TipType> type);
     static bool isMu(std::shared_ptr<TipType> type);

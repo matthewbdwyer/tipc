@@ -28,8 +28,28 @@ main()
     error h(g);
   return 0;
 }
-Functions : {f : () -> int, g : () -> int, h : (() -> int) -> int, main : () -> int}
-Locals for function f : {}
-Locals for function g : {x : int}
-Locals for function h : {h1 : () -> int, r : int, y : () -> int}
-Locals for function main : {}
+
+Functions : {
+  f : () -> int,
+  g : () -> int,
+  h : (() -> int) -> int,
+  main : () -> int
+}
+
+Locals for function f : {
+
+}
+
+Locals for function g : {
+  x : int
+}
+
+Locals for function h : {
+  h1 : () -> int,
+  r : int,
+  y : () -> int
+}
+
+Locals for function main : {
+
+}

@@ -1,4 +1,5 @@
 #include "UnionFind.h"
+#include "Substituter.h"
 
 #include "loguru.hpp"
 #include <iostream>
@@ -11,6 +12,34 @@ UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
     for(auto &term : seed) {
         smart_insert(term);
     }
+}
+
+/*
+std::ostream& operator<<(std::ostream& os, const UnionFind& obj) {
+  return obj.print(os);
+}
+
+std::ostream &UnionFind::print(std::ostream &out) const {
+  out << "UnionFind edges {\n"; 
+  for(auto const &edge : edges) {
+    out << *edge.first << " -> " << *edge.second << std::endl;
+  }
+  out << "}\n"; 
+  return out; 
+}
+*/
+
+std::unique_ptr<UnionFind> UnionFind::copy() {
+  std::vector<std::shared_ptr<TipType>> emptySeed;
+  auto ufCopy = std::make_unique<UnionFind>(emptySeed);
+
+  // Insert the vertices and edges in the copy
+  for(auto const &edge : edges) {
+    auto src = Copier::copy(edge.first);
+    auto dest = Copier::copy(edge.second);
+    ufCopy->edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(src, dest));
+  } 
+  return std::move(ufCopy);
 }
 
 /*

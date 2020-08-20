@@ -38,6 +38,21 @@ main()
     error nestedloopsifs(10, -2, -2);
   return 0;
 }
-Functions : {main : () -> int, nestedloopsifs : (int,int,int) -> int}
-Locals for function main : {}
-Locals for function nestedloopsifs : {a : int, b : int, c : int, x : int, y : int, z : int}
+
+Functions : {
+  main : () -> int,
+  nestedloopsifs : (int,int,int) -> int
+}
+
+Locals for function main : {
+
+}
+
+Locals for function nestedloopsifs : {
+  a : int,
+  b : int,
+  c : int,
+  x : int,
+  y : int,
+  z : int
+}

@@ -22,12 +22,12 @@ main()
 }
 
 Functions : {
-  foo : (int,(int,α<foo>) -> int) -> int,
-  main : (int
+  foo : μα<foo>.(int,α<foo>) -> int,
+  main : () -> int
 }
 
 Locals for function foo : {
-  f : (int,(int,α<foo>) -> int) -> int,
+  f : (int,μα<foo>.(int,α<foo>) -> int) -> int,
   n : int,
   r : int
 }

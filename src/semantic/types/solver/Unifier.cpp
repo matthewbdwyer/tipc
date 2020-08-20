@@ -192,7 +192,10 @@ std::shared_ptr<TipType> Unifier::close(
     for (auto v : freeV) {
       auto closedV = close(v, visited);
       for (auto a : current) {
+
+    LOG_S(1) << "Close cons substituting " << *closedV << " for " << *v << " in " << *a;
         auto subst = Substituter::substitute(a.get(), v.get(), closedV);
+    LOG_S(1) << "Close cons substitution yielded " << *subst;
         temp.push_back(subst);
       }
       current = temp;
@@ -225,11 +228,16 @@ std::shared_ptr<TipType> Unifier::close(
  *
  * Here we want to produce an inferred type that is "closed" in the
  * sense that all variables in the type definition are replaced with
- * their base types.
+ * their base types.  Because the close() function may destructively update
+ * the unionFind structure, by generating new types, we save a copy
+ * and restore it after closing.
  */ 
-std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipVar> v) {
+std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipType> v) {
+  auto unionFindCopy = unionFind->copy();
   std::set<std::shared_ptr<TipVar>> visited;
-  return close(v, visited);
+  auto closedV = close(v, visited);
+  unionFind = std::move(unionFindCopy);
+  return closedV;
 }
 
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {

@@ -8,5 +8,13 @@ main()
     error r1;
   return 0;
 }
-Functions : {main : () -> int}
-Locals for function main : {k : {a:int, b:α<*n.c.a:b>, c:α<*n.c.a:c>, d:α<*n.c.a:d>}, n : {a:α<n.c:a>, b:α<n.c:b>, c:&{a:int, b:α<*n.c.a:b>, c:α<*n.c.a:c>, d:α<*n.c.a:d>}, d:α<n.c:d>}, r1 : int}
+
+Functions : {
+  main : () -> int
+}
+
+Locals for function main : {
+  k : {a:int,b:int,c:α<((*(n.c)).a)>,d:α<((*(n.c)).a)>},
+  n : {a:α<(n.c)>,b:α<(n.c)>,c:&{a:int,b:int,c:α<((*(n.c)).a)>,d:α<((*(n.c)).a)>},d:int},
+  r1 : int
+}
