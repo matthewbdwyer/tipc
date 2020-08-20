@@ -73,6 +73,24 @@ void Unifier::solve() {
     }
 }
 
+/*! \fn unify
+ *  \brief Attempts to unify the two type terms. Throws a UnificationError on failure.
+ *
+ * Unify is the core of the typechecking algorithm. It is very selective
+ * about updating the underlying union-find graph. It enforces a number of requirements.
+ * First, is that given a proper type and a type variable, the proper type
+ * always becomes the canonical representative of the two terms. Next,
+ * given two type variables, the canonical representation can be picked arbitrarily,
+ * but it is, and must be, done consistently. Finally, given two proper types
+ * the method enforces that they are the same. It does so by checking their arity
+ * and then by unifying their subterms.
+ *
+ * The logic in this method is enough to conclude the type safety of a program. It
+ * cannot however infer the types. For inference, see the close method.
+ *
+ * \sa t1
+ * \sa t2
+ */
 void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     LOG_S(1) << "Unifying " << *t1 << " and " << *t2;
 

@@ -8,7 +8,7 @@ python3 -m coverxygen \
   --xml-dir xml/ \
   --src-dir ../src \
   --output doc-coverage.info \
-  --kind class,function \
+  --kind class \
   --scope public
 bash <(curl -s https://codecov.io/bash) \
   -f doc-coverage.info \
@@ -22,6 +22,6 @@ python3 -m coverxygen \
   --src-dir ../src \
   --output - \
   --format json-summary \
-  --kind class,function \
+  --kind class \
   --scope public | 
   jq '{"schemaVersion": 1,  "label": "doxygen","color":"informational","message": "\((.total.coverage_rate*100 | floor))%"}' > html/doccoverage.json

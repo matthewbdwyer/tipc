@@ -19,14 +19,30 @@
 class Unifier {
 public:
     Unifier();
+
+    /*! \brief Construct a Unifier with seeded with constraints.
+     *
+     * Useful for when one is collecting and then unifying constraints.
+     */
     explicit Unifier(std::vector<TypeConstraint>);
+
+    /*! \brief Construct an empty Unifier.
+     *
+     * Useful for when unifying on the fly.
+     */
     ~Unifier() = default;
 
-    void solve();
+    /*! \brief Attempt to unify the two types
+     * \throws UnificationError when constraints cannot be unifierd.
+     */
     void unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2);
- 
+
+    /*! \brief Solve the system of constraints that have presented to this unifier.
+     *  \pre The unifier has been constructed with seed values. That is, we are not unifying on-the-fly.
+     */
+    void solve();
+
     /*! \brief Returns the inferred type for a given type variable.
-     *
      * Can only be called after solve produces a union find
      * structure reflecting the inferred set of types. 
      */
