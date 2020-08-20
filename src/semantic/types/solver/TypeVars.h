@@ -20,6 +20,7 @@ public:
   std::set<std::shared_ptr<TipVar>> getVars() { return vars; }
 
   virtual void endVisit(TipMu * element) override;
+  virtual void endVisit(TipAlpha * element) override;
   virtual void endVisit(TipVar * element) override;
 };
 
