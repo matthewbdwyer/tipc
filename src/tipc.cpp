@@ -41,8 +41,10 @@ int main(int argc, char *argv[]) {
   std::ifstream stream;
   stream.open(sourceFile);
 
+  loguru::g_preamble = false;
   bool logging = !logfile.getValue().empty();
   if(debug || logging) {
+    loguru::g_preamble = true;
     loguru::g_preamble_date = false;
     loguru::g_preamble_time = false;
     loguru::g_preamble_uptime = false;
