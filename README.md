@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/matthewbdwyer/tipc.svg?branch=devel)](https://travis-ci.com/matthewbdwyer/tipc)
 [![codecov.io](https://codecov.io/gh/matthewbdwyer/tipc/coverage.svg?branch=devel&flag=codecoverage)](https://codecov.io/gh/matthewbdwyer/tipc?branch=devel)
-[![codecov.io](https://img.shields.io/codecov/c/github/matthewbdwyer/tipc/devel?flag=doccoverage&label=doxygen&logo=codecov)](https://codecov.io/gh/matthewbdwyer/tipc?branch=devel)
+[![codecov.io](https://img.shields.io/endpoint?logo=codecov&logoColor=blue&url=https%3A%2F%2Fmatthewbdwyer.github.io%2Ftipc%2Fdoccoverage.json)](https://codecov.io/gh/matthewbdwyer/tipc?branch=devel)
 
 tipc
 =========
