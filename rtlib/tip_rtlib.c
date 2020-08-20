@@ -53,7 +53,7 @@ void _tip_main_undefined() {
 int main(int argc, char *argv[]) {
   // Throw an error if the wrong number of arguments are passed
   if (argc != _tip_num_inputs + 1) {
-     printf("expected %ld integer arguments\n", _tip_num_inputs);
+     printf("expected %lld integer arguments\n", _tip_num_inputs);
      exit(-1);
   }
 
