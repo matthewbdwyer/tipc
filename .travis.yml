@@ -36,16 +36,17 @@ jobs:
         - pip3 install setuptools
         - pip3 install coverxygen
       script:
+        - pushd docs
         - doxygen
-        - python3 -m coverxygen --xml-dir xml/ --src-dir . --output doc-coverage.info --kind class,function --scope public
-        - bash <(curl -s https://codecov.io/bash) -f doc-coverage.info -F doccoverage || echo "Codecov did not collect coverage reports"
+        - ./builddocs
+        - popd
       deploy:
         provider: pages
         skip_cleanup: true
-        local_dir: html
+        local_dir: docs/html
         github_token: $GH_REPO_TOKEN
         on:
-          branch: main
+          branch: devel
 
 install:
   - bash bootstrap
