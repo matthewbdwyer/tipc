@@ -44,11 +44,19 @@ TEST_CASE("TipMu: test Getters", "[TipMu]") {
     ASTNumberExpr n(42);
     auto var = std::make_shared<TipVar>(&n);
     TipMu mu(var, term);
+
+    REQUIRE(term == mu.getT());
+    REQUIRE(var == mu.getV());
+}
+
+TEST_CASE("TipMu: test output stream", "[TipMu]") {
+    auto term = std::make_shared<TipInt>();
+    ASTNumberExpr n(42);
+    auto var = std::make_shared<TipVar>(&n);
+    TipMu mu(var, term);
     std::stringstream stream;
     stream << mu;
 
-    auto expected = "μ[[42@0:0]].int";
     auto actual = stream.str();
-
-    REQUIRE(expected == actual);
+    REQUIRE_THAT(actual, Catch::Matches("^μ\\[\\[42@\\d+:\\d+\\]\\]\\.int$"));
 }

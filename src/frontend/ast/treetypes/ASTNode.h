@@ -32,8 +32,8 @@ class ASTVisitor;
  * and for code generation pass. 
  */
 class ASTNode {
-  int line;
-  int column;
+  int line = 0;
+  int column = 0;
 public:
   virtual ~ASTNode() = default;
 
