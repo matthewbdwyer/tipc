@@ -3,6 +3,10 @@
 
 TypeConstraint::TypeConstraint(std::shared_ptr<TipType> l, std::shared_ptr<TipType> r): lhs(l), rhs(r) {};
 
+/**
+ *  \brief Two constraints are equal if their underlying terms are equal.
+ *
+ */
 bool TypeConstraint::operator==(const TypeConstraint &other) const {
     return *lhs == *(other.lhs);
 }
