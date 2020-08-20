@@ -30,6 +30,16 @@ bool contains(std::set<std::shared_ptr<TipVar>> s, std::shared_ptr<TipVar> t) {
   return false;
 }
 
+std::string print(std::set<std::shared_ptr<TipVar>> varSet) {
+  std::stringstream s;
+  s << "{ ";
+  for (auto v : varSet) {
+    s << *v << " "; 
+  }
+  s << "}";
+  return s.str();
+}
+
 }
 
 Unifier::Unifier() : unionFind(std::move(std::make_unique<UnionFind>())) {}
@@ -114,12 +124,10 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
 std::shared_ptr<TipType> Unifier::close(
         std::shared_ptr<TipType> type, std::set<std::shared_ptr<TipVar>> visited) {
 
-  LOG_SCOPE_FUNCTION(1);
-
   if (isVar(type)) {
     auto v = std::dynamic_pointer_cast<TipVar>(type);
 
-    LOG_S(1) << "Unifier closing variable: " << *v;
+    LOG_S(1) << "Close starting var " << *v << " with visited " << print(visited);
 
     if (!contains(visited, v) && (unionFind->find(type) != v)) {
       // No cyclic reference to v and it does not map to itself
@@ -136,26 +144,27 @@ std::shared_ptr<TipType> Unifier::close(
         auto substClosedV = Substituter::substitute(closedV.get(), v.get(), newV);
         auto mu = std::make_shared<TipMu>(newV, substClosedV);
 
-        LOG_S(1) << "Unifier closed var with " << *mu;
+        LOG_S(1) << "Close making " << *mu << " to end var " << *v;
         return mu;
 
       } else {
         // No cyclic reference in closed type
-        LOG_S(1) << "Unifier closed var with " << *closedV;
+        LOG_S(1) << "Close making " << *closedV << " to end var " << *v;
         return closedV;
       }
     } else {
       // Unconstrained type variable - should we start with fresh names to make output cleaner?
       auto alpha = std::make_shared<TipAlpha>(v->getNode());
 
-      LOG_S(1) << "Unifier closed var with " << *alpha;
+      LOG_S(1) << "Close making " << *alpha << " to end var " << *v;
       return alpha;
     } 
 
   } else if (isCons(type)) {
     auto c = std::dynamic_pointer_cast<TipCons>(type);
+    auto copy = Copier::copy(c);
 
-    LOG_S(1) << "Unifier closing cons " << *c;
+    LOG_S(1) << "Close starting cons " << *c << " with visited " << print(visited);
 
     // close each argument of the constructor for each free variable
     auto freeV = TypeVars::collect(c.get());
@@ -163,8 +172,8 @@ std::shared_ptr<TipType> Unifier::close(
     std::vector<std::shared_ptr<TipType>> temp;
     auto current = c->getArguments();
     for (auto v : freeV) {
+      auto closedV = close(v, visited);
       for (auto a : current) {
-        auto closedV = close(v, visited);
         auto subst = Substituter::substitute(a.get(), v.get(), closedV);
         temp.push_back(subst);
       }
@@ -175,18 +184,18 @@ std::shared_ptr<TipType> Unifier::close(
     // replace arguments with current
     c->setArguments(current);
 
-    LOG_S(1) << "Unifier closed cons with " << *c;
+    LOG_S(1) << "Close making " << *c << " to end cons " << *copy;
 
     return c;
 
   } else if (isMu(type)) {
     auto m = std::dynamic_pointer_cast<TipMu>(type);
 
-    LOG_S(1) << "Unifier closing mu " << *m;
+    LOG_S(1) << "Close starting mu " << *m << " with visited " << print(visited);
 
     auto closedMu = std::make_shared<TipMu>(m->getV(), close(m->getT(), visited));
 
-    LOG_S(1) << "Unifier closed mu with " << *closedMu;
+    LOG_S(1) << "Close making " << *closedMu << " to end mu " << *m;
 
     return closedMu;
   } 
@@ -202,7 +211,7 @@ std::shared_ptr<TipType> Unifier::close(
  */ 
 std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipVar> v) {
   std::set<std::shared_ptr<TipVar>> visited;
-  return close(unionFind->find(v), visited);
+  return close(v, visited);
 }
 
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
