@@ -43,6 +43,10 @@ int main(int argc, char *argv[]) {
 
   bool logging = !logfile.getValue().empty();
   if(debug || logging) {
+    loguru::g_preamble_date = false;
+    loguru::g_preamble_time = false;
+    loguru::g_preamble_uptime = false;
+    loguru::g_preamble_thread = false;
     loguru::init(argc, argv);
     loguru::g_stderr_verbosity = logging ? loguru::Verbosity_OFF : 1;
     if (logging) {

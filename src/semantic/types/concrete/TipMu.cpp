@@ -13,10 +13,11 @@ const std::shared_ptr<TipType> &TipMu::getT() const {
 }
 
 bool TipMu::operator==(const TipType &other) const {
-    if(auto mu = dynamic_cast<const TipMu *>(&other)) {
-        return *v == *(mu->v) && *t == *(mu->t);
+    auto mu = dynamic_cast<const TipMu *>(&other);
+    if(!mu) {
+      return false;
     }
-    return false;
+    return *v == *(mu->v) && *t == *(mu->t);
 }
 
 bool TipMu::operator!=(const TipType &other) const {

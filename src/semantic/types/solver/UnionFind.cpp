@@ -1,7 +1,6 @@
 #include "UnionFind.h"
 
 #include "loguru.hpp"
-#include <assert.h>
 #include <iostream>
 
 namespace { // Anonymous namespace for local helpers
@@ -33,7 +32,6 @@ std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
     return parent;
 }
 
-// TODO Weight the subtrees and be smarter about our unioning.
 void UnionFind::quick_union(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     smart_insert(t1);
     smart_insert(t2);
