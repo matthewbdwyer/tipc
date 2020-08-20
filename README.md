@@ -24,7 +24,7 @@ This project implements `tipc` which compiles TIP programs into LLVM bitcode.  L
 The project use [Travis CI](https://travis-ci.org) for building and testing and [CodeCov](https://codecov.io) for reporting code and documentation coverage.  The [.travis.yml](.travis.yml) file provides details of this process.  If you would prefer to build and test manually then read on.
 
 After cloning this repository you can build the compiler by moving to into the top-level directory and issuing these commands:
-  1. `./bootstrap`
+  1. `./bin/bootstrap.sh`
   2. `. ~/.bashrc`
   3. `mkdir build`
   4. `cd build`
@@ -39,18 +39,13 @@ You may see some warnings, e.g.,
 
 These are expected in the current version of the project; we will work to resolve them in future releases.
 
-The project includes more than 300 unit tests grouped into several executables. The project also 
-includes more than 70 system tests. These are TIP programs that have built in test oracles that check 
-for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.
-You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for
-more information.  
+The project includes more than 300 unit tests grouped into several executables. The project also includes more than 70 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.  You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for more information.  
 
 All of the tests should pass.
 
 ## Working with tipc
 
-During development you need only run build steps 1 through 5 a single time, unless you modify some `CMakeLists.txt` file. 
-Just run `make` in the build directory to rebuild after making changes to the source.
+During development you need only run build steps 1 through 5 a single time, unless you modify some `CMakeLists.txt` file.  Just run `make` in the build directory to rebuild after making changes to the source.
 
 If you do need to add a source file then you will have to edit the appropriate `CMakeLists.txt` file to add it.  In this case, you should:
   - `cd build`
@@ -62,10 +57,7 @@ which will regenerate the makefiles that you can then run, by typing `make`, to 
 Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README describes how to build it in isolation and run it using the ANTLR4 jar file.
 
 ### The bin directory
-To facilitate development of `tipc` we have collected a number of helper scripts into 
-the `bin` directory of the project. Among them are scripts to run the entire test bed (`runtests.sh`),
-to run a code coverage analysis (`gencov.sh`), and to generate the project documentation (`gendocs.sh`).
-Please see the `README` in the bin directory for example usages.  
+To facilitate development of `tipc` we have collected a number of helper scripts into the `bin` directory of the project. Among them are scripts to run the entire test bed (`runtests.sh`), to run a code coverage analysis (`gencov.sh`), and to generate the project documentation (`gendocs.sh`).  Please see the `README` in the bin directory for example usages.  
 
 ### CLion
 
