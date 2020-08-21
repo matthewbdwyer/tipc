@@ -15,6 +15,7 @@ usage() {
 
 
 run_unit_tests() {
+  find ${ROOT_DIR} -name '*gcda' -delete
   echo running the unit test suite
   ${UNIT_TEST_DIR}/frontend/frontend_unit_tests
   ${UNIT_TEST_DIR}/semantic/semantic_unit_tests
