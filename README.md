@@ -39,9 +39,66 @@ You may see some warnings, e.g.,
 
 These are expected in the current version of the project; we will work to resolve them in future releases.
 
+When finished the `tipc` executable will be located in `build/src/`.  You can copy it to a more convenient location if you like, but a number of scripts in the project expect it to be in this location so don't move it.
+
 The project includes more than 300 unit tests grouped into several executables. The project also includes more than 70 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.  You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for more information.  
 
 All of the tests should pass.
+
+## Using tipc
+
+The `tipc` compiler has a limited set of options available through the `--help` flag.
+```
+OVERVIEW: tipc - a TIP to llvm compiler
+
+USAGE: tipc [options] <tip source file>
+
+OPTIONS:
+
+Generic Options:
+
+  --help          - Display available options (--help-hidden for more)
+  --help-list     - Display list of available options (--help-list-hidden for more)
+  --version       - Display the version of this program
+
+tipc Options:
+Options for controlling the TIP compilation process.
+
+  --do            - disable bitcode optimization
+  --log=<logfile> - log all messages to logfile (enables --verbose)
+  --pp            - pretty print
+  --ps            - print symbols
+  --pt            - print symbols with types (supercedes --ps)
+  --verbose       - enable log messages
+```
+By default it will accept a `.tip` file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a `.bc` file which is a binary encoding of the bitcodes.  You can see a human readable version of the bitcodes by running `llvm-dis` on the `.bc` file.
+
+To produce an executable version of a TIP program, the `.bc` file must be linked with the the bitcode for [tip_rtlib.c](rtlib/tip_rtlib.c).  Running the `build.sh` script in the [rtlib](rtlib) directory once will create that library bitcode file.
+
+The link step is performed using `clang` which will include additional libraries needed by [tip_rtlib.c](rtlib/tip_rtlib.c).  
+
+For convenience, we provide a script [build.sh](bin/build.sh) that will compile the tip program and perform the link step.  The script can be used within this git repository, or if you define the shell variable `TIPDIR` to the path to the root of the repository you can run it from any location as follows:
+```
+$ cd
+$ more hello.tip
+main() { return 42; }
+$ $HOME/tipc/bin/build.sh hello.tip
+$ ./hello
+Program output: 42
+$ $HOME/tipc/bin/build.sh -pp -pt hello.tip
+main() 
+{
+  return 42;
+}
+
+Functions : {
+  main : () -> int
+}
+
+Locals for function main : {
+
+}
+```
 
 ## Working with tipc
 
