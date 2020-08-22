@@ -141,9 +141,15 @@ The `tipc` compiler is has a pretty classic design.  It is comprised of four pha
  * [code generation](./src/codegen) that produces LLVM bitcode from an AST and emits a binary
  * [optimization](./src/optimizer) that runs a few LLVM optimization passes to improve the bitcode
 
-Doxygen [documentation](https://matthewbdwyer.github.io/tipc) for the project is available for the project.  The documentation is a work in progress and will improve over time..
+Doxygen [documentation](https://matthewbdwyer.github.io/tipc) for the project is 
+available for the project.  The documentation is a work in progress 
+and will improve over time..
 
-The `tipc` driver program only produces a bitcode file, `.bc`.  You need to link it with the [runtime library](./rtlib/tip_rtlib.c) which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines.  A [script](./test/system/build.sh) is available to link binaries compiled by `tipc` with the runtime library.
+The `tipc` driver program only produces a bitcode file, `.bc`. You need to link it 
+with the [runtime library](./rtlib/tip_rtlib.c) which define the processing of command 
+line arguments, which is non-trivial for TIP, establish necessary runtime structures, 
+and implement IO routines. A [script](./bin/build.sh) is available to link binaries 
+compiled by `tipc` with the runtime library.
 
 ## Goals and Plans
 
