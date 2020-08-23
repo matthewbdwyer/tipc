@@ -73,7 +73,7 @@ Options for controlling the TIP compilation process.
 ```
 By default it will accept a `.tip` file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a `.bc` file which is a binary encoding of the bitcodes.  You can see a human readable version of the bitcodes by running `llvm-dis` on the `.bc` file.
 
-To produce an executable version of a TIP program, the `.bc` file must be linked with the the bitcode for [tip_rtlib.c](rtlib/tip_rtlib.c).  Running the `build.sh` script in the [rtlib](rtlib) directory once will create that library bitcode file.
+To produce an executable version of a TIP program, the `.bc` file must be linked with the bitcode for [tip_rtlib.c](rtlib/tip_rtlib.c).  Running the `build.sh` script in the [rtlib](rtlib) directory once will create that library bitcode file.
 
 The link step is performed using `clang` which will include additional libraries needed by [tip_rtlib.c](rtlib/tip_rtlib.c).  
 
@@ -157,9 +157,9 @@ The goal of this project is to provide a starting point for project work in an u
 
 First and foremost, the TIP language includes a number of rich features, e.g., high-order functions, and type inference, and the `tipc` compiler targets LLVM - a key component of a production compiler infrastructure.  These choices are intentional and while they create some challenges the project is intended to help demystify complex language features, e.g., parametric polymorphism, by illustrating how they can be realized.
 
-Second, the project attempts to use modern software development practices, e.g., Doxygen for in-code documentation, unit testing with Catch2, continuous integration with Travis CI, and code coverage with `lcov`.  
+Second, the project attempts to use modern software development practices, e.g. Doxygen for in-code documentation, unit testing with Catch2, continuous integration with Travis CI, and code coverage with `lcov`.  
 
-Third, the project intentionally makes heavy use of the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern) which is quite appropriate in the context of a compiler.  Our use of it is intended to demonstrate how this type of abstract design element in a system can yield conceptually simplicity and savings in development.   The project currently uses 6 visitors that extend [ASTVisitor](./src/frontend/ast/ASTVisitor.h) and another visitor from ANTLR4.
+Third, the project intentionally makes heavy use of the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern) which is quite appropriate in the context of a compiler.  Our use of it is intended to demonstrate how this type of abstract design element in a system can yield conceptual simplicity and savings in development.   The project currently uses 6 visitors that extend [ASTVisitor](./src/frontend/ast/ASTVisitor.h) and another visitor from ANTLR4.
 
 Finally, the project is implemented in C++17 using modern features.  For example, all memory allocation uses smart pointers, we use unique pointers where possible and shared pointers as well, to realize the [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization) pattern.  Again this presents some challenges, but addressing them is illustrated in the `tipc` code base and hopefully they provide a good example for students.  
 
@@ -243,3 +243,6 @@ There is lots of great advice about using LLVM available:
   * someone once told me to just use a search engine to find the LLVM APIs and its a standard use case for me, e.g., I don't remember where the docs are I just search for `llvm irbuilder`
   * LLVM has some nuances that take a bit to understand.  For instance, the [GEP](https://llvm.org/docs/GetElementPtr.html) instruction, which `tipc` uses quite a bit given that it emits calls through a function table.
   
+### Git Resources
++ [Pro Git Book](https://git-scm.com/book/en/v2)
++ [Git For Ages 4 And Up](https://www.youtube.com/watch?v=1ffBJ4sVUb4)
