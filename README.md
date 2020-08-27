@@ -45,6 +45,12 @@ The project includes more than 300 unit tests grouped into several executables. 
 
 All of the tests should pass.
 
+### Windows Subsystem for Linux
+
+If you are using a Windows machine, tipc can be built in the Windows Subsystem for Linux (WSL). [Here](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2) are instructions to install WSL and upgrade to WSL2. It is highly reccomended to upgrade to WSL2. Once installed, you should install
+[Ubuntu 20.04](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2). Once finished, you can open a virtual instance of Ubuntu and follow 
+the instructions above to build tipc.
+
 ## Using tipc
 
 The `tipc` compiler has a limited set of options available through the `--help` flag.
@@ -246,3 +252,7 @@ There is lots of great advice about using LLVM available:
 ### Git Resources
 + [Pro Git Book](https://git-scm.com/book/en/v2)
 + [Git For Ages 4 And Up](https://www.youtube.com/watch?v=1ffBJ4sVUb4)
+
+### CLion Resources
+* [Using Git in CLion](https://www.jetbrains.com/help/clion/using-git-integration.html)
+* [Using CLion with WSL](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html#wsl-tooclhain)

@@ -4,6 +4,7 @@ declare -r ROOT_DIR=${TRAVIS_BUILD_DIR:-$(git rev-parse --show-toplevel)}
 pushd $ROOT_DIR
 lcov --capture --directory build -output-file coverage.info
 lcov --remove coverage.info '/usr/*' -o coverage.info
+lcov --remove coverage.info '/Applications/*' -o coverage.info
 lcov --remove coverage.info '*.h' -o coverage.info
 lcov --remove coverage.info '*.hpp' -o coverage.info
 lcov --remove coverage.info '*/externals/*' -o coverage.info
