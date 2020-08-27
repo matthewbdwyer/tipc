@@ -30,3 +30,6 @@ html/
 latex/
 xml/
 *.info
+
+# reports
+coverage.out/
