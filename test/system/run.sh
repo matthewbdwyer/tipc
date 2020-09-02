@@ -78,7 +78,7 @@ do
   ${TIPC} iotests/$executable.tip
   ${TIPCLANG} iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
 
-  ./${executable} $input >iotests/$executable.output
+  ./${executable} $input >iotests/$executable.output 2>iotests/$executable.output
 
   diff iotests/$executable.output $i > ${SCRATCH_DIR}/$executable.diff
 

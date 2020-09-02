@@ -31,7 +31,7 @@ void LocalNameCollector::endVisit(ASTDeclNode * element) {
       if (curMap.count(element->getName()) == 0) {
         curMap.insert(std::pair<std::string, ASTDeclNode*>(element->getName(), element));
       } else {
-        throw SemanticError("Symbol error line " + std::to_string(element->getLine()) + " in column " + std::to_string(element->getColumn()) +": " + element->getName() + " redeclared in function" + funName + "\n");
+        throw SemanticError("Symbol error line " + std::to_string(element->getLine()) + " in column " + std::to_string(element->getColumn()) +": " + element->getName() + " redeclared in function " + funName + "\n");
       }
     } else {
       throw SemanticError("Symbol error line " + std::to_string(element->getLine()) + " in column " + std::to_string(element->getColumn()) +": " + element->getName() + " already declared as function\n");
@@ -42,7 +42,7 @@ void LocalNameCollector::endVisit(ASTDeclNode * element) {
 void LocalNameCollector::endVisit(ASTVariableExpr * element) {
   if (fMap.count(element->getName()) == 0) {
     if (curMap.count(element->getName()) == 0) {
-      throw SemanticError("Symbol error line " + std::to_string(element->getLine()) + " in column " + std::to_string(element->getColumn()) +": " + element->getName() + " undeclared in function" + funName + "\n");
+      throw SemanticError("Symbol error line " + std::to_string(element->getLine()) + " in column " + std::to_string(element->getColumn()) +": " + element->getName() + " undeclared in function " + funName + "\n");
     }
   }
 }
