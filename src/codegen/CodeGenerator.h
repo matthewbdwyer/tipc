@@ -4,6 +4,9 @@
 #include "SemanticAnalysis.h"
 #include "llvm/IR/Module.h"
 
+static const char *const LLVM_ASM_EXT = ".ll";
+static const char *const LLVM_BC_EXT = ".bc";
+
 /*! \class CodeGenerator
  *  \brief Routines to optimize generated code.
  *
@@ -14,7 +17,7 @@ class CodeGenerator {
 public:
 
   /*! \fn generate
-   *  \brief Generate LLVM IR for ast. 
+   *  \brief Generate LLVM IR for ast.
    *
    * Apply a series of basic optimization passes to the given LLVM module.
    * \param program the root of an AST encoding the program
@@ -30,4 +33,11 @@ public:
    * \param m the LLVM module holding the generated program
    */
   static void emit(llvm::Module* m);
+
+  /*! \fn emitHumanReadableAssembly
+   *  \brief Emit LLVM human-readable assembly to a file.
+   *
+   * \param m the LLVM module holding the generated program
+   */
+  static void emitHumanReadableAssembly(llvm::Module* m);
 };

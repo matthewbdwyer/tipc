@@ -12,7 +12,14 @@ std::unique_ptr<Module> CodeGenerator::generate(ASTProgram* program,
 
 void CodeGenerator::emit(Module* m) {
   std::error_code ec;
-  ToolOutputFile result(m->getModuleIdentifier() + ".bc", ec, sys::fs::F_None);
+  ToolOutputFile result(m->getModuleIdentifier() + LLVM_BC_EXT, ec, sys::fs::F_None);
   WriteBitcodeToFile(*m, result.os());
   result.keep();
+}
+
+void CodeGenerator::emitHumanReadableAssembly(llvm::Module *m) {
+    std::error_code ec;
+    ToolOutputFile result(m->getModuleIdentifier() + LLVM_ASM_EXT, ec, sys::fs::F_None);
+    m->print(result.os(), nullptr);
+    result.keep();
 }
