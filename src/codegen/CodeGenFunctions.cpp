@@ -135,6 +135,13 @@ GlobalVariable *tipNumInputs = nullptr;
 GlobalVariable *tipInputArray = nullptr;
 
 /*
+ * Some constants are used repeatedly in code generation.  We define them
+ * hear to eliminate redundancy.
+ */
+Constant *zeroV = ConstantInt::get(Type::getInt64Ty(TheContext), 0);
+Constant *oneV = ConstantInt::get(Type::getInt64Ty(TheContext), 1);
+
+/*
  * Create LLVM Function in Module associated with current program.
  * This function declares the function, but it does not generate code.
  * This is a key element of the shallow pass that builds the function
@@ -311,7 +318,7 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
           llvm::Function::ExternalLinkage, "_tip_main_undefined",
           CurrentModule.get());
       Builder.CreateCall(undef);
-      Builder.CreateRet(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+      Builder.CreateRet(zeroV);
     }
 
     // create global _tip_num_inputs with init of numTIPArgs
@@ -322,10 +329,8 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
         "_tip_num_inputs");
 
     // create global _tip_input_array with up to numTIPArgs of Int64
-    auto *inputArrayType =
-        ArrayType::get(Type::getInt64Ty(TheContext), numTIPArgs);
-    std::vector<Constant *> zeros(
-        numTIPArgs, ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+    auto *inputArrayType = ArrayType::get(Type::getInt64Ty(TheContext), numTIPArgs);
+    std::vector<Constant *> zeros(numTIPArgs, zeroV);
     tipInputArray = new GlobalVariable(
         *CurrentModule, inputArrayType, false, llvm::GlobalValue::CommonLinkage,
         ConstantArray::get(inputArrayType, zeros), "_tip_input_array");
@@ -398,7 +403,7 @@ llvm::Value* ASTFunction::codegen() {
 
       // Emit the GEP instruction to index into input array
       std::vector<Value *> indices;
-      indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+      indices.push_back(zeroV); 
       indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), argIdx));
       auto *gep = Builder.CreateInBoundsGEP(tipInputArray, indices, "inputidx");
 
@@ -533,7 +538,7 @@ llvm::Value* ASTFunAppExpr::codegen() {
    * pointer to be called.
    */
   std::vector<Value *> indices;
-  indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 0));
+  indices.push_back(zeroV); 
   indices.push_back(funVal);
   auto *gep = Builder.CreateInBoundsGEP(tipFTable, indices, "ftableidx");
 
@@ -660,7 +665,7 @@ llvm::Value* ASTRecordExpr::codegen() {
   // Use Builder to create the calloc call using pre-defined callocFun
   auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
   std::vector<Value *> callocArgs;
-  callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 1));
+  callocArgs.push_back(oneV); 
   callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
   auto *calloc = Builder.CreateCall(callocFun, callocArgs, "callocedPtr");
 
@@ -747,8 +752,7 @@ llvm::Value* ASTDeclStmt::codegen() {
     localAlloca = CreateEntryBlockAlloca(TheFunction, l->getName());
 
     // Initialize all locals to "0"
-    Builder.CreateStore(ConstantInt::get(Type::getInt64Ty(TheContext), 0),
-                        localAlloca);
+    Builder.CreateStore(zeroV, localAlloca);
 
     // Remember this binding.
     NamedValues[l->getName()] = localAlloca;
@@ -839,8 +843,7 @@ llvm::Value* ASTWhileStmt::codegen() {
     }
 
     // Convert condition to a bool by comparing non-equal to 0.
-    CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0),
-                                 "loopcond");
+    CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0), "loopcond");
 
     Builder.CreateCondBr(CondV, BodyBB, ExitBB);
   }
@@ -886,8 +889,7 @@ llvm::Value* ASTIfStmt::codegen() {
   }
 
   // Convert condition to a bool by comparing non-equal to 0.
-  CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0),
-                               "ifcond");
+  CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0), "ifcond");
 
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
