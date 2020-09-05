@@ -895,7 +895,9 @@ llvm::Value* ASTIfStmt::codegen() {
 
   /*
    * Create blocks for the then and else cases.  The then block is first so
-   * it is inserted in the function in the constructor.
+   * it is inserted in the function in the constructor. The rest of the blocks
+   * need to be inserted explicitly into the functions basic block list
+   * (via a push_back() call).
    *
    * Blocks don't need to be contiguous or ordered in
    * any particular way because we will explicitly branch between them.

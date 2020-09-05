@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 declare -r ROOT_DIR=${TIPDIR:-$(git rev-parse --show-toplevel)}
 declare -r TIPC=${ROOT_DIR}/build/src/tipc
 declare -r RTLIB=${ROOT_DIR}/rtlib
