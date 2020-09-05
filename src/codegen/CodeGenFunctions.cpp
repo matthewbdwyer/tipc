@@ -1,5 +1,6 @@
 #include "AST.h"
 #include "SemanticAnalysis.h"
+#include "InternalError.h"
 
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Bitcode/BitcodeWriter.h"
@@ -204,11 +205,6 @@ AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::strin
   return tmp.CreateAlloca(Type::getInt64Ty(TheContext), 0, VarName);
 }
 
-Value *LogError(std::string s) {
-  fprintf(stderr, "Code Generation Error: %s\n", s.c_str());
-  return nullptr;
-}
-
 } // end anonymous namespace for code generator data and functions
 
 /********************* codegen() routines ************************/
@@ -375,11 +371,9 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
 }
 
 llvm::Value* ASTFunction::codegen() {
-  bool success = true;
-
   llvm::Function *TheFunction = getFunction(getName());
   if (TheFunction == nullptr) {
-    return nullptr;
+    throw InternalError("failed to declare the function" + getName());
   }
 
   // create basic block to hold body of function definition
@@ -428,25 +422,20 @@ llvm::Value* ASTFunction::codegen() {
   // add local declarations to the symbol table
   for (auto const &decl : getDeclarations()) {
     if (decl->codegen() == nullptr) {
-      success = false;
+      TheFunction->eraseFromParent();
+      throw InternalError("failed to generate bitcode for the function declarations");
     }
   }
 
   for (auto &stmt : getStmts()) {
     if (stmt->codegen() == nullptr) {
-      success = false;
+      TheFunction->eraseFromParent();
+      throw InternalError("failed to generate bitcode for the function statement");
     }
   }
 
-  if (success) {
-    // internal LLVM helper function to detect errors in function defs
-    verifyFunction(*TheFunction);
-    return TheFunction;
-  }
-
-  // error in generating body, so remove partial function definition
-  TheFunction->eraseFromParent();
-  return nullptr;
+  verifyFunction(*TheFunction);
+  return TheFunction;
 }
 
 llvm::Value* ASTNumberExpr::codegen() {
@@ -457,7 +446,7 @@ llvm::Value* ASTBinaryExpr::codegen() {
   Value *L = getLeft()->codegen();
   Value *R = getRight()->codegen();
   if (L == nullptr || R == nullptr) {
-    return nullptr;
+    throw InternalError("left and right hand operands are both null");
   }
 
   if (getOp() == "+") {
@@ -475,7 +464,7 @@ llvm::Value* ASTBinaryExpr::codegen() {
   } else if (getOp() == "!=") {
     return Builder.CreateICmpNE(L, R, "netmp");
   } else {
-    return LogError("Invalid binary operator: " + OP);
+    throw InternalError("Invalid binary operator: " + OP);
   }
 }
 
@@ -498,7 +487,7 @@ llvm::Value* ASTVariableExpr::codegen() {
 
   auto fidx = functionIndex.find(getName());
   if (fidx == functionIndex.end()) {
-    return LogError("Unknown variable name: " + getName());
+    throw InternalError("Unknown variable name: " + getName());
   }
 
   return ConstantInt::get(Type::getInt64Ty(TheContext), fidx->second);
@@ -530,7 +519,7 @@ llvm::Value* ASTFunAppExpr::codegen() {
    */
   auto *funVal = getFunction()->codegen();
   if (funVal == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the function");
   }
 
   /*
@@ -567,7 +556,7 @@ llvm::Value* ASTFunAppExpr::codegen() {
   for (auto const &arg : getActuals()) {
     Value *argVal = arg->codegen();
     if (argVal == nullptr) {
-      return nullptr;
+      throw InternalError("failed to generate bitcode for the argument");
     }
     argsV.push_back(argVal);
   }
@@ -578,7 +567,7 @@ llvm::Value* ASTFunAppExpr::codegen() {
 llvm::Value* ASTAllocExpr::codegen() {
   Value *argVal = getInitializer()->codegen();
   if (argVal == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the initializer of the alloc expression");
   }
 
   // TBD TYPE CHECKING - this needs upating
@@ -615,7 +604,7 @@ llvm::Value* ASTRefExpr::codegen() {
   auto *v = dynamic_cast<ASTVariableExpr*>(getVar());
   Value *argVal = NamedValues[v->getName()];
   if (argVal == nullptr) {
-    return LogError("Unknown variable name: " + v->getName());
+    throw InternalError("Unknown variable name: " + v->getName());
   }
 
   return Builder.CreatePtrToInt(argVal, Type::getInt64Ty(TheContext),
@@ -639,7 +628,7 @@ llvm::Value* ASTDeRefExpr::codegen() {
  
   Value *argVal = getPtr()->codegen();
   if (argVal == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the pointer");
   }
 
   // compute the address
@@ -714,7 +703,7 @@ llvm::Value* ASTAccessExpr::codegen() {
     //Get current field and check if it exists
     auto currField = this->getField();
     if(fieldIndex.count(currField) == 0){
-        return LogError("This field doesn't exist");
+      throw InternalError("This field doesn't exist");
     }
 
   //Generate record instruction address
@@ -738,7 +727,7 @@ llvm::Value* ASTAccessExpr::codegen() {
 }
 
 llvm::Value* ASTDeclNode::codegen() {
-  return LogError("Declarations do not emit code");
+  throw InternalError("Declarations do not emit code");
 }
 
 llvm::Value* ASTDeclStmt::codegen() {
@@ -769,12 +758,12 @@ llvm::Value* ASTAssignStmt::codegen() {
   lValueGen = false;
 
   if (lValue == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the lhs of the assignment");
   }
 
   Value *rValue = getRHS()->codegen();
   if (rValue == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the rhs of the assignment");
   }
 
   return Builder.CreateStore(rValue, lValue);
@@ -839,7 +828,7 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *CondV = getCondition()->codegen();
     if (CondV == nullptr) {
-      return nullptr;
+      throw InternalError("failed to generate bitcode for the conditional");
     }
 
     // Convert condition to a bool by comparing non-equal to 0.
@@ -855,7 +844,7 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *BodyV = getBody()->codegen();
     if (BodyV == nullptr) {
-      return nullptr;
+      throw InternalError("failed to generate bitcode for the loop body");
     }
 
     Builder.CreateBr(HeaderBB);
@@ -885,7 +874,7 @@ llvm::Value* ASTWhileStmt::codegen() {
 llvm::Value* ASTIfStmt::codegen() {
   Value *CondV = getCondition()->codegen();
   if (CondV == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the condition of the if statement");
   }
 
   // Convert condition to a bool by comparing non-equal to 0.
@@ -919,7 +908,7 @@ llvm::Value* ASTIfStmt::codegen() {
 
     Value *ThenV = getThen()->codegen();
     if (ThenV == nullptr) {
-      return nullptr;
+      throw InternalError("failed to generate bitcode for the then block");
     }
 
     Builder.CreateBr(MergeBB);
@@ -935,7 +924,7 @@ llvm::Value* ASTIfStmt::codegen() {
     if (getElse() != nullptr) {
       ElseV = getElse()->codegen();
       if (ElseV == nullptr) {
-        return nullptr;
+        throw InternalError("failed to generate bitcode for the else block");
       }
     } else {
       Builder.CreateCall(nop);
@@ -961,7 +950,7 @@ llvm::Value* ASTOutputStmt::codegen() {
 
   Value *argVal = getArg()->codegen();
   if (argVal == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the argument of the output statement");
   }
 
   std::vector<Value *> ArgsV(1, argVal);
@@ -979,7 +968,7 @@ llvm::Value* ASTErrorStmt::codegen() {
 
   Value *argVal = getArg()->codegen();
   if (argVal == nullptr) {
-    return nullptr;
+    throw InternalError("failed to generate bitcode for the argument of the error statement");
   }
 
   std::vector<Value *> ArgsV(1, argVal);

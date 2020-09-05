@@ -3,6 +3,7 @@
 #include "CodeGenerator.h"
 #include "Optimizer.h"
 #include "ParseError.h"
+#include "InternalError.h"
 #include "SemanticError.h"
 #include "llvm/Support/CommandLine.h"
 #include "loguru.hpp"
@@ -101,8 +102,11 @@ int main(int argc, char *argv[]) {
       LOG_S(ERROR) << "tipc: " << e.what();
       LOG_S(ERROR) << "tipc: semantic error";
       exit (EXIT_FAILURE);
+    } catch (InternalError& e) {
+      LOG_S(ERROR) << "tipc: " << e.what();
+      LOG_S(ERROR) << "tipc: internal error";
+      exit (EXIT_FAILURE);
     }
-
   } catch (ParseError& e) {
     LOG_S(ERROR) << "tipc: " << e.what();
     LOG_S(ERROR) << "tipc: parse error";
