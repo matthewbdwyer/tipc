@@ -6,7 +6,6 @@
 #include "SemanticError.h"
 #include "llvm/Support/CommandLine.h"
 #include "loguru.hpp"
-#include <filesystem>
 #include <fstream>
 
 using namespace llvm;
@@ -58,12 +57,12 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (!std::filesystem::exists(sourceFile.getValue())) {
+  std::ifstream stream;
+  stream.open(sourceFile);
+  if(!stream.good()) {
     LOG_S(ERROR) << "tipc: error: no such file: '" << sourceFile << "'";
     exit(1);
   }
-  std::ifstream stream;
-  stream.open(sourceFile);
 
   /*
    * Program representations, e.g., ast, analysis results, etc., are
