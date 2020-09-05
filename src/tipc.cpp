@@ -19,7 +19,7 @@ static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<bool> debug("verbose", cl::desc("enable log messages"), cl::cat(TIPcat));
 static cl::opt<bool> emitHrAsm("asm",
-                           cl::desc("emit human-readable LLVM assembly language instead of llvm bitcode"),
+                           cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),
                            cl::cat(TIPcat));
 static cl::opt<std::string> logfile("log",
                                    cl::value_desc("logfile"),
