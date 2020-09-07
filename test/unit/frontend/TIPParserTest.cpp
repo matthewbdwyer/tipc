@@ -147,6 +147,16 @@ TEST_CASE("TIP Parser: input", "[TIP Parser]") {
 }
 
 
+TEST_CASE("TIP Parser: address of field access", "[TIP Parser]") {
+    std::stringstream stream;
+    stream << R"(
+      operators() { var x, y; y = &(x.f); return *y; }
+    )";
+
+    REQUIRE(ParserHelper::is_parsable(stream));
+}
+
+
 /************ The following are expected to fail parsing ************/
 
 TEST_CASE("TIP Parser: decl after stmt", "[TIP Parser]") {
@@ -189,15 +199,6 @@ TEST_CASE("TIP Parser: imbalanced binary expr", "[TIP Parser]") {
     std::stringstream stream;
     stream << R"(
       operators() { var x; x = y + + 1; return -x; }
-    )";
-
-    REQUIRE_FALSE(ParserHelper::is_parsable(stream));
-}
-
-TEST_CASE("TIP Parser: address of expr", "[TIP Parser]") {
-    std::stringstream stream;
-    stream << R"(
-      operators() { var x, y; y = &(x+1); return *y; }
     )";
 
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));

@@ -1,0 +1,21 @@
+main() {
+  var r, p;
+  r = {f1:0, f2:2, f3:4};
+  p = &(r.f2);
+
+  // update field through the pointer
+  *p = 13;
+
+  // Check that the update was performed correctly
+  if (r.f1 != 0) error r.f1;
+  if (r.f2 != 13) error r.f1;
+  if (r.f3 != 4) error r.f1;
+
+  // update the field
+  r.f2 = 42;
+
+  // Check that the pointer sees the update
+  if (*p != 42) error *p;
+
+  return 0;
+}

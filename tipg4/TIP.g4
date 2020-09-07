@@ -39,12 +39,12 @@ expr : expr '(' (expr (',' expr)*)? ')' 	#funAppExpr
      | expr '.' IDENTIFIER 			#accessExpr
      | '*' expr 				#deRefExpr
      | SUB NUMBER				#negNumber
-     | '&' varExpr				#refExpr
+     | '&' expr					#refExpr
      | expr op=(MUL | DIV) expr 		#multiplicativeExpr
      | expr op=(ADD | SUB) expr 		#additiveExpr
      | expr op=GT expr 				#relationalExpr
      | expr op=(EQ | NE) expr 			#equalityExpr
-     | varExpr					#varRule
+     | IDENTIFIER				#varExpr
      | NUMBER					#numExpr
      | KINPUT					#inputExpr
      | KALLOC expr				#allocExpr
@@ -52,8 +52,6 @@ expr : expr '(' (expr (',' expr)*)? ')' 	#funAppExpr
      | recordExpr				#recordRule
      | '(' expr ')'				#parenExpr
 ;
-
-varExpr : IDENTIFIER ;				
 
 recordExpr : '{' (fieldExpr (',' fieldExpr)*)? '}' ;
 

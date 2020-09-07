@@ -593,22 +593,20 @@ llvm::Value* ASTNullExpr::codegen() {
 
 /* '&' address of expression
  *
- * Only variables can serve as arguments to this operator.
- * Our code generation strategy has allocated all such variables
- * on the stack (via "alloca").  Consequently, in llvm this means
- * that the variable holds the address of stack location, but
- * we explicitly cast it with "ptrtoint" to enforce our invariant
- * that all code generation routines produce int values.
+ * The argument must be capable of generating an l-value.
+ * This is checked in the weeding pass.  
+ *
  */
 llvm::Value* ASTRefExpr::codegen() {
-  auto *v = dynamic_cast<ASTVariableExpr*>(getVar());
-  Value *argVal = NamedValues[v->getName()];
-  if (argVal == nullptr) {
-    throw InternalError("Unknown variable name: " + v->getName());
+  lValueGen = true;
+  Value *lValue = getVar()->codegen();
+  lValueGen = false;
+
+  if (lValue == nullptr) {
+    throw InternalError("could not generate l-value for address of");
   }
 
-  return Builder.CreatePtrToInt(argVal, Type::getInt64Ty(TheContext),
-                                "intPtrVal");
+  return Builder.CreatePtrToInt(lValue, Type::getInt64Ty(TheContext), "addrOfPtr");
 }
 
 /* '*' dereference expression

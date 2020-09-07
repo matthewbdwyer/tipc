@@ -1,0 +1,26 @@
+main() 
+{
+  var r, p;
+  r = {f1:0, f2:2, f3:4};
+  p = &r.f2;
+  *p = 13;
+  if ((r.f1 != 0)) 
+    error r.f1;
+  if ((r.f2 != 13)) 
+    error r.f1;
+  if ((r.f3 != 4)) 
+    error r.f1;
+  r.f2 = 42;
+  if ((*p != 42)) 
+    error *p;
+  return 0;
+}
+
+Functions : {
+  main : () -> int
+}
+
+Locals for function main : {
+  p : &int,
+  r : {f1:int,f2:int,f3:int}
+}

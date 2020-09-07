@@ -294,7 +294,7 @@ Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
 }
 
 Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
-  visit(ctx->varExpr());
+  visit(ctx->expr());
   visitedExpr = std::make_unique<ASTRefExpr>(std::move(visitedExpr));
 
   // Set source location 

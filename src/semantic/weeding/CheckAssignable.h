@@ -11,13 +11,16 @@
  * \sa DeRefExpr
  * \sa AccessExpr
  *
- * This weeding pass checks that assignment statements are to l-value expressions
- * and throws a SemanticError otherwise.
+ * Assignability is also required when using the "&E" expression.  We can only take the
+ * address of an expression if it has an l-value.
+ *
+ * This weeding pass checks where l-value expressions are required and throws a SemanticError otherwise.
  */
 class CheckAssignable :  public ASTVisitor {
 public:
     CheckAssignable() = default;
     static void check(ASTProgram* p);
     virtual void endVisit(ASTAssignStmt * element) override;
+    virtual void endVisit(ASTRefExpr * element) override;
 };
 

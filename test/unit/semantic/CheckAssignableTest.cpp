@@ -44,6 +44,20 @@ TEST_CASE("Check Assignable: complex pointer lhs", "[Symbol]") {
     REQUIRE_NOTHROW(CheckAssignable::check(ast.get()));
 }
 
+TEST_CASE("Check Assignable: address of var", "[Symbol]") {
+    std::stringstream stream;
+    stream << R"(recordlhs() { var x, y; x = &y; return 0; })";
+    auto ast = ASTHelper::build_ast(stream);
+    REQUIRE_NOTHROW(CheckAssignable::check(ast.get()));
+}
+
+TEST_CASE("Check Assignable: address of field", "[Symbol]") {
+    std::stringstream stream;
+    stream << R"(recordlhs() { var x, y; y = {f:0, g:1}; x = &(y.g); return 0; })";
+    auto ast = ASTHelper::build_ast(stream);
+    REQUIRE_NOTHROW(CheckAssignable::check(ast.get()));
+}
+
 /************** the following are expected to fail the check ************/
 
 TEST_CASE("Check Assignable: constant lhs", "[Symbol]") {
@@ -89,4 +103,22 @@ TEST_CASE("Check Assignable: record lhs", "[Symbol]") {
     REQUIRE_THROWS_MATCHES(CheckAssignable::check(ast.get()),
                            SemanticError,
                            ContainsWhat("{f:0,g:1} not an l-value"));
+}
+
+TEST_CASE("Check Assignable: address of pointer", "[Symbol]") {
+    std::stringstream stream;
+    stream << R"(recordlhs(p) { var x; x = &(*p); return 0; })";
+    auto ast = ASTHelper::build_ast(stream);
+    REQUIRE_THROWS_MATCHES(CheckAssignable::check(ast.get()),
+                           SemanticError,
+                           ContainsWhat("(*p) not an l-value"));
+}
+
+TEST_CASE("Check Assignable: address of expr", "[Symbol]") {
+    std::stringstream stream;
+    stream << R"(recordlhs(p) { var x, y; x = &(y*y); return 0; })";
+    auto ast = ASTHelper::build_ast(stream);
+    REQUIRE_THROWS_MATCHES(CheckAssignable::check(ast.get()),
+                           SemanticError,
+                           ContainsWhat("(y*y) not an l-value"));
 }
