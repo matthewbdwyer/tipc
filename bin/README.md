@@ -11,15 +11,37 @@ _example usage:_
 ./bootstrap.sh
 ```
 
+## runtests.sh
+Runs the full suite of tests.  
+
+By default the script runs both the system and unit tests. This behavior can be changed at the command line by providing the `-s` switch to run only the system tests, or by providing the `-u` switch to run only the unit tests.  
+
+_example usage:_
+```bash
+# Run only the unit tests.
+./runtests.sh -u
+```
+
 ## gencov.sh
 Uses [LCOV][1] to generate a code coverage report.  
 
-After a successful run, you can view an HTML version of the report report at `<tipc project root>/coverage.out/index.html`.  
+After a successful test run this script gathers the coverage data.  You can view an HTML version of the report report at `<tipc project root>/coverage.out/index.html`.  
 
 _example usage:_
 ```bash
 ./gencov.sh
 ```
+
+## cleancov.sh
+Cleans out the old coverage recording files to avoid corruption.
+
+If you rebuild the compiler and only run a subset of the tests, this can cause corruption of the coverage recording files.  To avoid this run this script.  Note that the runtests.sh script cleans the coverage recording files prior to executing the tests, so there is no need to use this script when rerunning the entire test suite.
+
+_example usage:_
+```bash
+./cleancov.sh
+```
+
 
 ## gendocs.sh
 Uses [doxygen][2] to generate documentation from the project source code.
@@ -33,16 +55,6 @@ _example usage:_
 ./gendocs.sh
 ```
 
-## runtests.sh
-Runs the full suite of tests.  
-
-By default the script runs both the system and unit tests. This behavior can be changed at the command line by providing the `-s` switch to run only the system tests, or by providing the `-u` switch to run only the unit tests.  
-
-_example usage:_
-```bash
-# Run only the unit tests.
-./runtests.sh -u
-```
 
 ## build.sh
 Compiles and links a single TIP program.  
