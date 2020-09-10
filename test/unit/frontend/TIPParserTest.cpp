@@ -213,7 +213,7 @@ TEST_CASE("TIP Parser: missing paren", "[TIP Parser]") {
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));
 }
 
-TEST_CASE("TIP Parser: imbalanced blocks", "[TIP Parser]") {
+TEST_CASE("TIP Parser: unbalanced blocks", "[TIP Parser]") {
     std::stringstream stream;
     stream << R"(
       main() { var x, y; { x = 0; y = x + 1; } } return x + y; }
@@ -222,7 +222,7 @@ TEST_CASE("TIP Parser: imbalanced blocks", "[TIP Parser]") {
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));
 }
 
-TEST_CASE("TIP Parser: imbalanced binary expr", "[TIP Parser]") {
+TEST_CASE("TIP Parser: unbalanced binary expr", "[TIP Parser]") {
     std::stringstream stream;
     stream << R"(
       operators() { var x; x = y + + 1; return -x; }
@@ -258,7 +258,18 @@ TEST_CASE("TIP Parser: no expression statements", "[TIP Parser]") {
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));
 }
 
-TEST_CASE("TIP Parser: missing comparison", "[TIP Parser]") {
+
+TEST_CASE("TIP Parser: keywords as ids", "[TIP Parser]") {
+    std::stringstream stream;
+    stream << R"(
+      if() { var x; if (x <= 0) x = x + 1; return x; }
+    )";
+
+    REQUIRE_FALSE(ParserHelper::is_parsable(stream));
+}
+
+
+TEST_CASE("TIP Lexer: illegal comparison token", "[TIP Lexer]") {
     std::stringstream stream;
     stream << R"(
       operators() { var x; if (x <= 0) x = x + 1; return x; }
@@ -267,10 +278,19 @@ TEST_CASE("TIP Parser: missing comparison", "[TIP Parser]") {
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));
 }
 
-TEST_CASE("TIP Parser: keywords as ids", "[TIP Parser]") {
+TEST_CASE("TIP Lexer: illegal operator token", "[TIP Lexer]") {
     std::stringstream stream;
     stream << R"(
-      if() { var x; if (x <= 0) x = x + 1; return x; }
+      operators() { var x; if (x == 0) x = x % 2; return x; }
+    )";
+
+    REQUIRE_FALSE(ParserHelper::is_parsable(stream));
+}
+
+TEST_CASE("TIP Lexer: illegal identifier token", "[TIP Lexer]") {
+    std::stringstream stream;
+    stream << R"(
+      operators() { var $x; if ($x == 0) $x = $x + 2; return $x; }
     )";
 
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));
