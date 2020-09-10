@@ -156,6 +156,33 @@ TEST_CASE("TIP Parser: address of field access", "[TIP Parser]") {
     REQUIRE(ParserHelper::is_parsable(stream));
 }
 
+/* These tests checks for operator precedence.
+ * They access the parse tree and ensure that the higher precedence
+ * operator is nested more deeply than the lower precedence operator.
+ */
+TEST_CASE("TIP Parser: mul higher precedence than add", "[TIP Parser]") {
+    std::stringstream stream;
+    stream << R"(main() { return 1 + 2 * 3; })";
+    std::string expected = "(expr (expr 1) + (expr (expr 2) * (expr 3)))";
+    std::string tree = ParserHelper::parsetree(stream);
+    REQUIRE(tree.find(expected) != std::string::npos); 
+}
+
+TEST_CASE("TIP Parser: access higher precedence than deref", "[TIP Parser]") {
+    std::stringstream stream;
+    stream << R"(main() { var p; return *p.f; })";
+    std::string expected = "(expr * (expr (expr p) . f))";
+    std::string tree = ParserHelper::parsetree(stream);
+    REQUIRE(tree.find(expected) != std::string::npos); 
+}
+
+TEST_CASE("TIP Parser: fun app higher precedence than deref", "[TIP Parser]") {
+    std::stringstream stream;
+    stream << R"(main() { var p; return *p(); })";
+    std::string expected = "(expr * (expr (expr p) ( )))";
+    std::string tree = ParserHelper::parsetree(stream);
+    REQUIRE(tree.find(expected) != std::string::npos); 
+}
 
 /************ The following are expected to fail parsing ************/
 

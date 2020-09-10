@@ -36,3 +36,14 @@ bool ParserHelper::is_parsable(std::istream &stream) {
   return !*parseError;
 }
 
+/* Assumes ParserHelper::is_parseable() is TRUE */
+std::string ParserHelper::parsetree(std::istream &stream) {
+  antlr4::ANTLRInputStream input(stream);
+  TIPLexer lexer(&input);
+  antlr4::CommonTokenStream tokens(&lexer);
+  TIPParser parser(&tokens);
+  TIPParser::ProgramContext *tree = parser.program();
+  // Return printed string
+  return tree->toStringTree(&parser,false);
+}
+
