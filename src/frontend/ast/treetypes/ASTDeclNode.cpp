@@ -2,6 +2,7 @@
 #include "ASTVisitor.h"
 
 void ASTDeclNode::accept(ASTVisitor * visitor) {
+  visitor->visit(this);
   visitor->endVisit(this);
 }
 

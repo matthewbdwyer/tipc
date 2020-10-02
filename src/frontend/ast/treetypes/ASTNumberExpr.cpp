@@ -3,6 +3,7 @@
 #include <iostream>
 
 void ASTNumberExpr::accept(ASTVisitor * visitor) {
+  visitor->visit(this);
   visitor->endVisit(this);
 }
 

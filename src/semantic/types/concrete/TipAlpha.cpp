@@ -33,6 +33,7 @@ std::string const & TipAlpha::getName() const {
 }
 
 void TipAlpha::accept(TipTypeVisitor * visitor) {
+  visitor->visit(this);
   visitor->endVisit(this);
 }
 

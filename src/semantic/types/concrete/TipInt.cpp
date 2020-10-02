@@ -24,5 +24,6 @@ std::ostream &TipInt::print(std::ostream &out) const {
 
 // TipInt is a 0-ary type constructor so it has no arguments to visit
 void TipInt::accept(TipTypeVisitor * visitor) {
+  visitor->visit(this);
   visitor->endVisit(this);
 }

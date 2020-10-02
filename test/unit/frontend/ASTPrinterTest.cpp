@@ -166,3 +166,32 @@ TEST_CASE("ASTPrinterTest: condiional expression printers", "[ASTNodePrint]") {
       if (i == numStmts) break;
     }
 }
+
+TEST_CASE("ASTPrinterTest: local expr test", "[ASTNodePrint]") {
+    // Constructor expects unique pointers so we must create them
+    auto zero = std::make_unique<ASTNumberExpr>(0); 
+    auto var = std::make_unique<ASTVariableExpr>("y"); 
+
+    // Here we just use the default constructor
+    ASTBinaryExpr ypluszero("+", std::move(var), std::move(zero)); 
+
+    std::stringstream  stream;
+    stream << ypluszero;
+    auto actual = stream.str();
+
+    REQUIRE(actual == "(y+0)");
+}
+
+TEST_CASE("ASTPrinterTest: local unique expr test", "[ASTNodePrint]") {
+    auto zero = std::make_unique<ASTNumberExpr>(0); 
+    auto var = std::make_unique<ASTVariableExpr>("y"); 
+
+    // Here we create a unique pointer to the binary expr
+    auto ypluszero = std::make_unique<ASTBinaryExpr>("+", std::move(var), std::move(zero)); 
+
+    std::stringstream  stream;
+    stream << *ypluszero; // dereference is an operation for unique pointers
+    auto actual = stream.str();
+
+    REQUIRE(actual == "(y+0)");
+}

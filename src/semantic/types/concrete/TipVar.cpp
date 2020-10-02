@@ -26,5 +26,6 @@ std::ostream &TipVar::print(std::ostream &out) const {
 }
 
 void TipVar::accept(TipTypeVisitor * visitor) {
+  visitor->visit(this);
   visitor->endVisit(this);
 }

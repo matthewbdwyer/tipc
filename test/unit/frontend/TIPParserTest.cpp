@@ -3,6 +3,7 @@
 #include "ParserHelper.h"
 
 #include <sstream>
+#include <iostream>
 
 TEST_CASE("TIP Parser: conditionals", "[TIP Parser]") {
     std::stringstream stream;

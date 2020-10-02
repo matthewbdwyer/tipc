@@ -2,6 +2,7 @@
 #include "ASTVisitor.h"
 
 void ASTVariableExpr::accept(ASTVisitor * visitor) {
+  visitor->visit(this);
   visitor->endVisit(this);
 }
 

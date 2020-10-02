@@ -5,13 +5,6 @@ using namespace antlrcpp;
 
 ASTBuilder::ASTBuilder(TIPParser *p) : parser{p} {}
 
-/*
- * Questions:
- *   ? when exactly do I need to use std::move
- *   ? seems like Kaleidoscope is using it too frequently
- *        (in ctor and in ctor invocatin)
- */
-
 std::string ASTBuilder::opString(int op) {
   std::string opStr;
   switch (op) {
