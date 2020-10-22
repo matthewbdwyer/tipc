@@ -4,6 +4,31 @@
 
 #include <iostream>
 
+TEST_CASE("ASTPrinterTest: output test", "[ASTNodePrint]") {
+    std::stringstream stream;
+    stream << R"(
+      foo() { output 42; return 0; }
+    )";
+
+    std::vector<std::string> expected {
+      "output 42;",
+      "return 0;"
+    };
+
+    auto ast = ASTHelper::build_ast(stream);
+
+    auto f = ast->findFunctionByName("foo");
+
+    int i = 0;
+    for (auto s : f->getStmts()) {
+      stream = std::stringstream();
+      stream << *s;
+      auto actual = stream.str();
+      REQUIRE(actual == expected.at(i++));
+    }
+
+}
+
 TEST_CASE("ASTPrinterTest: function printers", "[ASTNodePrint]") {
     std::stringstream stream;
     stream << R"(

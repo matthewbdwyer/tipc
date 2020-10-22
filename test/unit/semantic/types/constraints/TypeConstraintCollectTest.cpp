@@ -16,7 +16,7 @@ static void runtest(std::stringstream &program, std::vector<std::string> constra
     auto collected = visitor.getCollectedConstraints();
     for(int i = 0; i < collected.size(); i++) {
         std::stringstream stream;
-        stream << constraints.at(i);
+        stream << collected.at(i);
         auto actual = stream.str();
         auto expected = constraints.at(i);
         REQUIRE(expected == actual);
@@ -27,15 +27,14 @@ static void runtest(std::stringstream &program, std::vector<std::string> constra
 
 TEST_CASE("TypeConstraintVisitor: const, input, alloc, assign through ptr", "[TypeConstraintVisitor]") {
     std::stringstream program;
-    program << R"(
-      short() {
-        var x, y, z;
-        x = input;
-        y = alloc x;
-        *y = x;
-        z = *y;
-        return z;
-      }
+    program << R"(short() {
+ var x,y,z;
+ x = input;
+ y = alloc x;
+ *y = x;
+ z = *y;
+ return z;
+}
     )";
 
     /*
@@ -49,15 +48,15 @@ TEST_CASE("TypeConstraintVisitor: const, input, alloc, assign through ptr", "[Ty
      * Note that spacing is calculated immediately after the R"( in the program string literals.
      */
     std::vector<std::string> expected {
-            "[[input@3:4]] = int",
-            "[[x@2:4]] = [[input@3:4]]",
-            "[[alloc x@4:4]] = &[[x@2:4]]",
-            "[[y@2:7]] = [[alloc x@4:4]]",
-            "[[y@2:7]] = &[[(*y)@5:0]]",
-            "[[y@2:7]] = &[[x@2:4]]",
-            "[[y@2:7]] = &[[(*y)@6:4]]",
-            "[[z@2:10]] = [[(*y)@6:4]]",
-            "[[short@1:0]] = () -> [[z@2:10]]"
+            "[[input@3:5]] = int",
+            "[[x@2:5]] = [[input@3:5]]",
+            "[[alloc x@4:5]] = &[[x@2:5]]",
+            "[[y@2:7]] = [[alloc x@4:5]]",
+            "[[y@2:7]] = &[[(*y)@5:1]]",
+            "[[y@2:7]] = &[[x@2:5]]",
+            "[[y@2:7]] = &[[(*y)@6:5]]",
+            "[[z@2:9]] = [[(*y)@6:5]]",
+            "[[short@1:0]] = () -> [[z@2:9]]"
     };
 
     runtest(program, expected);
