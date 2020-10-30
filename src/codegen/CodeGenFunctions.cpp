@@ -446,7 +446,7 @@ llvm::Value* ASTBinaryExpr::codegen() {
   Value *L = getLeft()->codegen();
   Value *R = getRight()->codegen();
   if (L == nullptr || R == nullptr) {
-    throw InternalError("left and right hand operands are both null");
+    throw InternalError("null binary operand");
   }
 
   if (getOp() == "+") {
@@ -570,7 +570,6 @@ llvm::Value* ASTAllocExpr::codegen() {
     throw InternalError("failed to generate bitcode for the initializer of the alloc expression");
   }
 
-  // TBD TYPE CHECKING - this needs upating
   // Since we do not support records all allocs are for 8 bytes, i.e., int64_t
   std::vector<Value *> twoArg;
   twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 1));
