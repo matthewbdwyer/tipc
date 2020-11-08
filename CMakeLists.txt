@@ -62,7 +62,7 @@ endif()
 
 ######## LLVM rules for installed libraries ###########
 # We want to select the latest stable release even if others are installed
-find_package(LLVM 10 REQUIRED CONFIG)
+find_package(LLVM 11 REQUIRED CONFIG)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")

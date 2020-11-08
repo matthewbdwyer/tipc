@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
 declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=8
-declare -r LLVM_VERSION=10
+declare -r LLVM_VERSION=11
 
-echoerr() { 
-  echo "$@" 1>&2; 
+
+echogreen() {
+  local green=$(tput setaf 2)
+  local reset=$(tput sgr0)
+  echo "${green}${@}${reset}"
+}
+
+echoerr() {
+  local red=$(tput setaf 1)
+  local reset=$(tput sgr0)
+  echo "${red}${@}${reset}" 1>&2;
+  echo "$@" 1>&2;
 }
 
 
@@ -108,7 +118,11 @@ bootstrap() {
       exit 1
       ;;
   esac
-  echo bashrc has been updated - be sure to source the file or restart your shell.
+
+  echogreen
+  echogreen '--------------------------------------------------------------------------------'
+  echogreen '* bashrc has been updated - be sure to source the file or restart your shell.  *'
+  echogreen '--------------------------------------------------------------------------------'
 
 }
 

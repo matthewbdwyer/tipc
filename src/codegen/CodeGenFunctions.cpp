@@ -411,11 +411,11 @@ llvm::Value* ASTFunction::codegen() {
   } else {
     for (auto &arg : TheFunction->args()) {
       // Create an alloca for this argument and store its value
-      AllocaInst *argAlloc = CreateEntryBlockAlloca(TheFunction, arg.getName());
+      AllocaInst *argAlloc = CreateEntryBlockAlloca(TheFunction, arg.getName().str());
       Builder.CreateStore(&arg, argAlloc);
 
       // Record name binding to alloca
-      NamedValues[arg.getName()] = argAlloc;
+      NamedValues[arg.getName().str()] = argAlloc;
     }
   }
 
@@ -544,8 +544,9 @@ llvm::Value* ASTFunAppExpr::codegen() {
    * and construct the per actual vector of types.
    */
   std::vector<Type *> actualTypes(getActuals().size(), Type::getInt64Ty(TheContext));
-  auto *funPtrType = PointerType::get(
-      FunctionType::get(Type::getInt64Ty(TheContext), actualTypes, false), 0);
+  auto *funType = FunctionType::get(Type::getInt64Ty(TheContext), actualTypes, false);
+  auto *funPtrType = PointerType::get(funType, 0);
+
 
   // Bitcast the function pointer to the call-site determined function type
   auto *castFunPtr =
@@ -561,7 +562,7 @@ llvm::Value* ASTFunAppExpr::codegen() {
     argsV.push_back(argVal);
   }
 
-  return Builder.CreateCall(castFunPtr, argsV, "calltmp");
+  return Builder.CreateCall(funType, castFunPtr, argsV, "calltmp");
 }
 
 llvm::Value* ASTAllocExpr::codegen() {
