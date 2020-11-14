@@ -82,7 +82,7 @@ do
 
   diff iotests/$executable.output $i > ${SCRATCH_DIR}/$executable.diff
 
-  if [[ -s ${SCRATCH_DIR}/$expected.diff ]]
+  if [[ -s ${SCRATCH_DIR}/$executable.diff ]]
   then
     echo -n "Test differences for : " 
     echo $i

@@ -1,6 +1,4 @@
-main() {
-  var z;
-  z = input;
+main(z) {
   z = z + 3;
   if (10 > z)
      error z;
