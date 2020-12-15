@@ -31,7 +31,7 @@ After cloning this repository you can build the compiler by moving to into the t
   5. `cmake ..`
   6. `make`
 
-The build process will download an up to date version of ANTLR4 if needed, build the C++ target for ANTLR4, and then build all of `tipc` including its substantial body of unit tests.  This may take some time - to speed it up use multiple threads in the `make` commend, e.g., `make -j6`.
+The build process will download an up to date version of ANTLR4 if needed, build the C++ target for ANTLR4, and then build all of `tipc` including its substantial body of unit tests.  This may take some time - to speed it up use multiple threads in the `make` command, e.g., `make -j6`.
 
 You may see some warnings, e.g.,
   * CMake policy warnings
@@ -47,7 +47,7 @@ All of the tests should pass.
 
 ### Windows Subsystem for Linux
 
-If you are using a Windows machine, tipc can be built in the Windows Subsystem for Linux (WSL). [Here](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2) are instructions to install WSL and upgrade to WSL2. It is highly reccomended to upgrade to WSL2. Once installed, you should install
+If you are using a Windows machine, tipc can be built in the Windows Subsystem for Linux (WSL). [Here](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2) are instructions to install WSL and upgrade to WSL2. It is highly recommended to upgrade to WSL2. Once installed, you should install
 [Ubuntu 20.04](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2). Once finished, you can open a virtual instance of Ubuntu and follow 
 the instructions above to build tipc.
 
