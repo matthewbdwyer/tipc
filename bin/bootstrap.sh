@@ -3,8 +3,8 @@ declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=8
 declare -r LLVM_VERSION=10
 
-echoerr() { 
-  echo "$@" 1>&2; 
+echoerr() {
+  echo "$@" 1>&2;
 }
 
 
@@ -57,11 +57,35 @@ bootstrap_ubuntu() {
   bootstrap_ubuntu_env
 }
 
+bootstrap_arch_dependencies() {
+  sudo pacman -Syu
+
+  sudo pacman -S \
+    jdk$JAVA_VERSION-openjdk \
+    git \
+    cmake \
+    pkgconf \
+    zlib \
+    llvm$LLVM_VERSION \
+    llvm-libs \
+    clang
+}
+
+bootstrap_arch_env() {
+  echo export TIPCLANG=$(which clang) >> ~/.bashrc
+}
+
+bootstrap_arch() {
+  bootstrap_arch_dependencies
+  bootstrap_arch_env
+}
 
 bootstrap_linux() {
   . /etc/os-release
   if [ $ID == ubuntu -o $ID == pop ]; then
     bootstrap_ubuntu
+  elif [ $ID == arch -o $ID == pop ]; then
+    bootstrap_arch
   else
     echoerr $ID is not supported.
     exit 1
@@ -113,4 +137,3 @@ bootstrap() {
 }
 
 bootstrap
-
