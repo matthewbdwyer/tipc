@@ -62,7 +62,13 @@ endif()
 
 ######## LLVM rules for installed libraries ###########
 # We want to select the latest stable release even if others are installed
-find_package(LLVM 11 REQUIRED CONFIG)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  find_package(LLVM 11.1.0 REQUIRED CONFIG)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  find_package(LLVM 11.0.0 REQUIRED CONFIG)
+else()
+  message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} is not supported")
+endif()
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
