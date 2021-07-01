@@ -16,6 +16,7 @@
 #include "llvm/IR/Verifier.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
+#include "llvm/Support/Host.h"
 #include "llvm/Support/TypeSize.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/TargetSelect.h"
@@ -214,7 +215,7 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
   auto TheModule = std::make_unique<Module>(programName, TheContext);
 
   // Set the default target triple for this platform
-  TheModule->setTargetTriple(sys::getDefaultTargetTriple());
+  TheModule->setTargetTriple(llvm::sys::getDefaultTargetTriple());
 
   // Initialize nop declaration
   nop = Intrinsic::getDeclaration(TheModule.get(), Intrinsic::donothing);
