@@ -1,4 +1,5 @@
 #include "TypeConstraint.h"
+
 #include "iostream"
 
 TypeConstraint::TypeConstraint(std::shared_ptr<TipType> l, std::shared_ptr<TipType> r): lhs(l), rhs(r) {};

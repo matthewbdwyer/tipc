@@ -1,6 +1,6 @@
-#include "catch.hpp"
 #include "ASTHelper.h"
-#include "GeneralHelper.h"
+
+#include <catch2/catch.hpp>
 
 #include <iostream>
 

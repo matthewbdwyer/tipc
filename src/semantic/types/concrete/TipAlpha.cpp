@@ -1,5 +1,6 @@
 #include "TipAlpha.h"
 #include "TipTypeVisitor.h"
+
 #include <sstream>
 
 TipAlpha::TipAlpha(ASTNode* node): TipVar(node), name("") {};

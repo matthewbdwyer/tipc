@@ -1,5 +1,6 @@
 #include "TipRef.h"
 #include "TipTypeVisitor.h"
+
 #include <sstream>
 
 TipRef::TipRef(std::shared_ptr<TipType> of)

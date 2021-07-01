@@ -1,6 +1,7 @@
 #include "CheckAssignable.h"
 #include "PrettyPrinter.h"
 #include "SemanticError.h"
+
 #include <sstream>
 
 namespace {

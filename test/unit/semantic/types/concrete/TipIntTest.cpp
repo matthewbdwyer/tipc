@@ -1,6 +1,8 @@
-#include "catch.hpp"
 #include "TipInt.h"
 #include "TipVar.h"
+
+#include <catch2/catch.hpp>
+
 #include <sstream>
 #include <string>
 

@@ -1,12 +1,13 @@
 #include "Unifier.h"
-
 #include "Substituter.h"
 #include "TipAlpha.h"
 #include "TipCons.h"
 #include "TipMu.h"
 #include "TypeVars.h"
 #include "UnificationError.h"
+
 #include "loguru.hpp"
+
 #include <iostream>
 #include <sstream>
 #include <utility>

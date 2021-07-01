@@ -1,7 +1,9 @@
-#include "catch.hpp"
 #include "TypeConstraint.h"
 #include "TipFunction.h"
 #include "TipInt.h"
+
+#include <catch2/catch.hpp>
+
 #include <vector>
 #include <sstream>
 

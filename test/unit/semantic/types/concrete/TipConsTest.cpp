@@ -1,10 +1,11 @@
-#include "catch.hpp"
 #include "TipCons.h"
 #include "TipRecord.h"
 #include "TipRef.h"
 #include "TipInt.h"
 #include "TipVar.h"
 #include "TipTypeVisitor.h"
+
+#include <catch2/catch.hpp>
 
 TEST_CASE("TipCons: Test doMatch considers arity" "[TipCons]") {
     auto tipInt = std::make_shared<TipInt>();

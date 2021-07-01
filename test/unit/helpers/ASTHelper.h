@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTBuilder.h"
+
 #include <istream>
 
 class ASTHelper {

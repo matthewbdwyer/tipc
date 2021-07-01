@@ -1,6 +1,7 @@
 #include "TipVar.h"
 #include "TipAlpha.h"
 #include "TipTypeVisitor.h"
+
 #include <sstream>
 #include <iostream>
 

@@ -1,8 +1,9 @@
 #include "TypeConstraintCollectVisitor.h"
-
 #include "ASTHelper.h"
 #include "SymbolTable.h"
-#include "catch.hpp"
+
+#include <catch2/catch.hpp>
+
 #include <iostream>
 #include <sstream>
 
