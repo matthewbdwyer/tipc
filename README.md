@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/matthewbdwyer/tipc.svg?branch=devel)](https://travis-ci.com/matthewbdwyer/tipc)
-[![codecov.io](https://codecov.io/gh/matthewbdwyer/tipc/coverage.svg?branch=devel&flag=codecoverage)](https://codecov.io/gh/matthewbdwyer/tipc?branch=devel)
-[![codecov.io](https://img.shields.io/endpoint?logo=codecov&logoColor=blue&url=https%3A%2F%2Fmatthewbdwyer.github.io%2Ftipc%2Fdoccoverage.json)](https://codecov.io/gh/matthewbdwyer/tipc?branch=devel)
+[![Build Status](https://github.com/matthewbdwyer/tipc/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/matthewbdwyer/tipc/actions/workflows/build-and-test.yml)
+[![codecov.io](https://codecov.io/gh/matthewbdwyer/tipc/coverage.svg?branch=main&flag=codecoverage)](https://codecov.io/gh/matthewbdwyer/tipc?branch=main)
+[![codecov.io](https://img.shields.io/endpoint?logo=codecov&logoColor=blue&url=https%3A%2F%2Fmatthewbdwyer.github.io%2Ftipc%2Fdoccoverage.json)](https://codecov.io/gh/matthewbdwyer/tipc?branch=main)
 
 tipc
 =========

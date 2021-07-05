@@ -1,0 +1,70 @@
+name: build
+
+defaults:
+  run:
+    shell: bash -ieo pipefail {0}
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: 
+          - ubuntu-18.04
+          - macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./bin/bootstrap.sh
+      - run: |
+          mkdir build
+          pushd build
+          cmake ../
+          make -j2
+          popd
+      - run: ./bin/runtests.sh
+      - name: Cache build
+        if: runner.os == 'Linux'
+        id: cache-build
+        uses: actions/cache@v2
+        with:
+          path: build
+          key: linux-build-${{ github.sha }}
+  code-coverage:
+    needs: build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Restore build
+        id: cache-build
+        uses: actions/cache@v2
+        with:
+          path: build
+          key: linux-build-${{ github.sha }}
+      - run: sudo apt install lcov 
+      - run: ./bin/gencov.sh
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./coverage.info
+          flags: codecoverage 
+  docs:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install lcov doxygen graphviz python3 python3-pip python3-setuptools
+      - run: python3 -m pip install coverxygen
+      - run: ./bin/gendocs.sh
+      - uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: docs/html
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./docs/doc-coverage.info
+          flags: doccoverage 
+
