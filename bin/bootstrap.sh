@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -eux
+
 declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=8
 declare -r LLVM_VERSION=11
@@ -9,6 +11,7 @@ echogreen() {
   local reset=$(tput sgr0)
   echo "${green}${@}${reset}"
 }
+
 
 echoerr() {
   local red=$(tput setaf 1)
@@ -23,6 +26,10 @@ bootstrap_ubuntu_dependencies() {
   sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
   sudo apt -y update
 
+  wget https://apt.kitware.com/kitware-archive.sh
+  chmod +x kitware-archive.sh
+  sudo ./kitware-archive.sh
+
   sudo apt -y install \
     java-1.$JAVA_VERSION.0-amazon-corretto-jdk \
     git \
@@ -32,8 +39,10 @@ bootstrap_ubuntu_dependencies() {
     antlr$ANTLR_VERSION \
     zlib1g-dev \
     lcov
-
-  sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+  
+  wget https://apt.llvm.org/llvm.sh
+  chmod +x llvm.sh
+  sudo ./llvm.sh $LLVM_VERSION
 
   sudo apt -y install \
     libllvm-$LLVM_VERSION-ocaml-dev \
@@ -78,10 +87,12 @@ bootstrap_linux() {
   fi
 }
 
+
 bootstrap_mac_env() {
   echo export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake >> ~/.bashrc
   echo export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang >> ~/.bashrc
 }
+
 
 bootstrap_mac_dependencies() {
   if ! [ -x "$(command -v brew)" ]; then
@@ -123,7 +134,6 @@ bootstrap() {
   echogreen '--------------------------------------------------------------------------------'
   echogreen '* bashrc has been updated - be sure to source the file or restart your shell.  *'
   echogreen '--------------------------------------------------------------------------------'
-
 }
 
 bootstrap
