@@ -1,0 +1,9 @@
+<map id="/home/travis/build/matthewbdwyer/tipc/src/semantic/weeding" name="/home/travis/build/matthewbdwyer/tipc/src/semantic/weeding">
+<area shape="rect" id="node1" href="dir_fd06159f0ff580a3b08f97b0a9bd954b.html" title="weeding" alt="" coords="44,52,121,100"/>
+<area shape="rect" id="node2" href="dir_8509b06bafa958d2011203a730bf5778.html" title="frontend" alt="" coords="5,148,83,196"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000014_000003.html" title="2" alt="" coords="64,126,73,141"/>
+<area shape="rect" id="node3" href="dir_acc2056b73c4fda97caebb7ceca7df66.html" title="error" alt="" coords="45,244,117,292"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000014_000002.html" title="1" alt="" coords="94,220,104,235"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000003_000002.html" title="1" alt="" coords="68,216,78,231"/>
+<area shape="rect" id="clust1" href="dir_f8bacd05876e9609c05b390a7201ebf7.html" title="semantic" alt="" coords="33,16,132,111"/>
+</map>

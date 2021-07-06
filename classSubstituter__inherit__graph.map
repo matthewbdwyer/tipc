@@ -1,0 +1,4 @@
+<map id="Substituter" name="Substituter">
+<area shape="rect" id="node3" href="$classCopier.html" title="Makes a copy of a TipType. " alt="" coords="31,155,95,181"/>
+<area shape="rect" id="node2" href="$classTipTypeVisitor.html" title="Base class for TIP type visitors. " alt="" coords="5,5,120,32"/>
+</map>

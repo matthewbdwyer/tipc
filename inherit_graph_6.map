@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$classError.html" title="Base class for tipc errors. " alt="" coords="140,56,193,83"/>
+<area shape="rect" id="node3" href="$classInternalError.html" title="Class for tipc internal errors. " alt="" coords="247,5,350,32"/>
+<area shape="rect" id="node4" href="$classParseError.html" title="Class for tipc parse errors. " alt="" coords="255,56,343,83"/>
+<area shape="rect" id="node5" href="$classSemanticError.html" title="Class for tipc semantic errors. " alt="" coords="241,107,356,133"/>
+<area shape="rect" id="node6" href="$classUnificationError.html" title="A runtime error when unifying type terms. " alt="" coords="404,107,527,133"/>
+</map>

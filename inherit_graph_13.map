@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classTipTypeVisitor.html" title="Base class for TIP type visitors. " alt="" coords="5,31,120,57"/>
+<area shape="rect" id="node2" href="$classSubstituter.html" title="Produces a type with designated variable substitutions. " alt="" coords="168,5,261,32"/>
+<area shape="rect" id="node4" href="$classTypeVars.html" title="Produces set of type variables in a type expression. " alt="" coords="175,56,255,83"/>
+<area shape="rect" id="node3" href="$classCopier.html" title="Makes a copy of a TipType. " alt="" coords="309,5,373,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="Error" name="Error">
+<area shape="rect" id="node3" href="$classInternalError.html" title="Class for tipc internal errors. " alt="" coords="5,155,108,181"/>
+<area shape="rect" id="node4" href="$classParseError.html" title="Class for tipc parse errors. " alt="" coords="133,155,221,181"/>
+<area shape="rect" id="node5" href="$classSemanticError.html" title="Class for tipc semantic errors. " alt="" coords="245,155,359,181"/>
+<area shape="rect" id="node6" href="$classUnificationError.html" title="A runtime error when unifying type terms. " alt="" coords="241,229,363,256"/>
+</map>

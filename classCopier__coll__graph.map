@@ -1,0 +1,4 @@
+<map id="Copier" name="Copier">
+<area shape="rect" id="node2" href="$classSubstituter.html" title="Produces a type with designated variable substitutions. " alt="" coords="16,80,109,107"/>
+<area shape="rect" id="node3" href="$classTipTypeVisitor.html" title="Base class for TIP type visitors. " alt="" coords="5,5,120,32"/>
+</map>

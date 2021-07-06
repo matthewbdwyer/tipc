@@ -1,0 +1,5 @@
+<map id="TipTypeVisitor" name="TipTypeVisitor">
+<area shape="rect" id="node2" href="$classSubstituter.html" title="Produces a type with designated variable substitutions. " alt="" coords="5,80,99,107"/>
+<area shape="rect" id="node4" href="$classTypeVars.html" title="Produces set of type variables in a type expression. " alt="" coords="123,80,203,107"/>
+<area shape="rect" id="node3" href="$classCopier.html" title="Makes a copy of a TipType. " alt="" coords="20,155,84,181"/>
+</map>

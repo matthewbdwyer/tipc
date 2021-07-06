@@ -1,0 +1,8 @@
+<map id="/home/travis/build/matthewbdwyer/tipc/src/error/SemanticError.h" name="/home/travis/build/matthewbdwyer/tipc/src/error/SemanticError.h">
+<area shape="rect" id="node2" href="$FunctionNameCollector_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/symboltable\l/FunctionNameCollector.cpp" alt="" coords="5,109,208,180"/>
+<area shape="rect" id="node3" href="$LocalNameCollector_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/symboltable\l/LocalNameCollector.cpp" alt="" coords="232,109,427,180"/>
+<area shape="rect" id="node4" href="$UnificationError_8h.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/types/solver\l/UnificationError.h" alt="" coords="451,109,645,180"/>
+<area shape="rect" id="node6" href="$CheckAssignable_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/weeding\l/CheckAssignable.cpp" alt="" coords="669,109,837,180"/>
+<area shape="rect" id="node7" href="$tipc_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/tipc.cpp" alt="" coords="861,117,1021,173"/>
+<area shape="rect" id="node5" href="$Unifier_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/types/solver\l/Unifier.cpp" alt="" coords="451,228,645,299"/>
+</map>

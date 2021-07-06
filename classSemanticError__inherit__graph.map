@@ -1,0 +1,4 @@
+<map id="SemanticError" name="SemanticError">
+<area shape="rect" id="node4" href="$classUnificationError.html" title="A runtime error when unifying type terms. " alt="" coords="5,229,128,256"/>
+<area shape="rect" id="node2" href="$classError.html" title="Base class for tipc errors. " alt="" coords="40,80,93,107"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="TipCons" name="TipCons">
+<area shape="rect" id="node3" href="$classTipFunction.html" title="A proper type representing a function. " alt="" coords="5,155,101,181"/>
+<area shape="rect" id="node4" href="$classTipInt.html" title="A proper type representing an int. " alt="" coords="125,155,184,181"/>
+<area shape="rect" id="node5" href="$classTipRecord.html" title="A proper type representing a record. " alt="" coords="209,155,295,181"/>
+<area shape="rect" id="node6" href="$classTipRef.html" title="A proper type representing a reference. " alt="" coords="319,155,382,181"/>
+<area shape="rect" id="node2" href="$classTipType.html" title="Abstract base class of all types. " alt="" coords="167,5,239,32"/>
+</map>

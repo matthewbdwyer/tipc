@@ -1,0 +1,11 @@
+<map id="ASTStmt" name="ASTStmt">
+<area shape="rect" id="node3" href="$classASTAssignStmt.html" title="Class for assignment. " alt="" coords="263,5,383,32"/>
+<area shape="rect" id="node4" href="$classASTBlockStmt.html" title="Class for block of statements. " alt="" coords="265,56,380,83"/>
+<area shape="rect" id="node5" href="$classASTDeclStmt.html" title="Class for local variable declaration statement. " alt="" coords="269,107,376,133"/>
+<area shape="rect" id="node6" href="$classASTErrorStmt.html" title="Class for a error statement. " alt="" coords="268,157,377,184"/>
+<area shape="rect" id="node7" href="$classASTIfStmt.html" title="Class for if&#45;then&#45;else. " alt="" coords="279,208,366,235"/>
+<area shape="rect" id="node8" href="$classASTOutputStmt.html" title="Class for an output statement. " alt="" coords="261,259,384,285"/>
+<area shape="rect" id="node9" href="$classASTReturnStmt.html" title="Class for a return statement. " alt="" coords="263,309,383,336"/>
+<area shape="rect" id="node10" href="$classASTWhileStmt.html" title="Class for a while loop. " alt="" coords="265,360,380,387"/>
+<area shape="rect" id="node2" href="$classASTNode.html" title="Abstract base class for all AST nodes. " alt="" coords="5,183,87,209"/>
+</map>

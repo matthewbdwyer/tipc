@@ -1,0 +1,4 @@
+<map id="ASTDeclStmt" name="ASTDeclStmt">
+<area shape="rect" id="node2" href="$classASTStmt.html" title="Base class for all statement nodes. " alt="" coords="19,80,98,107"/>
+<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes. " alt="" coords="18,5,99,32"/>
+</map>
