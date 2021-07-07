@@ -1,5 +1,6 @@
 #include "ASTNumberExpr.h"
 #include "ASTVisitor.h"
+
 #include <iostream>
 
 void ASTNumberExpr::accept(ASTVisitor * visitor) {

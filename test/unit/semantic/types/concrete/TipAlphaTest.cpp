@@ -1,7 +1,9 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
 #include "TipAlpha.h"
 #include "ASTNumberExpr.h"
+
+#include <catch2/catch.hpp>
+
 #include <sstream>
 
 TEST_CASE("TipAlpha: Test TipAlphas are compared by their underlying objects" "[TipAlpha]") {

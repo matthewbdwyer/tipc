@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
 
 project(tipc)
 
@@ -92,6 +92,15 @@ include_directories(${CMAKE_SOURCE_DIR}/externals/loguru)
 
 ######## build target including unit tests ###########
 add_subdirectory(src)
+
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v2.13.6)
+
+FetchContent_MakeAvailable(Catch2)
 
 option (BUILD_TESTING "Build the testing tree." ON)
 # Only build tests if we are the top-level project

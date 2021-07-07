@@ -1,4 +1,3 @@
-#include "catch.hpp"
 #include "ASTHelper.h"
 #include "ASTVariableExpr.h"
 #include "TipFunction.h"
@@ -11,9 +10,10 @@
 #include "TypeConstraintVisitor.h"
 #include "UnificationError.h"
 #include "Unifier.h"
+
+#include <catch2/catch.hpp>
+
 #include <iostream>
-#include <sstream>
-#include <Unifier.h>
 
 TEST_CASE("Unifier: Collect and then unify constraints", "[Unifier, Collect]") {
 

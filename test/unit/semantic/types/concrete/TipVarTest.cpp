@@ -1,6 +1,8 @@
-#include "catch.hpp"
 #include "TipInt.h"
 #include "TipVar.h"
+
+#include <catch2/catch.hpp>
+
 #include <vector>
 
 TEST_CASE("TipVar: test TipVars objects with the same underlying node are equal" "[TipVar]") {

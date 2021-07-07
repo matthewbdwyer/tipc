@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eux
+set -x
 
 declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=8

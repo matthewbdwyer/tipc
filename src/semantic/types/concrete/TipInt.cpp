@@ -1,5 +1,6 @@
 #include "TipInt.h"
 #include "TipTypeVisitor.h"
+
 #include <string>
 
 TipInt::TipInt() { }

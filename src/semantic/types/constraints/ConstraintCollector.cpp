@@ -1,6 +1,8 @@
 #include "ConstraintCollector.h"
-#include <iostream>
+
 #include "loguru.hpp"
+
+#include <iostream>
 
 namespace {
 bool verbose = false;

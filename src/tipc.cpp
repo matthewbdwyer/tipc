@@ -5,8 +5,10 @@
 #include "ParseError.h"
 #include "InternalError.h"
 #include "SemanticError.h"
+
 #include "llvm/Support/CommandLine.h"
 #include "loguru.hpp"
+
 #include <fstream>
 
 using namespace llvm;

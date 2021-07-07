@@ -1,4 +1,5 @@
 #include "FieldNameCollector.h"
+
 #include <algorithm>
 
 void FieldNameCollector::endVisit(ASTFieldExpr * element) {

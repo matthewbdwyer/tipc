@@ -1,15 +1,15 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
-
-// Defines catch matcher "ContainsWhat" for exception strings 
-#include "ExceptionContainsWhat.h"
 
 #include "ASTHelper.h"
 #include "SymbolTable.h"
 #include "SemanticError.h"
+#include "ExceptionContainsWhat.h"
+
+#include <catch2/catch.hpp>
 
 #include <iostream>
 #include <optional>
+
 
 TEST_CASE("Symbol Table: locals", "[SymbolTable]") {
     std::stringstream stream;

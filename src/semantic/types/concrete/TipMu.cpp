@@ -1,5 +1,6 @@
 #include "TipMu.h"
 #include "TipTypeVisitor.h"
+
 #include <iostream>
 
 TipMu::TipMu(std::shared_ptr<TipVar> v, std::shared_ptr<TipType> t): v(std::move(v)), t(std::move(t)) { }

@@ -1,7 +1,9 @@
-#include "catch.hpp"
 #include "TipInt.h"
 #include "TipRef.h"
 #include "TipFunction.h"
+
+#include <catch2/catch.hpp>
+
 #include <sstream>
 #include <iostream>
 

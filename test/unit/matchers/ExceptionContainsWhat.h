@@ -1,6 +1,10 @@
-#include <string>
+// NB (nphair): It looks like ANTLR unsets this. Find a better solution.
+#define EOF -1
+
+#include <catch2/catch.hpp>
+
 #include <iostream>
-#include "SemanticError.h"
+#include <string>
 
 class ExceptionContainsWhat : public Catch::MatcherBase<std::exception> {
 public:

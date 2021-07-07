@@ -1,5 +1,6 @@
 #include "TipFunction.h"
 #include "TipTypeVisitor.h"
+
 #include <sstream>
 
 TipFunction::TipFunction(std::vector<std::shared_ptr<TipType>> params, std::shared_ptr<TipType> ret):

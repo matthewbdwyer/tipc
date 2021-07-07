@@ -1,12 +1,12 @@
 #pragma once
 
-#include <string>
+#include "AST.h"
 
-#include "antlr4-runtime.h"
 #include "TIPParser.h"
 #include "TIPBaseVisitor.h"
+#include "antlr4-runtime.h"
 
-#include "AST.h"
+#include <string>
 
 using namespace antlrcpp;
 
