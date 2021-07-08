@@ -1,5 +1,5 @@
-<map id="/home/travis/build/matthewbdwyer/tipc/src/semantic/types/solver/Substituter.h" name="/home/travis/build/matthewbdwyer/tipc/src/semantic/types/solver/Substituter.h">
-<area shape="rect" id="node2" href="$Substituter_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/types/solver\l/Substituter.cpp" alt="" coords="5,124,199,195"/>
-<area shape="rect" id="node3" href="$Unifier_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/types/solver\l/Unifier.cpp" alt="" coords="223,124,416,195"/>
-<area shape="rect" id="node4" href="$UnionFind_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/types/solver\l/UnionFind.cpp" alt="" coords="440,124,633,195"/>
+<map id="/home/runner/work/tipc/tipc/src/semantic/types/solver/Substituter.h" name="/home/runner/work/tipc/tipc/src/semantic/types/solver/Substituter.h">
+<area shape="rect" id="node2" href="$Substituter_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/solver/Substituter.cpp" alt="" coords="5,109,183,165"/>
+<area shape="rect" id="node3" href="$Unifier_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/solver/Unifier.cpp" alt="" coords="207,109,384,165"/>
+<area shape="rect" id="node4" href="$UnionFind_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/solver/UnionFind.cpp" alt="" coords="408,109,585,165"/>
 </map>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>tipc: /home/travis/build/matthewbdwyer/tipc/src/frontend/CMakeLists.txt File Reference</title>
+<title>tipc: /home/runner/work/tipc/tipc/src/frontend/CMakeLists.txt File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">/home/travis/build/matthewbdwyer/tipc/src/frontend/CMakeLists.txt File Reference</div>  </div>
+<div class="title">/home/runner/work/tipc/tipc/src/frontend/CMakeLists.txt File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -74,10 +74,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ace4e1e4f779626303dfb1ee52dbd9201"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="frontend_2CMakeLists_8txt.html#ace4e1e4f779626303dfb1ee52dbd9201">antlr_target</a> (TIPGrammar TIP.g4 VISITOR) <a class="el" href="semantic_2weeding_2CMakeLists_8txt.html#a946e7c0401e270562466297b0774352f">add_library</a>(antlrgen STATIC $</td></tr>
-<tr class="separator:ace4e1e4f779626303dfb1ee52dbd9201"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab39e4c77cc87d15bb3e3c02596d80a2a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="frontend_2CMakeLists_8txt.html#ab39e4c77cc87d15bb3e3c02596d80a2a">target_link_libraries</a> (antlrgen antlr4_static coverage_config) <a class="el" href="semantic_2CMakeLists_8txt.html#a1bd63cc825017b2dbd66994cafb79db4">add_subdirectory</a>(ast) <a class="el" href="semantic_2CMakeLists_8txt.html#a1bd63cc825017b2dbd66994cafb79db4">add_subdirectory</a>(prettyprint) <a class="el" href="semantic_2weeding_2CMakeLists_8txt.html#a946e7c0401e270562466297b0774352f">add_library</a>(frontend) target_sources(frontend PUBLIC $</td></tr>
-<tr class="separator:ab39e4c77cc87d15bb3e3c02596d80a2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d8ad19021449e663334e3d083d70a90"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="frontend_2CMakeLists_8txt.html#a7d8ad19021449e663334e3d083d70a90">antlr_target</a> (TIPGrammar TIP.g4 VISITOR) set_property(GLOBAL PROPERTY GrammarIncludeDir $</td></tr>
+<tr class="separator:a7d8ad19021449e663334e3d083d70a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a147adbd1a94634dca0f9d5ccc0a6fd58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="frontend_2CMakeLists_8txt.html#a147adbd1a94634dca0f9d5ccc0a6fd58">add_library</a> (antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS}) target_link_libraries(antlrgen PRIVATE antlr4_static coverage_config) <a class="el" href="semantic_2CMakeLists_8txt.html#aefd36ff7cedcaa21682fa89ec27487d9">add_subdirectory</a>(ast) <a class="el" href="semantic_2CMakeLists_8txt.html#aefd36ff7cedcaa21682fa89ec27487d9">add_subdirectory</a>(prettyprint) add_library(frontend) target_sources(frontend PRIVATE $</td></tr>
+<tr class="separator:a147adbd1a94634dca0f9d5ccc0a6fd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a8d3c3518d793541417a4845125da1ae1"></a>
@@ -95,8 +95,26 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ace4e1e4f779626303dfb1ee52dbd9201"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace4e1e4f779626303dfb1ee52dbd9201">&#9670;&nbsp;</a></span>antlr_target()</h2>
+<a id="a147adbd1a94634dca0f9d5ccc0a6fd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a147adbd1a94634dca0f9d5ccc0a6fd58">&#9670;&nbsp;</a></span>add_library()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">add_library </td>
+          <td>(</td>
+          <td class="paramtype">antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS}&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7d8ad19021449e663334e3d083d70a90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d8ad19021449e663334e3d083d70a90">&#9670;&nbsp;</a></span>antlr_target()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -106,24 +124,6 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">TIPGrammar TIP.g4&#160;</td>
           <td class="paramname"><em>VISITOR</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab39e4c77cc87d15bb3e3c02596d80a2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab39e4c77cc87d15bb3e3c02596d80a2a">&#9670;&nbsp;</a></span>target_link_libraries()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">target_link_libraries </td>
-          <td>(</td>
-          <td class="paramtype">antlrgen antlr4_static&#160;</td>
-          <td class="paramname"><em>coverage_config</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

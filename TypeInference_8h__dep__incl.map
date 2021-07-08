@@ -1,9 +1,9 @@
-<map id="/home/travis/build/matthewbdwyer/tipc/src/semantic/types/TypeInference.h" name="/home/travis/build/matthewbdwyer/tipc/src/semantic/types/TypeInference.h">
-<area shape="rect" id="node2" href="$SemanticAnalysis_8h.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/SemanticAnalysis.h" alt="" coords="386,109,627,165"/>
-<area shape="rect" id="node7" href="$SemanticAnalysis_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/SemanticAnalysis.cpp" alt="" coords="659,213,915,269"/>
-<area shape="rect" id="node8" href="$TypeInference_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/semantic/types/TypeInference.cpp" alt="" coords="763,109,1034,165"/>
-<area shape="rect" id="node3" href="$CodeGenerator_8h.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/codegen/CodeGenerator.h" alt="" coords="86,213,303,269"/>
-<area shape="rect" id="node5" href="$tipc_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/tipc.cpp" alt="" coords="261,317,421,373"/>
-<area shape="rect" id="node6" href="$CodeGenFunctions_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/codegen/CodeGenFunctions.cpp" alt="" coords="379,213,634,269"/>
-<area shape="rect" id="node4" href="$CodeGenerator_8cpp.html" title="/home/travis/build\l/matthewbdwyer/tipc\l/src/codegen/CodeGenerator.cpp" alt="" coords="5,317,237,373"/>
+<map id="/home/runner/work/tipc/tipc/src/semantic/types/TypeInference.h" name="/home/runner/work/tipc/tipc/src/semantic/types/TypeInference.h">
+<area shape="rect" id="node2" href="$SemanticAnalysis_8h.html" title="/home/runner/work/tipc\l/tipc/src/semantic/SemanticAnalysis.h" alt="" coords="421,117,690,158"/>
+<area shape="rect" id="node7" href="$SemanticAnalysis_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/SemanticAnalysis.cpp" alt="" coords="720,213,1004,255"/>
+<area shape="rect" id="node8" href="$TypeInference_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/TypeInference.cpp" alt="" coords="832,109,1009,165"/>
+<area shape="rect" id="node3" href="$CodeGenerator_8h.html" title="/home/runner/work/tipc\l/tipc/src/codegen/CodeGenerator.h" alt="" coords="94,213,339,255"/>
+<area shape="rect" id="node5" href="$tipc_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/tipc.cpp" alt="" coords="290,303,463,344"/>
+<area shape="rect" id="node6" href="$CodeGenFunctions_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/codegen/CodeGenFunctions.cpp" alt="" coords="414,213,697,255"/>
+<area shape="rect" id="node4" href="$CodeGenerator_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/codegen/CodeGenerator.cpp" alt="" coords="5,303,265,344"/>
 </map>
