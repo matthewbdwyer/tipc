@@ -21,7 +21,7 @@ This project implements `tipc` which compiles TIP programs into LLVM bitcode.  L
 
 ## Building tipc
 
-The project use [Travis CI](https://travis-ci.org) for building and testing and [CodeCov](https://codecov.io) for reporting code and documentation coverage.  The [.travis.yml](.travis.yml) file provides details of this process.  If you would prefer to build and test manually then read on.
+The project use [GitHub Actions](https://docs.github.com/en/actions) for building and testing and [CodeCov](https://codecov.io) for reporting code and documentation coverage.  The [build-and-test.yml](.github/workflows/build-and-test.yml) file provides details of this process.  If you would prefer to build and test manually then read on.
 
 After cloning this repository you can build the compiler by moving to into the top-level directory and issuing these commands:
   1. `./bin/bootstrap.sh`
@@ -164,7 +164,7 @@ The goal of this project is to provide a starting point for project work in an u
 
 First and foremost, the TIP language includes a number of rich features, e.g., high-order functions, and type inference, and the `tipc` compiler targets LLVM - a key component of a production compiler infrastructure.  These choices are intentional and while they create some challenges the project is intended to help demystify complex language features, e.g., parametric polymorphism, by illustrating how they can be realized.
 
-Second, the project attempts to use modern software development practices, e.g. Doxygen for in-code documentation, unit testing with Catch2, continuous integration with Travis CI, and code coverage with `lcov`.  
+Second, the project attempts to use modern software development practices, e.g. Doxygen for in-code documentation, unit testing with Catch2, continuous integration with GitHub Actions, and code coverage with `lcov`.  
 
 Third, the project intentionally makes heavy use of the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern) which is quite appropriate in the context of a compiler.  Our use of it is intended to demonstrate how this type of abstract design element in a system can yield conceptual simplicity and savings in development.   The project currently uses 6 visitors that extend [ASTVisitor](./src/frontend/ast/ASTVisitor.h) and another visitor from ANTLR4.
 
