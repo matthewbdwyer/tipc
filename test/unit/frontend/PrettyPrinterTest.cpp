@@ -110,7 +110,9 @@ prog() { var x, y, z; output x+y; return z; })";
     std::stringstream pp;
     auto ast = ASTHelper::build_ast(stream);
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
-    REQUIRE(pp.str() == expected);
+    std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
+    expected = GeneralHelper::removeTrailingWhitespace(expected);
+    REQUIRE(ppString == expected);
 }
 
 TEST_CASE("PrettyPrinter: Test embedded comment removal", "[PrettyPrinter]") {
@@ -128,7 +130,9 @@ TEST_CASE("PrettyPrinter: Test embedded comment removal", "[PrettyPrinter]") {
     std::stringstream pp;
     auto ast = ASTHelper::build_ast(stream);
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
-    REQUIRE(pp.str() == expected);
+    std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
+    expected = GeneralHelper::removeTrailingWhitespace(expected);
+    REQUIRE(ppString == expected);
 }
 
 TEST_CASE("PrettyPrinter: Test if print", "[PrettyPrinter]") {
@@ -149,7 +153,9 @@ TEST_CASE("PrettyPrinter: Test if print", "[PrettyPrinter]") {
     std::stringstream pp;
     auto ast = ASTHelper::build_ast(stream);
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
-    REQUIRE(pp.str() == expected);
+    std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
+    expected = GeneralHelper::removeTrailingWhitespace(expected);
+    REQUIRE(ppString == expected);
 }
 
 TEST_CASE("PrettyPrinter: Test nested if print", "[PrettyPrinter]") {
@@ -173,7 +179,9 @@ TEST_CASE("PrettyPrinter: Test nested if print", "[PrettyPrinter]") {
     std::stringstream pp;
     auto ast = ASTHelper::build_ast(stream);
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
-    REQUIRE(pp.str() == expected);
+    std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
+    expected = GeneralHelper::removeTrailingWhitespace(expected);
+    REQUIRE(ppString == expected);
 }
 
 TEST_CASE("PrettyPrinter: Test paren expr", "[PrettyPrinter]") {
@@ -191,7 +199,9 @@ TEST_CASE("PrettyPrinter: Test paren expr", "[PrettyPrinter]") {
     std::stringstream pp;
     auto ast = ASTHelper::build_ast(stream);
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
-    REQUIRE(pp.str() == expected);
+    std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
+    expected = GeneralHelper::removeTrailingWhitespace(expected);
+    REQUIRE(ppString == expected);
 }
 
 TEST_CASE("PrettyPrinter: Test while spacing", "[PrettyPrinter]") {
@@ -213,7 +223,9 @@ TEST_CASE("PrettyPrinter: Test while spacing", "[PrettyPrinter]") {
     std::stringstream pp;
     auto ast = ASTHelper::build_ast(stream);
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
-    REQUIRE(pp.str() == expected);
+    std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
+    expected = GeneralHelper::removeTrailingWhitespace(expected);
+    REQUIRE(ppString == expected);
 }
 
 
@@ -226,7 +238,7 @@ TEST_CASE("PrettyPrinter: Test funs and calls", "[PrettyPrinter]") {
   return (a + 1);
 }
 
-main() 
+main()        
 {
   output fun(9);
   return (fun(1) + fun(2));
@@ -236,5 +248,7 @@ main()
     std::stringstream pp;
     auto ast = ASTHelper::build_ast(stream);
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
-    REQUIRE(pp.str() == expected);
+    std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
+    expected = GeneralHelper::removeTrailingWhitespace(expected);
+    REQUIRE(ppString == expected);
 }
