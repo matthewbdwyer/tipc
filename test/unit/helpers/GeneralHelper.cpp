@@ -1,4 +1,5 @@
 #include "GeneralHelper.h"
+#include <cstddef>
 
 std::vector<std::string> GeneralHelper::tokenize(std::string str, char delim) {
   std::vector<std::string> tokens;
@@ -11,4 +12,20 @@ std::vector<std::string> GeneralHelper::tokenize(std::string str, char delim) {
   }
   tokens.push_back(str.substr(startIndex));
   return tokens;
+}
+
+std::string GeneralHelper::removeTrailingWhitespace(std::string str) {
+  std::string strNoWhiteSpace = "";
+  std::string delimeter = "\n";
+  const std::string WHITESPACE = " \t\f\v";
+  size_t pos = 0; 
+  while((pos = str.find(delimeter)) != std::string::npos){
+    std::string newLine = str.substr(0, pos);
+    size_t end = newLine.find_last_not_of(WHITESPACE);
+    newLine = (end == std::string::npos) ? "" : newLine.substr(0, end + 1);
+    strNoWhiteSpace += newLine+"\n";
+    str.erase(0,pos+delimeter.length());
+  }
+
+  return strNoWhiteSpace;
 }
