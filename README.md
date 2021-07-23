@@ -130,7 +130,7 @@ To facilitate development of `tipc` we have collected a number of helper scripts
 0. Follow steps 1-4 of the building tipc if you have not already
 1. Install VSCode using instructions listed for a supported operating system: [macOS](https://code.visualstudio.com/docs/setup/mac), [Linux](https://code.visualstudio.com/docs/setup/linux), [Windows](https://code.visualstudio.com/docs/setup/windows).
 2. Bring up the extension marketplace using Ctrl+Shift+X or clicking the four squares on the side bar
-3. Search for C++ to install the offical C/C++ extension produced by Microsoft (Not required but highly suggested)
+3. Search for C++ to install the offical C/C++ extension produced by Microsoft
 4. Open the project in VSCode using File->Open or simply type the command "code [path/to/tipc]"
 5. If you are planning on building using the command line, proceed with steps 5-6 of building tipc, otherwise install the CMake Tools in the extension marketplace and proceed.
 6. Open the Command Palette (Ctrl+Shift+P) and run CMake: Select a Kit. Select clang++-11 from the listed compilers
