@@ -41,6 +41,7 @@ bootstrap_ubuntu_dependencies() {
     lcov
   
   wget https://apt.llvm.org/llvm.sh
+  sed -i -E 's,Ubuntu_(.*),&\n    Pop_\1,g' llvm.sh
   chmod +x llvm.sh
   sudo ./llvm.sh $LLVM_VERSION
 
@@ -54,15 +55,13 @@ bootstrap_ubuntu_dependencies() {
     llvm-$LLVM_VERSION-runtime
 
   sudo apt -y install \
-    clang-$LLVM_VERSION \
     clang-tools-$LLVM_VERSION \
     clang-$LLVM_VERSION-doc \
     libclang-common-$LLVM_VERSION-dev \
     libclang-$LLVM_VERSION-dev \
     libclang1-$LLVM_VERSION \
     clang-format-$LLVM_VERSION \
-    python3-clang-$LLVM_VERSION \
-    clangd-$LLVM_VERSION
+    python3-clang-$LLVM_VERSION
 }
 
 
