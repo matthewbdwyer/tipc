@@ -20,13 +20,13 @@ static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
-static cl::opt<bool> debug("verbose", cl::desc("enable log messages"), cl::cat(TIPcat));
+static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 0-3)"), cl::cat(TIPcat));
 static cl::opt<bool> emitHrAsm("asm",
                            cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),
                            cl::cat(TIPcat));
 static cl::opt<std::string> logfile("log",
                                    cl::value_desc("logfile"),
-                                   cl::desc("log all messages to logfile (enables --verbose)"),
+                                   cl::desc("log all messages to logfile (enables --verbose 3)"),
                                    cl::cat(TIPcat));
 static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     loguru::g_preamble_uptime = false;
     loguru::g_preamble_thread = false;
     loguru::init(argc, argv);
-    loguru::g_stderr_verbosity = logging ? loguru::Verbosity_OFF : 1;
+    loguru::g_stderr_verbosity = logging ? loguru::Verbosity_OFF : debug;
     if (logging) {
       loguru::add_file(logfile.getValue().c_str(), loguru::Append, loguru::Verbosity_MAX);
     }
