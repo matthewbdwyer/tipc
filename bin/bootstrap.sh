@@ -5,6 +5,7 @@ declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=8
 declare -r LLVM_VERSION=11
 
+declare -r ROOT_DIR=${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}
 
 echogreen() {
   local green=$(tput setaf 2)
@@ -22,8 +23,12 @@ echoerr() {
 
 
 bootstrap_ubuntu_dependencies() {
-  wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add -
-  sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
+  [ -d /usr/share/keyrings ] || sudo mkdir -p /usr/share/keyrings
+
+  wget https://apt.corretto.aws/corretto.key 
+  gpg --dearmor corretto.key
+  sudo mv corretto.key.gpg /usr/share/keyrings/amazon-corretto-8-keyring.gpg
+  sudo cp ${ROOT_DIR}/bin/apt/amazon-corretto-8.sources /etc/apt/sources.list.d/
   sudo apt -y update
 
   wget https://apt.kitware.com/kitware-archive.sh
