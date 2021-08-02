@@ -118,6 +118,11 @@ int labelNum = 0;
 // Indicate whether the expression code gen is for an L-value
 bool lValueGen = false;
 
+// Indicate whether the expression code gen is for an alloc'd value
+bool allocFlag = false;
+// Indicate whether the expression code gen is for an alloc'd record
+bool recordAllocFlag = false;
+
 /*
  * The global function dispatch table is created in a shallow pass over
  * the function signatures, stored here, and then referenced in generating
@@ -566,15 +571,24 @@ llvm::Value* ASTFunAppExpr::codegen() {
 }
 
 llvm::Value* ASTAllocExpr::codegen() {
+  allocFlag = true;
   Value *argVal = getInitializer()->codegen();
+  allocFlag = false;
   if (argVal == nullptr) {
     throw InternalError("failed to generate bitcode for the initializer of the alloc expression");
   }
-
-  // Since we do not support records all allocs are for 8 bytes, i.e., int64_t
+  
+  u_int64_t size;
+  if(recordAllocFlag){
+    size = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
+  }
+  else{
+    size = 8;
+  }
   std::vector<Value *> twoArg;
   twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 1));
-  twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 8));
+  twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), size));
+  recordAllocFlag = false;
   auto *allocInst = Builder.CreateCall(callocFun, twoArg, "allocPtr");
   auto *castPtr = Builder.CreatePointerCast(
       allocInst, Type::getInt64PtrTy(TheContext), "castPtr");
@@ -646,35 +660,49 @@ llvm::Value* ASTDeRefExpr::codegen() {
  * Builds an instance of the UberRecord using the declared fields
  */
 llvm::Value* ASTRecordExpr::codegen() {
-  //Allocate the a pointer to an uber record
-  auto *allocaRecord = Builder.CreateAlloca(ptrToUberRecordType);
+  
+  // if(allocFlag){
+  //   //Allocate the a pointer to an uber record
+  //   auto *allocaRecord = Builder.CreateAlloca(ptrToUberRecordType);
 
-  // Use Builder to create the calloc call using pre-defined callocFun
-  auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
-  std::vector<Value *> callocArgs;
-  callocArgs.push_back(oneV); 
-  callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
-  auto *calloc = Builder.CreateCall(callocFun, callocArgs, "callocedPtr");
+  //   // Use Builder to create the calloc call using pre-defined callocFun
+  //   auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
+  //   std::vector<Value *> callocArgs;
+  //   callocArgs.push_back(oneV); 
+  //   callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
+  //   auto *calloc = Builder.CreateCall(callocFun, callocArgs, "callocedPtr");
 
-  //Bitcast the calloc call to theStruct Type
-  auto *recordPtr = Builder.CreatePointerCast(calloc, ptrToUberRecordType, "recordCalloc");
+  //   //Bitcast the calloc call to theStruct Type
+  //   auto recordPtr = Builder.CreatePointerCast(calloc, ptrToUberRecordType, "recordCalloc");
 
-  //Store the ptr to the record in the record alloc
-  Builder.CreateStore(recordPtr, allocaRecord);
+  //   //Store the ptr to the record in the record alloc
+  //   Builder.CreateStore(recordPtr, allocaRecord);
 
-  //Load allocaRecord
-  auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaRecord);
+  //   //Load allocaRecord
+  //   auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaRecord);
 
-  //For each field, generate GEP for location of field in the uberRecord
-  //Generate the code for the field and store it in the GEP
+  //   //For each field, generate GEP for location of field in the uberRecord
+  //   //Generate the code for the field and store it in the GEP
+  //   for(auto const &field : getFields()){
+  //       auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldIndex[field->getField()], field->getField());
+  //       auto value = field->codegen();
+  //       Builder.CreateStore(value, gep);
+  //   }
+
+  //   //Return int64 pointer to the record
+  // return Builder.CreatePtrToInt(recordPtr, Type::getInt64Ty(TheContext), "recordPtr");
+  // }
+// else{
+
+  recordAllocFlag = allocFlag;
+  auto *allocaRecord = Builder.CreateAlloca(uberRecordType);
   for(auto const &field : getFields()){
-      auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldIndex[field->getField()], field->getField());
-      auto value = field->codegen();
-      Builder.CreateStore(value, gep);
+    auto *gep = Builder.CreateStructGEP(allocaRecord, fieldIndex[field->getField()]);
+    auto value = field->codegen();
+    Builder.CreateStore(value, gep);
   }
 
-  //Return int64 pointer to the record
-  return Builder.CreatePtrToInt(recordPtr, Type::getInt64Ty(TheContext), "recordPtr");
+  return Builder.CreatePtrToInt(allocaRecord, Type::getInt64Ty(TheContext), "record");
 }
 
 /* field : val field expression
