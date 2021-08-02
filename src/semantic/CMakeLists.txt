@@ -2,6 +2,7 @@
 add_subdirectory(weeding)
 add_subdirectory(symboltable)
 add_subdirectory(types)
+add_subdirectory(cfa)
 
 # Define a library for all semantic analyses including the underlying passes
 add_library(semantic)
@@ -12,6 +13,7 @@ target_include_directories(
   semantic
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
           ${CMAKE_CURRENT_SOURCE_DIR}/symboltable
+          ${CMAKE_CURRENT_SOURCE_DIR}/cfa
           ${CMAKE_CURRENT_SOURCE_DIR}/types
           ${CMAKE_CURRENT_SOURCE_DIR}/types/concrete
           ${CMAKE_CURRENT_SOURCE_DIR}/types/constraints

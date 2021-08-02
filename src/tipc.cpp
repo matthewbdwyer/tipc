@@ -5,7 +5,6 @@
 #include "ParseError.h"
 #include "InternalError.h"
 #include "SemanticError.h"
-
 #include "llvm/Support/CommandLine.h"
 #include "loguru.hpp"
 
@@ -14,16 +13,13 @@
 using namespace llvm;
 using namespace std;
 
-static cl::OptionCategory TIPcat("tipc Options",
-                                 "Options for controlling the TIP compilation process.");
+static cl::OptionCategory TIPcat("tipc Options","Options for controlling the TIP compilation process.");
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<bool> debug("verbose", cl::desc("enable log messages"), cl::cat(TIPcat));
-static cl::opt<bool> emitHrAsm("asm",
-                           cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),
-                           cl::cat(TIPcat));
+static cl::opt<bool> emitHrAsm("asm",cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),cl::cat(TIPcat));
 static cl::opt<std::string> logfile("log",
                                    cl::value_desc("logfile"),
                                    cl::desc("log all messages to logfile (enables --verbose)"),

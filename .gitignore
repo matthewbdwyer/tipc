@@ -33,3 +33,5 @@ xml/
 
 # reports
 coverage.out/
+/src/optimizer/OptimizerNew.cpp
+/src/optimizer/OptimizerNew_backup.cpp
