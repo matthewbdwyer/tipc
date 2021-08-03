@@ -6,9 +6,10 @@
 /*! \brief Class for if-then-else.
  */
 class ASTIfStmt : public ASTStmt {
-  std::unique_ptr<ASTExpr> COND;
-  std::unique_ptr<ASTStmt> THEN, ELSE;
+  std::shared_ptr<ASTExpr> COND;
+  std::shared_ptr<ASTStmt> THEN, ELSE;
 public:
+  std::vector<std::shared_ptr<ASTNode>> getChildren() override;
   ASTIfStmt(std::unique_ptr<ASTExpr> COND, std::unique_ptr<ASTStmt> THEN,
             std::unique_ptr<ASTStmt> ELSE)
       : COND(std::move(COND)), THEN(std::move(THEN)), ELSE(std::move(ELSE)) {}

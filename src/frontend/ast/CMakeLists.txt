@@ -1,7 +1,12 @@
 add_library(ast)
 target_sources(
   ast
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/AST.h
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.h
+          ${CMAKE_CURRENT_SOURCE_DIR}/ASTVisitor.h
+          ${CMAKE_CURRENT_SOURCE_DIR}/SyntaxTree.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/SyntaxTree.h
+          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/AST.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTAccessExpr.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTAccessExpr.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTAllocExpr.cpp
@@ -12,12 +17,12 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTBinaryExpr.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTBlockStmt.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTBlockStmt.h
+          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeRefExpr.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeRefExpr.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeclNode.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeclNode.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeclStmt.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeclStmt.h
-          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeRefExpr.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTDeRefExpr.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTErrorStmt.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTErrorStmt.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTExpr.h
@@ -31,7 +36,6 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTIfStmt.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTInputExpr.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTInputExpr.h
-          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTinternal.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTNode.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTNullExpr.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTNullExpr.h
@@ -52,13 +56,13 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTVariableExpr.h
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTWhileStmt.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTWhileStmt.h
-          ${CMAKE_CURRENT_SOURCE_DIR}/ASTVisitor.h
-          ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.h)
+          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTinternal.h)
 target_include_directories(
   ast
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/treetypes
+  PRIVATE ${ANTLR_TIPGrammar_OUTPUT_DIR}
+          ${CMAKE_CURRENT_SOURCE_DIR}
+          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes
           ${CMAKE_SOURCE_DIR}/src/frontend/prettyprint
-          ${ANTLR_TIPGrammar_OUTPUT_DIR})
-target_link_libraries(ast PRIVATE antlr4_static antlrgen codegen
+          ${CMAKE_SOURCE_DIR}/src/frontend/iterators)
+target_link_libraries(ast PRIVATE antlr4_static antlrgen codegen iterators
                                   coverage_config)

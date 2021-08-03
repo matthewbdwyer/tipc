@@ -12,3 +12,9 @@ std::ostream& ASTFieldExpr::print(std::ostream &out) const {
   out << getField() << ":" << *getInitializer();
   return out;
 }
+
+std::vector<std::shared_ptr<ASTNode>> ASTFieldExpr::getChildren() {
+  std::vector<std::shared_ptr<ASTNode>> children;
+  children.push_back(INIT);
+  return children;
+}

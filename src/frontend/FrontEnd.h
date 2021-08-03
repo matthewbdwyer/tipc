@@ -26,4 +26,6 @@ public:
    * \param program the root of an AST for a TIP program.
    */ 
   static void prettyprint(ASTProgram* program, std::ostream& os);
+
+  static void astVisualize(std::shared_ptr<ASTNode> node, std::ostream& os);
 };

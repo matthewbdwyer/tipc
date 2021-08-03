@@ -5,9 +5,10 @@
 /*! \brief Class for a record field access
  */
 class ASTAccessExpr : public ASTExpr {
-  std::unique_ptr<ASTExpr> RECORD;
+  std::shared_ptr<ASTExpr> RECORD;
   std::string FIELD;
 public:
+  std::vector<std::shared_ptr<ASTNode>> getChildren() override;
   ASTAccessExpr(std::unique_ptr<ASTExpr> RECORD, const std::string &FIELD)
       : RECORD(std::move(RECORD)), FIELD(FIELD) {}
   std::string getField() const { return FIELD; }

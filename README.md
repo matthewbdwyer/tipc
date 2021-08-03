@@ -63,20 +63,21 @@ OPTIONS:
 
 Generic Options:
 
-  --help          - Display available options (--help-hidden for more)
-  --help-list     - Display list of available options (--help-list-hidden for more)
-  --version       - Display the version of this program
+  --help                 - Display available options (--help-hidden for more)
+  --help-list            - Display list of available options (--help-list-hidden for more)
+  --version              - Display the version of this program
 
 tipc Options:
 Options for controlling the TIP compilation process.
 
-  --asm           - emit human-readable LLVM assembly language instead of LLVM bitcode
-  --do            - disable bitcode optimization
-  --log=<logfile> - log all messages to logfile (enables --verbose)
-  --pp            - pretty print
-  --ps            - print symbols
-  --pt            - print symbols with types (supercedes --ps)
-  --verbose       - enable log messages
+  --asm                  - emit human-readable LLVM assembly language instead of LLVM Bitcode
+  --da=<ast output file> - dump the ast to a file in the dot syntax
+  --do                   - disable bitcode optimization
+  --log=<logfile>        - log all messages to logfile (enables --verbose)
+  --pp                   - pretty print
+  --ps                   - print symbols
+  --pt                   - print symbols with types (supercedes --ps)
+  --verbose              - enable log messages
 ```
 By default it will accept a `.tip` file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a `.bc` file which is a binary encoding of the bitcodes.  You can see a human readable version of the bitcodes by running `llvm-dis` on the `.bc` file.
 

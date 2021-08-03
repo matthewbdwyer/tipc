@@ -4,6 +4,8 @@ target_sources(
   PRIVATE # First test defines CATCH_CONFIG_MAIN
           ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/PreOrderIteratorTest.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/ASTVisualizerTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTPrinterTest.cpp)
 target_include_directories(
   frontend_unit_tests
@@ -11,12 +13,14 @@ target_include_directories(
           ${CMAKE_SOURCE_DIR}/src/frontend/ast
           ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes
           ${CMAKE_SOURCE_DIR}/src/frontend/prettyprint
+          ${CMAKE_SOURCE_DIR}/src/frontend/iterators
           ${CMAKE_SOURCE_DIR}/test/unit/helpers)
 target_link_libraries(
   frontend_unit_tests
   PRIVATE antlr4_static
           ${llvm_libs}
           ast
+          iterators
           error
           frontend
           semantic

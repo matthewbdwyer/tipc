@@ -2,6 +2,13 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
+ASTBlockStmt::ASTBlockStmt(std::vector<std::unique_ptr<ASTStmt>> STMTS) {
+  for(auto &stmt : STMTS) {
+    std::shared_ptr<ASTStmt> s = std::move(stmt);
+    this->STMTS.push_back(s);
+  }
+}
+
 std::vector<ASTStmt*> ASTBlockStmt::getStmts() const {
   return rawRefs(STMTS);
 }
@@ -22,4 +29,12 @@ std::ostream& ASTBlockStmt::print(std::ostream &out) const {
   }
   out << "}";
   return out;
+}
+
+std::vector<std::shared_ptr<ASTNode>> ASTBlockStmt::getChildren() {
+  std::vector<std::shared_ptr<ASTNode>> children;
+  for (auto &stmt : STMTS) {
+    children.push_back(stmt);
+  }
+  return children;
 }

@@ -6,8 +6,9 @@
 /*! \brief Class for a error statement
  */
 class ASTErrorStmt : public ASTStmt {
-  std::unique_ptr<ASTExpr> ARG;
+  std::shared_ptr<ASTExpr> ARG;
 public:
+  std::vector<std::shared_ptr<ASTNode>> getChildren() override;
   ASTErrorStmt(std::unique_ptr<ASTExpr> ARG) : ARG(std::move(ARG)) {}
   ASTExpr* getArg() const { return ARG.get(); }
   void accept(ASTVisitor * visitor) override;

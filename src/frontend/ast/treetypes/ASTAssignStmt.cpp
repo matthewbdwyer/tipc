@@ -13,3 +13,10 @@ std::ostream& ASTAssignStmt::print(std::ostream &out) const {
   out << *getLHS() << " = " << *getRHS() << ";";
   return out;
 }
+
+std::vector<std::shared_ptr<ASTNode>> ASTAssignStmt::getChildren() {
+  std::vector<std::shared_ptr<ASTNode>> children;
+  children.push_back(LHS);
+  children.push_back(RHS);
+  return children;
+}
