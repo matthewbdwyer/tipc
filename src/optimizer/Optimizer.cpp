@@ -1,50 +1,35 @@
 #include "Optimizer.h"
-#include "llvm/IR/PassManager.h" // change from #include "llvm/IR/LegacyPassManager.h" to new pass manager
+
+#include "llvm/IR/LegacyPassManager.h"
 #include "llvm/Transforms/Utils.h"
-#include "llvm/Transforms/InstCombine/InstCombine.h" // to include instruction combine pass
+#include "llvm/Transforms/InstCombine/InstCombine.h"
 #include "llvm/Transforms/Scalar.h"
-#include "llvm/Transforms/Scalar/NewGVN.h" // to include GVN pass
-#include "llvm/Passes/PassBuilder.h"
-#include "llvm/Transforms/Utils/Mem2Reg.h"
-#include "llvm/Transforms/Utils/PromoteMemToReg.h"
-#include "llvm/Transforms/Scalar/SimplifyCFG.h"
-#include "llvm/Transforms/Scalar/Reassociate.h"
-#include "llvm/Transforms/Scalar/InstSimplifyPass.h" // to include InstSimplifyPass pass
+#include "llvm/Transforms/Scalar/GVN.h"
+
 using namespace llvm;
 
-void Optimizer::optimize(Module* theModule)
-{
-    // Create a pass manager to simplify generated module
-    FunctionPassManager FPM(true);
+void Optimizer::optimize(Module* theModule) {
+  // Create a pass manager to simplify generated module
+  auto TheFPM = std::make_unique<legacy::FunctionPassManager>(theModule);
 
-    FPM.addPass(PromotePass());
+  // Promote allocas to registers.
+  TheFPM->add(createPromoteMemoryToRegisterPass());
 
-    // Do simple "peephole" optimizations
-    FPM.addPass(InstCombinePass());  //InstCombinePass doesn't work
+  // Do simple "peephole" optimizations
+  TheFPM->add(createInstructionCombiningPass());
 
-    // Reassociate expressions.
-     FPM.addPass(ReassociatePass()); //ReassociatePass doesn't work
+  // Reassociate expressions.
+  TheFPM->add(createReassociatePass());
 
-    // Eliminate Common SubExpressions.
-    FPM.addPass(NewGVNPass());
+  // Eliminate Common SubExpressions.
+  TheFPM->add(createGVNPass());
 
-    // Simplify the control flow graph (deleting unreachable blocks, etc).
-    FPM.addPass(SimplifyCFGPass());
+  // Simplify the control flow graph (deleting unreachable blocks, etc).
+  TheFPM->add(createCFGSimplificationPass());
 
-    FunctionAnalysisManager FAM;
-    PassBuilder PB;
-    PB.registerFunctionAnalyses(FAM);
-
-    //run simplification pass on each function
-
-    for (auto& fun : theModule->getFunctionList()) {
-
-        std::string fun_name = fun.getName().str();
-
-//skipped to these method bcz of segmentation faults
-        if (fun_name.compare("llvm.donothing") == 0 || fun_name.compare("calloc") == 0 || fun_name.compare("_tip_error") == 0 || fun_name.compare("_tip_main_undefined") == 0 || 			  	fun_name.compare("_tip_output") == 0 || fun_name.compare("_tip_input") == 0) continue;
-
-        FPM.run(fun, FAM);
-    }
+  // initialize and run simplification pass on each function
+  TheFPM->doInitialization();
+  for (auto &fun : theModule->getFunctionList()) {
+    TheFPM->run(fun);
+  }
 }
-
