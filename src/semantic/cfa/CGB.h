@@ -23,7 +23,7 @@ public:
     bool visit(ASTFunAppExpr * element) override;
     bool visit(ASTVariableExpr * element) override;
     bool visit(ASTReturnStmt * element) override;
-    static void printCallGraph(const std::vector<ASTFunction*>&, const std::map<ASTFunction*, std::set<ASTFunction*>>&, std::ostream&);
+    static int printCallGraph(const std::vector<ASTFunction*>&, const std::map<ASTFunction*, std::set<ASTFunction*>>&, std::ostream&);
 private:
     CallGraphBuilder(CFAnalyzer pass);
     ASTNode* getCanonical(ASTNode * n);
