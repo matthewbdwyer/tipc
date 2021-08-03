@@ -2,6 +2,13 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
+ASTRecordExpr::ASTRecordExpr(std::vector<std::unique_ptr<ASTFieldExpr>> FIELDS) {
+  for(auto &field : FIELDS) {
+    std::shared_ptr<ASTFieldExpr> f = std::move(field);
+    this->FIELDS.push_back(f);
+  }
+}
+
 std::vector<ASTFieldExpr*> ASTRecordExpr::getFields() const {
   return rawRefs(FIELDS);
 }
@@ -30,3 +37,11 @@ std::ostream& ASTRecordExpr::print(std::ostream &out) const {
   return out;
 }  // LCOV_EXCL_LINE
 
+
+std::vector<std::shared_ptr<ASTNode>> ASTRecordExpr::getChildren() {
+  std::vector<std::shared_ptr<ASTNode>> children;
+  for(auto &field : FIELDS) {
+    children.push_back(field);
+  }
+  return children;
+}

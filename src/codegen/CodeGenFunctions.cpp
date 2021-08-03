@@ -1,3 +1,6 @@
+
+#include <ASTDeclNode.h>
+
 #include "AST.h"
 #include "SemanticAnalysis.h"
 #include "InternalError.h"

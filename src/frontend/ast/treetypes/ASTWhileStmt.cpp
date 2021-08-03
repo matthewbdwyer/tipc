@@ -13,3 +13,10 @@ std::ostream& ASTWhileStmt::print(std::ostream &out) const {
   out << "while (" << *getCondition() << ") " << *getBody();
   return out;
 }
+
+std::vector<std::shared_ptr<ASTNode>> ASTWhileStmt::getChildren() {
+  std::vector<std::shared_ptr<ASTNode>> children;
+  children.push_back(COND);
+  children.push_back(BODY);
+  return children;
+}

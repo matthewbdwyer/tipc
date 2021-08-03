@@ -1,4 +1,13 @@
 #include "ASTFunAppExpr.h"
+
+ASTFunAppExpr::ASTFunAppExpr(std::unique_ptr<ASTExpr> FUN, std::vector<std::unique_ptr<ASTExpr>> ACTUALS) {
+  this->FUN = std::move(FUN);
+
+  for(auto &actual : ACTUALS) {
+    std::shared_ptr<ASTExpr> a = std::move(actual);
+    this->ACTUALS.push_back(a);
+  }
+}
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
@@ -30,3 +39,12 @@ std::ostream& ASTFunAppExpr::print(std::ostream &out) const {
   out << ")";
   return out;
 }  // LCOV_EXCL_LINE
+
+std::vector<std::shared_ptr<ASTNode>> ASTFunAppExpr::getChildren() {
+  std::vector<std::shared_ptr<ASTNode>> children;
+  children.push_back(FUN);
+  for (auto &actual : ACTUALS) {
+    children.push_back(actual);
+  }
+  return children;
+}

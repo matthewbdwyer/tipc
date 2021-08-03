@@ -5,6 +5,7 @@
 #include "ASTBuilder.h"
 #include "PrettyPrinter.h"
 #include "ParseError.h"
+#include "ASTVisualizer.h"
 
 using namespace std;
 using namespace antlr4;
@@ -46,4 +47,10 @@ std::unique_ptr<ASTProgram> FrontEnd::parse(std::istream& stream){
 
 void FrontEnd::prettyprint(ASTProgram* program, std::ostream& os) {
   PrettyPrinter::print(program, os, ' ', 2);
+}
+
+void FrontEnd::astVisualize(std::shared_ptr<ASTNode> node, std::ostream& os) {
+  ASTVisualizer visualizer(os);
+  SyntaxTree syntaxTree(node);
+  visualizer.buildGraph(syntaxTree);
 }

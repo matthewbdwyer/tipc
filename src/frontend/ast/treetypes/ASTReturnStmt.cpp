@@ -13,3 +13,9 @@ std::ostream& ASTReturnStmt::print(std::ostream &out) const {
   return out;
 }
 
+
+std::vector<std::shared_ptr<ASTNode>> ASTReturnStmt::getChildren() {
+  std::vector<std::shared_ptr<ASTNode>> children;
+  children.push_back(ARG);
+  return children;
+}
