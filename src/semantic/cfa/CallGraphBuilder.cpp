@@ -1,14 +1,16 @@
 //
 // contributor: Spencer Martin
-//
+// modified by SBH
 
 #include "CGB.h"
 #include "loguru.hpp"
 
-std::map<ASTFunction*, std::set<ASTFunction*>> CallGraphBuilder::build(ASTProgram* p, CFAnalyzer cfa){
+std::unique_ptr<CallGraph> CallGraphBuilder::build(ASTProgram* ast, SymbolTable* st){
+
+    auto cfa = CFAnalyzer::analyze(ast,st);
     CallGraphBuilder cgb(cfa);
-    p -> accept(&cgb);
-    return cgb.graph;
+    ast -> accept(&cgb);
+    return std::make_unique<CallGraph>(cgb.graph, ast -> getFunctions());
 }
 
 CallGraphBuilder::CallGraphBuilder(CFAnalyzer p) : cfa(p){}
@@ -39,21 +41,5 @@ bool CallGraphBuilder::visit(ASTReturnStmt *element) {
     return true;
 }
 
-int CallGraphBuilder::printCallGraph(const std::vector<ASTFunction*>& functions, const std::map<ASTFunction*, std::set<ASTFunction*>>& graph, std::ostream& str){
-    str << "digraph CFG{\n";
-    std::map<ASTFunction*, int> inds;
-    int i = 0;
-    int total_edges=0;
-    for(auto f : functions){
-        inds[f] = i++;
-        str << "a" << inds[f] << " [label=\"" << f -> getName() << "\"];\n";
-    }
-    for(auto pair : graph){
-        for(auto dest : pair.second){
-            str << "a" << inds[pair.first] << " -> a" << inds[dest] << ";\n";
-            total_edges++;
-        }
-    }
-    str << "}\n";
-    return total_edges;
-}
+
+

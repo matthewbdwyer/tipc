@@ -4,6 +4,8 @@
 #include <map>
 #include <ostream>
 #include <set>
+#include "CallGraph.h"
+
 
 /*! \class CallGraphBuilder
  *  \brief Generates call graph of a program that represents calling relationships between subroutines
@@ -18,17 +20,20 @@
 
 class CallGraphBuilder : ASTVisitor{
 public:
-    static std::map<ASTFunction*, std::set<ASTFunction*>> build(ASTProgram*, CFAnalyzer cfa);
+    static std::unique_ptr<CallGraph> build(ASTProgram*,SymbolTable* st);
     bool visit(ASTFunction * element) override;
     bool visit(ASTFunAppExpr * element) override;
     bool visit(ASTVariableExpr * element) override;
     bool visit(ASTReturnStmt * element) override;
-    static int printCallGraph(const std::vector<ASTFunction*>&, const std::map<ASTFunction*, std::set<ASTFunction*>>&, std::ostream&);
+    static void printCallGraph(const std::vector<ASTFunction*>&, const std::map<ASTFunction*, std::set<ASTFunction*>>&, std::ostream&);
+    static int getTotalEdges(const std::map<ASTFunction*,std::set<ASTFunction*>>& graph);
 private:
     CallGraphBuilder(CFAnalyzer pass);
     ASTNode* getCanonical(ASTNode * n);
     ASTFunction* cfun;
     CFAnalyzer cfa;
     std::map<ASTFunction*, std::set<ASTFunction*>> graph;
+    //std::vector<std::pair<ASTFunction*, ASTFunction*>> edges;
+
 };
 

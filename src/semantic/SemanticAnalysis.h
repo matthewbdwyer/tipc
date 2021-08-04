@@ -5,6 +5,7 @@
 #include "SymbolTable.h"
 #include "TypeInference.h"
 #include <memory>
+#include "cfa/CGB.h"  //call graph builder header
 
 /*! \class SemanticAnalysis
  *  \brief Stores the results of semantic analysis passes.
@@ -17,6 +18,8 @@
 class SemanticAnalysis {
   std::unique_ptr<SymbolTable> symTable;
   std::unique_ptr<TypeInference> typeResults;
+  std::unique_ptr<CallGraph> callGraph;
+
 
 public:
   SemanticAnalysis(std::unique_ptr<SymbolTable> s, std::unique_ptr<TypeInference> t) 
@@ -27,7 +30,7 @@ public:
    *
    * Run weeding, symbol, and type checking analysis.  Errors in any of these
    * result in a SemanticError.  If no errors then ownership of semantic analysis
-   * results are transfered to caller.
+   * results are transferred to caller.
    * \sa SemanticError
    * \param ast The program AST
    * \return The unique pointer to the semantic analysis structure.
@@ -41,8 +44,15 @@ public:
   SymbolTable* getSymbolTable(); 
 
   /*! \fn getTypeResults
-   *  \brief Returns the type inferrence results.
+   *  \brief Returns the type inference results.
    * \sa TypeInference
    */
   TypeInference* getTypeResults();
+
+  /*! \fn getCallGraph
+  *  \brief Returns the call graph for the program.
+  * \sa CallGraph
+  */
+  CallGraph* getCallGraph();
+
 };

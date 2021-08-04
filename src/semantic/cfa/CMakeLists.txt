@@ -7,6 +7,9 @@ target_sources(types PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/CFA.h
         ${CMAKE_CURRENT_SOURCE_DIR}/CallGraphBuilder.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/CGB.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/CallGraph.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/CallGraph.cpp
+
         )
 target_include_directories(types PUBLIC
         ${CMAKE_SOURCE_DIR}/src
