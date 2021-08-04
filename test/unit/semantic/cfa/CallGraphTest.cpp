@@ -1,3 +1,5 @@
+//added by soneya binta hossain
+
 #define CATCH_CONFIG_MAIN
 #include "CallGraph.h"
 #include "ASTHelper.h"
@@ -100,4 +102,44 @@ TEST_CASE("CallGraph: test complex call graph (overapproximations)" "[CallGraph]
      //check overapproximations, e.g., edge from h->g and h->f
      REQUIRE(true == callGraph.get()->existEdge("h", "g"));
      REQUIRE(true == callGraph.get()->existEdge("h", "f"));
+}
+
+TEST_CASE("CallGraph: test getCallee by function name" "[CallGraph]") {
+    std::stringstream program;
+    program << R"(
+      f() {
+        return 3;
+      }
+
+      g() {
+        var x;
+        x = f(); // call function by name
+        return x;
+      }
+
+      h(h1) {
+        var y, r;
+        y = h1;  // assign function reference
+        r = y(); // call function by reference
+        return r;
+      }
+
+      main() {
+        if (h(f) != 3) error h(f);
+        if (f() != 3) error f();
+        if (h(g) != 3) error h(g);
+        return 0;
+      }
+    )";
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     //check the size of callees, also can be checked whether a function is being called by another function
+     REQUIRE(callGraph.get()->getCallees("main").size()==3);
+     REQUIRE(callGraph.get()->getCallees("h").size()==2);
+     REQUIRE(callGraph.get()->getCallees("g").size()==1);
+     REQUIRE(callGraph.get()->getCallees("f").size()==0);
+
 }

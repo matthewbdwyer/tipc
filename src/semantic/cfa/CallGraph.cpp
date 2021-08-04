@@ -1,5 +1,4 @@
 #include "CallGraph.h"
-#include <iostream>
 
 std::unique_ptr<CallGraph> CallGraph::build(ASTProgram* ast, SymbolTable* st){
 
@@ -42,6 +41,15 @@ std::vector<std::pair<ASTFunction*, ASTFunction*> > CallGraph::getEdges()
 std::set<ASTFunction*> CallGraph::getCallees(ASTFunction* f)
 {
    return callGraph.find(f)->second;
+}
+
+std::set<ASTFunction*> CallGraph::getCallees(std::string caller)
+{
+   //iterate map and if function name matches return the list
+   std::set<ASTFunction*> callees;
+   for (auto fun : callGraph)
+      if(fun.first->getName().compare(caller) == 0) callees=callGraph.find(fun.first)->second;
+   return callees;
 }
 
 std::set<ASTFunction*> CallGraph::getCallers(ASTFunction* f)

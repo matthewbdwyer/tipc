@@ -46,11 +46,13 @@ public:
     */
     std::vector<std::pair<ASTFunction*, ASTFunction*> > getEdges();
 
-    /*! \brief Returns all the subroutines called by function f.
-     * \param f The AST Function node
+    /*! \brief Returns all the subroutines called by function f. this is an overloaded function
+     * \param f The AST Function node, caller is the string name of a function
      * \return The set of all callee functions node
      */
     std::set<ASTFunction*> getCallees(ASTFunction* f);
+    std::set<ASTFunction*> getCallees(std::string caller);
+
 
     /*! \brief Returns all the subroutines that call function f.
      * \param f The AST Function node
