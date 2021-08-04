@@ -120,8 +120,6 @@ bool lValueGen = false;
 
 // Indicate whether the expression code gen is for an alloc'd value
 bool allocFlag = false;
-// Indicate whether the expression code gen is for an alloc'd record
-bool recordAllocFlag = false;
 
 /*
  * The global function dispatch table is created in a shallow pass over
@@ -570,6 +568,9 @@ llvm::Value* ASTFunAppExpr::codegen() {
   return Builder.CreateCall(funType, castFunPtr, argsV, "calltmp");
 }
 
+/* 'alloc' Allocate expression
+ * Generates a pointer to the allocs arguments (ints, records, ...)
+ */
 llvm::Value* ASTAllocExpr::codegen() {
   allocFlag = true;
   Value *argVal = getInitializer()->codegen();
@@ -578,17 +579,10 @@ llvm::Value* ASTAllocExpr::codegen() {
     throw InternalError("failed to generate bitcode for the initializer of the alloc expression");
   }
   
-  u_int64_t size;
-  if(recordAllocFlag){
-    size = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
-  }
-  else{
-    size = 8;
-  }
+  //Allocate an int pointer with calloc
   std::vector<Value *> twoArg;
   twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 1));
-  twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), size));
-  recordAllocFlag = false;
+  twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 8));
   auto *allocInst = Builder.CreateCall(callocFun, twoArg, "allocPtr");
   auto *castPtr = Builder.CreatePointerCast(
       allocInst, Type::getInt64PtrTy(TheContext), "castPtr");
@@ -660,49 +654,51 @@ llvm::Value* ASTDeRefExpr::codegen() {
  * Builds an instance of the UberRecord using the declared fields
  */
 llvm::Value* ASTRecordExpr::codegen() {
-  
-  // if(allocFlag){
-  //   //Allocate the a pointer to an uber record
-  //   auto *allocaRecord = Builder.CreateAlloca(ptrToUberRecordType);
+  //If this is an alloc, we calloc the record
+  if(allocFlag){
+    //Allocate the a pointer to an uber record
+    auto *allocaRecord = Builder.CreateAlloca(ptrToUberRecordType);
 
-  //   // Use Builder to create the calloc call using pre-defined callocFun
-  //   auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
-  //   std::vector<Value *> callocArgs;
-  //   callocArgs.push_back(oneV); 
-  //   callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
-  //   auto *calloc = Builder.CreateCall(callocFun, callocArgs, "callocedPtr");
+    // Use Builder to create the calloc call using pre-defined callocFun
+    auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
+    std::vector<Value *> callocArgs;
+    callocArgs.push_back(oneV); 
+    callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
+    auto *calloc = Builder.CreateCall(callocFun, callocArgs, "callocedPtr");
 
-  //   //Bitcast the calloc call to theStruct Type
-  //   auto recordPtr = Builder.CreatePointerCast(calloc, ptrToUberRecordType, "recordCalloc");
+    //Bitcast the calloc call to theStruct Type
+    auto recordPtr = Builder.CreatePointerCast(calloc, ptrToUberRecordType, "recordCalloc");
 
-  //   //Store the ptr to the record in the record alloc
-  //   Builder.CreateStore(recordPtr, allocaRecord);
+    //Store the ptr to the record in the record alloc
+    Builder.CreateStore(recordPtr, allocaRecord);
 
-  //   //Load allocaRecord
-  //   auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaRecord);
+    //Load allocaRecord
+    auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaRecord);
 
-  //   //For each field, generate GEP for location of field in the uberRecord
-  //   //Generate the code for the field and store it in the GEP
-  //   for(auto const &field : getFields()){
-  //       auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldIndex[field->getField()], field->getField());
-  //       auto value = field->codegen();
-  //       Builder.CreateStore(value, gep);
-  //   }
+    //For each field, generate GEP for location of field in the uberRecord
+    //Generate the code for the field and store it in the GEP
+    for(auto const &field : getFields()){
+        auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldIndex[field->getField()], field->getField());
+        auto value = field->codegen();
+        Builder.CreateStore(value, gep);
+    }
 
-  //   //Return int64 pointer to the record
-  // return Builder.CreatePtrToInt(recordPtr, Type::getInt64Ty(TheContext), "recordPtr");
-  // }
-// else{
-
-  recordAllocFlag = allocFlag;
-  auto *allocaRecord = Builder.CreateAlloca(uberRecordType);
-  for(auto const &field : getFields()){
-    auto *gep = Builder.CreateStructGEP(allocaRecord, fieldIndex[field->getField()]);
-    auto value = field->codegen();
-    Builder.CreateStore(value, gep);
+  //Return int64 pointer to the pointer to the record
+  return Builder.CreatePtrToInt(recordPtr, Type::getInt64Ty(TheContext), "recordPtr");
   }
+  else{
+    //Allocate a the space for a uber record
+    auto *allocaRecord = Builder.CreateAlloca(uberRecordType);
 
-  return Builder.CreatePtrToInt(allocaRecord, Type::getInt64Ty(TheContext), "record");
+    //Codegen the fields present in this record and store them in the appropriate location
+    for(auto const &field : getFields()){
+      auto *gep = Builder.CreateStructGEP(allocaRecord, fieldIndex[field->getField()], field->getField());
+      auto value = field->codegen();
+      Builder.CreateStore(value, gep);
+    }
+    //Return int64 pointer to the record since all variables are pointers to ints
+    return Builder.CreatePtrToInt(allocaRecord, Type::getInt64Ty(TheContext), "record");
+  }
 }
 
 /* field : val field expression
@@ -719,18 +715,18 @@ llvm::Value* ASTFieldExpr::codegen() {
  * In an r-value context this returns the value of the field being accessed
  */
 llvm::Value* ASTAccessExpr::codegen() {
-    bool isLValue = lValueGen;
+  bool isLValue = lValueGen;
 
-    if (isLValue) {
-        // This flag is reset here so that sub-expressions are treated as r-values
-        lValueGen = false;
-    }
+  if (isLValue) {
+      // This flag is reset here so that sub-expressions are treated as r-values
+      lValueGen = false;
+  }
 
-    //Get current field and check if it exists
-    auto currField = this->getField();
-    if(fieldIndex.count(currField) == 0){
-      throw InternalError("This field doesn't exist");
-    }
+  //Get current field and check if it exists
+  auto currField = this->getField();
+  if(fieldIndex.count(currField) == 0){
+    throw InternalError("This field doesn't exist");
+  }
 
   //Generate record instruction address
   Value *recordVal = this->getRecord()->codegen();
@@ -744,7 +740,7 @@ llvm::Value* ASTAccessExpr::codegen() {
 
   //If LHS, return location of field
   if(isLValue){
-      return gep;
+    return gep;
   }
 
   //Load value at GEP and return it
