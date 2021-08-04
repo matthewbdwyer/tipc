@@ -5,15 +5,16 @@
 #include "SymbolTable.h"
 #include "TypeInference.h"
 #include <memory>
-#include "cfa/CGB.h"  //call graph builder header
+#include "cfa/CallGraph.h"  //call graph builder header
 
 /*! \class SemanticAnalysis
  *  \brief Stores the results of semantic analysis passes.
  *
  * This class provides the analyze method to run a set of semantic analyses, including
- * l-value checking for assignment statements, proper use of symbols, and type checking.   
+ * l-value checking for assignment statements, proper use of symbols, and type checking and control flow analysis
  * \sa SymbolTable
  * \sa TypeInference
+ * \sa CallGraph
  */
 class SemanticAnalysis {
   std::unique_ptr<SymbolTable> symTable;

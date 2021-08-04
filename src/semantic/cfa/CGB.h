@@ -4,36 +4,33 @@
 #include <map>
 #include <ostream>
 #include <set>
-#include "CallGraph.h"
-
 
 /*! \class CallGraphBuilder
- *  \brief Generates call graph of a program that represents calling relationships between subroutines
- *  in a computer program. Each node represents a procedure and each edge (a1, a0) indicates that procedure a1 calls procedure a0.
- *  A cycle in the graph indicates recursive procedure calls, e.g., a0 -> a0 indicates that a0 calls itself recursively
- *
- * This class overrides several ASTVisitor's methods
- * printCallGraph prints the call graph of a program on the standard output
- * this call graph is sometimes approximations. Not all the call relationship that exist in the graph will occur in the actual runs of the program.
+ *  \brief Builds call graph of a program that represents calling relationships between subroutines
+ * This class overrides several ASTVisitor's methods to populate the call graph's vertices and edges. Each vertex is a subroutine
+ * of the given program, and each edge represents which subroutine calls which subroutines
  */
 
 
 class CallGraphBuilder : ASTVisitor{
 public:
-    static std::unique_ptr<CallGraph> build(ASTProgram*,SymbolTable* st);
+
+    /*! \brief Return the call graph of a given program.
+    * \param ast The AST of the program
+    * \param cfa The control flow analyzer
+    * \return the call graph for the given program
+    */
+    static std::map<ASTFunction*, std::set<ASTFunction*>> build(ASTProgram* ast, CFAnalyzer cfa);
     bool visit(ASTFunction * element) override;
     bool visit(ASTFunAppExpr * element) override;
     bool visit(ASTVariableExpr * element) override;
     bool visit(ASTReturnStmt * element) override;
-    static void printCallGraph(const std::vector<ASTFunction*>&, const std::map<ASTFunction*, std::set<ASTFunction*>>&, std::ostream&);
-    static int getTotalEdges(const std::map<ASTFunction*,std::set<ASTFunction*>>& graph);
+
 private:
     CallGraphBuilder(CFAnalyzer pass);
     ASTNode* getCanonical(ASTNode * n);
     ASTFunction* cfun;
     CFAnalyzer cfa;
     std::map<ASTFunction*, std::set<ASTFunction*>> graph;
-    //std::vector<std::pair<ASTFunction*, ASTFunction*>> edges;
-
 };
 

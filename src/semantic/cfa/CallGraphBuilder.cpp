@@ -5,13 +5,13 @@
 #include "CGB.h"
 #include "loguru.hpp"
 
-std::unique_ptr<CallGraph> CallGraphBuilder::build(ASTProgram* ast, SymbolTable* st){
 
-    auto cfa = CFAnalyzer::analyze(ast,st);
+std::map<ASTFunction*, std::set<ASTFunction*>> CallGraphBuilder::build(ASTProgram* ast, CFAnalyzer cfa){
     CallGraphBuilder cgb(cfa);
     ast -> accept(&cgb);
-    return std::make_unique<CallGraph>(cgb.graph, ast -> getFunctions());
+    return cgb.graph;
 }
+
 
 CallGraphBuilder::CallGraphBuilder(CFAnalyzer p) : cfa(p){}
 

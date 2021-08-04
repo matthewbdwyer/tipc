@@ -18,14 +18,21 @@
 
 class CFAnalyzer : ASTVisitor{
 public:
-    static CFAnalyzer analyze(ASTProgram*, SymbolTable* st);
+
+    /*! \brief analyze the AST and symbol table for a given program. Generates control flow constraints.
+     * \param ast The AST of the program
+     * \param st The symbol table of a given program
+     * \return the CFAnalyzer for subsequent use for the CallGraphBuilder
+     */
+
+    static CFAnalyzer analyze(ASTProgram* p, SymbolTable* st);
     bool visit(ASTFunction * element) override;
     bool visit(ASTFunAppExpr * element) override;
     bool visit(ASTAssignStmt * element) override;
     void endVisit(ASTFunction * element) override;
     std::vector<ASTFunction*> getPossibleFunctionsForExpr(ASTNode* n, ASTFunction* f);
 private:
-    CFAnalyzer(ASTProgram*, SymbolTable* st);
+    CFAnalyzer(ASTProgram* p, SymbolTable* st);
     ASTNode* getCanonical(ASTNode * n);
     ASTNode* getCanonicalForFunction(ASTNode * n, ASTFunction*);
     CubicSolver s;

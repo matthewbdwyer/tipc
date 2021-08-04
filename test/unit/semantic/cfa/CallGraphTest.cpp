@@ -1,29 +1,11 @@
 #define CATCH_CONFIG_MAIN
-#include "CGB.h"
+#include "CallGraph.h"
 #include "ASTHelper.h"
 #include "SymbolTable.h"
 #define EOF -1
 #include <catch2/catch.hpp>
 
-static void runtest(std::stringstream &program, int num_of_nodes, int num_of_edges) {
-
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-
-     auto callGraph = CallGraphBuilder::build(ast.get(), symTable.get());
-
-     //callGraph->print(std::cout);
-
-
-     //std::cout << "total vertices ===="<<callGraph->getTotalVertices()<<"\n";
-     REQUIRE(callGraph.get()->getTotalVertices() == num_of_nodes); // functions are nodes
-     //REQUIRE(total_edge == num_of_edges); //there exists an edge (a1-> a0) if procedure a1 calls procedure a0.
-     //call_graph.size() returns the total number of edges
-     //perhaps we can do more checks, such as, if an edge exists or not
-     //if there is a cycle
-}
-
-TEST_CASE("CallGraphBuilder: checks num of nodes and edges" "[CallGraphBuilder]") {
+TEST_CASE("CallGraph: getter for num of vertices and edges" "[CallGraph]") {
     std::stringstream program;
     program << R"(
       foo(x) {
@@ -33,11 +15,17 @@ TEST_CASE("CallGraphBuilder: checks num of nodes and edges" "[CallGraphBuilder]"
         return foo(7);
       }
     )";
-    runtest(program,2,1);
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     REQUIRE(callGraph.get()->getTotalVertices() == 2); // 2 subroutines
+     REQUIRE(callGraph.get()->getTotalEdges() == 1); // 1 edge from bar ->foo
 }
 
 
-TEST_CASE("CallGraphBuilder: simple call graph" "[CallGraphBuilder]") {
+TEST_CASE("CallGraph: simple call graph with cycle(recursion)" "[CallGraph]") {
     std::stringstream program;
     program << R"(
       foo(n,f) {
@@ -57,11 +45,22 @@ TEST_CASE("CallGraphBuilder: simple call graph" "[CallGraphBuilder]") {
           return 0;
       }
     )";
-    runtest(program,2,2);
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     REQUIRE(callGraph.get()->getTotalVertices() == 2); // 2 subroutines
+     REQUIRE(callGraph.get()->getTotalEdges() == 2); // 1 edge from main ->foo and foo->foo
+
+
+      //std::vector<std::pair<ASTFunction*, ASTFunction*>> edges =  callGraph.get()->getEdges();
+      //check if there is an edge between foo and foo
+      REQUIRE(true == callGraph.get()->existEdge("foo", "foo"));
 }
 
 
-TEST_CASE("CallGraphBuilder: more complicated call graph" "[CallGraphBuilder]") {
+TEST_CASE("CallGraph: test complex call graph (overapproximations)" "[CallGraph]") {
     std::stringstream program;
     program << R"(
       f() {
@@ -88,5 +87,17 @@ TEST_CASE("CallGraphBuilder: more complicated call graph" "[CallGraphBuilder]") 
         return 0;
       }
     )";
-    runtest(program,4,6);
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     //callGraph.get()->print(std::cout);
+
+     REQUIRE(callGraph.get()->getTotalVertices() == 4); // 2 subroutines
+     REQUIRE(callGraph.get()->getTotalEdges() == 6);
+
+     //check overapproximations, e.g., edge from h->g and h->f
+     REQUIRE(true == callGraph.get()->existEdge("h", "g"));
+     REQUIRE(true == callGraph.get()->existEdge("h", "f"));
 }

@@ -2,8 +2,6 @@
 // Contributor: Spencer Martin
 //
 
-#ifndef SRC_CFACUBICSOLVER_H
-#define SRC_CFACUBICSOLVER_H
 #include <set>
 #include <vector>
 #include <map>
@@ -42,7 +40,3 @@ private:
     std::map<ASTFunction*, int> fmapping;
     std::map<ASTNode*, CubicSolverNode*> dagmapping;
 };
-
-
-
-#endif //SRC_CFACUBICSOLVER_H
