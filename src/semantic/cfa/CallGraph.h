@@ -1,3 +1,6 @@
+//created by Soneya B. Hossain
+
+
 #pragma once
 
 #include <map>
@@ -5,7 +8,7 @@
 #include "ASTVisitor.h"
 #include "treetypes/AST.h"
 #include "SymbolTable.h"
-#include "CGB.h"
+#include "CallGraphBuilder.h"
 #include <set>
 
 /*! \class CallGraph
@@ -23,12 +26,15 @@ class CallGraph {
     int total_edges;
     int total_vertices;
     std::map<ASTFunction*, std::set<ASTFunction*> > callGraph;
+    std::map<std::string, ASTFunction*> fromFunNameToASTFuns;
+
+
 
 public:
     static std::unique_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
 
-    CallGraph(std::map<ASTFunction*, std::set<ASTFunction*> > cGraph, std::vector<ASTFunction*> funs)
-        : callGraph(cGraph), vertices(funs), total_vertices(vertices.size()){}
+    CallGraph(std::map<ASTFunction*, std::set<ASTFunction*> > cGraph, std::vector<ASTFunction*> funs, std::map<std::string, ASTFunction*> fmap)
+        : callGraph(cGraph), vertices(funs), total_vertices(vertices.size()), fromFunNameToASTFuns(fmap){}
 
     /*! \brief Return the total num of vertices for a given call graph.
     */
@@ -44,7 +50,7 @@ public:
 
     /*! \brief Return the set of edges for a given call graph.
     */
-    std::vector<std::pair<ASTFunction*, ASTFunction*> > getEdges();
+    std::vector<std::pair<ASTFunction*, ASTFunction*>> getEdges();
 
     /*! \brief Returns all the subroutines called by function f. this is an overloaded function
      * \param f The AST Function node, caller is the string name of a function
@@ -59,10 +65,22 @@ public:
      * \return The set of all callers functions node
      */
     std::set<ASTFunction*> getCallers(ASTFunction* f);
+    std::set<std::string> getCallers(std::string callee);
 
     //! Print call graph contents to output stream
     void print(std::ostream& os);
 
+    /*! \brief Returns bool value indicating whether there is an edge between two subroutines.
+     * \param caller and callee are the str name of the subroutines
+     * \return returns true if an edge exists otherwise false
+     */
     bool existEdge(std::string caller, std::string callee);
+
+
+    /*! \brief Returns the ASTFunction* for a given function name .
+     * \param str name of the subroutines
+     * \return ASTFunction*
+     */
+    ASTFunction* getASTFun(std::string f_name);
 
 };

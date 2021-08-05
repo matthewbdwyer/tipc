@@ -1,10 +1,12 @@
+//created by Soneya B. Hossain
 #include "CallGraph.h"
 
-std::unique_ptr<CallGraph> CallGraph::build(ASTProgram* ast, SymbolTable* st){
 
+
+std::unique_ptr<CallGraph> CallGraph::build(ASTProgram* ast, SymbolTable* st){
     auto cfa = CFAnalyzer::analyze(ast,st);
-    auto callGraph = CallGraphBuilder::build(ast,cfa);
-    return std::make_unique<CallGraph>(callGraph, ast -> getFunctions());
+    auto cgb = CallGraphBuilder::build(ast,cfa);
+    return std::make_unique<CallGraph>(cgb.getCallGraph(), ast -> getFunctions(), cgb.getFunMap());
 }
 
 int CallGraph::getTotalVertices()
@@ -27,7 +29,7 @@ std::vector<ASTFunction*> CallGraph::getVertices()
     return vertices;
 }
 
-std::vector<std::pair<ASTFunction*, ASTFunction*> > CallGraph::getEdges()
+std::vector<std::pair<ASTFunction*, ASTFunction*>> CallGraph::getEdges()
 {
     for (auto pair : callGraph) {
         for (auto dest : pair.second) {
@@ -52,9 +54,27 @@ std::set<ASTFunction*> CallGraph::getCallees(std::string caller)
    return callees;
 }
 
+std::set<std::string> CallGraph::getCallers(std::string callee)
+{
+      //std::cout<<f->getName()<<"\n";
+      std::set<std::string> callers;
+      for (auto pair : callGraph){
+         for (auto callee_ : pair.second) {
+               if(callee_->getName().compare(callee) == 0)
+                 callers.insert(pair.first->getName());
+         }
+      }
+      return callers;
+}
+
 std::set<ASTFunction*> CallGraph::getCallers(ASTFunction* f)
 {
-   return callGraph.find(f)->second;
+
+      std::set<ASTFunction*> callers;
+      for (auto pair : callGraph){
+         if(pair.second.find(f)!=pair.second.end()) callers.insert(pair.first);
+      }
+      return callers;
 }
 
 void CallGraph::print(std::ostream& str)
@@ -82,4 +102,9 @@ bool CallGraph::existEdge(std::string caller, std::string callee)
             return true;
       }
       return false;
+}
+
+ASTFunction* CallGraph::getASTFun(std::string f_name)
+{
+ return fromFunNameToASTFuns[f_name];
 }

@@ -6,6 +6,7 @@
 #include "SymbolTable.h"
 #define EOF -1
 #include <catch2/catch.hpp>
+#include <set>
 
 TEST_CASE("CallGraph: getter for num of vertices and edges" "[CallGraph]") {
     std::stringstream program;
@@ -142,4 +143,85 @@ TEST_CASE("CallGraph: test getCallee by function name" "[CallGraph]") {
      REQUIRE(callGraph.get()->getCallees("g").size()==1);
      REQUIRE(callGraph.get()->getCallees("f").size()==0);
 
+}
+
+
+TEST_CASE("CallGraph: test getCallers" "[CallGraph]") {
+    std::stringstream program;
+    program << R"(
+      foo(x) {
+        return x;
+      }
+      bar() {
+        return foo(7);
+      }
+    )";
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     //ASTFunction* callee = (ASTFunction*) symTable.get()->getFunction("foo");
+     //ASTFunction* caller = (ASTFunction*) symTable.get()->getFunction("bar");
+
+     std::set<std::string> callers = callGraph.get()->getCallers("foo");
+     REQUIRE(callers.size() == 1); // as bar called foo, size should be 1
+     REQUIRE(true == (callers.find("bar")!= callers.end())); // bar should be in the set
+}
+
+
+TEST_CASE("CallGraph: test getCallers by ASTFunction*" "[CallGraph]") {
+    std::stringstream program;
+    program << R"(
+      foo(x) {
+        return x;
+      }
+      bar() {
+        return foo(7);
+      }
+    )";
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     ASTFunction* callee = callGraph.get()->getASTFun("foo");
+     ASTFunction* caller = callGraph.get()->getASTFun("bar");
+
+     std::set<ASTFunction*> callers = callGraph.get()->getCallers(callee);
+     REQUIRE(callers.size() == 1); // as bar called foo, size should be 1
+     REQUIRE(true == (callers.find(caller)!= callers.end())); // bar should be in the set
+}
+
+
+
+TEST_CASE("CallGraph: test getEdges" "[CallGraph]") {
+    std::stringstream program;
+    program << R"(
+      foo1(x) {
+        return x;
+      }
+      foo2(x) {
+              return foo1(x);
+      }
+      bar() {
+        return foo2(7);
+      }
+    )";
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     ASTFunction* foo2 = callGraph.get()->getASTFun("foo2");
+     ASTFunction* foo1 = callGraph.get()->getASTFun("foo1");
+     ASTFunction* bar = callGraph.get()->getASTFun("bar");
+
+
+     std::vector<std::pair<ASTFunction*, ASTFunction*>> edges = callGraph.get()->getEdges();
+     REQUIRE(edges.size() == 2); //size should be 2
+
+     //check if two edges in the graph
+     REQUIRE(true ==(std::find(edges.begin(), edges.end(), std::make_pair(foo2, foo1))!=edges.end()));
+     REQUIRE(true ==(std::find(edges.begin(), edges.end(), std::make_pair(bar, foo2))!=edges.end()));
 }

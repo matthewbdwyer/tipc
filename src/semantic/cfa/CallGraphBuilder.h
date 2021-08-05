@@ -1,6 +1,6 @@
 #include "ASTVisitor.h"
 #include "treetypes/AST.h"
-#include "CFA.h"
+#include "CFAnalyzer.h"
 #include <map>
 #include <ostream>
 #include <set>
@@ -20,11 +20,13 @@ public:
     * \param cfa The control flow analyzer
     * \return the call graph for the given program
     */
-    static std::map<ASTFunction*, std::set<ASTFunction*>> build(ASTProgram* ast, CFAnalyzer cfa);
+    static CallGraphBuilder build(ASTProgram* ast, CFAnalyzer cfa);
     bool visit(ASTFunction * element) override;
     bool visit(ASTFunAppExpr * element) override;
     bool visit(ASTVariableExpr * element) override;
     bool visit(ASTReturnStmt * element) override;
+    std::map<ASTFunction*, std::set<ASTFunction*>> getCallGraph();
+    std::map<std::string, ASTFunction*> getFunMap();
 
 private:
     CallGraphBuilder(CFAnalyzer pass);
@@ -32,5 +34,7 @@ private:
     ASTFunction* cfun;
     CFAnalyzer cfa;
     std::map<ASTFunction*, std::set<ASTFunction*>> graph;
+    std::map<std::string, ASTFunction*> fromFunNameToASTFun;
+
 };
 

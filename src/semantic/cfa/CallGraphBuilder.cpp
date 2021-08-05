@@ -2,14 +2,14 @@
 // contributor: Spencer Martin
 // modified by SBH
 
-#include "CGB.h"
+#include "CallGraphBuilder.h"
 #include "loguru.hpp"
 
 
-std::map<ASTFunction*, std::set<ASTFunction*>> CallGraphBuilder::build(ASTProgram* ast, CFAnalyzer cfa){
+CallGraphBuilder CallGraphBuilder::build(ASTProgram* ast, CFAnalyzer cfa){
     CallGraphBuilder cgb(cfa);
     ast -> accept(&cgb);
-    return cgb.graph;
+    return cgb;//.graph;
 }
 
 
@@ -23,6 +23,9 @@ bool CallGraphBuilder::visit(ASTFunction *element) {
 bool CallGraphBuilder::visit(ASTFunAppExpr *element) {
     for(ASTFunction* f : cfa.getPossibleFunctionsForExpr(element -> getFunction(), cfun)){
         graph[cfun].insert(f);
+        fromFunNameToASTFun[cfun->getName()]= cfun;
+        fromFunNameToASTFun[f->getName()]=f;
+
     }
     return true;
 }
@@ -30,6 +33,8 @@ bool CallGraphBuilder::visit(ASTFunAppExpr *element) {
 bool CallGraphBuilder::visit(ASTVariableExpr *element) {
     for(ASTFunction* f : cfa.getPossibleFunctionsForExpr(element, cfun)){
         graph[cfun].insert(f);
+           fromFunNameToASTFun[cfun->getName()]= cfun;
+               fromFunNameToASTFun[f->getName()]=f;
     }
     return true;
 }
@@ -37,8 +42,21 @@ bool CallGraphBuilder::visit(ASTVariableExpr *element) {
 bool CallGraphBuilder::visit(ASTReturnStmt *element) {
     for(ASTFunction* f : cfa.getPossibleFunctionsForExpr(element, cfun)){
         graph[cfun].insert(f);
+        fromFunNameToASTFun[cfun->getName()]= cfun;
+        fromFunNameToASTFun[f->getName()]=f;
     }
     return true;
+}
+
+std::map<ASTFunction*, std::set<ASTFunction*>> CallGraphBuilder::getCallGraph(){
+
+  return graph;
+}
+
+std::map<std::string, ASTFunction*> CallGraphBuilder::getFunMap(){
+
+  return fromFunNameToASTFun;
+
 }
 
 

@@ -4,9 +4,9 @@ target_sources(cfa PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/CFACubicSolver.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/CFACubicSolver.h
         ${CMAKE_CURRENT_SOURCE_DIR}/CFAnalyzer.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/CFA.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/CFAnalyzer.h
         ${CMAKE_CURRENT_SOURCE_DIR}/CallGraphBuilder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/CGB.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/CallGraphBuilder.h
         ${CMAKE_CURRENT_SOURCE_DIR}/CallGraph.h
         ${CMAKE_CURRENT_SOURCE_DIR}/CallGraph.cpp
         )
