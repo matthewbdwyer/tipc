@@ -56,7 +56,6 @@ std::set<ASTFunction*> CallGraph::getCallees(std::string caller)
 
 std::set<std::string> CallGraph::getCallers(std::string callee)
 {
-      //std::cout<<f->getName()<<"\n";
       std::set<std::string> callers;
       for (auto pair : callGraph){
          for (auto callee_ : pair.second) {
@@ -106,5 +105,5 @@ bool CallGraph::existEdge(std::string caller, std::string callee)
 
 ASTFunction* CallGraph::getASTFun(std::string f_name)
 {
- return fromFunNameToASTFuns[f_name];
+      return fromFunNameToASTFuns[f_name];
 }
