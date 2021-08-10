@@ -1,69 +1,78 @@
 #include "CFAnalyzer.h"
 #include "loguru.hpp"
 
-
-CFAnalyzer CFAnalyzer::analyze(ASTProgram* p, SymbolTable* st){
+CFAnalyzer CFAnalyzer::analyze(ASTProgram* p, SymbolTable* st)
+{
     CFAnalyzer cfa(p, st);
-    p -> accept(&cfa);
+    p->accept(&cfa);
     return cfa;
 }
 
-std::vector<ASTFunction*> CFAnalyzer::getPossibleFunctionsForExpr(ASTNode* n, ASTFunction* f){
+std::vector<ASTFunction*> CFAnalyzer::getPossibleFunctionsForExpr(ASTNode* n, ASTFunction* f)
+{
     return s.getPossibleFunctionsForExpr(getCanonicalForFunction(n, f));
 }
 
-CFAnalyzer::CFAnalyzer(ASTProgram* p, SymbolTable* st) : s(p->getFunctions()), symbolTable(st), pgr(p){}
+CFAnalyzer::CFAnalyzer(ASTProgram* p, SymbolTable* st): s(p->getFunctions()), symbolTable(st), pgr(p){}
 
-ASTNode* CFAnalyzer::getCanonical(ASTNode * n) {
+ASTNode* CFAnalyzer::getCanonical(ASTNode* n)
+{
     if (auto ve = dynamic_cast<ASTVariableExpr*>(n)) {
-        ASTDeclNode * canonical;
+        ASTDeclNode* canonical;
         if ((canonical = symbolTable->getLocal(ve->getName(), scope.top()))) {
             return canonical;
-        } else if ((canonical = symbolTable->getFunction(ve->getName()))) {
+        }
+        else if ((canonical = symbolTable->getFunction(ve->getName()))) {
             return canonical;
         }
     }
     return n;
 }
 
-ASTNode* CFAnalyzer::getCanonicalForFunction(ASTNode * n, ASTFunction* scp) {
+ASTNode* CFAnalyzer::getCanonicalForFunction(ASTNode* n, ASTFunction* scp)
+{
     if (auto ve = dynamic_cast<ASTVariableExpr*>(n)) {
-        ASTDeclNode * canonical;
-        if ((canonical = symbolTable->getLocal(ve->getName(), scp -> getDecl()))) {
+        ASTDeclNode* canonical;
+        if ((canonical = symbolTable->getLocal(ve->getName(), scp->getDecl()))) {
             return canonical;
-        } else if ((canonical = symbolTable->getFunction(ve->getName()))) {
+        }
+        else if ((canonical = symbolTable->getFunction(ve->getName()))) {
             return canonical;
         }
     }
     return n;
 }
 
-bool CFAnalyzer::visit(ASTFunction * element) {
+bool CFAnalyzer::visit(ASTFunction* element)
+{
     scope.push(element->getDecl());
-    s.addElementofConstraint(element, getCanonical(element -> getDecl()));
+    s.addElementofConstraint(element, getCanonical(element->getDecl()));
     return true;
 }
-void CFAnalyzer::endVisit(ASTFunction * element){
+void CFAnalyzer::endVisit(ASTFunction* element)
+{
     scope.pop();
 }
-bool CFAnalyzer::visit(ASTFunAppExpr * element){
-    for(ASTFunction* fun : pgr->getFunctions()){
-        if(fun->getFormals().size() == element -> getActuals().size()){
-            for(int i = 0; i < fun->getFormals().size(); i++){
-                s.addConditionalConstraint(fun, getCanonical(element -> getFunction()), getCanonical(element -> getActuals()[i]), getCanonicalForFunction(fun->getFormals()[i], fun));
-                auto stmts = fun -> getStmts();
+bool CFAnalyzer::visit(ASTFunAppExpr* element)
+{
+    for (ASTFunction* fun : pgr->getFunctions()) {
+        if (fun->getFormals().size() == element->getActuals().size()) {
+            for (int i = 0; i < fun->getFormals().size(); i++) {
+                s.addConditionalConstraint(fun, getCanonical(element->getFunction()), getCanonical(element->getActuals()[i]), getCanonicalForFunction(fun->getFormals()[i], fun));
+                auto stmts = fun->getStmts();
                 ASTReturnStmt* ret;
-                if(!(ret = dynamic_cast<ASTReturnStmt*>(stmts[stmts.size() - 1]))){
+                if (!(ret = dynamic_cast<ASTReturnStmt*>(stmts[stmts.size() - 1]))) {
                     assert(false);
                 }
-                s.addConditionalConstraint(fun, getCanonical(element -> getFunction()), getCanonicalForFunction(ret -> getArg(), fun), getCanonical(element));
+                s.addConditionalConstraint(fun, getCanonical(element->getFunction()), getCanonicalForFunction(ret->getArg(), fun), getCanonical(element));
             }
         }
     }
     return true;
 }
 
-bool CFAnalyzer::visit(ASTAssignStmt * element) {
-    s.addSubseteqConstraint(getCanonical(element -> getRHS()), getCanonical(element -> getLHS()));
+bool CFAnalyzer::visit(ASTAssignStmt* element)
+{
+    s.addSubseteqConstraint(getCanonical(element->getRHS()), getCanonical(element->getLHS()));
     return true;
 }

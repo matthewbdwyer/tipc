@@ -2,7 +2,6 @@
 #include "CallGraph.h"
 
 
-
 std::unique_ptr<CallGraph> CallGraph::build(ASTProgram* ast, SymbolTable* st){
     auto cfa = CFAnalyzer::analyze(ast,st);
     auto cgb = CallGraphBuilder::build(ast,cfa);

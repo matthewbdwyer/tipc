@@ -1,6 +1,4 @@
 //created by Soneya B. Hossain
-
-
 #pragma once
 
 #include <map>
@@ -14,7 +12,7 @@
 /*! \class CallGraph
  *  \brief Performs control flow analysis and records results for subsequent phases
  *  Generates call graph of a program that represents calling relationships between subroutines
- *  in a computer program. Each node represents a procedure and each edge (a1, a0) indicates that procedure a1 calls procedure a0.
+ *  in a computer program. Each node represents a subroutine and each edge (a1, a0) indicates that procedure a1 calls procedure a0.
  *  A cycle in the graph indicates recursive procedure calls, e.g., a0 -> a0 indicates that a0 calls itself recursively
  *  this call graph is sometimes approximations. Not all the call relationship that exist in the graph will occur in the actual runs of the program.
  */
@@ -36,10 +34,17 @@ public:
         : callGraph(cGraph), vertices(funs), total_vertices(vertices.size()), fromFunNameToASTFuns(fmap){}
 
 
+
+    /*! \brief Return the unique pointer of the call graph for a given program.
+     * \param The AST of the program and symbol table
+     */
+
     static std::unique_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
+
     /*! \brief Return the total num of vertices for a given call graph.
     */
     int getTotalVertices();
+
     /*! \brief Return the total num of edges for a given call graph.
     */
     int getTotalEdges();
@@ -62,7 +67,7 @@ public:
 
 
     /*! \brief Returns all the subroutines that call function f.
-     * \param f The AST Function node
+     * \param f The AST Function node or sting name of the function
      * \return The set of all callers functions node
      */
     std::set<ASTFunction*> getCallers(ASTFunction* f);

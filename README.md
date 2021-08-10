@@ -76,6 +76,8 @@ Options for controlling the TIP compilation process.
   --pp            - pretty print
   --ps            - print symbols
   --pt            - print symbols with types (supercedes --ps)
+  --pcg           - print call graph
+
   --verbose       - enable log messages
 ```
 By default it will accept a `.tip` file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a `.bc` file which is a binary encoding of the bitcodes.  You can see a human readable version of the bitcodes by running `llvm-dis` on the `.bc` file.

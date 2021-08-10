@@ -29,7 +29,7 @@ public:
   /*! \fn analyze
    *  \brief Perform semantic analysis on program AST.
    *
-   * Run weeding, symbol, and type checking analysis.  Errors in any of these
+   * Run weeding, symbol, and type checking and control flow analysis.  Errors in any of these
    * result in a SemanticError.  If no errors then ownership of semantic analysis
    * results are transferred to caller.
    * \sa SemanticError

@@ -2,7 +2,7 @@
 // Contributor: Spencer Martin
 //
 
-#include "CFACubicSolver.h"
+#include "CubicSolver.h"
 #include "loguru.hpp"
 #include <queue>
 #include <map>

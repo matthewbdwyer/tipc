@@ -87,6 +87,7 @@ int main(int argc, char *argv[]) {
       } else if (psym) {
         analysisResults->getSymbolTable()->print(std::cout);
       } else if(pcg) {
+      //added by SBH
          analysisResults->getCallGraph()->print(std::cout);
       }
       auto llvmModule = CodeGenerator::generate(ast.get(), analysisResults.get(), sourceFile);

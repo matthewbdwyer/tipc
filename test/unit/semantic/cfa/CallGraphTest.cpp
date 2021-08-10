@@ -259,7 +259,6 @@ TEST_CASE("CallGraph: test getEdges" "[CallGraph]") {
      ASTFunction* foo1 = callGraph.get()->getASTFun("foo1");
      ASTFunction* bar = callGraph.get()->getASTFun("bar");
 
-
      std::vector<std::pair<ASTFunction*, ASTFunction*>> edges = callGraph.get()->getEdges();
      REQUIRE(edges.size() == 2); //size should be 2
 
@@ -323,5 +322,4 @@ TEST_CASE("CallGraph: test print method" "[CallGraph]") {
     REQUIRE(found!=std::string::npos);
     found = output.find("a1 -> a0;");
     REQUIRE(found!=std::string::npos);
-
 }
