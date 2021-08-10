@@ -16,6 +16,8 @@ using namespace std;
 static cl::OptionCategory TIPcat("tipc Options","Options for controlling the TIP compilation process.");
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
+static cl::opt<bool> pcg("pcg", cl::desc("print call graph"), cl::cat(TIPcat));
+
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<bool> debug("verbose", cl::desc("enable log messages"), cl::cat(TIPcat));
@@ -75,6 +77,7 @@ int main(int argc, char *argv[]) {
     try {
       auto analysisResults = SemanticAnalysis::analyze(ast.get());
 
+
       if (ppretty) {
         FrontEnd::prettyprint(ast.get(), std::cout);
       }
@@ -83,6 +86,8 @@ int main(int argc, char *argv[]) {
         analysisResults->getTypeResults()->print(std::cout);
       } else if (psym) {
         analysisResults->getSymbolTable()->print(std::cout);
+      } else if(pcg) {
+         analysisResults->getCallGraph()->print(std::cout);
       }
       auto llvmModule = CodeGenerator::generate(ast.get(), analysisResults.get(), sourceFile);
 

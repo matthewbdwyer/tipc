@@ -31,11 +31,12 @@ class CallGraph {
 
 
 public:
-    static std::unique_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
 
     CallGraph(std::map<ASTFunction*, std::set<ASTFunction*> > cGraph, std::vector<ASTFunction*> funs, std::map<std::string, ASTFunction*> fmap)
         : callGraph(cGraph), vertices(funs), total_vertices(vertices.size()), fromFunNameToASTFuns(fmap){}
 
+
+    static std::unique_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
     /*! \brief Return the total num of vertices for a given call graph.
     */
     int getTotalVertices();

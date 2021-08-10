@@ -9,6 +9,8 @@ target_include_directories(
           ${CMAKE_SOURCE_DIR}/src/frontend/ast
           ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes
           ${CMAKE_SOURCE_DIR}/src/semantic/symboltable
+          ${CMAKE_SOURCE_DIR}/src/semantic
+          ${CMAKE_SOURCE_DIR}/src/semantic/types
           ${CMAKE_SOURCE_DIR}/src/semantic/cfa
           ${CMAKE_SOURCE_DIR}/src/semantic/types/concrete
           ${CMAKE_SOURCE_DIR}/src/semantic/types/constraints

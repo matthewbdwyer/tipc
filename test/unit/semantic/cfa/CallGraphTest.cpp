@@ -4,6 +4,7 @@
 #include "CallGraph.h"
 #include "ASTHelper.h"
 #include "SymbolTable.h"
+#include "SemanticAnalysis.h"
 #define EOF -1
 #include <catch2/catch.hpp>
 #include <set>
@@ -95,14 +96,16 @@ TEST_CASE("CallGraph: test complex call graph (overapproximations)" "[CallGraph]
      auto symTable = SymbolTable::build(ast.get());
      auto callGraph = CallGraph::build(ast.get(), symTable.get());
 
-     //callGraph.get()->print(std::cout);
+    // callGraph.get()->print(std::cout);
 
      REQUIRE(callGraph.get()->getTotalVertices() == 4); // 2 subroutines
      REQUIRE(callGraph.get()->getTotalEdges() == 6);
 
      //check overapproximations, e.g., edge from h->g and h->f
      REQUIRE(true == callGraph.get()->existEdge("h", "g"));
-     REQUIRE(true == callGraph.get()->existEdge("h", "f"));
+     REQUIRE(true == callGraph.get()->existEdge("h", "f"));  //check some false properties
+     REQUIRE(false == callGraph.get()->existEdge("f", "f"));  //check some false properties
+
 }
 
 TEST_CASE("CallGraph: test getCallee by function name" "[CallGraph]") {
@@ -145,6 +148,47 @@ TEST_CASE("CallGraph: test getCallee by function name" "[CallGraph]") {
 
 }
 
+
+
+TEST_CASE("CallGraph: test getCallee by ASTFunction*" "[CallGraph]") {
+    std::stringstream program;
+    program << R"(
+      f() {
+        return 3;
+      }
+
+      g() {
+        var x;
+        x = f(); // call function by name
+        return x;
+      }
+
+      h(h1) {
+        var y, r;
+        y = h1;  // assign function reference
+        r = y(); // call function by reference
+        return r;
+      }
+
+      main() {
+        if (h(f) != 3) error h(f);
+        if (f() != 3) error f();
+        if (h(g) != 3) error h(g);
+        return 0;
+      }
+    )";
+
+     auto ast = ASTHelper::build_ast(program);
+     auto symTable = SymbolTable::build(ast.get());
+     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+     ASTFunction* caller = callGraph.get()->getASTFun("main");
+     ASTFunction* callee = callGraph.get()->getASTFun("h");
+
+     std::set<ASTFunction*> callees = callGraph.get()->getCallees(caller);
+     REQUIRE(callees.size() == 3); // as main called h,g,f, size should be 3
+     REQUIRE(true == (callees.find(callee)!= callees.end())); // h should be in the callee set
+}
 
 TEST_CASE("CallGraph: test getCallers" "[CallGraph]") {
     std::stringstream program;
@@ -193,8 +237,6 @@ TEST_CASE("CallGraph: test getCallers by ASTFunction*" "[CallGraph]") {
      REQUIRE(true == (callers.find(caller)!= callers.end())); // bar should be in the set
 }
 
-
-
 TEST_CASE("CallGraph: test getEdges" "[CallGraph]") {
     std::stringstream program;
     program << R"(
@@ -224,4 +266,62 @@ TEST_CASE("CallGraph: test getEdges" "[CallGraph]") {
      //check if two edges in the graph
      REQUIRE(true ==(std::find(edges.begin(), edges.end(), std::make_pair(foo2, foo1))!=edges.end()));
      REQUIRE(true ==(std::find(edges.begin(), edges.end(), std::make_pair(bar, foo2))!=edges.end()));
+}
+
+TEST_CASE("CallGraph: test SemanticAnalysis" "[CallGraph]") {
+    std::stringstream program;
+    program << R"(
+      foo1(x) {
+        return x;
+      }
+      foo2(x) {
+              return foo1(x);
+      }
+      bar() {
+        return foo2(7);
+      }
+    )";
+
+    auto ast = ASTHelper::build_ast(program);
+    auto analysisResults = SemanticAnalysis::analyze(ast.get());
+    auto callGraph = analysisResults.get()->getCallGraph();
+    REQUIRE(callGraph->getVertices().size() == 3); //size should be 2
+}
+
+TEST_CASE("CallGraph: test print method" "[CallGraph]") {
+    std::stringstream program;
+    program << R"(
+      foo1(x) {
+        return x;
+      }
+      foo2(x) {
+              return foo1(x);
+      }
+      bar() {
+        return foo2(7);
+      }
+    )";
+
+    auto ast = ASTHelper::build_ast(program);
+    auto analysisResults = SemanticAnalysis::analyze(ast.get());
+    auto callGraph = analysisResults.get()->getCallGraph();
+
+    std::stringstream outputStream;
+    callGraph->print(outputStream);
+    std::string output = outputStream.str();
+
+    std::size_t found = output.find("digraph CFG{");
+    REQUIRE(found!=std::string::npos);
+
+    found = output.find("a0 [label=\"foo1\"];");
+    REQUIRE(found!=std::string::npos);
+    found = output.find("a1 [label=\"foo2\"];");
+    REQUIRE(found!=std::string::npos);
+    found = output.find("a2 [label=\"bar\"];");
+    REQUIRE(found!=std::string::npos);
+    found = output.find("a2 -> a1;");
+    REQUIRE(found!=std::string::npos);
+    found = output.find("a1 -> a0;");
+    REQUIRE(found!=std::string::npos);
+
 }

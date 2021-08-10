@@ -23,8 +23,8 @@ class SemanticAnalysis {
 
 
 public:
-  SemanticAnalysis(std::unique_ptr<SymbolTable> s, std::unique_ptr<TypeInference> t) 
-          : symTable(std::move(s)), typeResults(std::move(t)) {}
+  SemanticAnalysis(std::unique_ptr<SymbolTable> s, std::unique_ptr<TypeInference> t, std::unique_ptr<CallGraph> cg)
+          : symTable(std::move(s)), typeResults(std::move(t)), callGraph(std::move(cg)) {}
 
   /*! \fn analyze
    *  \brief Perform semantic analysis on program AST.

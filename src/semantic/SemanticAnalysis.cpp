@@ -8,10 +8,11 @@ std::unique_ptr<SemanticAnalysis> SemanticAnalysis::analyze(ASTProgram* ast) {
 
   //start: call graph generation
   auto callGraph = CallGraph::build(ast, symTable.get());
+  //callGraph::print(std::cout);
   //end: call graph generation
 
   auto typeResults = TypeInference::check(ast, symTable.get());
-  return std::make_unique<SemanticAnalysis>(std::move(symTable), std::move(typeResults));
+  return std::make_unique<SemanticAnalysis>(std::move(symTable), std::move(typeResults), std::move(callGraph));
 }
 
 SymbolTable* SemanticAnalysis::getSymbolTable() {
