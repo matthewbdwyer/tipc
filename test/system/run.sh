@@ -24,6 +24,8 @@ initialize_test() {
   ((numtests++))
 }
 
+#echo "number of tests:$numtests"
+
 # Self contained test cases
 for i in selftests/*.tip
 do
