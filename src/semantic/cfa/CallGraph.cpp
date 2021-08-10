@@ -1,4 +1,3 @@
-//created by Soneya B. Hossain
 #include "CallGraph.h"
 
 

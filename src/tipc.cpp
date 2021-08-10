@@ -37,7 +37,7 @@ static cl::opt<std::string> sourceFile(cl::Positional,
  * using LLVM CommandLine support.  It runs the phases of the compiler in sequence.
  * If an error is detected, via an exception, it reports the error and exits.  
  * If there is no error, then the LLVM bitcode is emitted to a file whose name
- * is the provided source file suffixed by ".bc".
+ * is the providvvved source file suffixed by ".bc".
  */
 int main(int argc, char *argv[]) {
   cl::HideUnrelatedOptions(TIPcat);
@@ -86,8 +86,9 @@ int main(int argc, char *argv[]) {
         analysisResults->getTypeResults()->print(std::cout);
       } else if (psym) {
         analysisResults->getSymbolTable()->print(std::cout);
-      } else if(pcg) {
-      //added by SBH
+      }
+
+      if(pcg) {
          analysisResults->getCallGraph()->print(std::cout);
       }
       auto llvmModule = CodeGenerator::generate(ast.get(), analysisResults.get(), sourceFile);

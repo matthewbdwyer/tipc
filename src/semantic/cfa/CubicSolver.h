@@ -1,7 +1,3 @@
-//
-// Contributor: Spencer Martin
-//
-
 #include <set>
 #include <vector>
 #include <map>

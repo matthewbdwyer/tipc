@@ -1,5 +1,3 @@
-//added by soneya binta hossain
-
 #define CATCH_CONFIG_MAIN
 #include "CallGraph.h"
 #include "ASTHelper.h"

@@ -1,7 +1,3 @@
-//
-// Contributor: Spencer Martin
-//
-
 #include "CubicSolver.h"
 #include "loguru.hpp"
 #include <queue>

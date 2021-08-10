@@ -1,4 +1,3 @@
-//created by Soneya B. Hossain
 #pragma once
 
 #include <map>

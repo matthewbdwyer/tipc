@@ -19,5 +19,5 @@ if [ ! -f "${RTLIB}/tip_rtlib.bc" ]; then
   exit 1
 fi
 
-${TIPC} $@
+${TIPC} --pcg -pt $@
 ${TIPCLANG} -w ${@: -1}.bc ${RTLIB}/tip_rtlib.bc -o `basename ${@: -1} .tip`

@@ -1,5 +1,3 @@
-
-
 #include "ASTVisitor.h"
 #include "treetypes/AST.h"
 #include "CubicSolver.h"

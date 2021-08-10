@@ -1,7 +1,3 @@
-//
-// contributor: Spencer Martin
-// modified by SBH
-
 #include "CallGraphBuilder.h"
 #include "loguru.hpp"
 
