@@ -1,0 +1,29 @@
+foo(r) 
+{
+  r.l = ((r.l + r.m) + r.n);
+  return r.l;
+}
+
+main() 
+{
+  var rec;
+  rec = {l:1, m:2, n:3};
+  if ((foo(rec) != 6)) 
+    error rec.l;
+  if ((foo(rec) != 11)) 
+    error rec.l;
+  return 0;
+}
+
+Functions : {
+  foo : ({l:int,m:int,n:int}) -> int,
+  main : () -> int
+}
+
+Locals for function foo : {
+  r : {l:int,m:int,n:int}
+}
+
+Locals for function main : {
+  rec : {l:int,m:int,n:int}
+}
