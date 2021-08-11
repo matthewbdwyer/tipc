@@ -649,7 +649,7 @@ llvm::Value* ASTDeRefExpr::codegen() {
   }
 }
 
-/* {field1 : val1, ..., fieldN, valN} record expression
+/* {field1 : val1, ..., fieldN : valN} record expression
  *
  * Builds an instance of the UberRecord using the declared fields
  */
@@ -691,6 +691,8 @@ llvm::Value* ASTRecordExpr::codegen() {
     auto *allocaRecord = Builder.CreateAlloca(uberRecordType);
 
     //Codegen the fields present in this record and store them in the appropriate location
+    //We do not give a value to fields that are not explictly set. Thus, accessing them is
+    //undefined behavior
     for(auto const &field : getFields()){
       auto *gep = Builder.CreateStructGEP(allocaRecord, fieldIndex[field->getField()], field->getField());
       auto value = field->codegen();
