@@ -191,26 +191,61 @@ access(r) { return r.f; }
 ```
 The record expression default initializes `f` to `0` and this is the value that is accessed and returned from the call to `access` and then from `main`.  
 
-Second, TIP allows memory allocation, and in fact records are allocated implicitly on the heap, yet its runtime system does not include a garbage collector.  It's an easy matter to write a TIP program that leaks memory:
+Second, TIP allows memory allocation, yet its runtime system does not include a garbage collector.  It's an easy matter to write a TIP program that leaks memory:
+
 ```
-main(max) {
-  var i, h;
-  i = 0;
-  h = null;
-  while (max > i) {
-    h = alloc h;
-    i = i + 1;
-  }
-  return 0;
+foo(x,y,z){
+    var rec;
+    rec = alloc {l: x, m: y, n: z};
+    return (*rec).m;
+}
+​
+main(){
+    var i, j, a;
+    a = 0;
+    i = 0;
+    j = 0;
+    while (1000000000 > i) { 
+      while (1000000000 > j) { 
+        a = a + foo(3,2,4);
+        j = j + 1;
+      }
+      i = i + 1;
+    }
+    return 0;
 }
 ```
-Running this program with a large enough input yields the expected result:
+This is a valid tip program which can be compiled into an executable using and observe it's memory usage using:
 ```
-$ ./leak 1000
-Program output: 0
-$ ./leak 1000000000000000
-Killed
+/path/to/tipc/bin/build.sh --do test/system/leak/recordLeak.tip
+./recordLeak &; top
 ```
+You can then kill top using `Ctrl+C` and then kill the ./recordleak with `fg` and `Ctrl+C`. It's important that you disable the optimizer with the `--do` flag. Otherwise, the optimizer would be smart enough to simply return the y value. If we remove the alloc from foo, as we do in "test/system/leak/recordNoLeak.tip":
+```
+```
+foo(x,y,z){
+    var rec;
+    rec = {l: x, m: y, n: z};
+    return (*rec).m;
+}
+​
+main(){
+    var i, j, a;
+    a = 0;
+    i = 0;
+    j = 0;
+    while (1000000000 > i) { 
+      while (1000000000 > j) { 
+        a = a + foo(3,2,4);
+        j = j + 1;
+      }
+      i = i + 1;
+    }
+    return 0;
+}
+```
+We can find that this program will not create a memory leak because rec will be allocated on the stack instead of the heap as the alloc would.  
+
 Incorporating a garbage collector is a possible future extension to the runtime library.
 
 ## Resources
