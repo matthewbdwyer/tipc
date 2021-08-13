@@ -5,7 +5,6 @@
 #include "ParseError.h"
 #include "InternalError.h"
 #include "SemanticError.h"
-
 #include "llvm/Support/CommandLine.h"
 #include "loguru.hpp"
 
@@ -14,12 +13,13 @@
 using namespace llvm;
 using namespace std;
 
-static cl::OptionCategory TIPcat("tipc Options",
-                                 "Options for controlling the TIP compilation process.");
+static cl::OptionCategory TIPcat("tipc Options","Options for controlling the TIP compilation process.");
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
+static cl::opt<bool> pcg("pcg", cl::desc("print call graph"), cl::cat(TIPcat));
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
+
 static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 0-3)"), cl::cat(TIPcat));
 static cl::opt<bool> emitHrAsm("asm",
                            cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),
@@ -32,6 +32,10 @@ static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
                                        cl::Required,
                                        cl::cat(TIPcat));
+static cl::opt<std::string> outputfile("o",
+                                    cl::value_desc("outputfile"),
+                                    cl::desc("write output to <outputfile>"),
+                                    cl::cat(TIPcat));
 
 /*! \brief tipc driver.
  * 
@@ -39,7 +43,7 @@ static cl::opt<std::string> sourceFile(cl::Positional,
  * using LLVM CommandLine support.  It runs the phases of the compiler in sequence.
  * If an error is detected, via an exception, it reports the error and exits.  
  * If there is no error, then the LLVM bitcode is emitted to a file whose name
- * is the provided source file suffixed by ".bc".
+ * is the providvvved source file suffixed by ".bc".
  */
 int main(int argc, char *argv[]) {
   cl::HideUnrelatedOptions(TIPcat);
@@ -79,6 +83,7 @@ int main(int argc, char *argv[]) {
     try {
       auto analysisResults = SemanticAnalysis::analyze(ast.get());
 
+
       if (ppretty) {
         FrontEnd::prettyprint(ast.get(), std::cout);
       }
@@ -88,6 +93,10 @@ int main(int argc, char *argv[]) {
       } else if (psym) {
         analysisResults->getSymbolTable()->print(std::cout);
       }
+
+      if(pcg) {
+         analysisResults->getCallGraph()->print(std::cout);
+      }
       auto llvmModule = CodeGenerator::generate(ast.get(), analysisResults.get(), sourceFile);
 
       if (!disopt) {
@@ -95,9 +104,9 @@ int main(int argc, char *argv[]) {
       }
 
       if(emitHrAsm) {
-        CodeGenerator::emitHumanReadableAssembly(llvmModule.get());
+        CodeGenerator::emitHumanReadableAssembly(llvmModule.get(), outputfile);
       } else {
-        CodeGenerator::emit(llvmModule.get());
+        CodeGenerator::emit(llvmModule.get(), outputfile);
       }
 
     } catch (SemanticError& e) {
@@ -113,6 +122,5 @@ int main(int argc, char *argv[]) {
     LOG_S(ERROR) << "tipc: " << e.what();
     LOG_S(ERROR) << "tipc: parse error";
     exit (EXIT_FAILURE);
-  }
-
-}
+  }  // LCOV_EXCL_LINE
+}  // LCOV_EXCL_LINE

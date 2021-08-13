@@ -158,7 +158,7 @@ TEST_CASE("ASTPrinterTest: expression printers", "[ASTNodePrint]") {
     }
 }
 
-TEST_CASE("ASTPrinterTest: condiional expression printers", "[ASTNodePrint]") {
+TEST_CASE("ASTPrinterTest: conditional expression printers", "[ASTNodePrint]") {
     std::stringstream stream;
     stream << R"(
       fun() {
@@ -219,4 +219,26 @@ TEST_CASE("ASTPrinterTest: local unique expr test", "[ASTNodePrint]") {
     auto actual = stream.str();
 
     REQUIRE(actual == "(y+0)");
+}
+
+TEST_CASE("ASTPrinterTest: ASTProgram output is the hash of the source.", "[ASTNodePrint]") {
+  std::stringstream stream;
+  stream << R"(
+      foo(x) {
+         return x + 1;
+      }
+
+      main() {
+        var z;
+        z = foo(42);
+        return z;
+      }
+    )";
+
+  auto ast = ASTHelper::build_ast(stream);
+
+  std::string expectedOutput = "29e272ab0b8752287594fb0014953a9cf7879e3687f4d481ced352a835b46359";
+  std::stringstream actualOutput;
+  actualOutput << *ast;
+  REQUIRE(expectedOutput == actualOutput.str());
 }

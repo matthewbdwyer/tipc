@@ -11,4 +11,4 @@ void ASTAccessExpr::accept(ASTVisitor * visitor) {
 std::ostream& ASTAccessExpr::print(std::ostream &out) const {
   out << "(" << *getRecord() << "." << getField() << ")";
   return out;
-}
+}  // LCOV_EXCL_LINE

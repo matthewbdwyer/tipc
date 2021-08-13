@@ -21,7 +21,7 @@ bool TipInt::operator!=(const TipType &other) const {
 std::ostream &TipInt::print(std::ostream &out) const {
     out << std::string("int");
     return out;
-}
+}  // LCOV_EXCL_LINE
 
 // TipInt is a 0-ary type constructor so it has no arguments to visit
 void TipInt::accept(TipTypeVisitor * visitor) {

@@ -32,7 +32,9 @@ TEST_CASE("Check Assignable: complex field lhs", "[Symbol]") {
     std::stringstream stream;
     stream << R"(recordlhs() { var x; {f:0, g:1}.f = x; return 0; })";
     auto ast = ASTHelper::build_ast(stream);
-    REQUIRE_NOTHROW(CheckAssignable::check(ast.get()));
+    REQUIRE_THROWS_MATCHES(CheckAssignable::check(ast.get()),
+                           SemanticError,
+                           ContainsWhat("{f:0,g:1} is an expression, and not a variable corresponding to a record"));
 }
 
 TEST_CASE("Check Assignable: complex pointer lhs", "[Symbol]") {

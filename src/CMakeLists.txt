@@ -28,6 +28,7 @@ target_include_directories(
           ${CMAKE_CURRENT_SOURCE_DIR}/frontend/ast/treetypes
           ${CMAKE_CURRENT_SOURCE_DIR}/frontend/prettyprint
           ${CMAKE_CURRENT_SOURCE_DIR}/semantic
+          ${CMAKE_CURRENT_SOURCE_DIR}/semantic/cfa
           ${CMAKE_CURRENT_SOURCE_DIR}/semantic/symboltable
           ${CMAKE_CURRENT_SOURCE_DIR}/semantic/types
           ${CMAKE_CURRENT_SOURCE_DIR}/semantic/types/concrete

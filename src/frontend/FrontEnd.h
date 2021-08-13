@@ -1,8 +1,32 @@
 #pragma once
 
 #include "ASTProgram.h"
+
+#include "antlr4-runtime.h"
+
 #include <iostream>
 #include <fstream>
+
+//! \brief Lexer error listener for redirecting ANTLR4 errors to ParseError.
+class LexerErrorListener : public antlr4::BaseErrorListener {
+public:
+  LexerErrorListener() = default;
+
+  virtual void syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol,
+                           size_t line, size_t charPositionInLine,
+                           const std::string &msg, std::exception_ptr e) override;
+};
+
+//! \brief Parse error listener for redirecting ANTLR4 errors to ParseError.
+class ParserErrorListener : public antlr4::BaseErrorListener {
+public:
+  ParserErrorListener() = default;
+
+  virtual void syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol,
+                           size_t line, size_t charPositionInLine,
+                           const std::string &msg, std::exception_ptr e) override;
+};
+
 
 /*! \class FrontEnd
  *  \brief A collection of routines implementing the compiler front end.
@@ -18,7 +42,7 @@ public:
    * \param stream the input stream holding the program text.
    * \return the generated AST.
    */
-  static std::unique_ptr<ASTProgram> parse(std::ifstream& stream);
+  static std::unique_ptr<ASTProgram> parse(std::istream& stream);
 
   /*! \fn print
    *  \brief Print program in a standard form to cout.

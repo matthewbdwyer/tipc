@@ -1,5 +1,8 @@
 #include "ASTBuilder.h"
 
+#include "picosha2.h"
+
+#include <functional>
 #include <vector>
 
 using namespace antlrcpp;
@@ -31,7 +34,7 @@ std::string ASTBuilder::opString(int op) {
     opStr = "!=";
     break;
   default:
-    std::runtime_error(
+    throw std::runtime_error(
         "unknown operator :" +
         ASTBuilder::parser->getVocabulary().getLiteralName(op));
   }
@@ -85,7 +88,10 @@ std::unique_ptr<ASTProgram> ASTBuilder::build(TIPParser::ProgramContext *ctx) {
     visit(fn);
     pFunctions.push_back(std::move(visitedFunction));
   }
-  return std::make_unique<ASTProgram>(std::move(pFunctions));
+
+  auto prog = std::make_unique<ASTProgram>(std::move(pFunctions));
+  prog->setName(generateSHA256(ctx->getText()));
+  return prog;
 }
 
 Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
@@ -137,7 +143,7 @@ Any ASTBuilder::visitNegNumber(TIPParser::NegNumberContext *ctx) {
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+}  // LCOV_EXCL_LINE
 
 /*
  * Unfortunately, the context types for binary expressions generated
@@ -232,7 +238,7 @@ Any ASTBuilder::visitNumExpr(TIPParser::NumExprContext *ctx) {
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+}  // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitVarExpr(TIPParser::VarExprContext *ctx) {
   std::string name = ctx->IDENTIFIER()->getText();
@@ -470,4 +476,10 @@ Any ASTBuilder::visitAssignStmt(TIPParser::AssignStmtContext *ctx) {
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
     return "";
+}
+
+std::string ASTBuilder::generateSHA256(std::string tohash) {
+  std::vector<unsigned char> hash(picosha2::k_digest_size);
+  picosha2::hash256(tohash.begin(), tohash.end(), hash.begin(), hash.end());
+  return picosha2::bytes_to_hex_string(hash.begin(), hash.end());
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 declare -r ROOT_DIR=${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}
 declare -r RTLIB_DIR=${ROOT_DIR}/rtlib
 declare -r UNIT_TEST_DIR=${ROOT_DIR}/build/test/unit
@@ -17,9 +18,7 @@ usage() {
 run_unit_tests() {
   find ${ROOT_DIR} -name '*gcda' -delete
   echo running the unit test suite
-  ${UNIT_TEST_DIR}/frontend/frontend_unit_tests
-  ${UNIT_TEST_DIR}/semantic/semantic_unit_tests
-  ${UNIT_TEST_DIR}/semantic/types/typeinference_unit_tests
+  find ${UNIT_TEST_DIR} -name '*_unit_tests' -exec {} \;
   echo unit test run complete
 }
 
