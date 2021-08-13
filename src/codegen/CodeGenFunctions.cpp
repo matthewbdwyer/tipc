@@ -34,8 +34,8 @@ using namespace llvm;
  *
  * These code generation routines are based on the LLVM Kaleidoscope
  * Tutorial for C++ Chapters 3 and 7
- *     https://llvm.org/docs/tutorial/LangImpl03.html
- *     https://llvm.org/docs/tutorial/LangImpl07.html
+ *     https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl03.html
+ *     https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl07.html
  * We thank the authors for making these example available.
  *
  * Unlike the tutorial, these routines rely on following LLVM passes
