@@ -7,8 +7,9 @@ foo(x, y, z)
 
 main() 
 {
-  var a, c;
+  var a, b;
   a = foo(3, 2, 4);
+  b = foo(6, 4, 8);
   if ((*a.l != 3)) 
     error *a.l;
   return 0;
@@ -28,5 +29,5 @@ Locals for function foo : {
 
 Locals for function main : {
   a : &{l:int,m:int,n:int},
-  c : α<c>
+  b : &{l:int,m:int,n:int}
 }

@@ -1,3 +1,4 @@
+// record argument passed by reference
 foo(r){
     r.l = r.l + r.m + r.n;
     return r.l;
