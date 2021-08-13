@@ -1,0 +1,9 @@
+<map id="/home/runner/work/tipc/tipc/src/semantic/cfa/CallGraph.h" name="/home/runner/work/tipc/tipc/src/semantic/cfa/CallGraph.h">
+<area shape="rect" id="node2" href="$CallGraph_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/cfa\l/CallGraph.cpp" alt="" coords="134,109,307,165"/>
+<area shape="rect" id="node3" href="$SemanticAnalysis_8h.html" title="/home/runner/work/tipc\l/tipc/src/semantic/SemanticAnalysis.h" alt="" coords="331,117,601,158"/>
+<area shape="rect" id="node4" href="$CodeGenerator_8h.html" title="/home/runner/work/tipc\l/tipc/src/codegen/CodeGenerator.h" alt="" coords="94,213,339,255"/>
+<area shape="rect" id="node6" href="$tipc_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/tipc.cpp" alt="" coords="290,303,463,344"/>
+<area shape="rect" id="node7" href="$CodeGenFunctions_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/codegen/CodeGenFunctions.cpp" alt="" coords="414,213,697,255"/>
+<area shape="rect" id="node8" href="$SemanticAnalysis_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/SemanticAnalysis.cpp" alt="" coords="720,213,1004,255"/>
+<area shape="rect" id="node5" href="$CodeGenerator_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/codegen/CodeGenerator.cpp" alt="" coords="5,303,265,344"/>
+</map>

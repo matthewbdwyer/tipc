@@ -69,6 +69,8 @@ $(function() {
 
 <p>Lexer error listener for redirecting ANTLR4 errors to <a class="el" href="classParseError.html" title="Class for tipc parse errors. ">ParseError</a>.  
  <a href="classLexerErrorListener.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="FrontEnd_8h_source.html">FrontEnd.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for LexerErrorListener:</div>
 <div class="dyncontent">
@@ -88,8 +90,8 @@ Collaboration diagram for LexerErrorListener:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abd073806d4eec4dfdb67043235b0aa9b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexerErrorListener.html#abd073806d4eec4dfdb67043235b0aa9b">LexerErrorListener</a> ()=default</td></tr>
 <tr class="separator:abd073806d4eec4dfdb67043235b0aa9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7e3c841036d7304785f9d75e11b9cea"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexerErrorListener.html#af7e3c841036d7304785f9d75e11b9cea">syntaxError</a> (Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const std::string &amp;msg, std::exception_ptr e) override</td></tr>
-<tr class="separator:af7e3c841036d7304785f9d75e11b9cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac512df53c3dfd0a562a980906b1e9bef"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexerErrorListener.html#ac512df53c3dfd0a562a980906b1e9bef">syntaxError</a> (antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line, size_t charPositionInLine, const std::string &amp;msg, std::exception_ptr e) override</td></tr>
+<tr class="separator:ac512df53c3dfd0a562a980906b1e9bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Lexer error listener for redirecting ANTLR4 errors to <a class="el" href="classParseError.html" title="Class for tipc parse errors. ">ParseError</a>. </p>
@@ -120,8 +122,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af7e3c841036d7304785f9d75e11b9cea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7e3c841036d7304785f9d75e11b9cea">&#9670;&nbsp;</a></span>syntaxError()</h2>
+<a id="ac512df53c3dfd0a562a980906b1e9bef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac512df53c3dfd0a562a980906b1e9bef">&#9670;&nbsp;</a></span>syntaxError()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -132,13 +134,13 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void LexerErrorListener::syntaxError </td>
           <td>(</td>
-          <td class="paramtype">Recognizer *&#160;</td>
+          <td class="paramtype">antlr4::Recognizer *&#160;</td>
           <td class="paramname"><em>recognizer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Token *&#160;</td>
+          <td class="paramtype">antlr4::Token *&#160;</td>
           <td class="paramname"><em>offendingSymbol</em>, </td>
         </tr>
         <tr>
@@ -180,7 +182,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>/home/runner/work/tipc/tipc/src/frontend/<a class="el" href="FrontEnd_8h_source.html">FrontEnd.h</a></li>
 <li>/home/runner/work/tipc/tipc/src/frontend/<a class="el" href="FrontEnd_8cpp.html">FrontEnd.cpp</a></li>
 </ul>
 </div><!-- contents -->
