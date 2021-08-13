@@ -436,7 +436,7 @@ llvm::Value* ASTFunction::codegen() {
 
   verifyFunction(*TheFunction);
   return TheFunction;
-}
+}  // LCOV_EXCL_LINE
 
 llvm::Value* ASTNumberExpr::codegen() {
   return ConstantInt::get(Type::getInt64Ty(TheContext), getValue());
@@ -607,7 +607,7 @@ llvm::Value* ASTRefExpr::codegen() {
   }
 
   return Builder.CreatePtrToInt(lValue, Type::getInt64Ty(TheContext), "addrOfPtr");
-}
+}  // LCOV_EXCL_LINE
 
 /* '*' dereference expression
  *
@@ -747,7 +747,7 @@ llvm::Value* ASTDeclStmt::codegen() {
 
   // Return the body computation.
   return localAlloca;
-}
+}  // LCOV_EXCL_LINE
 
 llvm::Value* ASTAssignStmt::codegen() {
   // trigger code generation for l-value expressions
@@ -765,7 +765,7 @@ llvm::Value* ASTAssignStmt::codegen() {
   }
 
   return Builder.CreateStore(rValue, lValue);
-}
+}  // LCOV_EXCL_LINE
 
 
 
@@ -778,7 +778,7 @@ llvm::Value* ASTBlockStmt::codegen() {
 
   // If the block was empty return a nop
   return (lastStmt == nullptr) ? Builder.CreateCall(nop) : lastStmt;
-}
+}  // LCOV_EXCL_LINE
 
 /*
  * The code generated for an WhileStmt looks like this:
@@ -852,7 +852,7 @@ llvm::Value* ASTWhileStmt::codegen() {
   TheFunction->getBasicBlockList().push_back(ExitBB);
   Builder.SetInsertPoint(ExitBB);
   return Builder.CreateCall(nop);
-}
+}  // LCOV_EXCL_LINE
 
 /*
  * The code generated for an IfStmt looks like this:
@@ -935,7 +935,7 @@ llvm::Value* ASTIfStmt::codegen() {
   TheFunction->getBasicBlockList().push_back(MergeBB);
   Builder.SetInsertPoint(MergeBB);
   return Builder.CreateCall(nop);
-}
+}  // LCOV_EXCL_LINE
 
 llvm::Value* ASTOutputStmt::codegen() {
   if (outputIntrinsic == nullptr) {

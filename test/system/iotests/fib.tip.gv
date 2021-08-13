@@ -1,0 +1,5 @@
+digraph CFG{
+a0 [label="fib"];
+a1 [label="main"];
+a1 -> a0;
+}

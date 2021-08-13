@@ -1,4 +1,4 @@
-add_library(test_helpers)
+add_library(test_helpers ASTNodeHelpers.h)
 target_sources(
   test_helpers
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ASTHelper.cpp

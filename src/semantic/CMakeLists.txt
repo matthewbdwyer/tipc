@@ -21,5 +21,12 @@ target_include_directories(
           ${CMAKE_CURRENT_SOURCE_DIR}/weeding
           ${CMAKE_SOURCE_DIR}/src/frontend/ast
           ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes)
-target_link_libraries(semantic PRIVATE cfa ast weeding symboltable types
-                                       coverage_config loguru)
+target_link_libraries(
+  semantic
+  PRIVATE cfa
+          ast
+          weeding
+          symboltable
+          types
+          coverage_config
+          loguru)

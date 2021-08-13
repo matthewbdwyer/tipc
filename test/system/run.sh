@@ -1,5 +1,4 @@
 #!/bin/bash
-
 declare -r ROOT_DIR=${TRAVIS_BUILD_DIR:-$(git rev-parse --show-toplevel)}
 declare -r TIPC=${ROOT_DIR}/build/src/tipc
 declare -r RTLIB=${ROOT_DIR}/rtlib
@@ -24,8 +23,6 @@ initialize_test() {
   ((numtests++))
 }
 
-#echo "number of tests:$numtests"
-
 # Self contained test cases
 for i in selftests/*.tip
 do
@@ -45,27 +42,6 @@ do
   else 
     rm ${base}
   fi 
-  rm $i.bc
-done
-
-for i in selftests/*.tip
-do
-  initialize_test
-  base="$(basename $i .tip)"
-
-  ${TIPC} -do $i
-  ${TIPCLANG} $i.bc ${RTLIB}/tip_rtlib.bc -o $base
-
-  ./${base} &>/dev/null
-  exit_code=${?}
-  if [ ${exit_code} -ne 0 ]; then
-    echo -n "Test failure for unoptimized : "
-    echo $i
-    ./${base}
-    ((numfailures++))
-  else
-    rm ${base}
-  fi
   rm $i.bc
 done
 
@@ -114,6 +90,7 @@ do
 done
 
 # Tests to cover argument handling
+# Test pretty printing and symbol printing.
 initialize_test
 ${TIPC} -pp -ps iotests/fib.tip >${SCRATCH_DIR}/fib.ppps
 diff iotests/fib.ppps ${SCRATCH_DIR}/fib.ppps >${SCRATCH_DIR}/fib.diff
@@ -124,6 +101,60 @@ then
   cat fib.diff
   ((numfailures++))
 fi 
+
+# Test default output file.
+initialize_test
+input=iotests/main.tip
+expected=iotests/main.tip.ll
+${TIPC} --asm $input
+if [ ! -f $expected ]; then
+  echo -n "Did not find exepected output, $expected, for input $input" 
+  ((numfailures++))
+fi 
+rm $expected
+
+# Test human-readable assembly.
+initialize_test
+input=iotests/fib.tip
+output=${SCRATCH_DIR}/fib.tip.ll
+expected=iotests/fib.tip.ll
+diffed=${SCRATCH_DIR}/fib.diff
+${TIPC} --asm $input -o $output
+diff <(sed -n '4,$p' $output) <(sed -n '4,$p' $expected) > $diffed
+if [ -s $diffed ]; then
+  echo -n "Test differences for: $input" 
+  cat $diffed
+  ((numfailures++))
+fi 
+
+# Test call graph.
+initialize_test
+input=iotests/fib.tip
+output=${SCRATCH_DIR}/fib.tip.bc
+output_graph=${SCRATCH_DIR}/fib.tip.gv
+expected_graph=iotests/fib.tip.gv
+diffed_graph=${SCRATCH_DIR}/fib.tip.diff
+${TIPC} --pcg $input -o $output > $output_graph
+diff $output_graph $expected_graph > $diffed_graph
+if [ -s $diffed_graph ]; then
+  echo "Test differences for: $input" 
+  cat $diffed_graph
+  ((numfailures++))
+fi 
+
+# Test bad input.
+initialize_test
+nonexistent=$(uuidgen).tip
+while [ -e $nonexistent ]; do
+  nonexistent=$(uuidgen).tip
+done
+
+${TIPC} $nonexistent &>/dev/null
+exit_code=${?}
+if [ ${exit_code} -eq 0 ]; then
+  echo -n "Test failure for non-exisitent input" 
+  ((numfailures++))
+fi
 
 # Type checking at the system level
 for i in selftests/*.tip

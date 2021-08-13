@@ -27,4 +27,4 @@ void ASTProgram::accept(ASTVisitor * visitor) {
 std::ostream& ASTProgram::print(std::ostream &out) const {
   out << getName();
   return out;
-}
+}  // LCOV_EXCL_LINE

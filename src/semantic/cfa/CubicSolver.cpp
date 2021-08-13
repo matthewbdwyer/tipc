@@ -100,7 +100,7 @@ CubicSolverNode * CubicSolver::killCyclesAt(CubicSolverNode * n) {
         }
     }while(collapsed);
     return n;
-}
+}  // LCOV_EXCL_LINE
 
 CubicSolverNode * CubicSolver::mergePath(std::vector<CubicSolverNode *>& path) {
     assert(path.size() != 0);

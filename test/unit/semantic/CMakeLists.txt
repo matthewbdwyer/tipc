@@ -6,6 +6,7 @@ target_sources(
   semantic_unit_tests
   PRIVATE # First test defines CATCH_CONFIG_MAIN
           ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTableTest.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/LocalNameCollectorTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/CheckAssignableTest.cpp)
 target_include_directories(
   semantic_unit_tests

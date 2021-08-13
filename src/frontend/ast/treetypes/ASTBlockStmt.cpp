@@ -22,4 +22,4 @@ std::ostream& ASTBlockStmt::print(std::ostream &out) const {
   }
   out << "}";
   return out;
-}
+}  // LCOV_EXCL_LINE
