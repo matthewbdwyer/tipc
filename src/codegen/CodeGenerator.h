@@ -32,12 +32,12 @@ public:
    *
    * \param m the LLVM module holding the generated program
    */
-  static void emit(llvm::Module* m);
+  static void emit(llvm::Module* m, std::string filename = "");
 
   /*! \fn emitHumanReadableAssembly
    *  \brief Emit LLVM human-readable assembly to a file.
    *
    * \param m the LLVM module holding the generated program
    */
-  static void emitHumanReadableAssembly(llvm::Module* m);
+  static void emitHumanReadableAssembly(llvm::Module* m, std::string filename = "");
 };

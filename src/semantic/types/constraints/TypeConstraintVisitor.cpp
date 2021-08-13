@@ -25,7 +25,7 @@ std::shared_ptr<TipType> TypeConstraintVisitor::astToVar(ASTNode * n) {
     } else if ((canonical = symbolTable->getFunction(ve->getName()))) {
       return std::make_shared<TipVar>(canonical);
     } 
-  } 
+  }  // LCOV_EXCL_LINE
 
   return std::make_shared<TipVar>(n);
 }

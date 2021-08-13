@@ -1,5 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "ParserHelper.h"
+#include "FrontEnd.h"
+#include "ParseError.h"
+#include "ExceptionContainsWhat.h"
 
 #include <catch2/catch.hpp>
 
@@ -295,5 +298,27 @@ TEST_CASE("TIP Lexer: illegal identifier token", "[TIP Lexer]") {
     REQUIRE_FALSE(ParserHelper::is_parsable(stream));
 }
 
+TEST_CASE("TIP Lexer: Lexing exceptions are thrown", "[TIP Lexer]") {
+  std::stringstream stream;
+  stream << R"(
+      main() {
+        return ";
+      }
+    )";
 
+  REQUIRE_THROWS_MATCHES(FrontEnd::parse(stream), ParseError,
+                         ContainsWhat("token recognition error"));
+}
+
+TEST_CASE("TIP Parser: Parsing exceptions are thrown", "[TIP Parser]") {
+  std::stringstream stream;
+  stream << R"(
+      main() {
+        return 0
+      }
+    )";
+
+  REQUIRE_THROWS_MATCHES(FrontEnd::parse(stream), ParseError,
+                         ContainsWhat("missing ';'"));
+}
 

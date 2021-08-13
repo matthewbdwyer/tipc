@@ -80,7 +80,7 @@ void UnionFind::quick_union(std::shared_ptr<TipType> t1, std::shared_ptr<TipType
 
 bool UnionFind::connected(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     return *find(t1) == *find(t2);
-}
+}  // LCOV_EXCL_LINE
 
 /*! \fn get_parent
  *

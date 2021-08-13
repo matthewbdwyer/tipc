@@ -25,7 +25,7 @@ ASTNode* CFAnalyzer::getCanonical(ASTNode* n)
         else if ((canonical = symbolTable->getFunction(ve->getName()))) {
             return canonical;
         }
-    }
+    }  // LCOV_EXCL_LINE
     return n;
 }
 
@@ -39,7 +39,7 @@ ASTNode* CFAnalyzer::getCanonicalForFunction(ASTNode* n, ASTFunction* scp)
         else if ((canonical = symbolTable->getFunction(ve->getName()))) {
             return canonical;
         }
-    }
+    }  // LCOV_EXCL_LINE
     return n;
 }
 
@@ -69,7 +69,7 @@ bool CFAnalyzer::visit(ASTFunAppExpr* element)
         }
     }
     return true;
-}
+}  // LCOV_EXCL_LINE
 
 bool CFAnalyzer::visit(ASTAssignStmt* element)
 {

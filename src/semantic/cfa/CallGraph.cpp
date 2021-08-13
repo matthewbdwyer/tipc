@@ -20,7 +20,7 @@ int CallGraph::getTotalEdges()
             total_edges++;
     }
     return total_edges;
-}
+}  // LCOV_EXCL_LINE
 
 std::vector<ASTFunction*> CallGraph::getVertices()
 {
@@ -36,7 +36,7 @@ std::vector<std::pair<ASTFunction*, ASTFunction*>> CallGraph::getEdges()
         }
     }
     return edges;
-}
+}  // LCOV_EXCL_LINE
 
 std::set<ASTFunction*> CallGraph::getCallees(ASTFunction* f)
 {

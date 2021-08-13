@@ -1,15 +1,12 @@
-add_executable(frontend_unit_tests)
+add_executable(codegen_unit_tests)
 target_sources(
-  frontend_unit_tests
+  codegen_unit_tests
   PRIVATE # First test defines CATCH_CONFIG_MAIN
-          ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/ASTPrinterTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilderTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTProgramTest.cpp)
+          ${CMAKE_CURRENT_SOURCE_DIR}/CodegenFunctionsTest.cpp)
 target_include_directories(
-  frontend_unit_tests
+  codegen_unit_tests
   PRIVATE ${CMAKE_SOURCE_DIR}/src/error
+          ${CMAKE_SOURCE_DIR}/src/codegen/
           ${CMAKE_SOURCE_DIR}/src/frontend/
           ${CMAKE_SOURCE_DIR}/src/frontend/ast
           ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes
@@ -17,7 +14,7 @@ target_include_directories(
           ${CMAKE_SOURCE_DIR}/test/unit/helpers
           ${CMAKE_SOURCE_DIR}/test/unit/matchers)
 target_link_libraries(
-  frontend_unit_tests
+  codegen_unit_tests
   PRIVATE antlr4_static
           ${llvm_libs}
           ast

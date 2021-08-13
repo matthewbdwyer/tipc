@@ -17,7 +17,6 @@ static cl::OptionCategory TIPcat("tipc Options","Options for controlling the TIP
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
 static cl::opt<bool> pcg("pcg", cl::desc("print call graph"), cl::cat(TIPcat));
-
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<bool> debug("verbose", cl::desc("enable log messages"), cl::cat(TIPcat));
@@ -30,6 +29,10 @@ static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
                                        cl::Required,
                                        cl::cat(TIPcat));
+static cl::opt<std::string> outputfile("o",
+                                    cl::value_desc("outputfile"),
+                                    cl::desc("write output to <outputfile>"),
+                                    cl::cat(TIPcat));
 
 /*! \brief tipc driver.
  * 
@@ -98,9 +101,9 @@ int main(int argc, char *argv[]) {
       }
 
       if(emitHrAsm) {
-        CodeGenerator::emitHumanReadableAssembly(llvmModule.get());
+        CodeGenerator::emitHumanReadableAssembly(llvmModule.get(), outputfile);
       } else {
-        CodeGenerator::emit(llvmModule.get());
+        CodeGenerator::emit(llvmModule.get(), outputfile);
       }
 
     } catch (SemanticError& e) {
@@ -116,6 +119,5 @@ int main(int argc, char *argv[]) {
     LOG_S(ERROR) << "tipc: " << e.what();
     LOG_S(ERROR) << "tipc: parse error";
     exit (EXIT_FAILURE);
-  }
-
-}
+  }  // LCOV_EXCL_LINE
+}  // LCOV_EXCL_LINE

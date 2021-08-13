@@ -4,5 +4,6 @@ get_property(GrammarIncDir GLOBAL PROPERTY GrammarIncludeDir)
 include_directories(${GrammarIncDir})
 
 add_subdirectory(helpers)
+add_subdirectory(codegen)
 add_subdirectory(frontend)
 add_subdirectory(semantic)

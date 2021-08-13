@@ -179,3 +179,11 @@ TEST_CASE("Symbol Table: functions clash ", "[SymbolTable]") {
                            SemanticError,
                            ContainsWhat("foo already declared"));
 }
+
+TEST_CASE("Symbol Table: Unknown Function", "[SymbolTable]") {
+  std::stringstream stream;
+  stream << R"(short() { var x, y, z; output x+y; return z; })";
+  auto ast = ASTHelper::build_ast(stream);
+  std::unique_ptr<SymbolTable> symbols = SymbolTable::build(ast.get());
+  REQUIRE(nullptr == symbols->getFunction("foo"));
+}

@@ -28,4 +28,4 @@ std::ostream& ASTDeclStmt::print(std::ostream &out) const {
   } 
   out << ";";
   return out;
-}
+}  // LCOV_EXCL_LINE
