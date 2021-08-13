@@ -1,0 +1,18 @@
+foo(x,y,z){
+    var rec;
+    rec = alloc {l: x, m: y, n: z};
+    return rec;
+}
+
+main(){
+    var a,b;
+
+    a = foo(3,2,4);
+
+    // This second call will NOT overwrite the record allocated by the first
+    b = foo(6,4,8);
+
+    // So there will be no side-effect on a.l
+    if((*a).l!=3) error (*a).l;
+    return 0;
+}

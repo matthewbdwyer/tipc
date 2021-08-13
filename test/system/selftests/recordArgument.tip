@@ -1,0 +1,18 @@
+// record argument passed by reference
+foo(r){
+    r.l = r.l + r.m + r.n;
+    return r.l;
+}
+
+main(){
+    var rec;
+
+    rec = {l: 1, m: 2, n: 3};
+
+    if (foo(rec) != 6) error rec.l;
+
+    // Record updates with each call
+    if (foo(rec) != 11) error rec.l;
+
+    return 0;
+}

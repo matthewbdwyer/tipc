@@ -1,0 +1,20 @@
+foo(x,y,z){
+    var rec;
+    rec = {l: x, m: y, n: z};
+    return rec.m;
+}
+
+main(){
+    var i, j, a;
+    a = 0;
+    i = 0;
+    j = 0;
+    while (1000000000 > i) { 
+      while (1000000000 > j) { 
+        a = a + foo(3,2,4);
+        j = j + 1;
+      }
+      i = i + 1;
+    }
+    return 0;
+}

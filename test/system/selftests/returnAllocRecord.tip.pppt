@@ -1,7 +1,7 @@
 foo(x, y, z) 
 {
   var rec;
-  rec = {l:x, m:y, n:z};
+  rec = alloc {l:x, m:y, n:z};
   return rec;
 }
 
@@ -10,24 +10,24 @@ main()
   var a, b;
   a = foo(3, 2, 4);
   b = foo(6, 4, 8);
-  if ((a.l == 3)) 
-    error a.l;
+  if ((*a.l != 3)) 
+    error *a.l;
   return 0;
 }
 
 Functions : {
-  foo : (int,int,int) -> {l:int,m:int,n:int},
+  foo : (int,int,int) -> &{l:int,m:int,n:int},
   main : () -> int
 }
 
 Locals for function foo : {
-  rec : {l:int,m:int,n:int},
+  rec : &{l:int,m:int,n:int},
   x : int,
   y : int,
   z : int
 }
 
 Locals for function main : {
-  a : {l:int,m:int,n:int},
-  b : {l:int,m:int,n:int}
+  a : &{l:int,m:int,n:int},
+  b : &{l:int,m:int,n:int}
 }
