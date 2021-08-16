@@ -211,15 +211,16 @@ access(r) { return r.f; }
 ```
 The record expression default initializes `f` to `0` and this is the value that is accessed and returned from the call to `access` and then from `main`.  
 
-Second, TIP allows memory allocation, yet its runtime system does not include a garbage collector.  It's an easy matter to write a TIP program that leaks memory:
-
+Second, TIP allows memory allocation, yet its runtime system does not include a garbage collector.  
+The TIP program [recordLeak.tip](test/system/leak/recordLeak.tip), shown below, leaks memory because the `alloc` constructor causes the record to be allocated on the heap:
 ```
+// recordLeak.tip
 foo(x,y,z){
     var rec;
     rec = alloc {l: x, m: y, n: z};
     return (*rec).m;
 }
-​
+
 main(){
     var i, j, a;
     a = 0;
@@ -240,15 +241,15 @@ This is a valid tip program which can be compiled into an executable using and o
 /path/to/tipc/bin/build.sh --do test/system/leak/recordLeak.tip
 ./recordLeak &; top
 ```
-You can then kill top using `Ctrl+C` and then kill the ./recordleak with `fg` and `Ctrl+C`. It's important that you disable the optimizer with the `--do` flag. Otherwise, the optimizer would be smart enough to simply return the y value. If we remove the alloc from foo, as we do in "test/system/leak/recordNoLeak.tip":
+You can then kill top using `Ctrl+C` and then kill the ./recordleak with `fg` and `Ctrl+C`. It's important that you disable the optimizer with the `--do` flag. Otherwise, the optimizer would be smart enough to simply return the `y` parameter's value. If we remove the alloc from `foo`, as we do in [recordNoLeak.tip](test/system/leak/recordNoLeak.tip), then the record is allocated on the call stack and it is reclained when the call to `foo` returns:
 ```
-```
+// recordNoLeak.tip
 foo(x,y,z){
     var rec;
     rec = {l: x, m: y, n: z};
     return (*rec).m;
 }
-​
+
 main(){
     var i, j, a;
     a = 0;
