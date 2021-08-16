@@ -1,0 +1,7 @@
+X-Repolib-Name: Amazon Corretto 8
+Enabled: yes
+Types: deb
+URIs: https://apt.corretto.aws
+Suites: stable
+Components: main
+signed-by: /usr/share/keyrings/amazon-corretto-8-keyring.gpg
