@@ -1,6 +1,5 @@
 #include "FrontEnd.h"
 
-#include "antlr4-runtime.h"
 #include "TIPLexer.h"
 #include "TIPParser.h"
 #include "ASTBuilder.h"
@@ -10,27 +9,7 @@
 using namespace std;
 using namespace antlr4;
 
-//! \brief Lexer error listener for redirecting ANTLR4 errors to ParseError.
-class LexerErrorListener : public BaseErrorListener {
-public:
-  LexerErrorListener() = default;
-
-  virtual void syntaxError(Recognizer *recognizer, Token *offendingSymbol, 
-                           size_t line, size_t charPositionInLine,
-                           const std::string &msg, std::exception_ptr e) override;
-};
-
-//! \brief Parse error listener for redirecting ANTLR4 errors to ParseError.
-class ParserErrorListener : public BaseErrorListener {
-public:
-  ParserErrorListener() = default;
-
-  virtual void syntaxError(Recognizer *recognizer, Token *offendingSymbol, 
-                           size_t line, size_t charPositionInLine,
-                           const std::string &msg, std::exception_ptr e) override;
-};
-
-void LexerErrorListener::syntaxError(Recognizer *recognizer, Token *offendingSymbol, 
+void LexerErrorListener::syntaxError(Recognizer *recognizer, Token *offendingSymbol,
                                      size_t line, size_t charPositionInLine, 
                                      const std::string &msg, std::exception_ptr e) {
   throw ParseError(msg+"@"+std::to_string(line)+":"+std::to_string(charPositionInLine));
@@ -43,7 +22,7 @@ void ParserErrorListener::syntaxError(Recognizer *recognizer, Token *offendingSy
 }
 
 
-std::unique_ptr<ASTProgram> FrontEnd::parse(std::ifstream& stream){
+std::unique_ptr<ASTProgram> FrontEnd::parse(std::istream& stream){
   ANTLRInputStream input(stream);
   TIPLexer lexer(&input);
   CommonTokenStream tokens(&lexer);

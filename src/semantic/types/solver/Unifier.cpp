@@ -115,7 +115,7 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
         auto f2 = std::dynamic_pointer_cast<TipCons>(rep2);
         if(!f1->doMatch(f2.get())) {
             throwUnifyException(t1,t2);
-        }
+        }  // LCOV_EXCL_LINE
 
         unionFind->quick_union(rep1, rep2);
         for(int i = 0; i < f1->getArguments().size(); i++) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ASTVisitor.h"
-
 #include <map>
 #include <vector>
 

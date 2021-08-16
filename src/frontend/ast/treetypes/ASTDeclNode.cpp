@@ -9,4 +9,4 @@ void ASTDeclNode::accept(ASTVisitor * visitor) {
 std::ostream& ASTDeclNode::print(std::ostream &out) const {
   out << getName();
   return out;
-}
+}  // LCOV_EXCL_LINE

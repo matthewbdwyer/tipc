@@ -22,6 +22,7 @@ class ASTBuilder : public TIPBaseVisitor {
 private:
   TIPParser *parser;
   std::string opString(int op);
+  std::string generateSHA256(std::string tohash);
 
 public:
   ASTBuilder(TIPParser *parser);

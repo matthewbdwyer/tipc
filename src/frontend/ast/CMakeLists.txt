@@ -54,10 +54,13 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTWhileStmt.h
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTVisitor.h
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.h)
+          ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilder.h
+          ${CMAKE_SOURCE_DIR}/externals/PicoSHA2/picosha2.h)
 target_include_directories(
   ast
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/treetypes
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes
+          ${CMAKE_SOURCE_DIR}/externals/PicoSHA2
           ${CMAKE_SOURCE_DIR}/src/frontend/prettyprint
           ${ANTLR_TIPGrammar_OUTPUT_DIR})
 target_link_libraries(ast PRIVATE antlr4_static antlrgen codegen
