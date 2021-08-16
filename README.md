@@ -70,13 +70,16 @@ Generic Options:
 tipc Options:
 Options for controlling the TIP compilation process.
 
-  --asm           - emit human-readable LLVM assembly language instead of LLVM bitcode
+  --asm           - emit human-readable LLVM assembly language instead of LLVM Bitcode
   --do            - disable bitcode optimization
-  --log=<logfile> - log all messages to logfile (enables --verbose)
+  --log=<logfile> - log all messages to logfile (enables --verbose 3)
   --pp            - pretty print
   --ps            - print symbols
   --pt            - print symbols with types (supercedes --ps)
-  --verbose       - enable log messages
+  --verbose=<int> - enable log messages (Levels 1-3) 
+                     Level 1 - Symbols being added to the symbol table and type constraints being generated for the type solvers.
+                     Level 2 - Level 1 and type constraints being unified.
+                     Level 3 - Level 2 and type constraints being added and searched for in the type graph
 ```
 By default it will accept a `.tip` file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a `.bc` file which is a binary encoding of the bitcodes.  You can see a human readable version of the bitcodes by running `llvm-dis` on the `.bc` file.
 
@@ -119,6 +122,9 @@ If you do need to add a source file then you will have to edit the appropriate `
 which will regenerate the makefiles that you can then run, by typing `make`, to build.
 
 Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README describes how to build it in isolation and run it using the ANTLR4 jar file.
+
+### Logging Messages
+When working on the tipc compiler, it may be helpful to enable logging messages when testing your changes on programs. We have inserted logging messages using loguru. These can be turned using the flag `--verbose [x]` where x is a number between 1-3. These messages get more verbose as you increase x. The first setting shows when symbols are added to the symbol table and when type constraints are generated for the type solver. The second setting shows the previous information and type constraints being unified. The third setting shows types being search for and added into the type graph. When adding to theses features, you can add logging messages by adding a line `LOG_S(x)` where x is an integer to describe the level of log verbosity you want. You can use the existing levels or make new levels.
 
 ### The bin directory
 To facilitate development of `tipc` we have collected a number of helper scripts into the `bin` directory of the project. Among them are scripts to run the entire test bed (`runtests.sh`), to run a code coverage analysis (`gencov.sh`), and to generate the project documentation (`gendocs.sh`).  Please see the `README` in the bin directory for example usages.  
