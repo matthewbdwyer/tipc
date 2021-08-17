@@ -1,12 +1,9 @@
-// NB (nphair): It looks like ANTLR unsets this. Find a better solution.
-#define EOF -1
-
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #include <iostream>
 #include <string>
 
-class ExceptionContainsWhat : public Catch::MatcherBase<std::exception> {
+class ExceptionContainsWhat : public Catch::Matchers::MatcherBase<std::exception> {
 public:
   ExceptionContainsWhat(std::string const & expected) : expected(expected) {}
 

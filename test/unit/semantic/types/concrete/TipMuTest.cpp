@@ -2,7 +2,8 @@
 #include "TipInt.h"
 #include "TipVar.h"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <memory>
 #include <sstream>
@@ -59,5 +60,5 @@ TEST_CASE("TipMu: test output stream", "[TipMu]") {
     stream << mu;
 
     auto actual = stream.str();
-    REQUIRE_THAT(actual, Catch::Matches("^μ\\[\\[42@\\d+:\\d+\\]\\]\\.int$"));
+    REQUIRE_THAT(actual, Catch::Matchers::Matches("^μ\\[\\[42@\\d+:\\d+\\]\\]\\.int$"));
 }

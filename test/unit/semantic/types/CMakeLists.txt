@@ -1,8 +1,7 @@
 add_executable(typeinference_unit_tests)
 target_sources(
   typeinference_unit_tests
-  PRIVATE # First test defines CATCH_CONFIG_MAIN
-          ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlphaTest.cpp
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAlphaTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipConsTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipFunctionTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipIntTest.cpp
@@ -39,4 +38,4 @@ target_link_libraries(
           error
           test_helpers
           coverage_config
-          Catch2::Catch2)
+          Catch2::Catch2WithMain)
