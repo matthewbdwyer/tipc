@@ -1,4 +1,4 @@
-#include <catch2/catch_all.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
 
 #include <iostream>
 #include <string>
