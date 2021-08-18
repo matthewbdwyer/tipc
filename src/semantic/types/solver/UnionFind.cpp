@@ -46,7 +46,7 @@ std::unique_ptr<UnionFind> UnionFind::copy() {
  * Add path compression instead of iterative parent lookup.
  */
 std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
-    LOG_S(1) << "UnionFind looking for representive of " << *t;
+    LOG_S(3) << "UnionFind looking for representive of " << *t;
 
     // Effectively a noop if the term is already in the map.
     smart_insert(t);
@@ -56,7 +56,7 @@ std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
         parent = get_parent(parent);
     }
 
-    LOG_S(1) << "UnionFind found representative " << *parent;
+    LOG_S(3) << "UnionFind found representative " << *parent;
 
     return parent;
 }
@@ -108,16 +108,16 @@ void UnionFind::smart_insert(std::shared_ptr<TipType> t) {
         throw std::invalid_argument("Refusing to insert a nullptr into the map.");
     }
     
-    LOG_S(1) << "UnionFind inserting term " << *t;
+    LOG_S(3) << "UnionFind inserting term " << *t;
 
     for(auto const &edge : edges) {
         if(*t == *edge.first) {
-            LOG_S(1) << " ; already in the graph as " << *edge.first;
+            LOG_S(3) << " ; already in the graph as " << *edge.first;
             return;
         }
     }
 
-    LOG_S(1) << " ; adding new edge\n";
+    LOG_S(3) << " ; adding new edge\n";
     edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t, t));
 }
 
