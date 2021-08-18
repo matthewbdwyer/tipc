@@ -13,6 +13,7 @@
 #include "TipInt.h"
 #include "TipMu.h"
 #include "TipRecord.h"
+#include "TipAbsentField.h"
 #include "TipRef.h"
 #include "TipType.h"
 #include "TipVar.h"

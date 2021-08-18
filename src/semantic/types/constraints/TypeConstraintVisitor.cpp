@@ -4,6 +4,7 @@
 #include "TipAlpha.h"
 #include "TipRef.h"
 #include "TipRecord.h"
+#include "TipAbsentField.h"
 #include "TipInt.h"
 
 TypeConstraintVisitor::TypeConstraintVisitor(SymbolTable* st, std::unique_ptr<ConstraintHandler> handler)
@@ -241,7 +242,7 @@ void TypeConstraintVisitor::endVisit(ASTRecordExpr * element) {
     }
     if (matched) continue;
 
-    fieldTypes.push_back(std::make_shared<TipAlpha>(element, f));
+    fieldTypes.push_back(std::make_shared<TipAbsentField>());
   } 
   constraintHandler->handle(astToVar(element), std::make_shared<TipRecord>(fieldTypes, allFields));
 }

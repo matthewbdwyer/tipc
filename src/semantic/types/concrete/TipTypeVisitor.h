@@ -33,6 +33,8 @@ public:
   virtual void endVisit(TipMu * element) {}
   virtual bool visit(TipRecord * element) { return true; }
   virtual void endVisit(TipRecord * element) {}
+  virtual bool visit(TipAbsentField * element) { return true; }
+  virtual void endVisit(TipAbsentField * element) {}
   virtual bool visit(TipRef * element) { return true; }
   virtual void endVisit(TipRef * element) {}
   virtual bool visit(TipVar * element) { return true; }

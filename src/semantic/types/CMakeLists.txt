@@ -18,6 +18,8 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecord.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecord.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAbsentField.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAbsentField.h
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRef.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRef.h
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipType.h
