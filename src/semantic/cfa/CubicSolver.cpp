@@ -28,14 +28,14 @@ void CubicSolver::addEmptyVariableIfNecessary(ASTNode * node) {
 }
 
 void CubicSolver::addElementofConstraint(ASTFunction * fn, ASTNode * node) {
-    LOG_S(1) << fn -> getName() << " \u2208 \u27e6" << *node << "\u27e7";
+    LOG_S(1) << "Generating control flow constraint: " <<fn -> getName() << " \u2208 \u27e6" << *node << "\u27e7";
     addEmptyVariableIfNecessary(node);
     dagmapping[node]->bitvector[fmapping[fn]] = true;
     propegateNodeChanges(dagmapping[node]);
 }
 
 void CubicSolver::addConditionalConstraint(ASTFunction* condition, ASTNode* in, ASTNode* from, ASTNode* to) {
-    LOG_S(1) << condition -> getName() << " \u2208 \u27e6" << *in << "\u27e7 \u21d2 \u27e6" << *from << "\u27e7 \u2286 \u27e6" << *to << "\u27e7";
+    LOG_S(1) << "Generating control flow constraint: " <<condition -> getName() << " \u2208 \u27e6" << *in << "\u27e7 \u21d2 \u27e6" << *from << "\u27e7 \u2286 \u27e6" << *to << "\u27e7";
     addEmptyVariableIfNecessary(in);
     addEmptyVariableIfNecessary(from);
     addEmptyVariableIfNecessary(to);
@@ -44,7 +44,7 @@ void CubicSolver::addConditionalConstraint(ASTFunction* condition, ASTNode* in, 
 }
 
 void CubicSolver::addSubseteqConstraint(ASTNode* from, ASTNode* to) {
-    LOG_S(1) << "\u27e6" << *from << "\u27e7 \u2286 \u27e6" << *to << "\u27e7";
+    LOG_S(1) << "Generating control flow constraint: " <<"\u27e6" << *from << "\u27e7 \u2286 \u27e6" << *to << "\u27e7";
     addEmptyVariableIfNecessary(from);
     addEmptyVariableIfNecessary(to);
     if(dagmapping[from] == dagmapping[to]){

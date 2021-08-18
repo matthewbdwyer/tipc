@@ -1,7 +1,9 @@
 #include "CallGraph.h"
+#include "loguru.hpp"
 
 
 std::unique_ptr<CallGraph> CallGraph::build(ASTProgram* ast, SymbolTable* st){
+    LOG_S(1) << "Generating Control Flow Constraints";
     auto cfa = CFAnalyzer::analyze(ast,st);
     auto cgb = CallGraphBuilder::build(ast,cfa);
     return std::make_unique<CallGraph>(cgb.getCallGraph(), ast -> getFunctions(), cgb.getFunMap());

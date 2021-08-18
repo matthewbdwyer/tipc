@@ -19,12 +19,7 @@ static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
 static cl::opt<bool> pcg("pcg", cl::desc("print call graph"), cl::cat(TIPcat));
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
-<<<<<<< HEAD
-static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 1-3) \n Level 1 - Symbols being added to the symbol table and type constraints being generated for the type solvers.\n Level 2 - Level 1 and type constraints being unified.\n Level 3 - Level 2 and type constraints being added and searched for in the type graph."), cl::cat(TIPcat));
-=======
-
-static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 0-3)"), cl::cat(TIPcat));
->>>>>>> 6dc71eae8da2bedf351959ed390edf2ea5518b22
+static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 1-3) \n Level 1 - Symbols being added to the symbol table, type constraints being generated for the type solvers, and control flow constraints being generated.\n Level 2 - Level 1 and type constraints being unified.\n Level 3 - Level 2 and type constraints being added and searched for in the type graph."), cl::cat(TIPcat));
 static cl::opt<bool> emitHrAsm("asm",
                            cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),
                            cl::cat(TIPcat));

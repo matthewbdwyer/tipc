@@ -2,6 +2,7 @@
 #include "TypeConstraint.h"
 #include "TypeConstraintCollectVisitor.h"
 #include "Unifier.h"
+#include "loguru.hpp"
 
 #include <memory>
 
@@ -11,6 +12,7 @@
  * can be subsequently queried.
  */
 std::unique_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable* symbols) {
+  LOG_S(1) <<"Generating Type Constraints";
   TypeConstraintCollectVisitor visitor(symbols);
   ast->accept(&visitor);
 
