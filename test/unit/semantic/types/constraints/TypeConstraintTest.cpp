@@ -2,10 +2,11 @@
 #include "TipFunction.h"
 #include "TipInt.h"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
-#include <vector>
 #include <sstream>
+#include <vector>
 
 TEST_CASE("TypeConstraint: Constraints are compared term-wise", "[TypeConstraint]") {
     std::vector<std::shared_ptr<TipType>> args;
@@ -27,5 +28,5 @@ TEST_CASE("TypeConstraint: Test output", "[TypeConstraint]") {
 
     std::stringstream sstream;
     sstream << constraint;
-    REQUIRE_THAT(sstream.str(), Catch::Matches("^.* = .*$"));
+    REQUIRE_THAT(sstream.str(), Catch::Matchers::Matches("^.* = .*$"));
 }

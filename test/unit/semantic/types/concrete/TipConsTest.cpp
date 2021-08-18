@@ -5,7 +5,7 @@
 #include "TipVar.h"
 #include "TipTypeVisitor.h"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("TipCons: Test doMatch considers arity" "[TipCons]") {
     auto tipInt = std::make_shared<TipInt>();

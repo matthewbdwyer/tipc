@@ -4,8 +4,7 @@ add_subdirectory(cfa)
 add_executable(semantic_unit_tests)
 target_sources(
   semantic_unit_tests
-  PRIVATE # First test defines CATCH_CONFIG_MAIN
-          ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTableTest.cpp
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/SymbolTableTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/LocalNameCollectorTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/CheckAssignableTest.cpp)
 target_include_directories(
@@ -33,4 +32,4 @@ target_link_libraries(
           test_helpers
           cfa
           coverage_config
-          Catch2::Catch2)
+          Catch2::Catch2WithMain)

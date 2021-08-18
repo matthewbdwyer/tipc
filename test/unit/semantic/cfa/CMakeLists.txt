@@ -1,7 +1,6 @@
 add_executable(call_graph_unit_tests)
-target_sources(
-  call_graph_unit_tests PRIVATE # First test defines CATCH_CONFIG_MAIN
-                                ${CMAKE_CURRENT_SOURCE_DIR}/CallGraphTest.cpp)
+target_sources(call_graph_unit_tests
+               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/CallGraphTest.cpp)
 target_include_directories(
   call_graph_unit_tests
   PRIVATE ${CMAKE_SOURCE_DIR}/src/error
@@ -30,4 +29,4 @@ target_link_libraries(
           test_helpers
           coverage_config
           cfa
-          Catch2::Catch2)
+          Catch2::Catch2WithMain)

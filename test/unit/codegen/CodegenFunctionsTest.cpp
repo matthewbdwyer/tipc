@@ -1,10 +1,9 @@
-#define CATCH_CONFIG_MAIN
 #include "ParserHelper.h"
 #include "InternalError.h"
 #include "AST.h"
 #include "ASTNodeHelpers.h"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("CodegenFunction: ASTDeclNode throws InternalError on codegen", "[CodegenFunctions]") {
   ASTDeclNode node("foo");

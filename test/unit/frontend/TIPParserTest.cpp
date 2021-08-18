@@ -1,10 +1,9 @@
-#define CATCH_CONFIG_MAIN
 #include "ParserHelper.h"
 #include "FrontEnd.h"
 #include "ParseError.h"
 #include "ExceptionContainsWhat.h"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("TIP Parser: conditionals", "[TIP Parser]") {
     std::stringstream stream;

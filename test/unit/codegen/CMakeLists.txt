@@ -1,8 +1,6 @@
 add_executable(codegen_unit_tests)
-target_sources(
-  codegen_unit_tests
-  PRIVATE # First test defines CATCH_CONFIG_MAIN
-          ${CMAKE_CURRENT_SOURCE_DIR}/CodegenFunctionsTest.cpp)
+target_sources(codegen_unit_tests
+               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/CodegenFunctionsTest.cpp)
 target_include_directories(
   codegen_unit_tests
   PRIVATE ${CMAKE_SOURCE_DIR}/src/error
@@ -24,4 +22,4 @@ target_link_libraries(
           codegen
           test_helpers
           coverage_config
-          Catch2::Catch2)
+          Catch2::Catch2WithMain)

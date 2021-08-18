@@ -1,10 +1,10 @@
-#define CATCH_CONFIG_MAIN
 #include "CallGraph.h"
 #include "ASTHelper.h"
 #include "SymbolTable.h"
 #include "SemanticAnalysis.h"
-#define EOF -1
-#include <catch2/catch.hpp>
+
+#include <catch2/catch_test_macros.hpp>
+
 #include <set>
 
 TEST_CASE("CallGraph: getter for num of vertices and edges" "[CallGraph]") {

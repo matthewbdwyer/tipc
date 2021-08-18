@@ -1,8 +1,7 @@
 add_executable(frontend_unit_tests)
 target_sources(
   frontend_unit_tests
-  PRIVATE # First test defines CATCH_CONFIG_MAIN
-          ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTPrinterTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilderTest.cpp
@@ -27,4 +26,4 @@ target_link_libraries(
           codegen
           test_helpers
           coverage_config
-          Catch2::Catch2)
+          Catch2::Catch2WithMain)
