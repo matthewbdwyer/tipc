@@ -100,7 +100,7 @@ Windows Subsystem for Linux</h3>
 <p>If you are using a Windows machine, tipc can be built in the Windows Subsystem for Linux (WSL). <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2">Here</a> are instructions to install WSL and upgrade to WSL2. It is highly recommended to upgrade to WSL2. Once installed, you should install <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2">Ubuntu 20.04</a>. Once finished, you can open a virtual instance of Ubuntu and follow the instructions above to build tipc.</p>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Using tipc</h2>
-<p>The <code>tipc</code> compiler has a limited set of options available through the <code>--help</code> flag. </p><div class="fragment"><div class="line">OVERVIEW: tipc - a TIP to llvm compiler</div><div class="line"></div><div class="line">USAGE: tipc [options] &lt;tip source file&gt;</div><div class="line"></div><div class="line">OPTIONS:</div><div class="line"></div><div class="line">Generic Options:</div><div class="line"></div><div class="line">  --help          - Display available options (--help-hidden for more)</div><div class="line">  --help-list     - Display list of available options (--help-list-hidden for more)</div><div class="line">  --version       - Display the version of this program</div><div class="line"></div><div class="line">tipc Options:</div><div class="line">Options for controlling the TIP compilation process.</div><div class="line"></div><div class="line">  --asm           - emit human-readable LLVM assembly language instead of LLVM bitcode</div><div class="line">  --do            - disable bitcode optimization</div><div class="line">  --log=&lt;logfile&gt; - log all messages to logfile (enables --verbose)</div><div class="line">  --pp            - pretty print</div><div class="line">  --ps            - print symbols</div><div class="line">  --pt            - print symbols with types (supercedes --ps)</div><div class="line">  --pcg           - print call graph</div><div class="line"></div><div class="line">  --verbose       - enable log messages</div></div><!-- fragment --><p> By default it will accept a <code>.tip</code> file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a <code>.bc</code> file which is a binary encoding of the bitcodes. You can see a human readable version of the bitcodes by running <code>llvm-dis</code> on the <code>.bc</code> file.</p>
+<p>The <code>tipc</code> compiler has a limited set of options available through the <code>--help</code> flag. </p><div class="fragment"><div class="line">OVERVIEW: tipc - a TIP to llvm compiler</div><div class="line"></div><div class="line">USAGE: tipc [options] &lt;tip source file&gt;</div><div class="line"></div><div class="line">OPTIONS:</div><div class="line"></div><div class="line">Generic Options:</div><div class="line"></div><div class="line">  --help          - Display available options (--help-hidden for more)</div><div class="line">  --help-list     - Display list of available options (--help-list-hidden for more)</div><div class="line">  --version       - Display the version of this program</div><div class="line"></div><div class="line">tipc Options:</div><div class="line">Options for controlling the TIP compilation process.</div><div class="line"></div><div class="line">  --asm           - emit human-readable LLVM assembly language instead of LLVM Bitcode</div><div class="line">  --do            - disable bitcode optimization</div><div class="line">  --log=&lt;logfile&gt; - log all messages to logfile (enables --verbose 3)</div><div class="line">  --pp            - pretty print</div><div class="line">  --ps            - print symbols</div><div class="line">  --pt            - print symbols with types (supercedes --ps)</div><div class="line">  --pcg           - print call graph</div><div class="line">  --verbose=&lt;int&gt; - enable log messages (Levels 1-3) </div><div class="line">                     Level 1 - Symbols being added to the symbol table and type constraints being generated for the type solvers.</div><div class="line">                     Level 2 - Level 1 and type constraints being unified.</div><div class="line">                     Level 3 - Level 2 and type constraints being added and searched for in the type graph</div></div><!-- fragment --><p> By default it will accept a <code>.tip</code> file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a <code>.bc</code> file which is a binary encoding of the bitcodes. You can see a human readable version of the bitcodes by running <code>llvm-dis</code> on the <code>.bc</code> file.</p>
 <p>To produce an executable version of a TIP program, the <code>.bc</code> file must be linked with the bitcode for <a href="rtlib/tip_rtlib.c">tip_rtlib.c</a>. Running the <code>build.sh</code> script in the [rtlib](rtlib) directory once will create that library bitcode file.</p>
 <p>The link step is performed using <code>clang</code> which will include additional libraries needed by <a href="rtlib/tip_rtlib.c">tip_rtlib.c</a>.</p>
 <p>For convenience, we provide a script <a href="bin/build.sh">build.sh</a> that will compile the tip program and perform the link step. The script can be used within this git repository, or if you define the shell variable <code>TIPDIR</code> to the path to the root of the repository you can run it from any location as follows: </p><div class="fragment"><div class="line">$ cd</div><div class="line">$ more hello.tip</div><div class="line">main() { return 42; }</div><div class="line">$ $HOME/tipc/bin/build.sh hello.tip</div><div class="line">$ ./hello</div><div class="line">Program output: 42</div><div class="line">$ $HOME/tipc/bin/build.sh -pp -pt hello.tip</div><div class="line">main() </div><div class="line">{</div><div class="line">  return 42;</div><div class="line">}</div><div class="line"></div><div class="line">Functions : {</div><div class="line">  main : () -&gt; int</div><div class="line">}</div><div class="line"></div><div class="line">Locals for function main : {</div><div class="line"></div><div class="line">}</div></div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
@@ -114,12 +114,15 @@ Working with tipc</h2>
 <p>which will regenerate the makefiles that you can then run, by typing <code>make</code>, to build.</p>
 <p>Note that the <code>tipg4</code> directory has a standalone ANTLR4 grammar. It's README describes how to build it in isolation and run it using the ANTLR4 jar file.</p>
 <h3><a class="anchor" id="autotoc_md7"></a>
+Logging Messages</h3>
+<p>When working on the tipc compiler, it may be helpful to enable logging messages when testing your changes on programs. We have inserted logging messages using loguru. These can be turned using the flag <code>--verbose [x]</code> where x is a number between 1-3. These messages get more verbose as you increase x. The first setting shows when symbols are added to the symbol table and when type constraints are generated for the type solver. The second setting shows the previous information and type constraints being unified. The third setting shows types being search for and added into the type graph. When adding to theses features, you can add logging messages by adding a line <code>LOG_S(x)</code> where x is an integer to describe the level of log verbosity you want. You can use the existing levels or make new levels.</p>
+<h3><a class="anchor" id="autotoc_md8"></a>
 The bin directory</h3>
 <p>To facilitate development of <code>tipc</code> we have collected a number of helper scripts into the <code>bin</code> directory of the project. Among them are scripts to run the entire test bed (<code>runtests.sh</code>), to run a code coverage analysis (<code>gencov.sh</code>), and to generate the project documentation (<code>gendocs.sh</code>). Please see the <code>README</code> in the bin directory for example usages.</p>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Visual Studio Code</h3>
 <p><a href="https://code.visualstudio.com/">Visual Studio Code</a> (VSCode) is a popular, open source text editor. The community has created many extensions that make it far more powerful than meerly a text editor. As a result, developers using VSCode get many of the benefits of a normal IDE with less overhead. Using VSCode, you can build and develop tipc with or without the command line.</p>
-<h4><a class="anchor" id="autotoc_md9"></a>
+<h4><a class="anchor" id="autotoc_md10"></a>
 Set-Up</h4>
 <p>0. Follow steps 1-4 of the building tipc if you have not already</p><ol type="1">
 <li>Install VSCode using instructions listed for a supported operating system: <a href="https://code.visualstudio.com/docs/setup/mac">macOS</a>, <a href="https://code.visualstudio.com/docs/setup/linux">Linux</a>, <a href="https://code.visualstudio.com/docs/setup/windows">Windows</a>.</li>
@@ -133,13 +136,13 @@ Set-Up</h4>
 <li>Build the project using the CMake: Build command in the Command Palette (Ctrl+Shift+P) or select the Build button on the status bar at the bottom of VSCode.</li>
 </ol>
 <p>Whenever you make changes to the project, simply repeat step 9. If you have to make changes to the CMakeLists, repeat both 8 and 9. For more information, follow <a href="https://code.visualstudio.com/docs/cpp/cmake-linux">this tutorial</a> on using CMake and VSCode.</p>
-<h3><a class="anchor" id="autotoc_md10"></a>
+<h3><a class="anchor" id="autotoc_md11"></a>
 CLion</h3>
 <p><a href="https://www.jetbrains.com/clion/">CLion</a> is a C and C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools, or as a standalone tool <a href="https://www.jetbrains.com/help/clion/installation-guide.html#standalone">here</a>. Once installed, you can start a 30 day trial license or, as a student, you can get a free educational license <a href="https://www.jetbrains.com/community/education/#students">here</a>.</p>
 <p>If you are building for the first time with CLion, follow the first two steps of the installation process to install any needed tipc dependencies. The project can now be built or rebuilt by clicking the "Build" button in the toolbar.</p>
-<h4><a class="anchor" id="autotoc_md11"></a>
+<h4><a class="anchor" id="autotoc_md12"></a>
 Troubleshooting</h4>
-<p>When working with CLion you might see the output become cluttered with messages about failing to merge <code>gcov</code> files. This happens when <code>gcov</code> files linger from previous runs. To cleanup these messages, simply remove the <code>gcov</code> files. You can do that quickly with the following one-liner. </p><div class="fragment"><div class="line">find . -name &#39;*gcda&#39; -delete</div></div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
+<p>When working with CLion you might see the output become cluttered with messages about failing to merge <code>gcov</code> files. This happens when <code>gcov</code> files linger from previous runs. To cleanup these messages, simply remove the <code>gcov</code> files. You can do that quickly with the following one-liner. </p><div class="fragment"><div class="line">find . -name &#39;*gcda&#39; -delete</div></div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
 Documentation</h2>
 <p>The TIP grammar, <a href="./tipg4/TIP.g4">tipg4</a>, is implemented using ANTLR4. This grammar is free of any semantic actions, though it does use ANTLR4 rule features which allow for control over the tree visitors that form key parts of the compiler. This allows the structure of the grammar to remain relatively clean, i.e., no grammar factoring or stratification needed.</p>
 <p>The <code>tipc</code> compiler is has a pretty classic design. It is comprised of four phases:</p><ul>
@@ -150,7 +153,7 @@ Documentation</h2>
 </ul>
 <p>Doxygen <a href="https://matthewbdwyer.github.io/tipc">documentation</a> for the project is available for the project. The documentation is a work in progress and will improve over time..</p>
 <p>The <code>tipc</code> driver program only produces a bitcode file, <code>.bc</code>. You need to link it with the <a href="./rtlib/tip_rtlib.c">runtime library</a> which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines. A <a href="./bin/build.sh">script</a> is available to link binaries compiled by <code>tipc</code> with the runtime library.</p>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Goals and Plans</h2>
 <p>The goal of this project is to provide a starting point for project work in an undergraduate compilers course. As such it similar to lots of other compiler projects, but there are some differences.</p>
 <p>First and foremost, the TIP language includes a number of rich features, e.g., high-order functions, and type inference, and the <code>tipc</code> compiler targets LLVM - a key component of a production compiler infrastructure. These choices are intentional and while they create some challenges the project is intended to help demystify complex language features, e.g., parametric polymorphism, by illustrating how they can be realized.</p>
@@ -158,50 +161,50 @@ Goals and Plans</h2>
 <p>Third, the project intentionally makes heavy use of the <a href="https://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> which is quite appropriate in the context of a compiler. Our use of it is intended to demonstrate how this type of abstract design element in a system can yield conceptual simplicity and savings in development. The project currently uses 6 visitors that extend <a href="./src/frontend/ast/ASTVisitor.h">ASTVisitor</a> and another visitor from ANTLR4.</p>
 <p>Finally, the project is implemented in C++17 using modern features. For example, all memory allocation uses smart pointers, we use unique pointers where possible and shared pointers as well, to realize the <a href="https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization">RAII</a> pattern. Again this presents some challenges, but addressing them is illustrated in the <code>tipc</code> code base and hopefully they provide a good example for students.</p>
 <p>The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance. For the latter, we expect to make a new release of the project in early August every year. This release will focus on improving the use of modern C++, as we come to better understand the best practices for C++20, and to incorporate better design principles, patterns, and practices.</p>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Differences from TIP and Limitations</h2>
 <p>Other than issues related to the efficiency of the code that it generates, the <code>tipc</code> compiler has two limitations.</p>
 <p>First, it implements a variant of the TIP language semantics in a few ways. It implements the <code>!=</code> operator which allows us to conveniently write self-contained system tests and it implements the <a href="https://en.cppreference.com/w/c/language/operator_precedence">C operator precedence rules</a>, whereas the original TIP uses a few different rules. This surfaces in the interplay between pointer dereference and field access. An expression <code>*r.f</code> is interpreted as <code>*(r.f)</code> according t the C precedence rules and as <code>(*r).f</code> according to the <a href="https://github.com/cs-au-dk/TIP">TIP Scala</a> implementation. If in doubt, add parentheses to express your meaning.</p>
 <p>The more important difference is the treatment of records. <code>tipc</code> implements the unification-based type inference algorithm used in the <a href="https://github.com/cs-au-dk/TIP/">Scala implementation</a>. This yields a type system that ensures that any expression appearing in the record position of a field access expression is in fact a record, but it does not infer precise record typing. Instead the strategy used is to define an <em>uber</em> record that consists of all of the fields referenced across the program. Code generation for records will allocate an uber record and then explicitly initialize fields present in a record expression. If the record is being created via an <code>alloc</code> expresion, the fields that aren't explictly set will be set to a default value 0, as we allocate memory using the C function <code>calloc</code>. If the record is being created without explictly allocating memory for it, the fields that aren't explictly set will not be given any value, but may still be referenced. This can lead to some unexpected behavior. Consider this TIP program: </p><div class="fragment"><div class="line">main() { var r; r = {g:1}; return access(r); }</div><div class="line">access(r) { return r.f; }</div></div><!-- fragment --><p> The record expression, <code>{g:1}</code>, forces the uber record to contain a field <code>g</code>, and the access expression <code>r.f</code>, forces the presence of field <code>f</code>. Because <code>r</code> is not being allocated using an <code>alloc</code> expression, access will return whatever value was in memory at the location of <code>r.f</code>. One might prefer that this program yield a type error, but that would require a more sophisticated type system. We chose not to implement that to manage the complexity of what is primarily a pedagogical project. If instead, r is allocated using <code>alloc</code> like the following: </p><div class="fragment"><div class="line">main() { var r; r = alloc {g:1}; return access(r); }</div><div class="line">access(r) { return r.f; }</div></div><!-- fragment --><p> The record expression default initializes <code>f</code> to <code>0</code> and this is the value that is accessed and returned from the call to <code>access</code> and then from <code>main</code>.</p>
 <p>Second, TIP allows memory allocation, yet its runtime system does not include a garbage collector. The TIP program <a href="test/system/leak/recordLeak.tip">recordLeak.tip</a>, shown below, leaks memory because the <code>alloc</code> constructor causes the record to be allocated on the heap: </p><div class="fragment"><div class="line">// recordLeak.tip</div><div class="line">foo(x,y,z){</div><div class="line">    var rec;</div><div class="line">    rec = alloc {l: x, m: y, n: z};</div><div class="line">    return (*rec).m;</div><div class="line">}</div><div class="line"></div><div class="line">main(){</div><div class="line">    var i, j, a;</div><div class="line">    a = 0;</div><div class="line">    i = 0;</div><div class="line">    j = 0;</div><div class="line">    while (1000000000 &gt; i) { </div><div class="line">      while (1000000000 &gt; j) { </div><div class="line">        a = a + foo(3,2,4);</div><div class="line">        j = j + 1;</div><div class="line">      }</div><div class="line">      i = i + 1;</div><div class="line">    }</div><div class="line">    return 0;</div><div class="line">}</div></div><!-- fragment --><p> This is a valid tip program which can be compiled into an executable using and observe it's memory usage using: </p><div class="fragment"><div class="line">/path/to/tipc/bin/build.sh --do test/system/leak/recordLeak.tip</div><div class="line">./recordLeak &amp;; top</div></div><!-- fragment --><p> You can then kill top using <code>Ctrl+C</code> and then kill the ./recordleak with <code>fg</code> and <code>Ctrl+C</code>. It's important that you disable the optimizer with the <code>--do</code> flag. Otherwise, the optimizer would be smart enough to simply return the <code>y</code> parameter's value. If we remove the alloc from <code>foo</code>, as we do in <a href="test/system/leak/recordNoLeak.tip">recordNoLeak.tip</a>, then the record is allocated on the call stack and it is reclained when the call to <code>foo</code> returns: </p><div class="fragment"><div class="line">// recordNoLeak.tip</div><div class="line">foo(x,y,z){</div><div class="line">    var rec;</div><div class="line">    rec = {l: x, m: y, n: z};</div><div class="line">    return (*rec).m;</div><div class="line">}</div><div class="line"></div><div class="line">main(){</div><div class="line">    var i, j, a;</div><div class="line">    a = 0;</div><div class="line">    i = 0;</div><div class="line">    j = 0;</div><div class="line">    while (1000000000 &gt; i) { </div><div class="line">      while (1000000000 &gt; j) { </div><div class="line">        a = a + foo(3,2,4);</div><div class="line">        j = j + 1;</div><div class="line">      }</div><div class="line">      i = i + 1;</div><div class="line">    }</div><div class="line">    return 0;</div><div class="line">}</div></div><!-- fragment --><p> We can find that this program will not create a memory leak because rec will be allocated on the stack instead of the heap as the alloc would.</p>
 <p>Incorporating a garbage collector is a possible future extension to the runtime library.</p>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Resources</h2>
 <p>To fully understand this project quite a bit of background is required. We collect a number of resources that we think can be helpful in that regard.</p>
-<h3><a class="anchor" id="autotoc_md16"></a>
+<h3><a class="anchor" id="autotoc_md17"></a>
 C++ Resources</h3>
 <p>If you find yourself unfamiliar with certain aspects of the C++ programming language we encourage you to explore the <em>Back To Basics</em> videos that have been presented at <a href="https://cppcon.org/">CppCon</a>. Provided below are links to a number of these videos, as well as to other resources that are relevant to this project.</p>
-<h4><a class="anchor" id="autotoc_md17"></a>
+<h4><a class="anchor" id="autotoc_md18"></a>
 Move Semantics</h4>
 <ul>
 <li><a href="https://youtu.be/St0MNEU5b0o">Move Semantics (part 1 of 2)</a></li>
 <li><a href="https://youtu.be/pIzaZbKUw2s">Move Semantics (part 2 of 2)</a></li>
 </ul>
-<h4><a class="anchor" id="autotoc_md18"></a>
+<h4><a class="anchor" id="autotoc_md19"></a>
 Value Categories</h4>
 <ul>
 <li><a href="https://youtu.be/XS2JddPq7GQ">Understanding Value Categories</a></li>
 <li><a href="https://www.stroustrup.com/terminology.pdf">“New” Value Terminology</a></li>
 </ul>
-<h4><a class="anchor" id="autotoc_md19"></a>
+<h4><a class="anchor" id="autotoc_md20"></a>
 Smart pointers</h4>
 <ul>
 <li><a href="https://youtu.be/xGDLkt-jBJ4">Smart Pointers</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md20"></a>
+<h3><a class="anchor" id="autotoc_md21"></a>
 CMake Resources</h3>
 <ul>
 <li><a href="https://cmake.org/cmake/help/v3.7/">CMake docs</a></li>
 <li><a href="https://youtu.be/y7ndUhdQuU8">More Modern CMake</a></li>
 <li><a href="https://youtu.be/y9kSr5enrSk">Oh No! More Modern CMake</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md21"></a>
+<h3><a class="anchor" id="autotoc_md22"></a>
 Catch2 and Unit Testing Resources</h3>
 <ul>
 <li><a href="https://github.com/catchorg/Catch2/tree/master/docs">Catch2 docs</a></li>
 <li><a href="https://youtu.be/Ob5_XZrFQH0">Modern C++ Testing with Catch2</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md22"></a>
+<h3><a class="anchor" id="autotoc_md23"></a>
 LLVM Resources</h3>
 <p>To understand this code, and perhaps extend it, you will want to become familiar with the <a href="http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-reference">core LLVM classes</a>. It can be difficult to absorb all of the information in this type of documentation just by reading it. A goal-directed strategy where you move back and forth between reading code and reading this documentation seems to work well for many people.</p>
 <p>If you are familiar with the <a href="https://llvm.org/docs/tutorial/">LLVM tutorial</a> you will see its influence on this compiler which leverages idioms, strategies, and code fragments from the tutorial. The LLVM tutorials are a great starting point for understanding the APIs in the context of compiling.</p>
@@ -211,13 +214,13 @@ LLVM Resources</h3>
 <li>someone once told me to just use a search engine to find the LLVM APIs and its a standard use case for me, e.g., I don't remember where the docs are I just search for <code>llvm irbuilder</code></li>
 <li>LLVM has some nuances that take a bit to understand. For instance, the <a href="https://llvm.org/docs/GetElementPtr.html">GEP</a> instruction, which <code>tipc</code> uses quite a bit given that it emits calls through a function table.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md23"></a>
+<h3><a class="anchor" id="autotoc_md24"></a>
 Git Resources</h3>
 <ul>
 <li><a href="https://git-scm.com/book/en/v2">Pro Git Book</a></li>
 <li><a href="https://www.youtube.com/watch?v=1ffBJ4sVUb4">Git For Ages 4 And Up</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md24"></a>
+<h3><a class="anchor" id="autotoc_md25"></a>
 CLion Resources</h3>
 <ul>
 <li><a href="https://www.jetbrains.com/help/clion/using-git-integration.html">Using Git in CLion</a></li>
