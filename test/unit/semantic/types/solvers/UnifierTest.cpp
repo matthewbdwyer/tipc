@@ -317,6 +317,24 @@ poly(p){
         REQUIRE_THROWS_AS(ast->accept(&visitor), UnificationError);
     }
 
+    SECTION("Test unification error 4") {
+        std::stringstream program;
+        program << R"(
+        foo() {
+            var r, q;
+            q = {f: 1, h: 3};
+            r = {f: 4, g: 13};
+            r.h = q.h;
+            return r.g;
+        }
+        )";
+        auto ast = ASTHelper::build_ast(program);
+        auto symbols = SymbolTable::build(ast.get());
+
+        TypeConstraintUnifyVisitor visitor(symbols.get());
+        REQUIRE_THROWS_AS(ast->accept(&visitor), UnificationError);    
+    }
+
 }
 
 
