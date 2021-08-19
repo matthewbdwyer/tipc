@@ -73,7 +73,7 @@ TEST_CASE("TipFunction: Test output stream" "[TipFunction]") {
     auto ret = std::make_shared<TipRef>(std::make_shared<TipInt>());
     TipFunction tipFunction(params, ret);
 
-    auto expectedValue = "(int,int) -> &int";
+    auto expectedValue = "(int,int) -> \u2B61int";
     std::stringstream stream;
     stream << tipFunction;
     std::string actualValue = stream.str();

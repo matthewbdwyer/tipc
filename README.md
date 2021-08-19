@@ -21,7 +21,7 @@ This project implements `tipc` which compiles TIP programs into LLVM bitcode.  L
 
 ## Building tipc
 
-The project use [GitHub Actions](https://docs.github.com/en/actions) for building and testing and [CodeCov](https://codecov.io) for reporting code and documentation coverage.  The [build-and-test.yml](.github/workflows/build-and-test.yml) file provides details of this process.  If you would prefer to build and test manually then read on.
+The project uses [GitHub Actions](https://docs.github.com/en/actions) for building and testing and [CodeCov](https://codecov.io) for reporting code and documentation coverage.  The [build-and-test.yml](.github/workflows/build-and-test.yml) file provides details of this process.  If you would prefer to build and test manually then read on.
 
 After cloning this repository you can build the compiler by moving to into the top-level directory and issuing these commands:
   1. `./bin/bootstrap.sh`
@@ -175,7 +175,7 @@ The `tipc` compiler is has a pretty classic design.  It is comprised of four pha
 
 Doxygen [documentation](https://matthewbdwyer.github.io/tipc) for the project is 
 available for the project.  The documentation is a work in progress 
-and will improve over time..
+and will improve over time.
 
 The `tipc` driver program only produces a bitcode file, `.bc`. You need to link it 
 with the [runtime library](./rtlib/tip_rtlib.c) which define the processing of command 

@@ -20,7 +20,7 @@ bool TipRef::operator!=(const TipType &other) const {
 }
 
 std::ostream& TipRef::print(std::ostream &out) const {
-    out << "&" << *arguments.front();
+    out << "\u2B61" << *arguments.front();
     return out;
 }
 

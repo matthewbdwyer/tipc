@@ -20,6 +20,6 @@ Functions : {
 Locals for function main : {
   x1 : int,
   x2 : int,
-  y : &int,
-  z : &&int
+  y : ⭡int,
+  z : ⭡⭡int
 }

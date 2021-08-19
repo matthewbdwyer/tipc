@@ -24,15 +24,15 @@ main()
 }
 
 Functions : {
-  foo : μα<foo>.(&int,α<foo>) -> int,
+  foo : μα<foo>.(⭡int,α<foo>) -> int,
   main : () -> int
 }
 
 Locals for function foo : {
   f : int,
-  p : &int,
-  q : &int,
-  x : (&int,μα<foo>.(&int,α<foo>) -> int) -> int
+  p : ⭡int,
+  q : ⭡int,
+  x : (⭡int,μα<foo>.(⭡int,α<foo>) -> int) -> int
 }
 
 Locals for function main : {
