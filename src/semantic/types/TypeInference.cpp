@@ -1,6 +1,7 @@
 #include "TypeInference.h"
 #include "TypeConstraint.h"
 #include "TypeConstraintCollectVisitor.h"
+#include "AbsentFieldChecker.h"
 #include "Unifier.h"
 #include "loguru.hpp"
 
@@ -9,7 +10,8 @@
 /*
  * This implementation collects the constraints and then solves them with a
  * unifier instance.  The unifier then records the inferred type results that
- * can be subsequently queried.
+ * can be subsequently queried.   It also checks for accesses to absent
+ * fields.
  */
 std::unique_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable* symbols) {
   LOG_S(1) <<"Generating Type Constraints";
@@ -18,7 +20,9 @@ std::unique_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable
 
   auto unifier =  std::make_unique<Unifier>(visitor.getCollectedConstraints());
   unifier->solve();
- 
+
+  AbsentFieldChecker::check(ast, unifier.get());
+
   return std::make_unique<TypeInference>(symbols, std::move(unifier));
 }
 

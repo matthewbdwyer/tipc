@@ -39,6 +39,8 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintUnifyVisitor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AbsentFieldChecker.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AbsentFieldChecker.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnificationError.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.h

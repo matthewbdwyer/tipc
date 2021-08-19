@@ -23,7 +23,9 @@ public:
    *
    * Visits the AST generating type constraints for each expression and solves
    * the resulting constraints.   If a term unification error is detected a
-   * UnificationError, a subtype fo SemanticError, is raised.
+   * UnificationError, a subtype fo SemanticError, is raised.  If an access
+   * to a field whose definition is absent is performed a SemanticError is
+   * raised.
    * \sa UnificationError
    * \sa SemanticError
    * \param ast The program AST

@@ -12,6 +12,7 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVarTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintCollectTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintTest.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AbsentFieldCheckerTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/solvers/UnifierTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/solvers/UnionFindTest.cpp)
 target_include_directories(
@@ -23,8 +24,8 @@ target_include_directories(
           ${CMAKE_SOURCE_DIR}/src/semantic/types/concrete
           ${CMAKE_SOURCE_DIR}/src/semantic/types/constraints
           ${CMAKE_SOURCE_DIR}/src/semantic/types/solver
-          ${CMAKE_SOURCE_DIR}/test/unit/helpers/
-          ${CMAKE_CURRENT_SOURCE_DIR}/concrete)
+          ${CMAKE_SOURCE_DIR}/test/unit/helpers
+          ${CMAKE_SOURCE_DIR}/test/unit/matchers)
 target_link_libraries(
   typeinference_unit_tests
   PRIVATE antlr4_static
