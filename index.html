@@ -77,7 +77,7 @@ Dependencies</h2>
 <p><code>tipc</code> is implemented in C++17 and depends on a number of tools and packages, e.g., <a href="https://www.antlr.org">ANTLR4</a>, <a href="https://github.com/catchorg/Catch2">Catch2</a>, <a href="https://cmake.org/">CMake</a>, <a href="https://www.doxygen.nl/">Doxygen</a>, <a href="https://github.com/emilk/loguru">loguru</a>, <a href="https://www.java.com">Java</a>, <a href="https://www.llvm.org">LLVM</a>. To simplify dependency management the project provides a <a href="bin/bootstrap.sh">bootstrap</a> script to install all of the required dependencies on linux ubuntu and mac platforms.</p>
 <h2><a class="anchor" id="autotoc_md3"></a>
 Building tipc</h2>
-<p>The project use <a href="https://docs.github.com/en/actions">GitHub Actions</a> for building and testing and <a href="https://codecov.io">CodeCov</a> for reporting code and documentation coverage. The <a href=".github/workflows/build-and-test.yml">build-and-test.yml</a> file provides details of this process. If you would prefer to build and test manually then read on.</p>
+<p>The project uses <a href="https://docs.github.com/en/actions">GitHub Actions</a> for building and testing and <a href="https://codecov.io">CodeCov</a> for reporting code and documentation coverage. The <a href=".github/workflows/build-and-test.yml">build-and-test.yml</a> file provides details of this process. If you would prefer to build and test manually then read on.</p>
 <p>After cloning this repository you can build the compiler by moving to into the top-level directory and issuing these commands:</p><ol type="1">
 <li><code>./bin/bootstrap.sh</code></li>
 <li><code>. ~/.bashrc</code></li>
@@ -151,7 +151,7 @@ Documentation</h2>
 <li><a href="./src/codegen">code generation</a> that produces LLVM bitcode from an AST and emits a binary</li>
 <li><a href="./src/optimizer">optimization</a> that runs a few LLVM optimization passes to improve the bitcode</li>
 </ul>
-<p>Doxygen <a href="https://matthewbdwyer.github.io/tipc">documentation</a> for the project is available for the project. The documentation is a work in progress and will improve over time..</p>
+<p>Doxygen <a href="https://matthewbdwyer.github.io/tipc">documentation</a> for the project is available for the project. The documentation is a work in progress and will improve over time.</p>
 <p>The <code>tipc</code> driver program only produces a bitcode file, <code>.bc</code>. You need to link it with the <a href="./rtlib/tip_rtlib.c">runtime library</a> which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines. A <a href="./bin/build.sh">script</a> is available to link binaries compiled by <code>tipc</code> with the runtime library.</p>
 <h2><a class="anchor" id="autotoc_md14"></a>
 Goals and Plans</h2>
