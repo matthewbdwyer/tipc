@@ -15,6 +15,6 @@ Functions : {
 
 Locals for function main : {
   k : {a:int,b:int,c:α<((*(n.c)).a)>,d:α<((*(n.c)).a)>},
-  n : {a:α<(n.c)>,b:α<(n.c)>,c:&{a:int,b:int,c:α<((*(n.c)).a)>,d:α<((*(n.c)).a)>},d:int},
+  n : {a:α<(n.c)>,b:α<(n.c)>,c:⭡{a:int,b:int,c:α<((*(n.c)).a)>,d:α<((*(n.c)).a)>},d:int},
   r1 : int
 }

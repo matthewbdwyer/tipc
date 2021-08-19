@@ -17,5 +17,5 @@ Functions : {
 
 Locals for function main : {
   x : int,
-  y : &int
+  y : ⭡int
 }

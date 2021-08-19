@@ -14,13 +14,13 @@ main()
 
 Functions : {
   main : () -> int,
-  poly : (&int) -> int
+  poly : (⭡int) -> int
 }
 
 Locals for function main : {
-  n : &int
+  n : ⭡int
 }
 
 Locals for function poly : {
-  p : &int
+  p : ⭡int
 }

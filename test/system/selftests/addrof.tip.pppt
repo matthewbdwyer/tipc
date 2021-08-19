@@ -21,6 +21,6 @@ Functions : {
 }
 
 Locals for function main : {
-  p : &int,
+  p : ⭡int,
   r : {f1:int,f2:int,f3:int}
 }
