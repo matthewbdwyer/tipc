@@ -7,6 +7,7 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipIntTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMuTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecordTest.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAbsentFieldTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRefTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipVarTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintCollectTest.cpp

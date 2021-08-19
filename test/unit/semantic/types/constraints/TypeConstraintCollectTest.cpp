@@ -291,11 +291,11 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
     std::vector<std::string> expected {
       "[[4@4:18]] = int",                            		// int constant
       "[[13@4:24]] = int",                           		// int constant
-      "[[{f:4,g:13}@4:14]] = {f:[[4@4:18]],g:[[13@4:24]],n:\u03B1<{f:4,g:13}:n>}",	// uber record
+      "[[{f:4,g:13}@4:14]] = {f:[[4@4:18]],g:[[13@4:24]],n:\u25C7}",	// uber record
       "[[r@3:14]] = [[{f:4,g:13}@4:14]]",                	// assignment
       "[[null@5:18]] = &\u03B1<null>",                		// null
       "[[13@5:27]] = int",                           		// int constant
-      "[[{n:null,f:13}@5:14]] = {f:[[13@5:27]],g:\u03B1<{n:null,f:13}:g>,n:[[null@5:18]]}",	// uber record
+      "[[{n:null,f:13}@5:14]] = {f:[[13@5:27]],g:\u25C7,n:[[null@5:18]]}",	// uber record
       "[[r@3:14]] = [[{n:null,f:13}@5:14]]",      		// assignment
       "[[0@6:17]] = int",                          		// main return int
       "[[foo@2:6]] = () -> [[0@6:17]]"                		// function decl
@@ -357,11 +357,11 @@ main() {
     std::vector<std::string> expected {
       "[[1@4:12]] = int",                                    // int constant
       "[[2@4:18]] = int",                                    // int constant
-      "[[{a:1,b:2}@4:8]] = {a:[[1@4:12]],b:[[2@4:18]],c:\u03B1<{a:1,b:2}:c>,d:\u03B1<{a:1,b:2}:d>}", // record
+      "[[{a:1,b:2}@4:8]] = {a:[[1@4:12]],b:[[2@4:18]],c:\u25C7,d:\u25C7}", // record
       "[[k@3:11]] = [[{a:1,b:2}@4:8]]",		     	     // assign
       "[[&k@5:12]] = &[[k@3:11]]",                           // address of
       "[[4@5:19]] = int",                                    // int constant
-      "[[{c:&k,d:4}@5:8]] = {a:\u03B1<{c:&k,d:4}:a>,b:\u03B1<{c:&k,d:4}:b>,c:[[&k@5:12]],d:[[4@5:19]]}", // record
+      "[[{c:&k,d:4}@5:8]] = {a:\u25C7,b:\u25C7,c:[[&k@5:12]],d:[[4@5:19]]}", // record
       "[[n@3:8]] = [[{c:&k,d:4}@5:8]]",		     	     // assign
       "[[n@3:8]] = {a:\u03B1<(n.c):a>,b:\u03B1<(n.c):b>,c:[[(n.c)@6:13]],d:\u03B1<(n.c):d>}", // access
       "[[(n.c)@6:13]] = &[[(*(n.c))@6:11]]",		     // assign through ptr
