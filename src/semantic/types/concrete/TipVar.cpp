@@ -22,7 +22,7 @@ bool TipVar::operator!=(const TipType &other) const {
 }
 
 std::ostream &TipVar::print(std::ostream &out) const {
-    out << "[[" << *node << "@" << node->getLine() << ":" << node->getColumn() << "]]";
+    out << "\u27E6" << *node << "@" << node->getLine() << ":" << node->getColumn() << "\u27E7";
     return out;
 }
 

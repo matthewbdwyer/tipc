@@ -60,5 +60,5 @@ TEST_CASE("TipMu: test output stream", "[TipMu]") {
     stream << mu;
 
     auto actual = stream.str();
-    REQUIRE_THAT(actual, Catch::Matchers::Matches("^μ\\[\\[42@\\d+:\\d+\\]\\]\\.int$"));
+    REQUIRE_THAT(actual, Catch::Matchers::Matches("^μ\u27E642@\\d+:\\d+\u27E7\\.int$"));
 }
