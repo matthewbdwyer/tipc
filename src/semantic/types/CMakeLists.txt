@@ -18,6 +18,8 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipMu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecord.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRecord.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAbsentField.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipAbsentField.h
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRef.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipRef.h
     ${CMAKE_CURRENT_SOURCE_DIR}/concrete/TipType.h
@@ -37,6 +39,8 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintUnifyVisitor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AbsentFieldChecker.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AbsentFieldChecker.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnificationError.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Unifier.h

@@ -36,8 +36,8 @@ Functions : {
 Locals for function main : {
   a : int,
   b : int,
-  rec1 : {field1:int,field2:int,field3:int,field4:α<(rec1.field1)>},
-  rec2 : {field1:int,field2:α<(rec2.field3)>,field3:int,field4:int}
+  rec1 : {field1:int,field2:int,field3:int,field4:◇},
+  rec2 : {field1:int,field2:◇,field3:int,field4:int}
 }
 
 Locals for function max : {

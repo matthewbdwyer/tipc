@@ -61,6 +61,11 @@ void Substituter::endVisit(TipRecord * element) {
   visitedTypes.push_back(std::make_shared<TipRecord>(initTypes, element->getNames()));
 }
 
+void Substituter::endVisit(TipAbsentField * element) {
+  // Zero element in visitedTypes (a special case of Cons)
+  visitedTypes.push_back(std::make_shared<TipAbsentField>());
+}
+
 void Substituter::endVisit(TipRef * element) {
   // One element in visitedTypes (a special case of Cons)
   auto pointedToType = visitedTypes.back();
