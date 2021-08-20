@@ -45,6 +45,14 @@ The project includes more than 300 unit tests grouped into several executables. 
 
 All of the tests should pass.
 
+### Ubuntu Linux
+
+Our continuous integration process builds on both Ubuntu 18.04 and 20.04, so these are well-supported.  We do not support other linux distributions, but we know that people in the past have ported `tipc` to different distributions. 
+
+### Mac OS
+
+Our continuous integration process builds on Mac OS 10.15 and we regularly build and test on Mac OS 11.4, so modern versions of Mac OS are well-supported.  `tipc` builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.  
+
 ### Windows Subsystem for Linux
 
 If you are using a Windows machine, tipc can be built in the Windows Subsystem for Linux (WSL). [Here](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2) are instructions to install WSL and upgrade to WSL2. It is highly recommended to upgrade to WSL2. Once installed, you should install
