@@ -166,7 +166,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Generate type constraints, unify them, and report any errors. </p>
-<p>Visits the AST generating type constraints for each expression and solves the resulting constraints. If a term unification error is detected a <a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms. ">UnificationError</a>, a subtype fo <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors. ">SemanticError</a>, is raised. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms. ">UnificationError</a> </dd>
+<p>Visits the AST generating type constraints for each expression and solves the resulting constraints. If a term unification error is detected a <a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms. ">UnificationError</a>, a subtype fo <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors. ">SemanticError</a>, is raised. If an access to a field whose definition is absent is performed a <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors. ">SemanticError</a> is raised. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms. ">UnificationError</a> </dd>
 <dd>
 <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors. ">SemanticError</a> </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>

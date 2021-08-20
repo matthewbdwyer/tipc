@@ -1,8 +1,9 @@
 <map id="/home/runner/work/tipc/tipc/src/error/SemanticError.h" name="/home/runner/work/tipc/tipc/src/error/SemanticError.h">
 <area shape="rect" id="node2" href="$FunctionNameCollector_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/symboltable\l/FunctionNameCollector.cpp" alt="" coords="5,95,228,151"/>
 <area shape="rect" id="node3" href="$LocalNameCollector_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/symboltable\l/LocalNameCollector.cpp" alt="" coords="252,95,475,151"/>
-<area shape="rect" id="node4" href="$UnificationError_8h.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/solver/UnificationError.h" alt="" coords="499,95,681,151"/>
-<area shape="rect" id="node6" href="$CheckAssignable_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/weeding\l/CheckAssignable.cpp" alt="" coords="705,95,901,151"/>
-<area shape="rect" id="node7" href="$tipc_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/tipc.cpp" alt="" coords="926,102,1099,143"/>
-<area shape="rect" id="node5" href="$Unifier_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/solver/Unifier.cpp" alt="" coords="501,199,679,255"/>
+<area shape="rect" id="node4" href="$AbsentFieldChecker_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/constraints/AbsentFieldChecker.cpp" alt="" coords="499,95,755,151"/>
+<area shape="rect" id="node5" href="$UnificationError_8h.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/solver/UnificationError.h" alt="" coords="780,95,963,151"/>
+<area shape="rect" id="node7" href="$CheckAssignable_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/weeding\l/CheckAssignable.cpp" alt="" coords="987,95,1183,151"/>
+<area shape="rect" id="node8" href="$tipc_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/tipc.cpp" alt="" coords="1207,102,1381,143"/>
+<area shape="rect" id="node6" href="$Unifier_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/types\l/solver/Unifier.cpp" alt="" coords="783,199,960,255"/>
 </map>
