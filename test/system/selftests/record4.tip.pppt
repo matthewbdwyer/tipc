@@ -15,6 +15,6 @@ Functions : {
 
 Locals for function main : {
   k : {a:int,b:int,c:◇,d:◇},
-  n : {a:◇,b:◇,c:&{a:int,b:int,c:◇,d:◇},d:int},
+  n : {a:◇,b:◇,c:⭡{a:int,b:int,c:◇,d:◇},d:int},
   r1 : int
 }

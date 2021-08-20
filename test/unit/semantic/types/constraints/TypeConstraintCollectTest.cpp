@@ -291,11 +291,11 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
     std::vector<std::string> expected {
       "\u27E64@4:18\u27E7 = int",                            		// int constant
       "\u27E613@4:24\u27E7 = int",                           		// int constant
-      "\u27E6{f:4,g:13}@4:14\u27E7 = {f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7,n:\u03B1<{f:4,g:13}:n>}",	// uber record
+      "\u27E6{f:4,g:13}@4:14\u27E7 = {f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7,n:\u25C7}",	// uber record
       "\u27E6r@3:14\u27E7 = \u27E6{f:4,g:13}@4:14\u27E7",                	// assignment
       "\u27E6null@5:18\u27E7 = \u2B61\u03B1<null>",                		// null
       "\u27E613@5:27\u27E7 = int",                           		// int constant
-      "\u27E6{n:null,f:13}@5:14\u27E7 = {f:\u27E613@5:27\u27E7,g:\u03B1<{n:null,f:13}:g>,n:\u27E6null@5:18\u27E7}",	// uber record
+      "\u27E6{n:null,f:13}@5:14\u27E7 = {f:\u27E613@5:27\u27E7,g:\u25C7,n:\u27E6null@5:18\u27E7}",	// uber record
       "\u27E6r@3:14\u27E7 = \u27E6{n:null,f:13}@5:14\u27E7",      		// assignment
       "\u27E60@6:17\u27E7 = int",                          		// main return int
       "\u27E6foo@2:6\u27E7 = () -> \u27E60@6:17\u27E7"                		// function decl
@@ -357,11 +357,11 @@ main() {
     std::vector<std::string> expected {
       "\u27E61@4:12\u27E7 = int",                                    // int constant
       "\u27E62@4:18\u27E7 = int",                                    // int constant
-      "\u27E6{a:1,b:2}@4:8\u27E7 = {a:\u27E61@4:12\u27E7,b:\u27E62@4:18\u27E7,c:\u03B1<{a:1,b:2}:c>,d:\u03B1<{a:1,b:2}:d>}", // record
+      "\u27E6{a:1,b:2}@4:8\u27E7 = {a:\u27E61@4:12\u27E7,b:\u27E62@4:18\u27E7,c:\u25C7,d:\u25C7}", // record
       "\u27E6k@3:11\u27E7 = \u27E6{a:1,b:2}@4:8\u27E7",		     	     // assign
       "\u27E6&k@5:12\u27E7 = \u2B61\u27E6k@3:11\u27E7",                           // address of
       "\u27E64@5:19\u27E7 = int",                                    // int constant
-      "\u27E6{c:&k,d:4}@5:8\u27E7 = {a:\u03B1<{c:&k,d:4}:a>,b:\u03B1<{c:&k,d:4}:b>,c:\u27E6&k@5:12\u27E7,d:\u27E64@5:19\u27E7}", // record
+      "\u27E6{c:&k,d:4}@5:8\u27E7 = {a:\u25C7,b:\u25C7,c:\u27E6&k@5:12\u27E7,d:\u27E64@5:19\u27E7}", // record
       "\u27E6n@3:8\u27E7 = \u27E6{c:&k,d:4}@5:8\u27E7",		     	     // assign
       "\u27E6n@3:8\u27E7 = {a:\u03B1<(n.c):a>,b:\u03B1<(n.c):b>,c:\u27E6(n.c)@6:13\u27E7,d:\u03B1<(n.c):d>}", // access
       "\u27E6(n.c)@6:13\u27E7 = \u2B61\u27E6(*(n.c))@6:11\u27E7",		     // assign through ptr
