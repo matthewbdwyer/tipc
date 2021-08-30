@@ -10,15 +10,21 @@ namespace {
 bool isAssignable(ASTExpr* e) {
   if (dynamic_cast<ASTVariableExpr*>(e)) return true;
   if (dynamic_cast<ASTAccessExpr*>(e)){
+    bool valid = true;
     ASTAccessExpr* access = dynamic_cast<ASTAccessExpr*>(e);
-    if (dynamic_cast<ASTVariableExpr*>(access->getRecord())){
-      return true;
-    }
-    else if (dynamic_cast<ASTDeRefExpr*>(access->getRecord())){
-      return true;
-    }
-    else{
-      return false;
+    while(valid){
+      if (dynamic_cast<ASTVariableExpr*>(access->getRecord())){
+        return true;
+      }
+      else if (dynamic_cast<ASTDeRefExpr*>(access->getRecord())){
+        return true;
+      }
+      else if (dynamic_cast<ASTAccessExpr*>(access->getRecord())){
+        access = dynamic_cast<ASTAccessExpr*>(access->getRecord());
+      }
+      else{
+        valid = false;
+      }
     }
   }
   return false;
