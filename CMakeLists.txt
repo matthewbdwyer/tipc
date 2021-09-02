@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
+cmake_minimum_required(VERSION 3.15)
 
 project(tipc)
 
@@ -32,26 +32,28 @@ if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     -g         # generate debug info
     --coverage # sets all required flags
   )
-  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-    target_link_options(coverage_config INTERFACE --coverage)
-  else()
-    target_link_libraries(coverage_config INTERFACE --coverage)
-  endif()
+  target_link_options(coverage_config INTERFACE --coverage)
 endif()
 
 ######## ANTLR4 CPP target rules ###########
+
+cmake_policy(PUSH)
+# Allow the antlr jar to be found without execute permissions. 
+cmake_policy(SET CMP0109 OLD)
+cmake_policy(SET CMP0114 NEW)
+
 # required if linking to static library
 add_definitions(-DANTLR4CPP_STATIC)
 
 set(ANTLR4_WITH_STATIC_CRT OFF)
-set(ANTLR4_TAG 4.8)
+set(ANTLR4_TAG 4.9.2)
 include(ExternalAntlr4Cpp)
 include_directories(${ANTLR4_INCLUDE_DIRS})
 
 # add macros to generate ANTLR Cpp code from grammar
 find_package(ANTLR)
 if(NOT ANTLR_FOUND)
-  set(ANTLR_JAR antlr-4.8-complete.jar)
+  set(ANTLR_JAR antlr-${ANTLR4_TAG}-complete.jar)
   set(ANTLR_JAR_URL https://www.antlr.org/download/${ANTLR_JAR})
   message(STATUS "Downloading antlr jar")
   file(DOWNLOAD ${ANTLR_JAR_URL} ${CMAKE_BINARY_DIR}/include/${ANTLR_JAR})
@@ -59,6 +61,8 @@ if(NOT ANTLR_FOUND)
   list(APPEND CMAKE_PROGRAM_PATH "${CMAKE_BINARY_DIR}/include")
   find_package(ANTLR REQUIRED)
 endif()
+
+cmake_policy(POP)
 
 ######## LLVM rules for installed libraries ###########
 # We want to select the latest stable release even if others are installed
