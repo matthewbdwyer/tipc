@@ -116,7 +116,7 @@ if [[ -s ${SCRATCH_DIR}/fib.diff ]]
 then
   echo -n "Test differences for : " 
   echo $i
-  cat fib.diff
+  cat ${SCRATCH_DIR}/fib.diff
   ((numfailures++))
 fi 
 
