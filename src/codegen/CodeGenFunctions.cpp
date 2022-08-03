@@ -342,7 +342,8 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
   callocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                      "calloc", CurrentModule.get());
   callocFun->addFnAttr(llvm::Attribute::NoUnwind);
-  callocFun->addAttribute(0, llvm::Attribute::NoAlias);
+
+  callocFun->setAttributes(callocFun->getAttributes().addAttributeAtIndex(callocFun->getContext(), 0, llvm::Attribute::NoAlias));
 
   /* We create a single unified record structure that is capable of representing
    * all records in a TIP program.  While wasteful of memory, this approach is 
@@ -402,10 +403,10 @@ llvm::Value* ASTFunction::codegen() {
       std::vector<Value *> indices;
       indices.push_back(zeroV); 
       indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), argIdx));
-      auto *gep = Builder.CreateInBoundsGEP(tipInputArray, indices, "inputidx");
+      auto *gep = Builder.CreateInBoundsGEP(tipInputArray->getValueType(), tipInputArray, indices, "inputidx");
 
       // Load the value and store it into the arg's alloca
-      auto *inVal = Builder.CreateLoad(gep, "tipinput" + std::to_string(argIdx++));
+      auto *inVal = Builder.CreateLoad(gep->getType(), gep, "tipinput" + std::to_string(argIdx++));
       Builder.CreateStore(inVal, argAlloc);
 
       // Record name binding to alloca
@@ -484,7 +485,7 @@ llvm::Value* ASTVariableExpr::codegen() {
     if (lValueGen) {
       return NamedValues[nv->first];
     } else {
-      return Builder.CreateLoad(nv->second, getName().c_str());
+      return Builder.CreateLoad(nv->second->getAllocatedType(), nv->second, getName().c_str());
     }
   }
 
@@ -532,10 +533,10 @@ llvm::Value* ASTFunAppExpr::codegen() {
   std::vector<Value *> indices;
   indices.push_back(zeroV); 
   indices.push_back(funVal);
-  auto *gep = Builder.CreateInBoundsGEP(tipFTable, indices, "ftableidx");
+  auto *gep = Builder.CreateInBoundsGEP(tipFTable->getType(), tipFTable, indices, "ftableidx");
 
   // Load the function pointer
-  auto *genericFunPtr = Builder.CreateLoad(gep, "genfptr");
+  auto *genericFunPtr = Builder.CreateLoad(gep->getType(), gep, "genfptr");
 
   /*
    * Compute the specific function pointer type based on the actual parameter
@@ -645,7 +646,7 @@ llvm::Value* ASTDeRefExpr::codegen() {
     return address;
   } else {
     // For an r-value, return the value at the address
-    return Builder.CreateLoad(address, "valueAt");
+    return Builder.CreateLoad(address->getType(), address, "valueAt");
   }
 }
 
@@ -694,7 +695,7 @@ llvm::Value* ASTRecordExpr::codegen() {
     //We do not give a value to fields that are not explictly set. Thus, accessing them is
     //undefined behavior
     for(auto const &field : getFields()){
-      auto *gep = Builder.CreateStructGEP(allocaRecord, fieldIndex[field->getField()], field->getField());
+      auto *gep = Builder.CreateStructGEP(allocaRecord->getAllocatedType(), allocaRecord, fieldIndex[field->getField()], field->getField());
       auto value = field->codegen();
       Builder.CreateStore(value, gep);
     }
