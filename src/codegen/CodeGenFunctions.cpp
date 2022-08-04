@@ -646,7 +646,7 @@ llvm::Value* ASTDeRefExpr::codegen() {
     return address;
   } else {
     // For an r-value, return the value at the address
-    return Builder.CreateLoad(address->getType(), address, "valueAt");
+    return Builder.CreateLoad(address->getType()->getPointerElementType(), address, "valueAt");
   }
 }
 
