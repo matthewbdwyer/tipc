@@ -406,7 +406,7 @@ llvm::Value* ASTFunction::codegen() {
       auto *gep = Builder.CreateInBoundsGEP(tipInputArray->getValueType(), tipInputArray, indices, "inputidx");
 
       // Load the value and store it into the arg's alloca
-      auto *inVal = Builder.CreateLoad(gep->getType(), gep, "tipinput" + std::to_string(argIdx++));
+      auto *inVal = Builder.CreateLoad(gep->getType()->getPointerElementType(), gep, "tipinput" + std::to_string(argIdx++));
       Builder.CreateStore(inVal, argAlloc);
 
       // Record name binding to alloca
