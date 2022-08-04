@@ -43,6 +43,16 @@ cmake_policy(SET CMP0109 OLD)
 cmake_policy(SET CMP0114 NEW)
 
 # required if linking to static library
+
+# Point CMake to the Corretto install location to avoid setting the system path.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(JAVA_HOME "/usr/lib/jvm/java-11-amazon-corretto")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  set(JAVA_HOME "/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home")
+else()
+  message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} is not supported")
+endif()
+
 add_definitions(-DANTLR4CPP_STATIC)
 
 set(ANTLR4_WITH_STATIC_CRT OFF)
