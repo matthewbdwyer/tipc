@@ -533,10 +533,11 @@ llvm::Value* ASTFunAppExpr::codegen() {
   std::vector<Value *> indices;
   indices.push_back(zeroV); 
   indices.push_back(funVal);
-  auto *gep = Builder.CreateInBoundsGEP(tipFTable->getType(), tipFTable, indices, "ftableidx");
+
+  auto *gep = Builder.CreateInBoundsGEP(tipFTable->getValueType(), tipFTable, indices, "ftableidx");
 
   // Load the function pointer
-  auto *genericFunPtr = Builder.CreateLoad(gep->getType(), gep, "genfptr");
+  auto *genericFunPtr = Builder.CreateLoad(gep->getType()->getPointerElementType(), gep, "genfptr");
 
   /*
    * Compute the specific function pointer type based on the actual parameter
