@@ -222,15 +222,6 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
 
   // Set the default target triple for this platform
   llvm:Triple targetTriple(llvm::sys::getProcessTriple());
-  std::cout << "Default target triple is " << targetTriple.str() << "\n";
-  if (targetTriple.getOS() == Triple::Darwin) {
-    VersionTuple version;
-    targetTriple.setOS(Triple::MacOSX);
-    if (targetTriple.getMacOSXVersion(version)) {
-      std::cout << "  couldn't convert version numbers\n";
-    }
-  }
-  std::cout << "Target triple changed to " << targetTriple.str() << "\n";
   TheModule->setTargetTriple(targetTriple.str());
 
   // Initialize nop declaration

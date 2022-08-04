@@ -31,6 +31,9 @@ static cl::opt<std::string> logfile("log",
                                    cl::value_desc("logfile"),
                                    cl::desc("log all messages to logfile (enables --verbose 3)"),
                                    cl::cat(TIPcat));
+static cl::opt<std::string> targetTriple("tt",
+                                       cl::desc("target triple to use for code generation"),
+                                       cl::cat(TIPcat));
 static cl::opt<std::string> sourceFile(cl::Positional,
                                        cl::desc("<tip source file>"),
                                        cl::Required,
