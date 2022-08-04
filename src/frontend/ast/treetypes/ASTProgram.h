@@ -18,7 +18,7 @@ public:
   std::string getName() const { return name; }
   std::vector<ASTFunction*> getFunctions() const;
   ASTFunction * findFunctionByName(std::string);
-  void accept(ASTVisitor * visitor);
+  void accept(ASTVisitor * visitor) override;
   std::unique_ptr<llvm::Module> codegen(SemanticAnalysis* st, std::string name);
 
 private:
@@ -31,5 +31,5 @@ public:
   }
 
 protected:
-  std::ostream& print(std::ostream &out) const;
+  std::ostream& print(std::ostream &out) const override;
 };

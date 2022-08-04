@@ -251,6 +251,5 @@ main()
     PrettyPrinter::print(ast.get(), pp, ' ', 2);
     std::string ppString = GeneralHelper::removeTrailingWhitespace(pp.str());
     expected = GeneralHelper::removeTrailingWhitespace(expected);
-    cout << ppString;
     REQUIRE(ppString == expected);
 }
