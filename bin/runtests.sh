@@ -14,11 +14,10 @@ usage() {
   echo "-u  runs unit tests only"
 }
 
-
 run_unit_tests() {
   find ${ROOT_DIR} -name '*gcda' -delete
   echo running the unit test suite
-  find ${UNIT_TEST_DIR} -name '*_unit_tests' -exec {} \;
+  find ${UNIT_TEST_DIR} -name '*_unit_tests' | xargs -n1 sh -c
   echo unit test run complete
 }
 

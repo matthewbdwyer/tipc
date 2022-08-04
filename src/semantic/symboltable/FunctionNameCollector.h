@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTVisitor.h"
+#include <map>
 
 /*! \class FunctionNameCollector
  *  \brief Collects the names of functions declared in the program.

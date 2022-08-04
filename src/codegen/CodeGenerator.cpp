@@ -17,7 +17,7 @@ void CodeGenerator::emit(llvm::Module* m, std::string filename) {
   }
 
   std::error_code ec;
-  ToolOutputFile result(filename, ec, sys::fs::F_None);
+  ToolOutputFile result(filename, ec, sys::fs::OF_None);
   WriteBitcodeToFile(*m, result.os());
   result.keep();
 }
@@ -28,7 +28,7 @@ void CodeGenerator::emitHumanReadableAssembly(llvm::Module* m, std::string filen
   }
 
   std::error_code ec;
-  ToolOutputFile result(filename, ec, sys::fs::F_None);
+  ToolOutputFile result(filename, ec, sys::fs::OF_None);
   m->print(result.os(), nullptr);
   result.keep();
 }

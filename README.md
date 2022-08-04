@@ -57,7 +57,9 @@ Our continuous integration process builds on Mac OS 10.15 and we regularly build
 
 If you are using a Windows machine, tipc can be built in the Windows Subsystem for Linux (WSL). [Here](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2) are instructions to install WSL and upgrade to WSL2. It is highly recommended to upgrade to WSL2. Once installed, you should install
 [Ubuntu 20.04](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2). Once finished, you can open a virtual instance of Ubuntu and follow 
-the instructions above to build tipc.
+the instructions above to build tipc. 
+
+You may recieve an error saying "No CMAKE_CXX_COMPILER could be found" when running `cmake ..`. If this is the case, you should install g++ with the command: `sudo apt-get install g++`.
 
 ## Using tipc
 

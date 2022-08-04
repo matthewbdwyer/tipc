@@ -36,7 +36,7 @@ std::string ASTBuilder::opString(int op) {
   default:
     throw std::runtime_error(
         "unknown operator :" +
-        ASTBuilder::parser->getVocabulary().getLiteralName(op));
+        std::string(ASTBuilder::parser->getVocabulary().getLiteralName(op)));
   }
   return opStr;
 }
