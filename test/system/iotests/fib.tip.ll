@@ -9,7 +9,7 @@ target triple = "x86_64-apple-darwin21.5.0"
 ; Function Attrs: nofree nosync nounwind readnone willreturn
 declare void @llvm.donothing() #0
 
-define i64 @fib(i64 %n) {
+define internal i64 @fib(i64 %n) {
 entry:
   br label %header1
 
