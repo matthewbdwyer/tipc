@@ -46,7 +46,7 @@ using namespace llvm;
  * and especially the CFGSimplification pass, which removes nops and
  * dead blocks.
  *
- * The philosophy of these code generation routines is to rely on the fact
+ * The approach taken in these codegen routines is to rely on the fact
  * that the program is type correct, which is checked in a previous pass.
  * This allows the code generator to infer the type of values accessed
  * in memory based on the nature of the expression, e.g., if we are generating
@@ -189,7 +189,7 @@ llvm::Function *getFunction(std::string Name) {
     // Use type factory to create function from formal type to int
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), FormalTypes, false);
 
-    auto *F = llvm::Function::Create(FT, llvm::Function::ExternalLinkage, Name,
+    auto *F = llvm::Function::Create(FT, llvm::Function::InternalLinkage, Name,
                                      CurrentModule.get());
 
     // assign names to args for readability of generated code
