@@ -19,6 +19,7 @@ numtests=0
 numfailures=0
 
 initialize_test() {
+  echo -n "."
   rm -f ${SCRATCH_DIR}/*
   ((numtests++))
 }
@@ -31,7 +32,7 @@ do
   # test optimized program
   initialize_test
   ${TIPC} $i
-  ${TIPCLANG} $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} &>/dev/null
   exit_code=${?}
@@ -48,7 +49,7 @@ do
   # test unoptimized program
   initialize_test
   ${TIPC} -do $i
-  ${TIPCLANG} $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} &>/dev/null
   exit_code=${?}
@@ -67,12 +68,13 @@ done
 for i in iotests/*.expected
 do
   initialize_test
+
   expected="$(basename $i .tip)"
   executable="$(echo $expected | cut -f1 -d-)"
   input="$(echo $expected | cut -f2 -d- | cut -f1 -d.)"
 
   ${TIPC} iotests/$executable.tip
-  ${TIPCLANG} iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
+  ${TIPCLANG} -w iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
 
   ./${executable} $input >iotests/$executable.output 2>iotests/$executable.output
 
@@ -197,10 +199,11 @@ initialize_test
 ${TIPC} -pt -log=/dev/null selftests/polyfactorial.tip &>/dev/null 
 
 if [ ${numfailures} -eq "0" ]; then
-  echo -n "all " 
+  echo -n " all " 
   echo -n ${numtests}
   echo " tests passed"
 else
+  echo -n " " 
   echo -n ${numfailures}/${numtests}
   echo " tests failed"
 fi
