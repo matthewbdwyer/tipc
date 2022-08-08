@@ -37,7 +37,7 @@ run_system_tests() {
   fi
   popd &> /dev/null
 
-  echo running the unit test suite
+  echo running the system test suite
   pushd ${SYSTEM_TEST_DIR} &> /dev/null
   ./run.sh
   if [ $? -ne 0 ]; then

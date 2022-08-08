@@ -1,9 +1,0 @@
-Improve the log messages for type inference
-
-1) Add some kind of indentation/nesting for union-find so that it is easier to track the balancing of the messages, i.e., looking for representative of X ... found representative Y.
-
-2) in the unifier anticipate the kinds of errors that people can make when creating subtypes and include those in the log messages.  for example,
- - when two types are equal and you think they should not be check "==" implementation 
- - what errors arise when doMatch is not implemented?  indicate those
- - what errors arise when TipCons vector is not used by a subtype? indicate those
- - what errors arise when Substituter is not extended?  indicate those

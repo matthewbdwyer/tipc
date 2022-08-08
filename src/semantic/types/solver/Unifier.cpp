@@ -124,7 +124,8 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
             unify(a1, a2);
         }
     } else {
-        throwUnifyException(t1,t2);
+        // This case should be unreachable
+        assert(false); // LCOV_EXCL_LINE
     }
 
     LOG_S(2) << "Unifying representatives to " << *unionFind->find(t1);
@@ -222,7 +223,14 @@ std::shared_ptr<TipType> Unifier::close(
     return closedMu;
   } 
 
-  return type;
+  /* This should be unreachable since all subtypes of TipType are
+   * subtypes of TipVar, TipCons, or TipMu -- the three cases above.
+   * We could have left the final "else if" implicit above, but add the
+   * assertion here to catch any problematic type extensions.  Note
+   * that this necessitates the return statement.
+   */
+  assert(false);  // LCOV_EXCL_LINE
+  return type;  // LCOV_EXCL_LINE
 }
 
 /*! \brief Looks up the inferred type in the type solution.
