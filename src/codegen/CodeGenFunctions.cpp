@@ -30,6 +30,8 @@
 #include "llvm/Transforms/Scalar/GVN.h"
 #include "llvm/Transforms/Utils.h"
 
+#include "loguru.hpp"
+
 using namespace llvm;
 
 /*
@@ -217,6 +219,8 @@ AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::strin
 
 std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
                                                   std::string programName) {
+  LOG_S(1) << "Generating code for program " << programName;
+
   // Create module to hold generated code
   auto TheModule = std::make_unique<Module>(programName, TheContext);
 
@@ -379,6 +383,8 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
 }
 
 llvm::Value* ASTFunction::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   llvm::Function *TheFunction = getFunction(getName());
   if (TheFunction == nullptr) {
     throw InternalError("failed to declare the function" + getName());
@@ -447,10 +453,14 @@ llvm::Value* ASTFunction::codegen() {
 }  // LCOV_EXCL_LINE
 
 llvm::Value* ASTNumberExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   return ConstantInt::get(Type::getInt64Ty(TheContext), getValue());
 }
 
 llvm::Value* ASTBinaryExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *L = getLeft()->codegen();
   Value *R = getRight()->codegen();
   if (L == nullptr || R == nullptr) {
@@ -484,6 +494,8 @@ llvm::Value* ASTBinaryExpr::codegen() {
  * ensure that names obey the scope rules.
  */
 llvm::Value* ASTVariableExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   auto nv = NamedValues.find(getName());
   if (nv != NamedValues.end()) {
     if (lValueGen) {
@@ -502,6 +514,8 @@ llvm::Value* ASTVariableExpr::codegen() {
 }
 
 llvm::Value* ASTInputExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   if (inputIntrinsic == nullptr) {
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), false);
     inputIntrinsic = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
@@ -521,6 +535,8 @@ llvm::Value* ASTInputExpr::codegen() {
  * functions performed during codegen for the Program.
  */
 llvm::Value* ASTFunAppExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   /*
    * Evaluate the function expression - it will resolve to an integer value
    * whether it is a function literal or an expression.
@@ -578,6 +594,8 @@ llvm::Value* ASTFunAppExpr::codegen() {
  * Generates a pointer to the allocs arguments (ints, records, ...)
  */
 llvm::Value* ASTAllocExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   allocFlag = true;
   Value *argVal = getInitializer()->codegen();
   allocFlag = false;
@@ -612,6 +630,8 @@ llvm::Value* ASTNullExpr::codegen() {
  *
  */
 llvm::Value* ASTRefExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   lValueGen = true;
   Value *lValue = getVar()->codegen();
   lValueGen = false;
@@ -631,6 +651,8 @@ llvm::Value* ASTRefExpr::codegen() {
  * the value at the pointed-to memory location.
  */
 llvm::Value* ASTDeRefExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   bool isLValue = lValueGen;
 
   if (isLValue) {
@@ -660,6 +682,8 @@ llvm::Value* ASTDeRefExpr::codegen() {
  * Builds an instance of the UberRecord using the declared fields
  */
 llvm::Value* ASTRecordExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   //If this is an alloc, we calloc the record
   if(allocFlag){
     //Allocate the a pointer to an uber record
@@ -714,6 +738,8 @@ llvm::Value* ASTRecordExpr::codegen() {
  * Expression for generating the code for the value of a field
  */
 llvm::Value* ASTFieldExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   return this->getInitializer()->codegen();
 }
 
@@ -723,6 +749,8 @@ llvm::Value* ASTFieldExpr::codegen() {
  * In an r-value context this returns the value of the field being accessed
  */
 llvm::Value* ASTAccessExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   bool isLValue = lValueGen;
 
   if (isLValue) {
@@ -761,6 +789,8 @@ llvm::Value* ASTDeclNode::codegen() {
 }
 
 llvm::Value* ASTDeclStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   // The LLVM builder records the function we are currently generating
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -782,6 +812,8 @@ llvm::Value* ASTDeclStmt::codegen() {
 }  // LCOV_EXCL_LINE
 
 llvm::Value* ASTAssignStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   // trigger code generation for l-value expressions
   lValueGen = true;
   Value *lValue = getLHS()->codegen();
@@ -799,9 +831,9 @@ llvm::Value* ASTAssignStmt::codegen() {
   return Builder.CreateStore(rValue, lValue);
 }  // LCOV_EXCL_LINE
 
-
-
 llvm::Value* ASTBlockStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *lastStmt = nullptr;
 
   for (auto const &s : getStmts()) {
@@ -830,6 +862,8 @@ llvm::Value* ASTBlockStmt::codegen() {
  * body executes.
  */
 llvm::Value* ASTWhileStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
   /*
@@ -902,6 +936,8 @@ llvm::Value* ASTWhileStmt::codegen() {
  * code at that insertion point.
  */
 llvm::Value* ASTIfStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *CondV = getCondition()->codegen();
   if (CondV == nullptr) {
     throw InternalError("failed to generate bitcode for the condition of the if statement");
@@ -970,6 +1006,8 @@ llvm::Value* ASTIfStmt::codegen() {
 }  // LCOV_EXCL_LINE
 
 llvm::Value* ASTOutputStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   if (outputIntrinsic == nullptr) {
     std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), oneInt, false);
@@ -989,6 +1027,8 @@ llvm::Value* ASTOutputStmt::codegen() {
 }
 
 llvm::Value* ASTErrorStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   if (errorIntrinsic == nullptr) {
     std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), oneInt, false);
@@ -1007,6 +1047,8 @@ llvm::Value* ASTErrorStmt::codegen() {
 }
 
 llvm::Value* ASTReturnStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *argVal = getArg()->codegen();
   return Builder.CreateRet(argVal);
 }

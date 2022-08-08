@@ -11,10 +11,10 @@ void AbsentFieldChecker::check(ASTProgram* p, Unifier* u)
   p->accept(&visitor);
 }
 
-/*! \brief Check that the type of the field access is not absent 
+/*! \brief Check that the accessed field is defined somewhere in the program.
  *
  * This check is a bit less nuanced than in the TIP scala implementation.
- * We simply report absent field accesses and do distinguish reads from writes.
+ * We simply report absent field accesses and do not distinguish reads from writes.
  */
 void AbsentFieldChecker::endVisit(ASTAccessExpr * element) {
   // Generate a new type variable for the access expression

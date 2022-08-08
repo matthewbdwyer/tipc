@@ -7,6 +7,8 @@
 #include "ParseError.h"
 #include "ASTVisualizer.h"
 
+#include "loguru.hpp"
+
 using namespace std;
 using namespace antlr4;
 
@@ -39,7 +41,11 @@ std::unique_ptr<ASTProgram> FrontEnd::parse(std::istream& stream){
   parser.removeErrorListeners();
   parser.addErrorListener(&parserErrorListener);
 
+  LOG_S(1) << "Parsing program";
+
   TIPParser::ProgramContext *tree = parser.program();
+
+  LOG_S(1) << "Building AST";
 
   ASTBuilder ab(&parser);
   return ab.build(tree);

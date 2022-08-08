@@ -11,9 +11,13 @@
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Scalar/GVN.h"
 
+#include "loguru.hpp"
+
 using namespace llvm;
 
 void Optimizer::optimize(Module* theModule) {
+  LOG_S(1) << "Optimizing program " << theModule->getName().str();
+
   // Create a pass manager to simplify generated module
   auto TheFPM = std::make_unique<legacy::FunctionPassManager>(theModule);
 
@@ -35,6 +39,8 @@ void Optimizer::optimize(Module* theModule) {
   // initialize and run simplification pass on each function
   TheFPM->doInitialization();
   for (auto &fun : theModule->getFunctionList()) {
+    LOG_S(1) << "Optimizing function " << fun.getName().str();
+
     TheFPM->run(fun);
   }
 }

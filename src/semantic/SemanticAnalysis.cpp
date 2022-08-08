@@ -1,6 +1,5 @@
 #include "SemanticAnalysis.h"
 #include "CheckAssignable.h"
-#include "loguru.hpp"
 
 std::unique_ptr<SemanticAnalysis> SemanticAnalysis::analyze(ASTProgram* ast) {
   auto symTable = SymbolTable::build(ast);

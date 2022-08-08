@@ -4,6 +4,7 @@
 
 #include <functional>
 #include <vector>
+#include "loguru.hpp"
 
 using namespace antlrcpp;
 
@@ -128,6 +129,8 @@ Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
   visitedFunction = std::make_unique<ASTFunction>(
       std::move(fName), std::move(fParams), std::move(fDecls), std::move(fBody));
 
+  LOG_S(1) << "Built AST node for function " << *visitedFunction;
+
   // Set source location 
   visitedFunction->setLocation(ctx->getStart()->getLine(), 
                                ctx->getStart()->getCharPositionInLine());
@@ -138,6 +141,8 @@ Any ASTBuilder::visitNegNumber(TIPParser::NegNumberContext *ctx) {
   int val = std::stoi(ctx->NUMBER()->getText());
   val = -val;
   visitedExpr = std::make_unique<ASTNumberExpr>(val);
+
+  LOG_S(1) << "Built AST node " << *visitedExpr;
 
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
@@ -166,6 +171,8 @@ Any ASTBuilder::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
 
   visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -182,6 +189,8 @@ Any ASTBuilder::visitRelationalExpr(TIPParser::RelationalExprContext *ctx) {
   auto rhs = std::move(visitedExpr);
 
   visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+
+  LOG_S(1) << "Built AST node " << *visitedExpr;
 
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
@@ -201,6 +210,8 @@ Any ASTBuilder::visitMultiplicativeExpr(
 
   visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -218,6 +229,8 @@ Any ASTBuilder::visitEqualityExpr(TIPParser::EqualityExprContext *ctx) {
 
   visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -234,6 +247,8 @@ Any ASTBuilder::visitNumExpr(TIPParser::NumExprContext *ctx) {
   int val = std::stoi(ctx->NUMBER()->getText());
   visitedExpr = std::make_unique<ASTNumberExpr>(val);
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -244,6 +259,8 @@ Any ASTBuilder::visitVarExpr(TIPParser::VarExprContext *ctx) {
   std::string name = ctx->IDENTIFIER()->getText();
   visitedExpr = std::make_unique<ASTVariableExpr>(name);
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -252,6 +269,8 @@ Any ASTBuilder::visitVarExpr(TIPParser::VarExprContext *ctx) {
 
 Any ASTBuilder::visitInputExpr(TIPParser::InputExprContext *ctx) {
   visitedExpr = std::make_unique<ASTInputExpr>();
+
+  LOG_S(1) << "Built AST node " << *visitedExpr;
 
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
@@ -277,6 +296,8 @@ Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
 
   visitedExpr = std::make_unique<ASTFunAppExpr>(std::move(fExpr), std::move(fArgs));
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -286,6 +307,8 @@ Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
 Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
   visit(ctx->expr());
   visitedExpr = std::make_unique<ASTAllocExpr>(std::move(visitedExpr));
+
+  LOG_S(1) << "Built AST node " << *visitedExpr;
 
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
@@ -297,6 +320,8 @@ Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
   visit(ctx->expr());
   visitedExpr = std::make_unique<ASTRefExpr>(std::move(visitedExpr));
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -307,6 +332,8 @@ Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
   visit(ctx->expr());
   visitedExpr = std::make_unique<ASTDeRefExpr>(std::move(visitedExpr));
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -315,6 +342,8 @@ Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
 
 Any ASTBuilder::visitNullExpr(TIPParser::NullExprContext *ctx) {
   visitedExpr = std::make_unique<ASTNullExpr>();
+
+  LOG_S(1) << "Built AST node " << *visitedExpr;
 
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
@@ -331,6 +360,8 @@ Any ASTBuilder::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
 
   visitedExpr = std::make_unique<ASTRecordExpr>(std::move(rFields));
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -341,6 +372,8 @@ Any ASTBuilder::visitFieldExpr(TIPParser::FieldExprContext *ctx) {
   std::string fName = ctx->IDENTIFIER()->getText();
   visit(ctx->expr());
   visitedFieldExpr = std::make_unique<ASTFieldExpr>(fName, std::move(visitedExpr));
+
+  LOG_S(1) << "Built AST node " << *visitedExpr;
 
   // Set source location 
   visitedFieldExpr->setLocation(ctx->getStart()->getLine(), 
@@ -356,6 +389,8 @@ Any ASTBuilder::visitAccessExpr(TIPParser::AccessExprContext *ctx) {
 
   visitedExpr = std::make_unique<ASTAccessExpr>(std::move(rExpr), fName);
 
+  LOG_S(1) << "Built AST node " << *visitedExpr;
+
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -370,6 +405,8 @@ Any ASTBuilder::visitDeclaration(TIPParser::DeclarationContext *ctx) {
   }
   visitedDeclStmt = std::make_unique<ASTDeclStmt>(std::move(dVars));
 
+  LOG_S(1) << "Built AST node " << *visitedDeclStmt;
+
   // Set source location 
   visitedDeclStmt->setLocation(ctx->getStart()->getLine(), 
                                ctx->getStart()->getCharPositionInLine());
@@ -379,6 +416,8 @@ Any ASTBuilder::visitDeclaration(TIPParser::DeclarationContext *ctx) {
 Any ASTBuilder::visitNameDeclaration(TIPParser::NameDeclarationContext *ctx) {
   std::string name = ctx->IDENTIFIER()->getText();
   visitedDeclNode = std::make_unique<ASTDeclNode>(name);
+
+  LOG_S(1) << "Built AST node " << *visitedDeclNode;
 
   // Set source location 
   visitedDeclNode->setLocation(ctx->getStart()->getLine(), 
@@ -394,6 +433,8 @@ Any ASTBuilder::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
   }
   visitedStmt = std::make_unique<ASTBlockStmt>(std::move(bStmts));
 
+  LOG_S(1) << "Built AST node " << *visitedStmt;
+
   // Set source location 
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -406,6 +447,8 @@ Any ASTBuilder::visitWhileStmt(TIPParser::WhileStmtContext *ctx) {
   visit(ctx->statement());
   auto body = std::move(visitedStmt);
   visitedStmt = std::make_unique<ASTWhileStmt>(std::move(cond), std::move(body));
+
+  LOG_S(1) << "Built AST node " << *visitedStmt;
 
   // Set source location 
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
@@ -429,6 +472,8 @@ Any ASTBuilder::visitIfStmt(TIPParser::IfStmtContext *ctx) {
   visitedStmt = std::make_unique<ASTIfStmt>(std::move(cond), std::move(thenBody),
                                             std::move(elseBody));
 
+  LOG_S(1) << "Built AST node " << *visitedStmt;
+
   // Set source location 
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -438,6 +483,8 @@ Any ASTBuilder::visitIfStmt(TIPParser::IfStmtContext *ctx) {
 Any ASTBuilder::visitOutputStmt(TIPParser::OutputStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ASTOutputStmt>(std::move(visitedExpr));
+
+  LOG_S(1) << "Built AST node " << *visitedStmt;
 
   // Set source location 
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
@@ -449,6 +496,8 @@ Any ASTBuilder::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ASTErrorStmt>(std::move(visitedExpr));
 
+  LOG_S(1) << "Built AST node " << *visitedStmt;
+
   // Set source location 
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -459,6 +508,8 @@ Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   visit(ctx->expr());
   visitedStmt = std::make_unique<ASTReturnStmt>(std::move(visitedExpr));
 
+  LOG_S(1) << "Built AST node " << *visitedStmt;
+
   // Set source location 
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
@@ -466,16 +517,18 @@ Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
 }
 
 Any ASTBuilder::visitAssignStmt(TIPParser::AssignStmtContext *ctx) {
-    visit(ctx->expr(0));
-    auto lhs = std::move(visitedExpr);
-    visit(ctx->expr(1));
-    auto rhs = std::move(visitedExpr);
-    visitedStmt = std::make_unique<ASTAssignStmt>(std::move(lhs), std::move(rhs));
+  visit(ctx->expr(0));
+  auto lhs = std::move(visitedExpr);
+  visit(ctx->expr(1));
+  auto rhs = std::move(visitedExpr);
+  visitedStmt = std::make_unique<ASTAssignStmt>(std::move(lhs), std::move(rhs));
+
+  LOG_S(1) << "Built AST node " << *visitedStmt;
 
   // Set source location 
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
-    return "";
+  return "";
 }
 
 std::string ASTBuilder::generateSHA256(std::string tohash) {
