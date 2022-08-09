@@ -276,7 +276,7 @@ Any ASTBuilder::visitInputExpr(TIPParser::InputExprContext *ctx) {
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
   std::unique_ptr<ASTExpr> fExpr = nullptr;
@@ -314,7 +314,7 @@ Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
   visit(ctx->expr());
@@ -326,7 +326,7 @@ Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
   visit(ctx->expr());
@@ -338,7 +338,7 @@ Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitNullExpr(TIPParser::NullExprContext *ctx) {
   visitedExpr = std::make_unique<ASTNullExpr>();
@@ -349,7 +349,7 @@ Any ASTBuilder::visitNullExpr(TIPParser::NullExprContext *ctx) {
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
   std::vector<std::unique_ptr<ASTFieldExpr>> rFields;
@@ -490,7 +490,7 @@ Any ASTBuilder::visitOutputStmt(TIPParser::OutputStmtContext *ctx) {
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
   visit(ctx->expr());
@@ -502,7 +502,7 @@ Any ASTBuilder::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   visit(ctx->expr());
@@ -514,7 +514,7 @@ Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   visitedStmt->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitAssignStmt(TIPParser::AssignStmtContext *ctx) {
   visit(ctx->expr(0));

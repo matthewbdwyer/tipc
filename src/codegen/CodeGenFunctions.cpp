@@ -387,7 +387,7 @@ llvm::Value* ASTFunction::codegen() {
 
   llvm::Function *TheFunction = getFunction(getName());
   if (TheFunction == nullptr) {
-    throw InternalError("failed to declare the function" + getName());
+    throw InternalError("failed to declare the function" + getName()); // LCOV_EXCL_LINE
   }
 
   // create basic block to hold body of function definition
@@ -436,15 +436,15 @@ llvm::Value* ASTFunction::codegen() {
   // add local declarations to the symbol table
   for (auto const &decl : getDeclarations()) {
     if (decl->codegen() == nullptr) {
-      TheFunction->eraseFromParent();
-      throw InternalError("failed to generate bitcode for the function declarations");
+      TheFunction->eraseFromParent(); // LCOV_EXCL_LINE
+      throw InternalError("failed to generate bitcode for the function declarations"); // LCOV_EXCL_LINE
     }
   }
 
   for (auto &stmt : getStmts()) {
     if (stmt->codegen() == nullptr) {
-      TheFunction->eraseFromParent();
-      throw InternalError("failed to generate bitcode for the function statement");
+      TheFunction->eraseFromParent(); // LCOV_EXCL_LINE
+      throw InternalError("failed to generate bitcode for the function statement"); // LCOV_EXCL_LINE
     }
   }
 
@@ -456,7 +456,7 @@ llvm::Value* ASTNumberExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   return ConstantInt::get(Type::getInt64Ty(TheContext), getValue());
-}
+} // LCOV_EXCL_LINE
 
 llvm::Value* ASTBinaryExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
@@ -522,7 +522,7 @@ llvm::Value* ASTInputExpr::codegen() {
                                             "_tip_input", CurrentModule.get());
   }
   return Builder.CreateCall(inputIntrinsic);
-}
+} // LCOV_EXCL_LINE
 
 /*
  * Function application in TIP can either be through explicitly named
@@ -582,7 +582,7 @@ llvm::Value* ASTFunAppExpr::codegen() {
   for (auto const &arg : getActuals()) {
     Value *argVal = arg->codegen();
     if (argVal == nullptr) {
-      throw InternalError("failed to generate bitcode for the argument");
+      throw InternalError("failed to generate bitcode for the argument"); // LCOV_EXCL_LINE
     }
     argsV.push_back(argVal);
   }
@@ -741,7 +741,7 @@ llvm::Value* ASTFieldExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   return this->getInitializer()->codegen();
-}
+} // LCOV_EXCL_LINE
 
 /* record.field Access Expression
  *
@@ -892,7 +892,7 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *CondV = getCondition()->codegen();
     if (CondV == nullptr) {
-      throw InternalError("failed to generate bitcode for the conditional");
+      throw InternalError("failed to generate bitcode for the conditional"); // LCOV_EXCL_LINE
     }
 
     // Convert condition to a bool by comparing non-equal to 0.
@@ -908,7 +908,7 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *BodyV = getBody()->codegen();
     if (BodyV == nullptr) {
-      throw InternalError("failed to generate bitcode for the loop body");
+      throw InternalError("failed to generate bitcode for the loop body"); // LCOV_EXCL_LINE
     }
 
     Builder.CreateBr(HeaderBB);
@@ -974,7 +974,7 @@ llvm::Value* ASTIfStmt::codegen() {
 
     Value *ThenV = getThen()->codegen();
     if (ThenV == nullptr) {
-      throw InternalError("failed to generate bitcode for the then block");
+      throw InternalError("failed to generate bitcode for the then block"); // LCOV_EXCL_LINE
     }
 
     Builder.CreateBr(MergeBB);
@@ -990,7 +990,7 @@ llvm::Value* ASTIfStmt::codegen() {
     if (getElse() != nullptr) {
       ElseV = getElse()->codegen();
       if (ElseV == nullptr) {
-        throw InternalError("failed to generate bitcode for the else block");
+        throw InternalError("failed to generate bitcode for the else block"); // LCOV_EXCL_LINE
       }
     } else {
       Builder.CreateCall(nop);
@@ -1051,4 +1051,4 @@ llvm::Value* ASTReturnStmt::codegen() {
 
   Value *argVal = getArg()->codegen();
   return Builder.CreateRet(argVal);
-}
+} // LCOV_EXCL_LINE

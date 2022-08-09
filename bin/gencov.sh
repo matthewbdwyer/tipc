@@ -4,6 +4,7 @@ declare -r ROOT_DIR=${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}
 pushd $ROOT_DIR
 lcov --capture --directory build -output-file coverage.info
 lcov --remove coverage.info '/usr/*' -o coverage.info
+lcov --remove coverage.info '/opt/*' -o coverage.info
 lcov --remove coverage.info '/Applications/*' -o coverage.info
 lcov --remove coverage.info '/Library/*' -o coverage.info
 lcov --remove coverage.info '*.h' -o coverage.info
