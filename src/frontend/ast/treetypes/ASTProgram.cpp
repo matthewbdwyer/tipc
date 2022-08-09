@@ -44,6 +44,9 @@ std::vector<std::shared_ptr<ASTNode>> ASTProgram::getChildren() {
   return children;
 }
 
-llvm::Value *ASTProgram::codegen() {
-  assert(0);
-}
+/* This function is never called because a custom code generation
+ * routine, which accepts additional arguments, is defined for programs.
+ */
+llvm::Value *ASTProgram::codegen() { // LCOV_EXCL_LINE
+  assert(0); // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE

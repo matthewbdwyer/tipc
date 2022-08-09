@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
         std::ofstream astStream;
         astStream.open(astFile);
         if(!astStream.good()) {
-          LOG_S(ERROR) << "tipc: error: failed to open '" << sourceFile << "' for writing";
+          LOG_S(ERROR) << "tipc: error: failed to open '" << astFile << "' for writing";
           exit(1);
         }
 
@@ -128,10 +128,14 @@ int main(int argc, char *argv[]) {
       LOG_S(ERROR) << "tipc: " << e.what();
       LOG_S(ERROR) << "tipc: semantic error";
       exit (EXIT_FAILURE);
-    } catch (InternalError& e) {
-      LOG_S(ERROR) << "tipc: " << e.what();
-      LOG_S(ERROR) << "tipc: internal error";
-      exit (EXIT_FAILURE);
+    } catch (InternalError& e) { // LCOV_EXCL_LINE
+      /* Internal errors should never happen, but we have logic to catch 
+       * them just in case.  We do not want to count these lines toward 
+       * coverage goals since a working compiler will never cover these.
+       */
+      LOG_S(ERROR) << "tipc: " << e.what(); // LCOV_EXCL_LINE
+      LOG_S(ERROR) << "tipc: internal error"; // LCOV_EXCL_LINE
+      exit (EXIT_FAILURE); // LCOV_EXCL_LINE
     }
   } catch (ParseError& e) {
     LOG_S(ERROR) << "tipc: " << e.what();

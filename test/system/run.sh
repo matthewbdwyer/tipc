@@ -128,7 +128,7 @@ input=iotests/main.tip
 expected=iotests/main.tip.ll
 ${TIPC} --asm $input
 if [ ! -f $expected ]; then
-  echo -n "Did not find exepected output, $expected, for input $input" 
+  echo -n "Did not find expected output, $expected, for input $input" 
   ((numfailures++))
 fi 
 rm $expected
@@ -193,11 +193,52 @@ do
   fi 
 done
 
+# Test unwritable output file
+initialize_test
+outputfile=iotests/unwritable
+input=iotests/linkedlist.tip
+${TIPC} --da=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
+grep "failed to open" ${SCRATCH_DIR}/unwritable.out > ${SCRATCH_DIR}/unwritable.grep
+if [[ ! -s ${SCRATCH_DIR}/unwritable.grep ]]; then
+  echo -n "Test differences for: $outputfile"
+  echo $i
+  cat ${SCRATCH_DIR}/$outputfile.grep
+  ((numfailures++))
+fi 
+
 # Logging test 
-#   kick the tires on logging to make sure there are null pointer derefs
+#   enable logging for a basic smoke test
 initialize_test
 ${TIPC} -pt -log=/dev/null selftests/polyfactorial.tip &>/dev/null 
 
+# Test AST visualizer
+initialize_test
+input=iotests/linkedlist.tip
+output=${SCRATCH_DIR}/linkedlist.dot
+expected_output=iotests/linkedlist.dot
+differences=${SCRATCH_DIR}/linkedlist.dot.diff
+${TIPC} --da=$output $input 
+diff $output $expected_output > $differences
+if [ -s $differences ]; then
+  echo "Test differences for: $input" 
+  cat $differences
+  ((numfailures++))
+fi 
+
+initialize_test
+input=selftests/ptr4.tip
+output=${SCRATCH_DIR}/ptr4.dot
+expected_output=selftests/ptr4.dot
+differences=${SCRATCH_DIR}/ptr4.dot.diff
+${TIPC} --da=$output $input 
+diff $output $expected_output > $differences
+if [ -s $differences ]; then
+  echo "Test differences for: $input" 
+  cat $differences
+  ((numfailures++))
+fi 
+
+# Print out the test results
 if [ ${numfailures} -eq "0" ]; then
   echo -n " all " 
   echo -n ${numtests}

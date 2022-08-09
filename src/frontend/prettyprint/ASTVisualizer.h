@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <map>
 #include <SyntaxTree.h>
 
 /*! \brief Constructs a dot graph that can be used to visualize the AST.
@@ -33,6 +34,7 @@ public:
 private:
   std::ostream &os;
   std::stack<ASTNode *> parent;
+  std::map<ASTNode *,std::string> vertexMap;
 
   void connect_node_to_parent(ASTNode * element);
   void declare_node(ASTNode * element, std::string label = "");
