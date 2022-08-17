@@ -196,6 +196,7 @@ done
 # Test unwritable output file
 initialize_test
 outputfile=iotests/unwritable
+chmod a-w $outputfile
 input=iotests/linkedlist.tip
 ${TIPC} --da=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
 grep "failed to open" ${SCRATCH_DIR}/unwritable.out > ${SCRATCH_DIR}/unwritable.grep
