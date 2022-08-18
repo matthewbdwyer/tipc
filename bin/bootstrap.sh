@@ -66,7 +66,8 @@ bootstrap_ubuntu_dependencies() {
     libclang-$LLVM_VERSION-dev \
     libclang1-$LLVM_VERSION \
     clang-format-$LLVM_VERSION \
-    python3-clang-$LLVM_VERSION
+    python3-clang-$LLVM_VERSION \
+    graphviz
 }
 
 
@@ -111,7 +112,8 @@ bootstrap_mac_dependencies() {
     pkg-config \
     llvm@$LLVM_VERSION \
     antlr@$ANTLR_VERSION \
-    lcov
+    lcov \
+    graphviz
 }
 
 
