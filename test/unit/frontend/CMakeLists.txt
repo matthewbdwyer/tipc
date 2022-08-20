@@ -2,12 +2,13 @@ add_executable(frontend_unit_tests)
 target_sources(
   frontend_unit_tests
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/TIPParserTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilderTest.cpp
+		  ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilderTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTPrinterTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTVisualizerTest.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/PreOrderIteratorTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTProgramTest.cpp)
+		  ${CMAKE_CURRENT_SOURCE_DIR}/SyntaxTreeTest.cpp
+		  ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTProgramTest.cpp)
 target_include_directories(
   frontend_unit_tests
   PRIVATE ${CMAKE_SOURCE_DIR}/src/error
