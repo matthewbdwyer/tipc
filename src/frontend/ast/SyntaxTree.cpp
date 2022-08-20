@@ -12,13 +12,12 @@ Iterator SyntaxTree::begin(const std::string &order) {
   // Don't fret, the Iterator class is going to manage this pointer for us.
   PreOrderIterator * testIterator = new PreOrderIterator(*this, false);
   return Iterator(testIterator);
-}  // LCOV_EXCL_LINE
-
+}
 
 Iterator SyntaxTree::end(const std::string &order) {
   PreOrderIterator * testIterator = new PreOrderIterator(*this, true);
   return Iterator(testIterator);
-}   // LCOV_EXCL_LINE
+}
 
 std::vector<SyntaxTree> SyntaxTree::getSubtrees() {
   std::vector<SyntaxTree> subtrees;

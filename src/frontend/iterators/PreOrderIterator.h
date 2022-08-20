@@ -14,13 +14,9 @@ public:
 
   SyntaxTree operator*() override;
 
-  SyntaxTree const operator*() const override;
-
   void operator++() override;
 
   SyntaxTree *operator->() override;
-
-  SyntaxTree const *operator->() const override;
 
   bool operator==(const IteratorImpl &rhs) const override;
 
