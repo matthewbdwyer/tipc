@@ -5,7 +5,8 @@ target_sources(
 		  ${CMAKE_CURRENT_SOURCE_DIR}/ASTBuilderTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTPrinterTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTVisualizerTest.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
+		  ${CMAKE_CURRENT_SOURCE_DIR}/IteratorTest.cpp
+		  ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/PreOrderIteratorTest.cpp
 		  ${CMAKE_CURRENT_SOURCE_DIR}/SyntaxTreeTest.cpp
 		  ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTProgramTest.cpp)

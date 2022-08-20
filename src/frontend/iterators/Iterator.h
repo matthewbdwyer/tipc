@@ -21,15 +21,11 @@ public:
 
   SyntaxTree operator* ();
 
-  SyntaxTree const operator* () const;
-
   Iterator &operator++ ();
 
   Iterator operator++ (int);
 
   SyntaxTree *operator-> ();
-
-  SyntaxTree const *operator-> () const;
 
   bool operator== (const Iterator &rhs);
 

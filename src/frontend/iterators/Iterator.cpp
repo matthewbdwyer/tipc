@@ -12,10 +12,6 @@ SyntaxTree Iterator::operator*() {
   return *(*iteratorImpl);
 }
 
-SyntaxTree const Iterator::operator*() const {
-  return *(*iteratorImpl);
-}
-
 Iterator &Iterator::operator++() {
   ++(*iteratorImpl);
   return *this;
@@ -28,10 +24,6 @@ Iterator Iterator::operator++(int) {
 }
 
 SyntaxTree *Iterator::operator->() {
-  return iteratorImpl->operator->();
-}
-
-SyntaxTree const *Iterator::operator->() const {
   return iteratorImpl->operator->();
 }
 
