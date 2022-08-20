@@ -8,14 +8,14 @@ namespace IteratorUtils {
    *  Equality means of the same type and at the same point in the traversal process.
    */
   template<typename T>
-  bool are_equal(T *lhs, const IteratorImpl &rhs) {
+  bool are_equal(T const *lhs, const IteratorImpl &rhs) {
     // Different iterator implementations cannot be equal.
     auto rhs_downcast = dynamic_cast<decltype(lhs)>(&rhs);
     if(rhs_downcast == nullptr) {
       return false;
     }
 
-    // If the underlying trees roots are different then the iterators are not equal.
+    // If the underlying trees roots are different, then the iterators are not equal.
     SyntaxTree const &lhs_tree = lhs->get_tree();
     SyntaxTree const &rhs_tree = rhs_downcast->get_tree();
     if(lhs_tree.getRoot() != rhs_tree.getRoot()) {
