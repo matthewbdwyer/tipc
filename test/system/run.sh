@@ -116,9 +116,8 @@ ${TIPC} -pp -ps iotests/fib.tip >${SCRATCH_DIR}/fib.ppps
 diff iotests/fib.ppps ${SCRATCH_DIR}/fib.ppps >${SCRATCH_DIR}/fib.diff
 if [[ -s ${SCRATCH_DIR}/fib.diff ]]
 then
-  echo -n "Test differences for : " 
-  echo $i
-  cat fib.diff
+  echo "Test differences for : iotests/fib.tip"
+  cat ${SCRATCH_DIR}/fib.diff
   ((numfailures++))
 fi 
 
