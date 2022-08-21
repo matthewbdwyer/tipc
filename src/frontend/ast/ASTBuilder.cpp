@@ -160,9 +160,8 @@ Any ASTBuilder::visitNegNumber(TIPParser::NegNumberContext *ctx) {
  * This might be improved by restructuring the grammar, but then another
  * mechanism for handling operator precedence would be needed.
  */
-Any ASTBuilder::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
-  std::string op = opString(ctx->op->getType());
-
+template <typename T>
+void ASTBuilder::visitBinaryExpr(T* ctx, const std::string& op) {
   visit(ctx->expr(0));
   auto lhs = std::move(visitedExpr);
 
@@ -176,64 +175,26 @@ Any ASTBuilder::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
   // Set source location 
   visitedExpr->setLocation(ctx->getStart()->getLine(), 
                            ctx->getStart()->getCharPositionInLine());
+}
+
+Any ASTBuilder::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
+  visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
 }
 
 Any ASTBuilder::visitRelationalExpr(TIPParser::RelationalExprContext *ctx) {
-  std::string op = opString(ctx->op->getType());
-
-  visit(ctx->expr(0));
-  auto lhs = std::move(visitedExpr);
-
-  visit(ctx->expr(1));
-  auto rhs = std::move(visitedExpr);
-
-  visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
-
-  LOG_S(1) << "Built AST node " << *visitedExpr;
-
-  // Set source location 
-  visitedExpr->setLocation(ctx->getStart()->getLine(), 
-                           ctx->getStart()->getCharPositionInLine());
+  visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
 }
 
 Any ASTBuilder::visitMultiplicativeExpr(
     TIPParser::MultiplicativeExprContext *ctx) {
-  std::string op = opString(ctx->op->getType());
-
-  visit(ctx->expr(0));
-  auto lhs = std::move(visitedExpr);
-
-  visit(ctx->expr(1));
-  auto rhs = std::move(visitedExpr);
-
-  visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
-
-  LOG_S(1) << "Built AST node " << *visitedExpr;
-
-  // Set source location 
-  visitedExpr->setLocation(ctx->getStart()->getLine(), 
-                           ctx->getStart()->getCharPositionInLine());
+  visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
 }
 
 Any ASTBuilder::visitEqualityExpr(TIPParser::EqualityExprContext *ctx) {
-  std::string op = opString(ctx->op->getType());
-
-  visit(ctx->expr(0));
-  auto lhs = std::move(visitedExpr);
-
-  visit(ctx->expr(1));
-  auto rhs = std::move(visitedExpr);
-
-  visitedExpr = std::make_unique<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
-
-  LOG_S(1) << "Built AST node " << *visitedExpr;
-
-  // Set source location 
-  visitedExpr->setLocation(ctx->getStart()->getLine(), 
-                           ctx->getStart()->getCharPositionInLine());
+  visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
 }
 

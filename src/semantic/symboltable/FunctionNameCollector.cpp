@@ -14,9 +14,8 @@ std::map<std::string, ASTDeclNode*> FunctionNameCollector::build(ASTProgram* p) 
 bool FunctionNameCollector::visit(ASTFunction * element) {
   auto decl = element->getDecl();
   // check to see if the name has been declared
-  if (fMap.count(decl->getName()) == 0) {
-    fMap.insert(std::pair<std::string, ASTDeclNode*>(decl->getName(), decl));
-  } else {
+  auto [_, success] = fMap.try_emplace(decl->getName(), decl);
+  if (!success) { // insertion is unsuccessful -> name already declared -> throws error
     throw SemanticError("Symbol error on line " + std::to_string(decl->getLine()) + ": function name " + decl->getName() + " already declared\n");
   }
   return false;
