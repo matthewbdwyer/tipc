@@ -93,6 +93,9 @@ Collaboration diagram for ASTFunAppExpr:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a30f3fa0b21477845a52ccd88e7cb6b8c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunAppExpr.html#a30f3fa0b21477845a52ccd88e7cb6b8c">getChildren</a> () override</td></tr>
+<tr class="memdesc:a30f3fa0b21477845a52ccd88e7cb6b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return all of the children for the node.  <a href="#a30f3fa0b21477845a52ccd88e7cb6b8c">More...</a><br /></td></tr>
+<tr class="separator:a30f3fa0b21477845a52ccd88e7cb6b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb1d734df0b0f6a112ba3a94fa42885f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunAppExpr.html#afb1d734df0b0f6a112ba3a94fa42885f">ASTFunAppExpr</a> (std::unique_ptr&lt; <a class="el" href="classASTExpr.html">ASTExpr</a> &gt; FUN, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTExpr.html">ASTExpr</a> &gt;&gt; ACTUALS)</td></tr>
 <tr class="separator:afb1d734df0b0f6a112ba3a94fa42885f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b994f76eddc29c976572d94aca66068"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classASTExpr.html">ASTExpr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunAppExpr.html#a7b994f76eddc29c976572d94aca66068">getFunction</a> () const</td></tr>
@@ -131,9 +134,6 @@ Protected Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">ASTFunAppExpr::ASTFunAppExpr </td>
@@ -153,11 +153,6 @@ Protected Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -245,6 +240,37 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30f3fa0b21477845a52ccd88e7cb6b8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30f3fa0b21477845a52ccd88e7cb6b8c">&#9670;&nbsp;</a></span>getChildren()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt; ASTFunAppExpr::getChildren </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return all of the children for the node. </p>
+<p>This is not a pure virtual function so subclasses can selectively override it.</p>
+<dl class="section return"><dt>Returns</dt><dd>a collection of the nodes children. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classASTNode.html#a95fdb16e2b84e7eaba2583f2bdfb019d">ASTNode</a>.</p>
 
 </div>
 </div>

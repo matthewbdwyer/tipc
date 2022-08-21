@@ -28,5 +28,6 @@ var searchData=
   ['aststmt',['ASTStmt',['../classASTStmt.html',1,'']]],
   ['astvariableexpr',['ASTVariableExpr',['../classASTVariableExpr.html',1,'']]],
   ['astvisitor',['ASTVisitor',['../classASTVisitor.html',1,'']]],
+  ['astvisualizer',['ASTVisualizer',['../classASTVisualizer.html',1,'']]],
   ['astwhilestmt',['ASTWhileStmt',['../classASTWhileStmt.html',1,'']]]
 ];

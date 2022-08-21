@@ -1,7 +1,7 @@
 <map id="/home/runner/work/tipc/tipc/src/semantic/symboltable/FunctionNameCollector.cpp" name="/home/runner/work/tipc/tipc/src/semantic/symboltable/FunctionNameCollector.cpp">
-<area shape="rect" id="node2" href="$FunctionNameCollector_8h.html" title="FunctionNameCollector.h" alt="" coords="2134,109,2318,136"/>
-<area shape="rect" id="node38" href="$SemanticError_8h.html" title="SemanticError.h" alt="" coords="2471,109,2597,136"/>
-<area shape="rect" id="node3" href="$ASTVisitor_8h.html" title="ASTVisitor.h" alt="" coords="1916,184,2016,211"/>
+<area shape="rect" id="node2" href="$FunctionNameCollector_8h.html" title="FunctionNameCollector.h" alt="" coords="1491,109,1675,136"/>
+<area shape="rect" id="node39" href="$SemanticError_8h.html" title="SemanticError.h" alt="" coords="1973,109,2098,136"/>
+<area shape="rect" id="node3" href="$ASTVisitor_8h.html" title="ASTVisitor.h" alt="" coords="1533,184,1633,211"/>
 <area shape="rect" id="node4" href="$AST_8h.html" title="AST.h" alt="" coords="1419,259,1476,285"/>
 <area shape="rect" id="node5" href="$ASTAccessExpr_8h.html" title="ASTAccessExpr.h" alt="" coords="1199,408,1330,435"/>
 <area shape="rect" id="node6" href="$ASTExpr_8h.html" title="ASTExpr.h" alt="" coords="1372,483,1459,509"/>
@@ -29,5 +29,5 @@
 <area shape="rect" id="node35" href="$ASTReturnStmt_8h.html" title="ASTReturnStmt.h" alt="" coords="668,408,800,435"/>
 <area shape="rect" id="node36" href="$ASTVariableExpr_8h.html" title="ASTVariableExpr.h" alt="" coords="1063,333,1203,360"/>
 <area shape="rect" id="node37" href="$ASTWhileStmt_8h.html" title="ASTWhileStmt.h" alt="" coords="824,408,951,435"/>
-<area shape="rect" id="node39" href="$Error_8h.html" title="Error.h" alt="" coords="2594,184,2658,211"/>
+<area shape="rect" id="node40" href="$Error_8h.html" title="Error.h" alt="" coords="2141,184,2205,211"/>
 </map>

@@ -76,8 +76,8 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a7d8ad19021449e663334e3d083d70a90"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="frontend_2CMakeLists_8txt.html#a7d8ad19021449e663334e3d083d70a90">antlr_target</a> (TIPGrammar TIP.g4 VISITOR) set_property(GLOBAL PROPERTY GrammarIncludeDir $</td></tr>
 <tr class="separator:a7d8ad19021449e663334e3d083d70a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a147adbd1a94634dca0f9d5ccc0a6fd58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="frontend_2CMakeLists_8txt.html#a147adbd1a94634dca0f9d5ccc0a6fd58">add_library</a> (antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS}) target_link_libraries(antlrgen PRIVATE antlr4_static coverage_config) <a class="el" href="semantic_2CMakeLists_8txt.html#a117509486df77eae6a3a8422b0ae5fec">add_subdirectory</a>(ast) <a class="el" href="semantic_2CMakeLists_8txt.html#a117509486df77eae6a3a8422b0ae5fec">add_subdirectory</a>(prettyprint) add_library(frontend) target_sources(frontend PRIVATE $</td></tr>
-<tr class="separator:a147adbd1a94634dca0f9d5ccc0a6fd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1e97e47aee2e122751525061546f792"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="frontend_2CMakeLists_8txt.html#ae1e97e47aee2e122751525061546f792">add_library</a> (antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS} iterators/Iterator.h) target_link_libraries(antlrgen PRIVATE antlr4_static coverage_config) <a class="el" href="semantic_2CMakeLists_8txt.html#a117509486df77eae6a3a8422b0ae5fec">add_subdirectory</a>(ast) <a class="el" href="semantic_2CMakeLists_8txt.html#a117509486df77eae6a3a8422b0ae5fec">add_subdirectory</a>(iterators) <a class="el" href="semantic_2CMakeLists_8txt.html#a117509486df77eae6a3a8422b0ae5fec">add_subdirectory</a>(prettyprint) add_library(frontend) target_sources(frontend PRIVATE $</td></tr>
+<tr class="separator:ae1e97e47aee2e122751525061546f792"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a8d3c3518d793541417a4845125da1ae1"></a>
@@ -95,8 +95,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a147adbd1a94634dca0f9d5ccc0a6fd58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a147adbd1a94634dca0f9d5ccc0a6fd58">&#9670;&nbsp;</a></span>add_library()</h2>
+<a id="ae1e97e47aee2e122751525061546f792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1e97e47aee2e122751525061546f792">&#9670;&nbsp;</a></span>add_library()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -104,8 +104,8 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">add_library </td>
           <td>(</td>
-          <td class="paramtype">antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS}&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS} iterators/Iterator.&#160;</td>
+          <td class="paramname"><em>h</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

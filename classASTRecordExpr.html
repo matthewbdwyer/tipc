@@ -93,6 +93,9 @@ Collaboration diagram for ASTRecordExpr:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a27ad7c59482be5de2c0620d84e07d03c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTRecordExpr.html#a27ad7c59482be5de2c0620d84e07d03c">getChildren</a> () override</td></tr>
+<tr class="memdesc:a27ad7c59482be5de2c0620d84e07d03c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return all of the children for the node.  <a href="#a27ad7c59482be5de2c0620d84e07d03c">More...</a><br /></td></tr>
+<tr class="separator:a27ad7c59482be5de2c0620d84e07d03c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2472364ace3ca3f1c8da4fbfab91ea2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTRecordExpr.html#a2472364ace3ca3f1c8da4fbfab91ea2d">ASTRecordExpr</a> (std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTFieldExpr.html">ASTFieldExpr</a> &gt;&gt; FIELDS)</td></tr>
 <tr class="separator:a2472364ace3ca3f1c8da4fbfab91ea2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add890f84f05aff33ca331058d0ce0471"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classASTFieldExpr.html">ASTFieldExpr</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTRecordExpr.html#add890f84f05aff33ca331058d0ce0471">getFields</a> () const</td></tr>
@@ -129,9 +132,6 @@ Protected Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">ASTRecordExpr::ASTRecordExpr </td>
@@ -141,11 +141,6 @@ Protected Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -216,6 +211,37 @@ Protected Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>LLVM value holding an representation of the generated code. </dd></dl>
 
 <p>Implements <a class="el" href="classASTNode.html#a5cd734ea377a036218801111be59f4c2">ASTNode</a>.</p>
+
+</div>
+</div>
+<a id="a27ad7c59482be5de2c0620d84e07d03c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27ad7c59482be5de2c0620d84e07d03c">&#9670;&nbsp;</a></span>getChildren()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt; ASTRecordExpr::getChildren </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return all of the children for the node. </p>
+<p>This is not a pure virtual function so subclasses can selectively override it.</p>
+<dl class="section return"><dt>Returns</dt><dd>a collection of the nodes children. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classASTNode.html#a95fdb16e2b84e7eaba2583f2bdfb019d">ASTNode</a>.</p>
 
 </div>
 </div>

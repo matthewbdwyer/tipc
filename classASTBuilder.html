@@ -93,6 +93,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8865ba36ea7c4940faf6fdbb537ee246"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classASTProgram.html">ASTProgram</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTBuilder.html#a8865ba36ea7c4940faf6fdbb537ee246">build</a> (TIPParser::ProgramContext *ctx)</td></tr>
 <tr class="memdesc:a8865ba36ea7c4940faf6fdbb537ee246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds an instance of <a class="el" href="classASTProgram.html" title="Class for a program which is a name and a list of functions. ">ASTProgram</a> from an ANTLR4 parse tree.  <a href="#a8865ba36ea7c4940faf6fdbb537ee246">More...</a><br /></td></tr>
 <tr class="separator:a8865ba36ea7c4940faf6fdbb537ee246"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6481aa958451322f7fc5a9b327258b22"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a6481aa958451322f7fc5a9b327258b22"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classASTBuilder.html#a6481aa958451322f7fc5a9b327258b22">visitBinaryExpr</a> (T *ctx, const std::string &amp;op)</td></tr>
+<tr class="separator:a6481aa958451322f7fc5a9b327258b22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb9915dbd6084d7ecc1fbbe8bbd1edb8"><td class="memItemLeft" align="right" valign="top">Any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTBuilder.html#adb9915dbd6084d7ecc1fbbe8bbd1edb8">visitFunction</a> (TIPParser::FunctionContext *ctx) override</td></tr>
 <tr class="separator:adb9915dbd6084d7ecc1fbbe8bbd1edb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dfcf3a4caef62f37507e7161fce2c7b"><td class="memItemLeft" align="right" valign="top">Any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTBuilder.html#a6dfcf3a4caef62f37507e7161fce2c7b">visitNegNumber</a> (TIPParser::NegNumberContext *ctx) override</td></tr>
@@ -293,6 +296,37 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6481aa958451322f7fc5a9b327258b22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6481aa958451322f7fc5a9b327258b22">&#9670;&nbsp;</a></span>visitBinaryExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void ASTBuilder::visitBinaryExpr </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>op</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>a helper function to build binary expressions </p>
 
 </div>
 </div>

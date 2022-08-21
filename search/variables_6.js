@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['visitedtypes',['visitedTypes',['../classSubstituter.html#aef48964e562c82df137be79343addacf',1,'Substituter']]]
+  ['stack',['stack',['../classPreOrderIterator.html#ad33792f8271bc704dd32eaeea1c74696',1,'PreOrderIterator']]]
 ];

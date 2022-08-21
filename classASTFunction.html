@@ -91,8 +91,13 @@ Collaboration diagram for ASTFunction:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0c874b6bc06f0113e93942bb399169fe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunction.html#a0c874b6bc06f0113e93942bb399169fe">ASTFunction</a> (std::unique_ptr&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> &gt; DECL, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> &gt;&gt; FORMALS, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTDeclStmt.html">ASTDeclStmt</a> &gt;&gt; DECLS, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTStmt.html">ASTStmt</a> &gt;&gt; BODY)</td></tr>
-<tr class="separator:a0c874b6bc06f0113e93942bb399169fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0630f8b345fc797ce48afd0b9608fefc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunction.html#a0630f8b345fc797ce48afd0b9608fefc">getChildren</a> () override</td></tr>
+<tr class="memdesc:a0630f8b345fc797ce48afd0b9608fefc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return all of the children for the node.  <a href="#a0630f8b345fc797ce48afd0b9608fefc">More...</a><br /></td></tr>
+<tr class="separator:a0630f8b345fc797ce48afd0b9608fefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88ae9da77e8abff55009db3d5eb58955"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunction.html#a88ae9da77e8abff55009db3d5eb58955">ASTFunction</a> (std::unique_ptr&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> &gt; DECL, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> &gt;&gt; FORMALS, const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTDeclStmt.html">ASTDeclStmt</a> &gt;&gt; &amp;DECLS, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTStmt.html">ASTStmt</a> &gt;&gt; BODY)</td></tr>
+<tr class="separator:a88ae9da77e8abff55009db3d5eb58955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2beca35d3a08bef82409d2429bf8984"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunction.html#ac2beca35d3a08bef82409d2429bf8984">~ASTFunction</a> ()=default</td></tr>
+<tr class="separator:ac2beca35d3a08bef82409d2429bf8984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e137b58b20178b2b8493c116640a74a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunction.html#a1e137b58b20178b2b8493c116640a74a">getDecl</a> () const</td></tr>
 <tr class="separator:a1e137b58b20178b2b8493c116640a74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0f4532488bb6ed7a916e2cd595f7bb3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTFunction.html#ac0f4532488bb6ed7a916e2cd595f7bb3">getName</a> () const</td></tr>
@@ -128,14 +133,11 @@ Protected Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for defining the signature, local declarations, and a body of a function. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a0c874b6bc06f0113e93942bb399169fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c874b6bc06f0113e93942bb399169fe">&#9670;&nbsp;</a></span>ASTFunction()</h2>
+<a id="a88ae9da77e8abff55009db3d5eb58955"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88ae9da77e8abff55009db3d5eb58955">&#9670;&nbsp;</a></span>ASTFunction()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">ASTFunction::ASTFunction </td>
@@ -152,7 +154,7 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTDeclStmt.html">ASTDeclStmt</a> &gt;&gt;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classASTDeclStmt.html">ASTDeclStmt</a> &gt;&gt; &amp;&#160;</td>
           <td class="paramname"><em>DECLS</em>, </td>
         </tr>
         <tr>
@@ -167,9 +169,29 @@ Protected Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac2beca35d3a08bef82409d2429bf8984"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2beca35d3a08bef82409d2429bf8984">&#9670;&nbsp;</a></span>~ASTFunction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ASTFunction::~ASTFunction </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -242,6 +264,37 @@ Protected Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>LLVM value holding an representation of the generated code. </dd></dl>
 
 <p>Implements <a class="el" href="classASTNode.html#a5cd734ea377a036218801111be59f4c2">ASTNode</a>.</p>
+
+</div>
+</div>
+<a id="a0630f8b345fc797ce48afd0b9608fefc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0630f8b345fc797ce48afd0b9608fefc">&#9670;&nbsp;</a></span>getChildren()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt; ASTFunction::getChildren </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return all of the children for the node. </p>
+<p>This is not a pure virtual function so subclasses can selectively override it.</p>
+<dl class="section return"><dt>Returns</dt><dd>a collection of the nodes children. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classASTNode.html#a95fdb16e2b84e7eaba2583f2bdfb019d">ASTNode</a>.</p>
 
 </div>
 </div>

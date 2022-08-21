@@ -6,5 +6,7 @@ var searchData=
   ['substituter_2ecpp',['Substituter.cpp',['../Substituter_8cpp.html',1,'']]],
   ['substituter_2eh',['Substituter.h',['../Substituter_8h.html',1,'']]],
   ['symboltable_2ecpp',['SymbolTable.cpp',['../SymbolTable_8cpp.html',1,'']]],
-  ['symboltable_2eh',['SymbolTable.h',['../SymbolTable_8h.html',1,'']]]
+  ['symboltable_2eh',['SymbolTable.h',['../SymbolTable_8h.html',1,'']]],
+  ['syntaxtree_2ecpp',['SyntaxTree.cpp',['../SyntaxTree_8cpp.html',1,'']]],
+  ['syntaxtree_2eh',['SyntaxTree.h',['../SyntaxTree_8h.html',1,'']]]
 ];

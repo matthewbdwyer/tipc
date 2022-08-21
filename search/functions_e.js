@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rawrefs',['rawRefs',['../ASTinternal_8h.html#af54e66f9f1ed5cb2f78a58d065ae373d',1,'ASTinternal.h']]]
+  ['quick_5funion',['quick_union',['../classUnionFind.html#af40bb3f8d746b0549cd8743bcc3f8734',1,'UnionFind']]]
 ];

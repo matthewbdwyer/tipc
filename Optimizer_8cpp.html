@@ -68,11 +68,16 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="Optimizer_8h_source.html">Optimizer.h</a>&quot;</code><br />
+<code>#include &quot;llvm/Pass.h&quot;</code><br />
+<code>#include &quot;llvm/IR/Function.h&quot;</code><br />
+<code>#include &quot;llvm/Support/raw_ostream.h&quot;</code><br />
 <code>#include &quot;llvm/IR/LegacyPassManager.h&quot;</code><br />
+<code>#include &quot;llvm/Transforms/IPO/PassManagerBuilder.h&quot;</code><br />
 <code>#include &quot;llvm/Transforms/Utils.h&quot;</code><br />
 <code>#include &quot;llvm/Transforms/InstCombine/InstCombine.h&quot;</code><br />
 <code>#include &quot;llvm/Transforms/Scalar.h&quot;</code><br />
 <code>#include &quot;llvm/Transforms/Scalar/GVN.h&quot;</code><br />
+<code>#include &quot;loguru.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Optimizer.cpp:</div>
 <div class="dyncontent">

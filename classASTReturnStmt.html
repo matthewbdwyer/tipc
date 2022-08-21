@@ -93,6 +93,9 @@ Collaboration diagram for ASTReturnStmt:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a54c27e4f04660688cbe8838828d98d5f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTReturnStmt.html#a54c27e4f04660688cbe8838828d98d5f">getChildren</a> () override</td></tr>
+<tr class="memdesc:a54c27e4f04660688cbe8838828d98d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return all of the children for the node.  <a href="#a54c27e4f04660688cbe8838828d98d5f">More...</a><br /></td></tr>
+<tr class="separator:a54c27e4f04660688cbe8838828d98d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4069e5fa4a2b6b67714a52b8fb278a6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTReturnStmt.html#ae4069e5fa4a2b6b67714a52b8fb278a6">ASTReturnStmt</a> (std::unique_ptr&lt; <a class="el" href="classASTExpr.html">ASTExpr</a> &gt; ARG)</td></tr>
 <tr class="separator:ae4069e5fa4a2b6b67714a52b8fb278a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32e1fd48149ec109d94e1261d2d4b826"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classASTExpr.html">ASTExpr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTReturnStmt.html#a32e1fd48149ec109d94e1261d2d4b826">getArg</a> () const</td></tr>
@@ -241,6 +244,37 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a54c27e4f04660688cbe8838828d98d5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54c27e4f04660688cbe8838828d98d5f">&#9670;&nbsp;</a></span>getChildren()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classASTNode.html">ASTNode</a> &gt; &gt; ASTReturnStmt::getChildren </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return all of the children for the node. </p>
+<p>This is not a pure virtual function so subclasses can selectively override it.</p>
+<dl class="section return"><dt>Returns</dt><dd>a collection of the nodes children. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classASTNode.html#a95fdb16e2b84e7eaba2583f2bdfb019d">ASTNode</a>.</p>
 
 </div>
 </div>
