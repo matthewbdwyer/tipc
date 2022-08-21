@@ -87,20 +87,16 @@ Building tipc</h2>
 <li><code>make</code></li>
 </ol>
 <p>The build process will download an up to date version of ANTLR4 if needed, build the C++ target for ANTLR4, and then build all of <code>tipc</code> including its substantial body of unit tests. This may take some time - to speed it up use multiple threads in the <code>make</code> command, e.g., <code>make -j6</code>.</p>
-<p>You may see some warnings, e.g.,</p><ul>
-<li>CMake policy warnings</li>
-<li>compile warnings for ignored type attribute ATN</li>
-</ul>
-<p>These are expected in the current version of the project; we will work to resolve them in future releases.</p>
+<p>You may see some warnings, e.g., CMake policy warnings, due to some of the packages we use in the project. As those projects are updated, to avoid CMake feature deprecation, these will go away.</p>
 <p>When finished the <code>tipc</code> executable will be located in <code>build/src/</code>. You can copy it to a more convenient location if you like, but a number of scripts in the project expect it to be in this location so don't move it.</p>
-<p>The project includes more than 300 unit tests grouped into several executables. The project also includes more than 70 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a <code>runtests.sh</code> script provided in the <code>bin</code> directory. You can run this script to invoke the entire collection of tests. See the <code>README</code> in the bin directory for more information.</p>
+<p>The project includes more than 300 unit tests grouped into several executables. The project also includes more than 90 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a <code>runtests.sh</code> script provided in the <code>bin</code> directory. You can run this script to invoke the entire collection of tests. See the <code>README</code> in the bin directory for more information.</p>
 <p>All of the tests should pass.</p>
 <h3><a class="anchor" id="autotoc_md4"></a>
 Ubuntu Linux</h3>
 <p>Our continuous integration process builds on both Ubuntu 18.04 and 20.04, so these are well-supported. We do not support other linux distributions, but we know that people in the past have ported <code>tipc</code> to different distributions.</p>
 <h3><a class="anchor" id="autotoc_md5"></a>
 Mac OS</h3>
-<p>Our continuous integration process builds on Mac OS 10.15 and we regularly build and test on Mac OS 11.4, so modern versions of Mac OS are well-supported. <code>tipc</code> builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.</p>
+<p>Our continuous integration process builds on Mac OS 12, so modern versions of Mac OS are well-supported. <code>tipc</code> builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.</p>
 <h3><a class="anchor" id="autotoc_md6"></a>
 Windows Subsystem for Linux</h3>
 <p>If you are using a Windows machine, tipc can be built in the Windows Subsystem for Linux (WSL). <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2">Here</a> are instructions to install WSL and upgrade to WSL2. It is highly recommended to upgrade to WSL2. Once installed, you should install <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2">Ubuntu 20.04</a>. Once finished, you can open a virtual instance of Ubuntu and follow the instructions above to build tipc.</p>
