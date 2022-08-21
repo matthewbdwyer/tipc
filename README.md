@@ -33,15 +33,11 @@ After cloning this repository you can build the compiler by moving to into the t
 
 The build process will download an up to date version of ANTLR4 if needed, build the C++ target for ANTLR4, and then build all of `tipc` including its substantial body of unit tests.  This may take some time - to speed it up use multiple threads in the `make` command, e.g., `make -j6`.
 
-You may see some warnings, e.g.,
-  * CMake policy warnings
-  * compile warnings for ignored type attribute ATN
-
-These are expected in the current version of the project; we will work to resolve them in future releases.
+You may see some warnings, e.g., CMake policy warnings, due to some of the packages we use in the project.  As those projects are updated, to avoid CMake feature deprecation, these will go away.
 
 When finished the `tipc` executable will be located in `build/src/`.  You can copy it to a more convenient location if you like, but a number of scripts in the project expect it to be in this location so don't move it.
 
-The project includes more than 300 unit tests grouped into several executables. The project also includes more than 70 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.  You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for more information.  
+The project includes more than 300 unit tests grouped into several executables. The project also includes more than 90 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.  You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for more information.  
 
 All of the tests should pass.
 
@@ -51,7 +47,7 @@ Our continuous integration process builds on both Ubuntu 18.04 and 20.04, so the
 
 ### Mac OS
 
-Our continuous integration process builds on Mac OS 10.15 and we regularly build and test on Mac OS 11.4, so modern versions of Mac OS are well-supported.  `tipc` builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.  
+Our continuous integration process builds on Mac OS 12, so modern versions of Mac OS are well-supported.  `tipc` builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.  
 
 ### Windows Subsystem for Linux
 
