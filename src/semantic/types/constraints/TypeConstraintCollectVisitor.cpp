@@ -11,7 +11,7 @@ std::unique_ptr<ConstraintHandler> TypeConstraintCollectVisitor::buildConstraint
 std::vector<TypeConstraint> &TypeConstraintCollectVisitor::getCollectedConstraints() {
     auto handler = dynamic_cast<ConstraintCollector *>(constraintHandler.get());
     if(!handler) {
-        assert(0);
+        assert(0);  // LCOV_EXCL_LINE
     }
     return handler->getCollectedConstraints();
 }

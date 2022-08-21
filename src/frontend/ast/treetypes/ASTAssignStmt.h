@@ -6,8 +6,9 @@
 /*! \brief Class for assignment
  */
 class ASTAssignStmt : public ASTStmt {
-  std::unique_ptr<ASTExpr> LHS, RHS;
+  std::shared_ptr<ASTExpr> LHS, RHS;
 public:
+  std::vector<std::shared_ptr<ASTNode>> getChildren() override;
   ASTAssignStmt(std::unique_ptr<ASTExpr> LHS, std::unique_ptr<ASTExpr> RHS)
       : LHS(std::move(LHS)), RHS(std::move(RHS)) {}
   ASTExpr* getLHS() const { return LHS.get(); }

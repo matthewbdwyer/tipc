@@ -10,6 +10,11 @@ class TipTypeVisitor;
  * \brief Abstract base class of all types
  *
  * Defines equality comparisons, output operator, and accept for visitor.
+ * Type variables and operators, like mu, directly subtype TipType.
+ * All other types, e.g., ints, functions, etc., are subtypes of TipCons,
+ * since this allows type unification to just handle TipCons.  Consequently,
+ * it means that if you want to extend the types supported you will need to
+ * subtype TipCons.
  */
 class TipType {
 public:

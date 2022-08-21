@@ -20,4 +20,8 @@ if [ ! -f "${RTLIB}/tip_rtlib.bc" ]; then
 fi
 
 ${TIPC} $@
-${TIPCLANG} -w ${@: -1}.bc ${RTLIB}/tip_rtlib.bc -o `basename ${@: -1} .tip`
+
+# Skip the link step if help is requested 
+if [ $1 != "--help" ]; then
+  ${TIPCLANG} -w ${@: -1}.bc ${RTLIB}/tip_rtlib.bc -o `basename ${@: -1} .tip`
+fi

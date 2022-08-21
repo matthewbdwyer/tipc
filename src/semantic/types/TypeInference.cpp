@@ -14,12 +14,17 @@
  * fields.
  */
 std::unique_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable* symbols) {
-  LOG_S(1) <<"Generating Type Constraints";
+  LOG_S(1) << "Performing type inference";
+
   TypeConstraintCollectVisitor visitor(symbols);
   ast->accept(&visitor);
 
+  LOG_S(1) << "Solving type constraints";
+
   auto unifier =  std::make_unique<Unifier>(visitor.getCollectedConstraints());
   unifier->solve();
+
+  LOG_S(1) << "Checking that field accesses are defined";
 
   AbsentFieldChecker::check(ast, unifier.get());
 

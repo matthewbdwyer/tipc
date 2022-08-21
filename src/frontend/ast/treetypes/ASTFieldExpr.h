@@ -6,8 +6,9 @@
  */
 class ASTFieldExpr : public ASTExpr {
   std::string FIELD;
-  std::unique_ptr<ASTExpr> INIT;
+  std::shared_ptr<ASTExpr> INIT;
 public:
+  std::vector<std::shared_ptr<ASTNode>> getChildren() override;
   ASTFieldExpr(const std::string &FIELD, std::unique_ptr<ASTExpr> INIT)
       : FIELD(FIELD), INIT(std::move(INIT)) {}
   std::string getField() const { return FIELD; }

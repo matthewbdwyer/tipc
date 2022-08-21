@@ -4,6 +4,8 @@
 
 #include <sstream>
 
+#include "loguru.hpp"
+
 namespace {
 
 // Return true if expression has an l-value
@@ -27,6 +29,8 @@ bool isAssignable(ASTExpr* e) {
 }
 
 void CheckAssignable::endVisit(ASTAssignStmt* element) {
+  LOG_S(1) << "Checking assignability of " << *element;
+
   if (isAssignable(element->getLHS())) return;
 
   // Assigning through a pointer is also permitted
@@ -45,6 +49,8 @@ void CheckAssignable::endVisit(ASTAssignStmt* element) {
 }
 
 void CheckAssignable::endVisit(ASTRefExpr* element) {
+  LOG_S(1) << "Checking assignability of " << *element;
+
   if (isAssignable(element->getVar())) return;
 
   std::ostringstream oss;
@@ -54,6 +60,7 @@ void CheckAssignable::endVisit(ASTRefExpr* element) {
 }
 
 void CheckAssignable::check(ASTProgram* p) {
+  LOG_S(1) << "Checking assignability";
   CheckAssignable visitor;
   p->accept(&visitor);
 }

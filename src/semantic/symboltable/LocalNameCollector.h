@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTVisitor.h"
+#include <map>
 
 /*! \class LocalNameCollector
  *  \brief Records local names declared in each function and checks for errors.

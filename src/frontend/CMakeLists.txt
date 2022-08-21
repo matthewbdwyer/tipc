@@ -5,11 +5,13 @@ antlr_target(TIPGrammar TIP.g4 VISITOR)
 set_property(GLOBAL PROPERTY GrammarIncludeDir ${ANTLR_TIPGrammar_OUTPUT_DIR})
 
 # Define a target to force the compilation of the ANTLR4 generated output files.
-add_library(antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS})
+add_library(antlrgen STATIC ${ANTLR_TIPGrammar_CXX_OUTPUTS}
+                            iterators/Iterator.h)
 target_link_libraries(antlrgen PRIVATE antlr4_static coverage_config)
 
 # Build the different front end passes
 add_subdirectory(ast)
+add_subdirectory(iterators)
 add_subdirectory(prettyprint)
 
 # Define a library for the front end
@@ -21,6 +23,8 @@ target_include_directories(
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ast
           ${CMAKE_CURRENT_SOURCE_DIR}/ast/treetypes
           ${CMAKE_CURRENT_SOURCE_DIR}/prettyprint
+          ${CMAKE_CURRENT_SOURCE_DIR}/iterators
           ${CMAKE_SOURCE_DIR}/src/error
           ${ANTLR_TIPGrammar_OUTPUT_DIR})
-target_link_libraries(frontend PRIVATE antlrgen ast prettyprint coverage_config)
+target_link_libraries(frontend PRIVATE antlrgen ast prettyprint iterators
+                                       coverage_config)

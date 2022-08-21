@@ -5,7 +5,10 @@
 
 #include <sstream>
 
+#include "loguru.hpp"
+
 std::unique_ptr<SymbolTable> SymbolTable::build(ASTProgram* p) {
+  LOG_S(1) << "Building symbol table";
   auto fMap = FunctionNameCollector::build(p);
   auto lMap = LocalNameCollector::build(p, fMap);
   auto fSet = FieldNameCollector::build(p); 

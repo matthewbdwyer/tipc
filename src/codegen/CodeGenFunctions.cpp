@@ -1,3 +1,6 @@
+
+#include <ASTDeclNode.h>
+
 #include "AST.h"
 #include "SemanticAnalysis.h"
 #include "InternalError.h"
@@ -27,6 +30,8 @@
 #include "llvm/Transforms/Scalar/GVN.h"
 #include "llvm/Transforms/Utils.h"
 
+#include "loguru.hpp"
+
 using namespace llvm;
 
 /*
@@ -43,7 +48,7 @@ using namespace llvm;
  * and especially the CFGSimplification pass, which removes nops and
  * dead blocks.
  *
- * The philosophy of these code generation routines is to rely on the fact
+ * The approach taken in these codegen routines is to rely on the fact
  * that the program is type correct, which is checked in a previous pass.
  * This allows the code generator to infer the type of values accessed
  * in memory based on the nature of the expression, e.g., if we are generating
@@ -186,7 +191,7 @@ llvm::Function *getFunction(std::string Name) {
     // Use type factory to create function from formal type to int
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), FormalTypes, false);
 
-    auto *F = llvm::Function::Create(FT, llvm::Function::ExternalLinkage, Name,
+    auto *F = llvm::Function::Create(FT, llvm::Function::InternalLinkage, Name,
                                      CurrentModule.get());
 
     // assign names to args for readability of generated code
@@ -214,11 +219,14 @@ AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::strin
 
 std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
                                                   std::string programName) {
+  LOG_S(1) << "Generating code for program " << programName;
+
   // Create module to hold generated code
   auto TheModule = std::make_unique<Module>(programName, TheContext);
 
   // Set the default target triple for this platform
-  TheModule->setTargetTriple(llvm::sys::getDefaultTargetTriple());
+  llvm:Triple targetTriple(llvm::sys::getProcessTriple());
+  TheModule->setTargetTriple(targetTriple.str());
 
   // Initialize nop declaration
   nop = Intrinsic::getDeclaration(TheModule.get(), Intrinsic::donothing);
@@ -342,7 +350,8 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
   callocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                      "calloc", CurrentModule.get());
   callocFun->addFnAttr(llvm::Attribute::NoUnwind);
-  callocFun->addAttribute(0, llvm::Attribute::NoAlias);
+
+  callocFun->setAttributes(callocFun->getAttributes().addAttributeAtIndex(callocFun->getContext(), 0, llvm::Attribute::NoAlias));
 
   /* We create a single unified record structure that is capable of representing
    * all records in a TIP program.  While wasteful of memory, this approach is 
@@ -374,9 +383,11 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
 }
 
 llvm::Value* ASTFunction::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   llvm::Function *TheFunction = getFunction(getName());
   if (TheFunction == nullptr) {
-    throw InternalError("failed to declare the function" + getName());
+    throw InternalError("failed to declare the function" + getName()); // LCOV_EXCL_LINE
   }
 
   // create basic block to hold body of function definition
@@ -402,10 +413,10 @@ llvm::Value* ASTFunction::codegen() {
       std::vector<Value *> indices;
       indices.push_back(zeroV); 
       indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), argIdx));
-      auto *gep = Builder.CreateInBoundsGEP(tipInputArray, indices, "inputidx");
+      auto *gep = Builder.CreateInBoundsGEP(tipInputArray->getValueType(), tipInputArray, indices, "inputidx");
 
       // Load the value and store it into the arg's alloca
-      auto *inVal = Builder.CreateLoad(gep, "tipinput" + std::to_string(argIdx++));
+      auto *inVal = Builder.CreateLoad(gep->getType()->getPointerElementType(), gep, "tipinput" + std::to_string(argIdx++));
       Builder.CreateStore(inVal, argAlloc);
 
       // Record name binding to alloca
@@ -425,15 +436,15 @@ llvm::Value* ASTFunction::codegen() {
   // add local declarations to the symbol table
   for (auto const &decl : getDeclarations()) {
     if (decl->codegen() == nullptr) {
-      TheFunction->eraseFromParent();
-      throw InternalError("failed to generate bitcode for the function declarations");
+      TheFunction->eraseFromParent(); // LCOV_EXCL_LINE
+      throw InternalError("failed to generate bitcode for the function declarations"); // LCOV_EXCL_LINE
     }
   }
 
   for (auto &stmt : getStmts()) {
     if (stmt->codegen() == nullptr) {
-      TheFunction->eraseFromParent();
-      throw InternalError("failed to generate bitcode for the function statement");
+      TheFunction->eraseFromParent(); // LCOV_EXCL_LINE
+      throw InternalError("failed to generate bitcode for the function statement"); // LCOV_EXCL_LINE
     }
   }
 
@@ -442,10 +453,14 @@ llvm::Value* ASTFunction::codegen() {
 }  // LCOV_EXCL_LINE
 
 llvm::Value* ASTNumberExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   return ConstantInt::get(Type::getInt64Ty(TheContext), getValue());
-}
+} // LCOV_EXCL_LINE
 
 llvm::Value* ASTBinaryExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *L = getLeft()->codegen();
   Value *R = getRight()->codegen();
   if (L == nullptr || R == nullptr) {
@@ -479,12 +494,14 @@ llvm::Value* ASTBinaryExpr::codegen() {
  * ensure that names obey the scope rules.
  */
 llvm::Value* ASTVariableExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   auto nv = NamedValues.find(getName());
   if (nv != NamedValues.end()) {
     if (lValueGen) {
       return NamedValues[nv->first];
     } else {
-      return Builder.CreateLoad(nv->second, getName().c_str());
+      return Builder.CreateLoad(nv->second->getAllocatedType(), nv->second, getName().c_str());
     }
   }
 
@@ -497,13 +514,15 @@ llvm::Value* ASTVariableExpr::codegen() {
 }
 
 llvm::Value* ASTInputExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   if (inputIntrinsic == nullptr) {
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), false);
     inputIntrinsic = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                             "_tip_input", CurrentModule.get());
   }
   return Builder.CreateCall(inputIntrinsic);
-}
+} // LCOV_EXCL_LINE
 
 /*
  * Function application in TIP can either be through explicitly named
@@ -516,6 +535,8 @@ llvm::Value* ASTInputExpr::codegen() {
  * functions performed during codegen for the Program.
  */
 llvm::Value* ASTFunAppExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   /*
    * Evaluate the function expression - it will resolve to an integer value
    * whether it is a function literal or an expression.
@@ -532,10 +553,11 @@ llvm::Value* ASTFunAppExpr::codegen() {
   std::vector<Value *> indices;
   indices.push_back(zeroV); 
   indices.push_back(funVal);
-  auto *gep = Builder.CreateInBoundsGEP(tipFTable, indices, "ftableidx");
+
+  auto *gep = Builder.CreateInBoundsGEP(tipFTable->getValueType(), tipFTable, indices, "ftableidx");
 
   // Load the function pointer
-  auto *genericFunPtr = Builder.CreateLoad(gep, "genfptr");
+  auto *genericFunPtr = Builder.CreateLoad(gep->getType()->getPointerElementType(), gep, "genfptr");
 
   /*
    * Compute the specific function pointer type based on the actual parameter
@@ -560,7 +582,7 @@ llvm::Value* ASTFunAppExpr::codegen() {
   for (auto const &arg : getActuals()) {
     Value *argVal = arg->codegen();
     if (argVal == nullptr) {
-      throw InternalError("failed to generate bitcode for the argument");
+      throw InternalError("failed to generate bitcode for the argument"); // LCOV_EXCL_LINE
     }
     argsV.push_back(argVal);
   }
@@ -572,6 +594,8 @@ llvm::Value* ASTFunAppExpr::codegen() {
  * Generates a pointer to the allocs arguments (ints, records, ...)
  */
 llvm::Value* ASTAllocExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   allocFlag = true;
   Value *argVal = getInitializer()->codegen();
   allocFlag = false;
@@ -606,6 +630,8 @@ llvm::Value* ASTNullExpr::codegen() {
  *
  */
 llvm::Value* ASTRefExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   lValueGen = true;
   Value *lValue = getVar()->codegen();
   lValueGen = false;
@@ -625,6 +651,8 @@ llvm::Value* ASTRefExpr::codegen() {
  * the value at the pointed-to memory location.
  */
 llvm::Value* ASTDeRefExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   bool isLValue = lValueGen;
 
   if (isLValue) {
@@ -645,7 +673,7 @@ llvm::Value* ASTDeRefExpr::codegen() {
     return address;
   } else {
     // For an r-value, return the value at the address
-    return Builder.CreateLoad(address, "valueAt");
+    return Builder.CreateLoad(address->getType()->getPointerElementType(), address, "valueAt");
   }
 }
 
@@ -654,6 +682,8 @@ llvm::Value* ASTDeRefExpr::codegen() {
  * Builds an instance of the UberRecord using the declared fields
  */
 llvm::Value* ASTRecordExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   //If this is an alloc, we calloc the record
   if(allocFlag){
     //Allocate the a pointer to an uber record
@@ -694,7 +724,7 @@ llvm::Value* ASTRecordExpr::codegen() {
     //We do not give a value to fields that are not explictly set. Thus, accessing them is
     //undefined behavior
     for(auto const &field : getFields()){
-      auto *gep = Builder.CreateStructGEP(allocaRecord, fieldIndex[field->getField()], field->getField());
+      auto *gep = Builder.CreateStructGEP(allocaRecord->getAllocatedType(), allocaRecord, fieldIndex[field->getField()], field->getField());
       auto value = field->codegen();
       Builder.CreateStore(value, gep);
     }
@@ -708,8 +738,10 @@ llvm::Value* ASTRecordExpr::codegen() {
  * Expression for generating the code for the value of a field
  */
 llvm::Value* ASTFieldExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   return this->getInitializer()->codegen();
-}
+} // LCOV_EXCL_LINE
 
 /* record.field Access Expression
  *
@@ -717,6 +749,8 @@ llvm::Value* ASTFieldExpr::codegen() {
  * In an r-value context this returns the value of the field being accessed
  */
 llvm::Value* ASTAccessExpr::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   bool isLValue = lValueGen;
 
   if (isLValue) {
@@ -755,6 +789,8 @@ llvm::Value* ASTDeclNode::codegen() {
 }
 
 llvm::Value* ASTDeclStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   // The LLVM builder records the function we are currently generating
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -776,6 +812,8 @@ llvm::Value* ASTDeclStmt::codegen() {
 }  // LCOV_EXCL_LINE
 
 llvm::Value* ASTAssignStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   // trigger code generation for l-value expressions
   lValueGen = true;
   Value *lValue = getLHS()->codegen();
@@ -793,9 +831,9 @@ llvm::Value* ASTAssignStmt::codegen() {
   return Builder.CreateStore(rValue, lValue);
 }  // LCOV_EXCL_LINE
 
-
-
 llvm::Value* ASTBlockStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *lastStmt = nullptr;
 
   for (auto const &s : getStmts()) {
@@ -824,6 +862,8 @@ llvm::Value* ASTBlockStmt::codegen() {
  * body executes.
  */
 llvm::Value* ASTWhileStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
   /*
@@ -852,7 +892,7 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *CondV = getCondition()->codegen();
     if (CondV == nullptr) {
-      throw InternalError("failed to generate bitcode for the conditional");
+      throw InternalError("failed to generate bitcode for the conditional"); // LCOV_EXCL_LINE
     }
 
     // Convert condition to a bool by comparing non-equal to 0.
@@ -868,7 +908,7 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *BodyV = getBody()->codegen();
     if (BodyV == nullptr) {
-      throw InternalError("failed to generate bitcode for the loop body");
+      throw InternalError("failed to generate bitcode for the loop body"); // LCOV_EXCL_LINE
     }
 
     Builder.CreateBr(HeaderBB);
@@ -896,6 +936,8 @@ llvm::Value* ASTWhileStmt::codegen() {
  * code at that insertion point.
  */
 llvm::Value* ASTIfStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *CondV = getCondition()->codegen();
   if (CondV == nullptr) {
     throw InternalError("failed to generate bitcode for the condition of the if statement");
@@ -932,7 +974,7 @@ llvm::Value* ASTIfStmt::codegen() {
 
     Value *ThenV = getThen()->codegen();
     if (ThenV == nullptr) {
-      throw InternalError("failed to generate bitcode for the then block");
+      throw InternalError("failed to generate bitcode for the then block"); // LCOV_EXCL_LINE
     }
 
     Builder.CreateBr(MergeBB);
@@ -948,7 +990,7 @@ llvm::Value* ASTIfStmt::codegen() {
     if (getElse() != nullptr) {
       ElseV = getElse()->codegen();
       if (ElseV == nullptr) {
-        throw InternalError("failed to generate bitcode for the else block");
+        throw InternalError("failed to generate bitcode for the else block"); // LCOV_EXCL_LINE
       }
     } else {
       Builder.CreateCall(nop);
@@ -964,6 +1006,8 @@ llvm::Value* ASTIfStmt::codegen() {
 }  // LCOV_EXCL_LINE
 
 llvm::Value* ASTOutputStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   if (outputIntrinsic == nullptr) {
     std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), oneInt, false);
@@ -983,6 +1027,8 @@ llvm::Value* ASTOutputStmt::codegen() {
 }
 
 llvm::Value* ASTErrorStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   if (errorIntrinsic == nullptr) {
     std::vector<Type *> oneInt(1, Type::getInt64Ty(TheContext));
     auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), oneInt, false);
@@ -1001,6 +1047,8 @@ llvm::Value* ASTErrorStmt::codegen() {
 }
 
 llvm::Value* ASTReturnStmt::codegen() {
+  LOG_S(1) << "Generating code for " << *this;
+
   Value *argVal = getArg()->codegen();
   return Builder.CreateRet(argVal);
-}
+} // LCOV_EXCL_LINE
