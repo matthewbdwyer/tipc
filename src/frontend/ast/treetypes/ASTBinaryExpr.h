@@ -6,8 +6,9 @@
  */
 class ASTBinaryExpr : public ASTExpr {
   std::string OP;
-  std::unique_ptr<ASTExpr> LEFT, RIGHT;
+  std::shared_ptr<ASTExpr> LEFT, RIGHT;
 public:
+  std::vector<std::shared_ptr<ASTNode>> getChildren() override;
   ASTBinaryExpr(const std::string &OP, std::unique_ptr<ASTExpr> LEFT,
              std::unique_ptr<ASTExpr> RIGHT)
       : OP(OP), LEFT(std::move(LEFT)), RIGHT(std::move(RIGHT)) {}

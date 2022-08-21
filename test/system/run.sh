@@ -19,6 +19,7 @@ numtests=0
 numfailures=0
 
 initialize_test() {
+  echo -n "."
   rm -f ${SCRATCH_DIR}/*
   ((numtests++))
 }
@@ -31,7 +32,7 @@ do
   # test optimized program
   initialize_test
   ${TIPC} $i
-  ${TIPCLANG} $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} &>/dev/null
   exit_code=${?}
@@ -48,7 +49,7 @@ do
   # test unoptimized program
   initialize_test
   ${TIPC} -do $i
-  ${TIPCLANG} $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
 
   ./${base} &>/dev/null
   exit_code=${?}
@@ -67,12 +68,13 @@ done
 for i in iotests/*.expected
 do
   initialize_test
+
   expected="$(basename $i .tip)"
   executable="$(echo $expected | cut -f1 -d-)"
   input="$(echo $expected | cut -f2 -d- | cut -f1 -d.)"
 
   ${TIPC} iotests/$executable.tip
-  ${TIPCLANG} iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
+  ${TIPCLANG} -w iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
 
   ./${executable} $input >iotests/$executable.output 2>iotests/$executable.output
 
@@ -125,7 +127,7 @@ input=iotests/main.tip
 expected=iotests/main.tip.ll
 ${TIPC} --asm $input
 if [ ! -f $expected ]; then
-  echo -n "Did not find exepected output, $expected, for input $input" 
+  echo -n "Did not find expected output, $expected, for input $input" 
   ((numfailures++))
 fi 
 rm $expected
@@ -190,16 +192,59 @@ do
   fi 
 done
 
+# Test unwritable output file
+initialize_test
+outputfile=iotests/unwritable
+chmod a-w $outputfile
+input=iotests/linkedlist.tip
+${TIPC} --da=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
+grep "failed to open" ${SCRATCH_DIR}/unwritable.out > ${SCRATCH_DIR}/unwritable.grep
+if [[ ! -s ${SCRATCH_DIR}/unwritable.grep ]]; then
+  echo -n "Test differences for: $outputfile"
+  echo $i
+  cat ${SCRATCH_DIR}/$outputfile.grep
+  ((numfailures++))
+fi 
+
 # Logging test 
-#   kick the tires on logging to make sure there are null pointer derefs
+#   enable logging for a basic smoke test
 initialize_test
 ${TIPC} -pt -log=/dev/null selftests/polyfactorial.tip &>/dev/null 
 
+# Test AST visualizer
+initialize_test
+input=iotests/linkedlist.tip
+output=${SCRATCH_DIR}/linkedlist.dot
+expected_output=iotests/linkedlist.dot
+differences=${SCRATCH_DIR}/linkedlist.dot.diff
+${TIPC} --da=$output $input 
+diff $output $expected_output > $differences
+if [ -s $differences ]; then
+  echo "Test differences for: $input" 
+  cat $differences
+  ((numfailures++))
+fi 
+
+initialize_test
+input=selftests/ptr4.tip
+output=${SCRATCH_DIR}/ptr4.dot
+expected_output=selftests/ptr4.dot
+differences=${SCRATCH_DIR}/ptr4.dot.diff
+${TIPC} --da=$output $input 
+diff $output $expected_output > $differences
+if [ -s $differences ]; then
+  echo "Test differences for: $input" 
+  cat $differences
+  ((numfailures++))
+fi 
+
+# Print out the test results
 if [ ${numfailures} -eq "0" ]; then
-  echo -n "all " 
+  echo -n " all " 
   echo -n ${numtests}
   echo " tests passed"
 else
+  echo -n " " 
   echo -n ${numfailures}/${numtests}
   echo " tests failed"
 fi

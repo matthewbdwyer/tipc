@@ -73,19 +73,20 @@ OPTIONS:
 
 Generic Options:
 
-  --help          - Display available options (--help-hidden for more)
-  --help-list     - Display list of available options (--help-list-hidden for more)
-  --version       - Display the version of this program
+  --help                 - Display available options (--help-hidden for more)
+  --help-list            - Display list of available options (--help-list-hidden for more)
+  --version              - Display the version of this program
 
 tipc Options:
 Options for controlling the TIP compilation process.
 
-  --asm           - emit human-readable LLVM assembly language instead of LLVM Bitcode
-  --do            - disable bitcode optimization
-  --log=<logfile> - log all messages to logfile (enables --verbose 3)
-  --pp            - pretty print
-  --ps            - print symbols
-  --pt            - print symbols with types (supercedes --ps)
+  --asm                  - emit human-readable LLVM assembly language instead of LLVM Bitcode
+  --da=<ast output file> - dump the ast to a file in the dot syntax
+  --do                   - disable bitcode optimization
+  --log=<logfile>        - log all messages to logfile (enables --verbose)
+  --pp                   - pretty print
+  --ps                   - print symbols
+  --pt                   - print symbols with types (supercedes --ps)
   --pcg           - print call graph
   --verbose=<int> - enable log messages (Levels 1-3) 
                      Level 1 - Symbols being added to the symbol table and type constraints being generated for the type solvers.

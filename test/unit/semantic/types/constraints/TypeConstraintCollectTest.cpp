@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <set>
 
 static void runtest(std::stringstream &program, std::vector<std::string> constraints) {
     auto ast = ASTHelper::build_ast(program);
@@ -15,15 +16,20 @@ static void runtest(std::stringstream &program, std::vector<std::string> constra
     ast->accept(&visitor);
 
     auto collected = visitor.getCollectedConstraints();
+
+    // Copy the vectors to sets to allow for a single equality test
+    std::set<std::string> expectedSet;
+    copy(constraints.begin(), constraints.end(), 
+         inserter(expectedSet, expectedSet.end()));    
+
+    std::set<std::string> collectedSet;
     for(int i = 0; i < collected.size(); i++) {
         std::stringstream stream;
         stream << collected.at(i);
-        auto actual = stream.str();
-        auto expected = constraints.at(i);
-        REQUIRE(expected == actual);
+        collectedSet.insert(stream.str());
     }
 
-    REQUIRE(visitor.getCollectedConstraints().size() == constraints.size());
+    REQUIRE(expectedSet == collectedSet);
 }
 
 TEST_CASE("TypeConstraintVisitor: const, input, alloc, assign through ptr", "[TypeConstraintVisitor]") {

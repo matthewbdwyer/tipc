@@ -43,10 +43,20 @@ cmake_policy(SET CMP0109 OLD)
 cmake_policy(SET CMP0114 NEW)
 
 # required if linking to static library
+
+# Point CMake to the Corretto install location to avoid setting the system path.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(JAVA_HOME "/usr/lib/jvm/java-11-amazon-corretto")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  set(JAVA_HOME "/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home")
+else()
+  message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} is not supported")
+endif()
+
 add_definitions(-DANTLR4CPP_STATIC)
 
 set(ANTLR4_WITH_STATIC_CRT OFF)
-set(ANTLR4_TAG 4.9.2)
+set(ANTLR4_TAG 4.10.1)
 include(ExternalAntlr4Cpp)
 include_directories(${ANTLR4_INCLUDE_DIRS})
 
@@ -58,7 +68,7 @@ if(NOT ANTLR_FOUND)
   message(STATUS "Downloading antlr jar")
   file(DOWNLOAD ${ANTLR_JAR_URL} ${CMAKE_BINARY_DIR}/include/${ANTLR_JAR})
   message(STATUS "Downloading complete")
-  list(APPEND CMAKE_PROGRAM_PATH "${CMAKE_BINARY_DIR}/include")
+  set(ANTLR_EXECUTABLE ${CMAKE_BINARY_DIR}/include/${ANTLR_JAR})
   find_package(ANTLR REQUIRED)
 endif()
 
@@ -67,9 +77,9 @@ cmake_policy(POP)
 ######## LLVM rules for installed libraries ###########
 # We want to select the latest stable release even if others are installed
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  find_package(LLVM 11.1.0 REQUIRED CONFIG)
+  find_package(LLVM 14.0.0 REQUIRED CONFIG)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  find_package(LLVM 11.1.0 REQUIRED CONFIG)
+  find_package(LLVM 14.0.0 REQUIRED CONFIG)
 else()
   message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} is not supported")
 endif()

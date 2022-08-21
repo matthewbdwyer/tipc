@@ -23,6 +23,10 @@ static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 1-3) 
 static cl::opt<bool> emitHrAsm("asm",
                            cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),
                            cl::cat(TIPcat));
+static cl::opt<std::string> astFile("da",
+                                 cl::value_desc("ast output file"),
+                                 cl::desc("dump the ast to a file in the dot syntax"),
+                                 cl::cat(TIPcat));
 static cl::opt<std::string> logfile("log",
                                    cl::value_desc("logfile"),
                                    cl::desc("log all messages to logfile (enables --verbose 3)"),
@@ -77,7 +81,7 @@ int main(int argc, char *argv[]) {
    * the underlying pointer, i.e., via a call to get().
    */
   try {
-    auto ast = FrontEnd::parse(stream);
+    std::shared_ptr<ASTProgram> ast = std::move(FrontEnd::parse(stream));
 
     try {
       auto analysisResults = SemanticAnalysis::analyze(ast.get());
@@ -108,14 +112,30 @@ int main(int argc, char *argv[]) {
         CodeGenerator::emit(llvmModule.get(), outputfile);
       }
 
+      bool shouldDumpAST = !astFile.getValue().empty();
+      if(shouldDumpAST) {
+        std::ofstream astStream;
+        astStream.open(astFile);
+        if(!astStream.good()) {
+          LOG_S(ERROR) << "tipc: error: failed to open '" << astFile << "' for writing";
+          exit(1);
+        }
+
+        FrontEnd::astVisualize(ast, astStream);
+      }
+
     } catch (SemanticError& e) {
       LOG_S(ERROR) << "tipc: " << e.what();
       LOG_S(ERROR) << "tipc: semantic error";
       exit (EXIT_FAILURE);
-    } catch (InternalError& e) {
-      LOG_S(ERROR) << "tipc: " << e.what();
-      LOG_S(ERROR) << "tipc: internal error";
-      exit (EXIT_FAILURE);
+    } catch (InternalError& e) { // LCOV_EXCL_LINE
+      /* Internal errors should never happen, but we have logic to catch 
+       * them just in case.  We do not want to count these lines toward 
+       * coverage goals since a working compiler will never cover these.
+       */
+      LOG_S(ERROR) << "tipc: " << e.what(); // LCOV_EXCL_LINE
+      LOG_S(ERROR) << "tipc: internal error"; // LCOV_EXCL_LINE
+      exit (EXIT_FAILURE); // LCOV_EXCL_LINE
     }
   } catch (ParseError& e) {
     LOG_S(ERROR) << "tipc: " << e.what();

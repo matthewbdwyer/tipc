@@ -15,10 +15,10 @@ class ASTVisitor;
  *
  * ASTNodes define the elements of the program in a tree structured form.
  * A key concept to undestand is that of "ownership".   Every node in the
- * tree is "owned" by its parent.  The parent maintains a "unique pointer"
+ * tree is "owned" by its parent.  The parent maintains a "shared pointer"
  * to each of its children.  This greatly simplifies memory management as
  * the tree can be reclaimed once its root is no longer needed.  It is 
- * important to understand that the "unique pointer" is only used to manage
+ * important to understand that the "shared pointer" is only used to manage
  * the lifetime of the child nodes.  The values of those pointers can be
  * passed around freely to other parts of the compiler that want to view
  * the ASTNodes.
@@ -62,6 +62,16 @@ public:
    */
   virtual llvm::Value* codegen() = 0;
 
+  /*! \fn getChildren
+   *  \brief Return all of the children for the node.
+   *
+   * This is not a pure virtual function so subclasses can selectively override it.
+   *
+   * \return a collection of the nodes children.
+   */
+  virtual std::vector<std::shared_ptr<ASTNode>> getChildren() {
+    return {};
+  }
   void setLocation(int l, int c) { line = l; column = c; }
   int getLine() { return line; }
   int getColumn() { return column; }

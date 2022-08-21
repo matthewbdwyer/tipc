@@ -2,8 +2,8 @@
 set -ex
 
 declare -r ANTLR_VERSION=4
-declare -r JAVA_VERSION=8
-declare -r LLVM_VERSION=11
+declare -r JAVA_VERSION=11
+declare -r LLVM_VERSION=14
 
 declare -r ROOT_DIR=${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}
 
@@ -27,8 +27,8 @@ bootstrap_ubuntu_dependencies() {
 
   wget https://apt.corretto.aws/corretto.key 
   gpg --dearmor corretto.key
-  sudo mv corretto.key.gpg /usr/share/keyrings/amazon-corretto-8-keyring.gpg
-  sudo cp ${ROOT_DIR}/bin/apt/amazon-corretto-8.sources /etc/apt/sources.list.d/
+  sudo mv corretto.key.gpg /usr/share/keyrings/amazon-corretto-${JAVA_VERSION}-keyring.gpg
+  sudo cp ${ROOT_DIR}/bin/apt/amazon-corretto-${JAVA_VERSION}.sources /etc/apt/sources.list.d/
   sudo apt -y update
 
   wget https://apt.kitware.com/kitware-archive.sh
@@ -36,7 +36,7 @@ bootstrap_ubuntu_dependencies() {
   sudo ./kitware-archive.sh
 
   sudo apt -y install \
-    java-1.$JAVA_VERSION.0-amazon-corretto-jdk \
+    java-$JAVA_VERSION-amazon-corretto-jdk \
     git \
     cmake \
     pkg-config \
@@ -66,7 +66,8 @@ bootstrap_ubuntu_dependencies() {
     libclang-$LLVM_VERSION-dev \
     libclang1-$LLVM_VERSION \
     clang-format-$LLVM_VERSION \
-    python3-clang-$LLVM_VERSION
+    python3-clang-$LLVM_VERSION \
+    graphviz
 }
 
 
@@ -111,7 +112,8 @@ bootstrap_mac_dependencies() {
     pkg-config \
     llvm@$LLVM_VERSION \
     antlr@$ANTLR_VERSION \
-    lcov
+    lcov \
+    graphviz
 }
 
 

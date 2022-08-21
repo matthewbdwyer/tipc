@@ -1,15 +1,15 @@
 ; ModuleID = 'iotests/fib.tip'
 source_filename = "iotests/fib.tip"
-target triple = "x86_64-apple-darwin20.5.0"
+target triple = "x86_64-apple-darwin21.5.0"
 
 @_tip_ftable = internal constant [2 x i64 ()*] [i64 ()* bitcast (i64 (i64)* @fib to i64 ()*), i64 ()* @_tip_main]
 @_tip_num_inputs = constant i64 1
 @_tip_input_array = common global [1 x i64] zeroinitializer
 
-; Function Attrs: nounwind readnone willreturn
+; Function Attrs: nofree nosync nounwind readnone willreturn
 declare void @llvm.donothing() #0
 
-define i64 @fib(i64 %n) {
+define internal i64 @fib(i64 %n) {
 entry:
   br label %header1
 
@@ -39,5 +39,5 @@ entry:
 ; Function Attrs: nounwind
 declare noalias i8* @calloc(i64, i64) #1
 
-attributes #0 = { nounwind readnone willreturn }
+attributes #0 = { nofree nosync nounwind readnone willreturn }
 attributes #1 = { nounwind }
