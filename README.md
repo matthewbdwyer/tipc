@@ -80,18 +80,19 @@ Generic Options:
 tipc Options:
 Options for controlling the TIP compilation process.
 
-  --asm                  - emit human-readable LLVM assembly language instead of LLVM Bitcode
-  --da=<ast output file> - dump the ast to a file in the dot syntax
-  --do                   - disable bitcode optimization
-  --log=<logfile>        - log all messages to logfile (enables --verbose)
-  --pp                   - pretty print
-  --ps                   - print symbols
-  --pt                   - print symbols with types (supercedes --ps)
-  --pcg           - print call graph
-  --verbose=<int> - enable log messages (Levels 1-3) 
-                     Level 1 - Symbols being added to the symbol table and type constraints being generated for the type solvers.
-                     Level 2 - Level 1 and type constraints being unified.
-                     Level 3 - Level 2 and type constraints being added and searched for in the type graph
+  --asm                          - emit human-readable LLVM assembly language
+  --do                           - disable bitcode optimization
+  --log=<logfile>                - log all messages to logfile (enables --verbose 3)
+  -o=<outputfile>                - write output to <outputfile>
+  --pa=<AST output file>         - print AST to a file in dot syntax
+  --pcg=<call graph output file> - print call graph to a file in dot syntax
+  --pp                           - pretty print
+  --ps                           - print symbols
+  --pt                           - print symbols with types (supercedes --ps)
+  --verbose=<int>                - enable log messages (Levels 1-3) 
+                                    Level 1 - Basic logging for every phase.
+                                    Level 2 - Level 1 and type constraints being unified.
+                                    Level 3 - Level 2 and union-find solving steps.
 ```
 By default it will accept a `.tip` file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a `.bc` file which is a binary encoding of the bitcodes.  You can see a human readable version of the bitcodes by running `llvm-dis` on the `.bc` file.
 
@@ -206,7 +207,9 @@ Third, the project intentionally makes heavy use of the [Visitor pattern](https:
 
 Finally, the project is implemented in C++17 using modern features.  For example, all memory allocation uses smart pointers, we use unique pointers where possible and shared pointers as well, to realize the [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization) pattern.  Again this presents some challenges, but addressing them is illustrated in the `tipc` code base and hopefully they provide a good example for students.  
 
-The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance.  For the latter, we expect to make a new release of the project in early August every year.  This release will focus on improving the use of modern C++, as we come to better understand the best practices for C++20, and to incorporate better design principles, patterns, and practices.
+The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance.  For the latter, we expect to make a new release of the project in early August every year.  This release will focus on improving the use of modern C++
+and to incorporate better design principles, patterns, and practices.
+We welcome issue reports and pull-requests along these lines.
 
 ## Differences from TIP and Limitations
 
