@@ -67,7 +67,9 @@ bootstrap_ubuntu_dependencies() {
     libclang1-$LLVM_VERSION \
     clang-format-$LLVM_VERSION \
     python3-clang-$LLVM_VERSION \
-    graphviz
+    graphviz \
+    jq \
+    doxygen
 }
 
 
@@ -113,7 +115,9 @@ bootstrap_mac_dependencies() {
     llvm@$LLVM_VERSION \
     antlr@$ANTLR_VERSION \
     lcov \
-    graphviz
+    graphviz \ 
+    jq \
+    doxygen
 }
 
 
