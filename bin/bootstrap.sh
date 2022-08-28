@@ -94,8 +94,23 @@ bootstrap_linux() {
 
 
 bootstrap_mac_env() {
-  echo export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake >> ~/.bashrc
-  echo export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang >> ~/.bashrc
+  # detect login shell
+  case $SHELL in
+    */zsh)
+      # bootstrap for zsh, which is default on macOS >= Catalina
+      echogreen "Bootstrapping env vars for zsh"
+      echo export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake >> ~/.zshrc
+      echo export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang >> ~/.zshrc
+      ;;
+    */bash)
+      # bootstrap for bash, which used to be default
+      echogreen "Bootstrapping env vars for bash"
+      echo export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake >> ~/.bashrc
+      echo export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang >> ~/.bashrc
+      ;;
+    *)
+      echoerr "error: Script has not been implemented for $SHELL"
+  esac
 }
 
 
@@ -137,9 +152,9 @@ bootstrap() {
   esac
 
   echogreen
-  echogreen '--------------------------------------------------------------------------------'
-  echogreen '* bashrc has been updated - be sure to source the file or restart your shell.  *'
-  echogreen '--------------------------------------------------------------------------------'
+  echogreen '--------------------------------------------------------------------------------------'
+  echogreen '* bashrc/zshrc has been updated - be sure to source the file or restart your shell.  *'
+  echogreen '--------------------------------------------------------------------------------------'
 }
 
 bootstrap
