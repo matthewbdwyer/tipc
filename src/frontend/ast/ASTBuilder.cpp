@@ -180,29 +180,29 @@ void ASTBuilder::visitBinaryExpr(T* ctx, const std::string& op) {
 Any ASTBuilder::visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) {
   visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitRelationalExpr(TIPParser::RelationalExprContext *ctx) {
   visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitMultiplicativeExpr(
     TIPParser::MultiplicativeExprContext *ctx) {
   visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitEqualityExpr(TIPParser::EqualityExprContext *ctx) {
   visitBinaryExpr(ctx, opString(ctx->op->getType()));
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitParenExpr(TIPParser::ParenExprContext *ctx) {
   visit(ctx->expr());
   // leave visitedExpr from expr unchanged
   return "";
-}
+} // LCOV_EXCL_LINE
 
 Any ASTBuilder::visitNumExpr(TIPParser::NumExprContext *ctx) {
   int val = std::stoi(ctx->NUMBER()->getText());

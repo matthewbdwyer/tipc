@@ -62,7 +62,7 @@ bool CFAnalyzer::visit(ASTFunAppExpr* element)
                 auto stmts = fun->getStmts();
                 ASTReturnStmt* ret;
                 if (!(ret = dynamic_cast<ASTReturnStmt*>(stmts[stmts.size() - 1]))) {
-                    assert(false);
+                    assert(false); // LCOV_EXCL_LINE
                 }
                 s.addConditionalConstraint(fun, getCanonical(element->getFunction()), getCanonicalForFunction(ret->getArg(), fun), getCanonical(element));
             }
