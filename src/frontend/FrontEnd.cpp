@@ -25,7 +25,7 @@ void ParserErrorListener::syntaxError(Recognizer *recognizer, Token *offendingSy
 }
 
 
-std::unique_ptr<ASTProgram> FrontEnd::parse(std::istream& stream){
+std::shared_ptr<ASTProgram> FrontEnd::parse(std::istream& stream){
   ANTLRInputStream input(stream);
   TIPLexer lexer(&input);
   CommonTokenStream tokens(&lexer);

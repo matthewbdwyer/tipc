@@ -9,7 +9,7 @@ class ASTDeclStmt : public ASTStmt {
   std::vector<std::shared_ptr<ASTDeclNode>> VARS;
 public:
   std::vector<std::shared_ptr<ASTNode>> getChildren() override;
-  ASTDeclStmt(std::vector<std::unique_ptr<ASTDeclNode>> VARS);
+  ASTDeclStmt(std::vector<std::shared_ptr<ASTDeclNode>> VARS);
   std::vector<ASTDeclNode*> getVars() const;
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;

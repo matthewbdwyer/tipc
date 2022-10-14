@@ -1,10 +1,10 @@
 #include "ASTFunAppExpr.h"
 
-ASTFunAppExpr::ASTFunAppExpr(std::unique_ptr<ASTExpr> FUN, std::vector<std::unique_ptr<ASTExpr>> ACTUALS) {
-  this->FUN = std::move(FUN);
+ASTFunAppExpr::ASTFunAppExpr(std::shared_ptr<ASTExpr> FUN, std::vector<std::shared_ptr<ASTExpr>> ACTUALS) {
+  this->FUN = FUN;
 
   for(auto &actual : ACTUALS) {
-    std::shared_ptr<ASTExpr> a = std::move(actual);
+    std::shared_ptr<ASTExpr> a = actual;
     this->ACTUALS.push_back(a);
   }
 }

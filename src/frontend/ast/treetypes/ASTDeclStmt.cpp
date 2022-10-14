@@ -2,9 +2,9 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-ASTDeclStmt::ASTDeclStmt(std::vector<std::unique_ptr<ASTDeclNode>> VARS) {
+ASTDeclStmt::ASTDeclStmt(std::vector<std::shared_ptr<ASTDeclNode>> VARS) {
   for(auto &var : VARS) {
-    std::shared_ptr<ASTDeclNode> d = std::move(var);
+    std::shared_ptr<ASTDeclNode> d = var;
     this->VARS.push_back(d);
   }
 }

@@ -6,6 +6,6 @@
 
 class ASTHelper {
 public:
-  static std::unique_ptr<ASTProgram> build_ast(std::istream &stream);
+  static std::shared_ptr<ASTProgram> build_ast(std::istream &stream);
 };
 

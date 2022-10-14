@@ -2,23 +2,23 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-ASTFunction::ASTFunction(std::unique_ptr<ASTDeclNode> DECL, std::vector<std::unique_ptr<ASTDeclNode>> FORMALS,
-                         const std::vector<std::unique_ptr<ASTDeclStmt>> &DECLS,
-                         std::vector<std::unique_ptr<ASTStmt>> BODY) {
+ASTFunction::ASTFunction(std::shared_ptr<ASTDeclNode> DECL, std::vector<std::shared_ptr<ASTDeclNode>> FORMALS,
+                         const std::vector<std::shared_ptr<ASTDeclStmt>> &DECLS,
+                         std::vector<std::shared_ptr<ASTStmt>> BODY) {
 
-  this->DECL = std::move(DECL);
+  this->DECL = DECL;
 
   for(auto &formal : FORMALS) {
-    std::shared_ptr<ASTDeclNode> f = std::move(formal);
+    std::shared_ptr<ASTDeclNode> f = formal;
     this->FORMALS.push_back(f);
   }
 
   for(auto &d : DECLS) {
-    this->DECLS.push_back(std::move(const_cast<std::unique_ptr<ASTDeclStmt>&>(d)));
+    this->DECLS.push_back(const_cast<std::shared_ptr<ASTDeclStmt>&>(d));
   }
 
   for(auto &stmt : BODY) {
-    std::shared_ptr<ASTStmt> s = std::move(stmt);
+    std::shared_ptr<ASTStmt> s = stmt;
     this->BODY.push_back(s);
   }
 }
@@ -51,7 +51,7 @@ void ASTFunction::accept(ASTVisitor * visitor) {
   visitor->endVisit(this);
 }
 
-//! \brief Print an abbreviated unique string for the function
+//! \brief Print an abbreviated shared string for the function
 std::ostream& ASTFunction::print(std::ostream &out) const {
   out << *getDecl() << "(";
   bool skip = true;
