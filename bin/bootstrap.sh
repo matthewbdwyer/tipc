@@ -119,7 +119,7 @@ bootstrap_mac_dependencies() {
     llvm@$LLVM_VERSION \
     antlr@$ANTLR_VERSION \
     lcov \
-    graphviz \ 
+    graphviz \
     jq \
     doxygen
 }
