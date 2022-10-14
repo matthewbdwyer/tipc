@@ -33,3 +33,8 @@ xml/
 
 # reports
 coverage.out/
+
+# setup artifacts
+corretto.key*
+kitware-archive.sh*
+llvm.sh*
