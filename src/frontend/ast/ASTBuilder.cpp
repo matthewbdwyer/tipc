@@ -87,10 +87,10 @@ std::shared_ptr<ASTProgram> ASTBuilder::build(TIPParser::ProgramContext *ctx) {
   std::vector<std::shared_ptr<ASTFunction>> pFunctions;
   for (auto fn : ctx->function()) {
     visit(fn);
-    pFunctions.push_back(std::move(visitedFunction));
+    pFunctions.push_back(visitedFunction);
   }
 
-  auto prog = std::make_shared<ASTProgram>(std::move(pFunctions));
+  auto prog = std::make_shared<ASTProgram>(pFunctions);
   prog->setName(generateSHA256(ctx->getText()));
   return prog;
 }
@@ -106,28 +106,28 @@ Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
     visit(decl);
     if (firstId) {
       firstId = !firstId;
-      fName = std::move(visitedDeclNode);
+      fName = visitedDeclNode;
     } else {
-      fParams.push_back(std::move(visitedDeclNode));
+      fParams.push_back(visitedDeclNode);
     }
   }
 
   for (auto decl : ctx->declaration()) {
     visit(decl);
-    fDecls.push_back(std::move(visitedDeclStmt));
+    fDecls.push_back(visitedDeclStmt);
   }
 
   for (auto stmt : ctx->statement()) {
     visit(stmt);
-    fBody.push_back(std::move(visitedStmt));
+    fBody.push_back(visitedStmt);
   }
 
   // return statement is always the last statement in a TIP function body
   visit(ctx->returnStmt());
-  fBody.push_back(std::move(visitedStmt));
+  fBody.push_back(visitedStmt);
 
   visitedFunction = std::make_shared<ASTFunction>(
-      std::move(fName), std::move(fParams), std::move(fDecls), std::move(fBody));
+      fName, fParams, fDecls, fBody);
 
   LOG_S(1) << "Built AST node for function " << *visitedFunction;
 
@@ -163,12 +163,12 @@ Any ASTBuilder::visitNegNumber(TIPParser::NegNumberContext *ctx) {
 template <typename T>
 void ASTBuilder::visitBinaryExpr(T* ctx, const std::string& op) {
   visit(ctx->expr(0));
-  auto lhs = std::move(visitedExpr);
+  auto lhs = visitedExpr;
 
   visit(ctx->expr(1));
-  auto rhs = std::move(visitedExpr);
+  auto rhs = visitedExpr;
 
-  visitedExpr = std::make_shared<ASTBinaryExpr>(op, std::move(lhs), std::move(rhs));
+  visitedExpr = std::make_shared<ASTBinaryExpr>(op, lhs, rhs);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -248,14 +248,14 @@ Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
   for (auto e : ctx->expr()) {
     visit(e);
     if (first) {
-      fExpr = std::move(visitedExpr);
+      fExpr = visitedExpr;
       first = false;
     } else {
-      fArgs.push_back(std::move(visitedExpr));
+      fArgs.push_back(visitedExpr);
     }
   }
 
-  visitedExpr = std::make_shared<ASTFunAppExpr>(std::move(fExpr), std::move(fArgs));
+  visitedExpr = std::make_shared<ASTFunAppExpr>(fExpr, fArgs);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -267,7 +267,7 @@ Any ASTBuilder::visitFunAppExpr(TIPParser::FunAppExprContext *ctx) {
 
 Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
   visit(ctx->expr());
-  visitedExpr = std::make_shared<ASTAllocExpr>(std::move(visitedExpr));
+  visitedExpr = std::make_shared<ASTAllocExpr>(visitedExpr);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -279,7 +279,7 @@ Any ASTBuilder::visitAllocExpr(TIPParser::AllocExprContext *ctx) {
 
 Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
   visit(ctx->expr());
-  visitedExpr = std::make_shared<ASTRefExpr>(std::move(visitedExpr));
+  visitedExpr = std::make_shared<ASTRefExpr>(visitedExpr);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -291,7 +291,7 @@ Any ASTBuilder::visitRefExpr(TIPParser::RefExprContext *ctx) {
 
 Any ASTBuilder::visitDeRefExpr(TIPParser::DeRefExprContext *ctx) {
   visit(ctx->expr());
-  visitedExpr = std::make_shared<ASTDeRefExpr>(std::move(visitedExpr));
+  visitedExpr = std::make_shared<ASTDeRefExpr>(visitedExpr);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -316,10 +316,10 @@ Any ASTBuilder::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
   std::vector<std::shared_ptr<ASTFieldExpr>> rFields;
   for (auto fn : ctx->fieldExpr()) {
     visit(fn);
-    rFields.push_back(std::move(visitedFieldExpr));
+    rFields.push_back(visitedFieldExpr);
   }
 
-  visitedExpr = std::make_shared<ASTRecordExpr>(std::move(rFields));
+  visitedExpr = std::make_shared<ASTRecordExpr>(rFields);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -332,7 +332,7 @@ Any ASTBuilder::visitRecordExpr(TIPParser::RecordExprContext *ctx) {
 Any ASTBuilder::visitFieldExpr(TIPParser::FieldExprContext *ctx) {
   std::string fName = ctx->IDENTIFIER()->getText();
   visit(ctx->expr());
-  visitedFieldExpr = std::make_shared<ASTFieldExpr>(fName, std::move(visitedExpr));
+  visitedFieldExpr = std::make_shared<ASTFieldExpr>(fName, visitedExpr);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -346,9 +346,9 @@ Any ASTBuilder::visitAccessExpr(TIPParser::AccessExprContext *ctx) {
   std::string fName = ctx->IDENTIFIER()->getText();
 
   visit(ctx->expr());
-  auto rExpr = std::move(visitedExpr);
+  auto rExpr = visitedExpr;
 
-  visitedExpr = std::make_shared<ASTAccessExpr>(std::move(rExpr), fName);
+  visitedExpr = std::make_shared<ASTAccessExpr>(rExpr, fName);
 
   LOG_S(1) << "Built AST node " << *visitedExpr;
 
@@ -362,9 +362,9 @@ Any ASTBuilder::visitDeclaration(TIPParser::DeclarationContext *ctx) {
   std::vector<std::shared_ptr<ASTDeclNode>> dVars;
   for (auto decl : ctx->nameDeclaration()) {
     visit(decl);
-    dVars.push_back(std::move(visitedDeclNode));
+    dVars.push_back(visitedDeclNode);
   }
-  visitedDeclStmt = std::make_shared<ASTDeclStmt>(std::move(dVars));
+  visitedDeclStmt = std::make_shared<ASTDeclStmt>(dVars);
 
   LOG_S(1) << "Built AST node " << *visitedDeclStmt;
 
@@ -390,9 +390,9 @@ Any ASTBuilder::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
   std::vector<std::shared_ptr<ASTStmt>> bStmts;
   for (auto s : ctx->statement()) {
     visit(s);
-    bStmts.push_back(std::move(visitedStmt));
+    bStmts.push_back(visitedStmt);
   }
-  visitedStmt = std::make_shared<ASTBlockStmt>(std::move(bStmts));
+  visitedStmt = std::make_shared<ASTBlockStmt>(bStmts);
 
   LOG_S(1) << "Built AST node " << *visitedStmt;
 
@@ -404,10 +404,10 @@ Any ASTBuilder::visitBlockStmt(TIPParser::BlockStmtContext *ctx) {
 
 Any ASTBuilder::visitWhileStmt(TIPParser::WhileStmtContext *ctx) {
   visit(ctx->expr());
-  auto cond = std::move(visitedExpr);
+  auto cond = visitedExpr;
   visit(ctx->statement());
-  auto body = std::move(visitedStmt);
-  visitedStmt = std::make_shared<ASTWhileStmt>(std::move(cond), std::move(body));
+  auto body = visitedStmt;
+  visitedStmt = std::make_shared<ASTWhileStmt>(cond, body);
 
   LOG_S(1) << "Built AST node " << *visitedStmt;
 
@@ -419,19 +419,19 @@ Any ASTBuilder::visitWhileStmt(TIPParser::WhileStmtContext *ctx) {
 
 Any ASTBuilder::visitIfStmt(TIPParser::IfStmtContext *ctx) {
   visit(ctx->expr());
-  auto cond = std::move(visitedExpr);
+  auto cond = visitedExpr;
   visit(ctx->statement(0));
-  auto thenBody = std::move(visitedStmt);
+  auto thenBody = visitedStmt;
 
   // else is optional
   std::shared_ptr<ASTStmt> elseBody = nullptr;
   if (ctx->statement().size() == 2) {
     visit(ctx->statement(1));
-    elseBody = std::move(visitedStmt);
+    elseBody = visitedStmt;
   }
 
-  visitedStmt = std::make_shared<ASTIfStmt>(std::move(cond), std::move(thenBody),
-                                            std::move(elseBody));
+  visitedStmt = std::make_shared<ASTIfStmt>(cond, thenBody,
+                                            elseBody);
 
   LOG_S(1) << "Built AST node " << *visitedStmt;
 
@@ -443,7 +443,7 @@ Any ASTBuilder::visitIfStmt(TIPParser::IfStmtContext *ctx) {
 
 Any ASTBuilder::visitOutputStmt(TIPParser::OutputStmtContext *ctx) {
   visit(ctx->expr());
-  visitedStmt = std::make_shared<ASTOutputStmt>(std::move(visitedExpr));
+  visitedStmt = std::make_shared<ASTOutputStmt>(visitedExpr);
 
   LOG_S(1) << "Built AST node " << *visitedStmt;
 
@@ -455,7 +455,7 @@ Any ASTBuilder::visitOutputStmt(TIPParser::OutputStmtContext *ctx) {
 
 Any ASTBuilder::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
   visit(ctx->expr());
-  visitedStmt = std::make_shared<ASTErrorStmt>(std::move(visitedExpr));
+  visitedStmt = std::make_shared<ASTErrorStmt>(visitedExpr);
 
   LOG_S(1) << "Built AST node " << *visitedStmt;
 
@@ -467,7 +467,7 @@ Any ASTBuilder::visitErrorStmt(TIPParser::ErrorStmtContext *ctx) {
 
 Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
   visit(ctx->expr());
-  visitedStmt = std::make_shared<ASTReturnStmt>(std::move(visitedExpr));
+  visitedStmt = std::make_shared<ASTReturnStmt>(visitedExpr);
 
   LOG_S(1) << "Built AST node " << *visitedStmt;
 
@@ -479,10 +479,10 @@ Any ASTBuilder::visitReturnStmt(TIPParser::ReturnStmtContext *ctx) {
 
 Any ASTBuilder::visitAssignStmt(TIPParser::AssignStmtContext *ctx) {
   visit(ctx->expr(0));
-  auto lhs = std::move(visitedExpr);
+  auto lhs = visitedExpr;
   visit(ctx->expr(1));
-  auto rhs = std::move(visitedExpr);
-  visitedStmt = std::make_shared<ASTAssignStmt>(std::move(lhs), std::move(rhs));
+  auto rhs = visitedExpr;
+  visitedStmt = std::make_shared<ASTAssignStmt>(lhs, rhs);
 
   LOG_S(1) << "Built AST node " << *visitedStmt;
 
