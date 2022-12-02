@@ -116,9 +116,8 @@ ${TIPC} -pp -ps iotests/fib.tip >${SCRATCH_DIR}/fib.ppps
 diff iotests/fib.ppps ${SCRATCH_DIR}/fib.ppps >${SCRATCH_DIR}/fib.diff
 if [[ -s ${SCRATCH_DIR}/fib.diff ]]
 then
-  echo -n "Test differences for : " 
-  echo $i
-  cat fib.diff
+  echo "Test differences for : iotests/fib.tip"
+  cat ${SCRATCH_DIR}/fib.diff
   ((numfailures++))
 fi 
 
@@ -151,16 +150,18 @@ fi
 initialize_test
 input=iotests/fib.tip
 output=${SCRATCH_DIR}/fib.tip.bc
-output_graph=${SCRATCH_DIR}/fib.tip.gv
-expected_graph=iotests/fib.tip.gv
-diffed_graph=${SCRATCH_DIR}/fib.tip.diff
-${TIPC} --pcg $input -o $output > $output_graph
+output_graph=${SCRATCH_DIR}/fib.tip.dot
+expected_graph=iotests/fib.tip.dot
+diffed_graph=${SCRATCH_DIR}/fib.tip.dot.diff
+${TIPC} --pcg=$output_graph $input -o $output
 diff $output_graph $expected_graph > $diffed_graph
 if [ -s $diffed_graph ]; then
   echo "Test differences for: $input" 
   cat $diffed_graph
   ((numfailures++))
 fi 
+
+
 
 # Test bad input.
 initialize_test
@@ -193,12 +194,25 @@ do
   fi 
 done
 
-# Test unwritable output file
+# Test unwritable output file for both ast and call graph printing
 initialize_test
 outputfile=iotests/unwritable
 chmod a-w $outputfile
 input=iotests/linkedlist.tip
-${TIPC} --da=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
+${TIPC} --pa=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
+grep "failed to open" ${SCRATCH_DIR}/unwritable.out > ${SCRATCH_DIR}/unwritable.grep
+if [[ ! -s ${SCRATCH_DIR}/unwritable.grep ]]; then
+  echo -n "Test differences for: $outputfile"
+  echo $i
+  cat ${SCRATCH_DIR}/$outputfile.grep
+  ((numfailures++))
+fi 
+
+initialize_test
+outputfile=iotests/unwritable
+chmod a-w $outputfile
+input=iotests/linkedlist.tip
+${TIPC} --pcg=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
 grep "failed to open" ${SCRATCH_DIR}/unwritable.out > ${SCRATCH_DIR}/unwritable.grep
 if [[ ! -s ${SCRATCH_DIR}/unwritable.grep ]]; then
   echo -n "Test differences for: $outputfile"
@@ -215,25 +229,25 @@ ${TIPC} -pt -log=/dev/null selftests/polyfactorial.tip &>/dev/null
 # Test AST visualizer
 initialize_test
 input=iotests/linkedlist.tip
-output=${SCRATCH_DIR}/linkedlist.dot
-expected_output=iotests/linkedlist.dot
-differences=${SCRATCH_DIR}/linkedlist.dot.diff
-${TIPC} --da=$output $input 
-diff $output $expected_output > $differences
-if [ -s $differences ]; then
-  echo "Test differences for: $input" 
+output_graph=${SCRATCH_DIR}/linkedlist.tip.dot
+expected_output=iotests/linkedlist.tip.dot
+diffed_graph=${SCRATCH_DIR}/linkedlist.tip.dot.diff
+${TIPC} --pa=$output_graph $input
+diff $output_graph $expected_output > $diffed_graph
+if [ -s $diffed_graph ]; then
+  echo "Test differences for: $input"
   cat $differences
   ((numfailures++))
-fi 
+fi
 
 initialize_test
 input=selftests/ptr4.tip
-output=${SCRATCH_DIR}/ptr4.dot
-expected_output=selftests/ptr4.dot
-differences=${SCRATCH_DIR}/ptr4.dot.diff
-${TIPC} --da=$output $input 
-diff $output $expected_output > $differences
-if [ -s $differences ]; then
+output_graph=${SCRATCH_DIR}/ptr4.tip.dot
+expected_output=selftests/ptr4.tip.dot
+diffed_graph=${SCRATCH_DIR}/ptr4.tip.dot.diff
+${TIPC} --pa=$output_graph $input 
+diff $output_graph $expected_output > $diffed_graph
+if [ -s $diffed_graph ]; then
   echo "Test differences for: $input" 
   cat $differences
   ((numfailures++))

@@ -35,15 +35,6 @@ bool CallGraphBuilder::visit(ASTVariableExpr *element) {
     return true;
 }  // LCOV_EXCL_LINE
 
-bool CallGraphBuilder::visit(ASTReturnStmt *element) {
-    for(ASTFunction* f : cfa.getPossibleFunctionsForExpr(element, cfun)){
-        graph[cfun].insert(f);
-        fromFunNameToASTFun[cfun->getName()]= cfun;
-        fromFunNameToASTFun[f->getName()]=f;
-    }
-    return true;
-}  // LCOV_EXCL_LINE
-
 std::map<ASTFunction*, std::set<ASTFunction*>> CallGraphBuilder::getCallGraph(){
 
   return graph;

@@ -28,6 +28,8 @@ public:
    */
   Iterator begin(std::string const &order);
 
+  Iterator begin(std::string const &order) const;
+
   /*! \fn end
    *  \brief Construct an iterator pointing at the end of the tree.
    *

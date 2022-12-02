@@ -1,0 +1,19 @@
+addone(x) { 
+  return x+1;
+}
+
+square(x) {
+  return x*x;
+}
+
+identity(f) {
+  return f;
+}
+
+main() {
+    var n;
+    n = 7;
+    if (8 != identity(addone)(n)) error identity(addone)(n);
+    if (49 != identity(square)(n)) error identity(square)(n);
+    return 0;
+}

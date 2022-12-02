@@ -33,15 +33,11 @@ After cloning this repository you can build the compiler by moving to into the t
 
 The build process will download an up to date version of ANTLR4 if needed, build the C++ target for ANTLR4, and then build all of `tipc` including its substantial body of unit tests.  This may take some time - to speed it up use multiple threads in the `make` command, e.g., `make -j6`.
 
-You may see some warnings, e.g.,
-  * CMake policy warnings
-  * compile warnings for ignored type attribute ATN
-
-These are expected in the current version of the project; we will work to resolve them in future releases.
+You may see some warnings, e.g., CMake policy warnings, due to some of the packages we use in the project.  As those projects are updated, to avoid CMake feature deprecation, these will go away.
 
 When finished the `tipc` executable will be located in `build/src/`.  You can copy it to a more convenient location if you like, but a number of scripts in the project expect it to be in this location so don't move it.
 
-The project includes more than 300 unit tests grouped into several executables. The project also includes more than 70 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.  You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for more information.  
+The project includes more than 300 unit tests grouped into several executables. The project also includes more than 90 system tests. These are TIP programs that have built in test oracles that check for the expected results. For convenience, there is a `runtests.sh` script provided in the `bin` directory.  You can run this script to invoke the entire collection of tests. See the `README` in the bin directory for more information.  
 
 All of the tests should pass.
 
@@ -51,7 +47,7 @@ Our continuous integration process builds on both Ubuntu 18.04 and 20.04, so the
 
 ### Mac OS
 
-Our continuous integration process builds on Mac OS 10.15 and we regularly build and test on Mac OS 11.4, so modern versions of Mac OS are well-supported.  `tipc` builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.  
+Our continuous integration process builds on Mac OS 12, so modern versions of Mac OS are well-supported.  `tipc` builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.  
 
 ### Windows Subsystem for Linux
 
@@ -80,18 +76,19 @@ Generic Options:
 tipc Options:
 Options for controlling the TIP compilation process.
 
-  --asm                  - emit human-readable LLVM assembly language instead of LLVM Bitcode
-  --da=<ast output file> - dump the ast to a file in the dot syntax
-  --do                   - disable bitcode optimization
-  --log=<logfile>        - log all messages to logfile (enables --verbose)
-  --pp                   - pretty print
-  --ps                   - print symbols
-  --pt                   - print symbols with types (supercedes --ps)
-  --pcg           - print call graph
-  --verbose=<int> - enable log messages (Levels 1-3) 
-                     Level 1 - Symbols being added to the symbol table and type constraints being generated for the type solvers.
-                     Level 2 - Level 1 and type constraints being unified.
-                     Level 3 - Level 2 and type constraints being added and searched for in the type graph
+  --asm                          - emit human-readable LLVM assembly language
+  --do                           - disable bitcode optimization
+  --log=<logfile>                - log all messages to logfile (enables --verbose 3)
+  -o=<outputfile>                - write output to <outputfile>
+  --pa=<AST output file>         - print AST to a file in dot syntax
+  --pcg=<call graph output file> - print call graph to a file in dot syntax
+  --pp                           - pretty print
+  --ps                           - print symbols
+  --pt                           - print symbols with types (supercedes --ps)
+  --verbose=<int>                - enable log messages (Levels 1-3) 
+                                    Level 1 - Basic logging for every phase.
+                                    Level 2 - Level 1 and type constraints being unified.
+                                    Level 3 - Level 2 and union-find solving steps.
 ```
 By default it will accept a `.tip` file, parse it, perform a series of semantic analyses to determine if it is a legal TIP program, generate LLVM bitcode, and emit a `.bc` file which is a binary encoding of the bitcodes.  You can see a human readable version of the bitcodes by running `llvm-dis` on the `.bc` file.
 
@@ -206,7 +203,9 @@ Third, the project intentionally makes heavy use of the [Visitor pattern](https:
 
 Finally, the project is implemented in C++17 using modern features.  For example, all memory allocation uses smart pointers, we use unique pointers where possible and shared pointers as well, to realize the [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization) pattern.  Again this presents some challenges, but addressing them is illustrated in the `tipc` code base and hopefully they provide a good example for students.  
 
-The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance.  For the latter, we expect to make a new release of the project in early August every year.  This release will focus on improving the use of modern C++, as we come to better understand the best practices for C++20, and to incorporate better design principles, patterns, and practices.
+The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance.  For the latter, we expect to make a new release of the project in early August every year.  This release will focus on improving the use of modern C++
+and to incorporate better design principles, patterns, and practices.
+We welcome issue reports and pull-requests along these lines.
 
 ## Differences from TIP and Limitations
 

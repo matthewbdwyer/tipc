@@ -16,13 +16,11 @@ using namespace std;
 static cl::OptionCategory TIPcat("tipc Options","Options for controlling the TIP compilation process.");
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
-static cl::opt<bool> pcg("pcg", cl::desc("print call graph"), cl::cat(TIPcat));
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
 static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 1-3) \n Level 1 - Symbols being added to the symbol table, type constraints being generated for the type solvers, and control flow constraints being generated.\n Level 2 - Level 1 and type constraints being unified.\n Level 3 - Level 2 and type constraints being added and searched for in the type graph."), cl::cat(TIPcat));
 static cl::opt<bool> emitHrAsm("asm",
-                           cl::desc("emit human-readable LLVM assembly language instead of LLVM Bitcode"),
+                           cl::desc("emit human-readable LLVM assembly language"),
                            cl::cat(TIPcat));
-
 // CLEANUP - the following can be cleaned up by using an optimizer namespace
 static cl::opt<Optimizer::DisoptPass> disopt(cl::desc("Disable all or one optimization"), 
                                   cl::values(
@@ -42,9 +40,13 @@ static cl::opt<Optimizer::DisoptPass> disopt(cl::desc("Disable all or one optimi
                                               Optimizer::cmdLine[Optimizer::tce])),
                                   cl::cat(TIPcat));
 
-static cl::opt<std::string> astFile("da",
-                                 cl::value_desc("ast output file"),
-                                 cl::desc("dump the ast to a file in the dot syntax"),
+static cl::opt<std::string> cgFile("pcg", 
+                         cl::value_desc("call graph output file"),
+                         cl::desc("print call graph to a file in dot syntax"), 
+                         cl::cat(TIPcat));
+static cl::opt<std::string> astFile("pa",
+                                 cl::value_desc("AST output file"),
+                                 cl::desc("print AST to a file in dot syntax"),
                                  cl::cat(TIPcat));
 static cl::opt<std::string> logfile("log",
                                    cl::value_desc("logfile"),
@@ -116,9 +118,18 @@ int main(int argc, char *argv[]) {
         analysisResults->getSymbolTable()->print(std::cout);
       }
 
-      if(pcg) {
-         analysisResults->getCallGraph()->print(std::cout);
+      bool printCG = !cgFile.getValue().empty();
+      if(printCG) {
+        std::ofstream cgStream;
+        cgStream.open(cgFile);
+        if(!cgStream.good()) {
+          LOG_S(ERROR) << "tipc: error: failed to open '" << cgFile << "' for writing";
+          exit(1);
+        }
+
+        analysisResults->getCallGraph()->print(cgStream);
       }
+
       auto llvmModule = CodeGenerator::generate(ast.get(), analysisResults.get(), sourceFile);
 
       Optimizer::optimize(llvmModule.get(), disopt);
@@ -129,8 +140,8 @@ int main(int argc, char *argv[]) {
         CodeGenerator::emit(llvmModule.get(), outputfile);
       }
 
-      bool shouldDumpAST = !astFile.getValue().empty();
-      if(shouldDumpAST) {
+      bool printAST = !astFile.getValue().empty();
+      if(printAST) {
         std::ofstream astStream;
         astStream.open(astFile);
         if(!astStream.good()) {

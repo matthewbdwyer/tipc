@@ -27,6 +27,7 @@ bootstrap_ubuntu_dependencies() {
 
   wget https://apt.corretto.aws/corretto.key 
   gpg --dearmor corretto.key
+  rm corretto.key
   sudo mv corretto.key.gpg /usr/share/keyrings/amazon-corretto-${JAVA_VERSION}-keyring.gpg
   sudo cp ${ROOT_DIR}/bin/apt/amazon-corretto-${JAVA_VERSION}.sources /etc/apt/sources.list.d/
   sudo apt -y update
@@ -34,6 +35,7 @@ bootstrap_ubuntu_dependencies() {
   wget https://apt.kitware.com/kitware-archive.sh
   chmod +x kitware-archive.sh
   sudo ./kitware-archive.sh
+  rm kitware-archive.sh
 
   sudo apt -y install \
     java-$JAVA_VERSION-amazon-corretto-jdk \
@@ -44,11 +46,16 @@ bootstrap_ubuntu_dependencies() {
     antlr$ANTLR_VERSION \
     zlib1g-dev \
     lcov
+
+  if [ "$VERSION_ID" = "18.04" ]; then 
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  fi
   
   wget https://apt.llvm.org/llvm.sh
   sed -i -E 's,Ubuntu_(.*),&\n    Pop_\1,g' llvm.sh
   chmod +x llvm.sh
   sudo ./llvm.sh $LLVM_VERSION
+  rm llvm.sh
 
   sudo apt -y install \
     libllvm-$LLVM_VERSION-ocaml-dev \
@@ -66,7 +73,10 @@ bootstrap_ubuntu_dependencies() {
     libclang-$LLVM_VERSION-dev \
     libclang1-$LLVM_VERSION \
     clang-format-$LLVM_VERSION \
-    python3-clang-$LLVM_VERSION
+    python3-clang-$LLVM_VERSION \
+    graphviz \
+    jq \
+    doxygen
 }
 
 
@@ -111,7 +121,10 @@ bootstrap_mac_dependencies() {
     pkg-config \
     llvm@$LLVM_VERSION \
     antlr@$ANTLR_VERSION \
-    lcov
+    lcov \
+    graphviz \
+    jq \
+    doxygen
 }
 
 

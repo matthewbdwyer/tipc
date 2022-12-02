@@ -8,20 +8,29 @@ void PrettyPrinter::print(ASTProgram *p, std::ostream &os, char c, int n) {
   p->accept(&visitor);
 }
 
-void PrettyPrinter::endVisit(ASTProgram * element) {
-  std::string programString = "";
-  bool skip = true;
-  for (auto &fn : element->getFunctions()) {
-    if (skip) {
-      programString = visitResults.back() + programString;
-      visitResults.pop_back();
-      skip = false;
-      continue;
-    }
-    programString = visitResults.back() + "\n" + programString;
-    visitResults.pop_back();
+/**
+ * join last sz items from the visitedResults with delimiter delim. Then, remove these items from the stack
+ * 
+ * the delimiter before the last skip items are not appended (e.g. to not add trailing commas) 
+ * 
+ * returns the joined string
+ */
+std::string joinWithDelim(std::vector<std::string>& visitResults, std::string delim, int sz, int skip) {
+  std::string out;
+  int i;
+  for (i = visitResults.size() - sz; i < visitResults.size() - skip; i++) {
+    out += visitResults[i];
+    out += delim;
   }
-  os << programString;
+  // skip the delimiter for the last several tokens
+  for (; i < visitResults.size(); i++)
+    out += visitResults[i];
+  visitResults.erase(visitResults.begin() + visitResults.size() - sz, visitResults.end());
+  return out;
+}
+
+void PrettyPrinter::endVisit(ASTProgram * element) {
+  os << joinWithDelim(visitResults, "\n", element->getFunctions().size(), 1);
   os.flush();
 }
 
@@ -47,39 +56,14 @@ bool PrettyPrinter::visit(ASTFunction * element) {
  * they are on the visit stack in that order.
  */
 void PrettyPrinter::endVisit(ASTFunction * element) {
-  std::string bodyString = "";
-  for (auto &stmt : element->getStmts()) {
-    bodyString = visitResults.back() + "\n" + bodyString;
-    visitResults.pop_back();
-  }
-
-  for (auto &decl : element->getDeclarations()) {
-    bodyString = visitResults.back() + "\n" + bodyString;
-    visitResults.pop_back();
-  }
-
-  std::string formalsString = "";
-  bool skip = true;
-  for(auto &formal : element->getFormals()) {
-    if (skip) {
-      formalsString = visitResults.back() + formalsString;
-      visitResults.pop_back();
-      skip = false;
-      continue;
-    }
-    formalsString = visitResults.back() + ", " + formalsString;
-    visitResults.pop_back();
-  }
+  auto bodyString = joinWithDelim(visitResults, "\n", element->getStmts().size(), 0);
+  auto declString = joinWithDelim(visitResults, "\n", element->getDeclarations().size(), 0);
+  auto formalsString = joinWithDelim(visitResults, ", ", element->getFormals().size(), 1);
 
   // function name is last element on stack
-  std::string functionString = visitResults.back();
-  visitResults.pop_back();
-
-  functionString += "(" + formalsString + ") \n{\n" + bodyString + "}\n";
-
+  // we modify it in place
+  visitResults.back() += "(" + formalsString + ") \n{\n" + declString + bodyString + "}\n";
   indentLevel--;
-
-  visitResults.push_back(functionString);
 }
 
 void PrettyPrinter::endVisit(ASTNumberExpr * element) {
@@ -104,28 +88,8 @@ void PrettyPrinter::endVisit(ASTInputExpr * element) {
 }
 
 void PrettyPrinter::endVisit(ASTFunAppExpr * element) {
-  std::string funAppString;
-
-  /* 
-   * Skip printing of comma separator for last arg.
-   */ 
-  std::string actualsString = "";
-  bool skip = true;
-  for (auto &arg : element->getActuals()) {
-    if (skip) {
-      actualsString = visitResults.back() + actualsString;
-      visitResults.pop_back();
-      skip = false;
-      continue;
-    }
-    actualsString = visitResults.back() + ", " + actualsString;
-    visitResults.pop_back();
-  } 
-
-  funAppString = visitResults.back() + "(" + actualsString + ")";
-  visitResults.pop_back();
-
-  visitResults.push_back(funAppString);
+  auto actualsString = joinWithDelim(visitResults, ", ", element->getActuals().size(), 1);
+  visitResults.back() += "(" + actualsString + ")";
 }
 
 void PrettyPrinter::endVisit(ASTAllocExpr * element) {
@@ -157,24 +121,7 @@ void PrettyPrinter::endVisit(ASTFieldExpr * element) {
 }
 
 void PrettyPrinter::endVisit(ASTRecordExpr * element) {
-  /* 
-   * Skip printing of comma separator for last record element.
-   */ 
-  std::string fieldsString = "";
-  bool skip = true;
-  for (auto &f : element->getFields()) {
-    if (skip) {
-      fieldsString = visitResults.back() + fieldsString;
-      visitResults.pop_back();
-      skip = false;
-      continue;
-    }
-    fieldsString = visitResults.back() + ", " + fieldsString;
-    visitResults.pop_back();
-  } 
-
-  std::string recordString = "{" + fieldsString + "}";
-  visitResults.push_back(recordString);
+  visitResults.push_back("{" + joinWithDelim(visitResults, ", ", element->getFields().size(), 1) + "}");
 }
 
 void PrettyPrinter::endVisit(ASTAccessExpr * element) {
@@ -188,22 +135,7 @@ void PrettyPrinter::endVisit(ASTDeclNode * element) {
 }
 
 void PrettyPrinter::endVisit(ASTDeclStmt * element) {
-  std::string declString = "";
-  bool skip = true;
-  for (auto &id : element->getVars()) {
-    if (skip) {
-      declString = visitResults.back() + declString;
-      visitResults.pop_back();
-      skip = false;
-      continue;
-    }
-    declString = visitResults.back() + ", " + declString;
-    visitResults.pop_back();
-  }
-
-  declString = indent() + "var " + declString + ";";
-
-  visitResults.push_back(declString);
+  visitResults.push_back(indent() + "var " + joinWithDelim(visitResults, ", ", element->getVars().size(), 1) + ";");
 }
 
 void PrettyPrinter::endVisit(ASTAssignStmt * element) {
@@ -220,17 +152,8 @@ bool PrettyPrinter::visit(ASTBlockStmt * element) {
 }
 
 void PrettyPrinter::endVisit(ASTBlockStmt * element) {
-  std::string stmtsString = "";
-  for (auto &s : element->getStmts()) {
-    stmtsString = visitResults.back() + "\n" + stmtsString;
-    visitResults.pop_back();
-  } 
-
   indentLevel--;
-
-  std::string blockString = indent() + "{\n" + stmtsString + indent() + "}";
-
-  visitResults.push_back(blockString);
+  visitResults.push_back(indent() + "{\n" + joinWithDelim(visitResults, "\n", element->getStmts().size(), 0) + indent() + "}");
 }
 
 /*

@@ -14,11 +14,7 @@ public:
 
   virtual SyntaxTree operator* () = 0;
 
-  virtual const SyntaxTree operator* () const = 0;
-
   virtual SyntaxTree *operator->() = 0;
-
-  virtual const SyntaxTree *operator-> () const = 0;
 
   virtual void operator++ () = 0;
 

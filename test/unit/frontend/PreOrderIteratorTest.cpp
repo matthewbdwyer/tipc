@@ -1,6 +1,7 @@
 #include "ASTHelper.h"
 #include "PrettyPrinter.h"
 #include "SyntaxTree.h"
+#include "PreOrderIterator.h"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -35,4 +36,71 @@ TEST_CASE("PreOrderIterator: Test Traversal", "[PreOrderIterator]") {
     actual_node << *iter->getRoot();
     REQUIRE(expected_node_order.at(i++) == actual_node.str());
   }
+}
+
+TEST_CASE("PreOrderIterator: Test dereference", "[PreOrderIterator]") {
+  std::stringstream stream;
+  stream << R"(
+      short() {
+        var x;
+        return 5;
+      }
+    )";
+  std::shared_ptr<ASTProgram> ast = std::move(ASTHelper::build_ast(stream));
+  SyntaxTree syntaxTree(ast);
+  auto iter = syntaxTree.begin("");
+  REQUIRE(syntaxTree.getRoot() == (*iter).getRoot());
+  REQUIRE(syntaxTree.getRoot() == iter->getRoot());
+}
+
+
+TEST_CASE("PreOrderIterator: Test Cloning", "[PreOrderIterator]") {
+  std::stringstream stream;
+  stream << R"(
+      short() {
+        var x;
+        return 5;
+      }
+    )";
+
+  std::shared_ptr<ASTProgram> ast = std::move(ASTHelper::build_ast(stream));
+  SyntaxTree syntaxTree(ast);
+  auto iter = new PreOrderIterator(syntaxTree, false);
+  auto cloned = iter->clone();
+
+  REQUIRE(iter->get_tree().getRoot() == cloned->get_tree().getRoot());
+}
+
+TEST_CASE("PreOrderIterator: Exhausted increment returns gracefully", "[PreOrderIterator]") {
+  std::stringstream stream;
+  stream << R"(
+      short() {
+        var x;
+        return 5;
+      }
+    )";
+
+  std::shared_ptr<ASTProgram> ast = std::move(ASTHelper::build_ast(stream));
+  SyntaxTree syntaxTree(ast);
+  auto iter = syntaxTree.begin("");
+  for(; iter != syntaxTree.end(""); ++iter);
+
+  REQUIRE_NOTHROW(iter++);
+}
+
+TEST_CASE("PreOrderIterator: Sentinel end", "[PreOrderIterator]") {
+  std::stringstream stream;
+  stream << R"(
+      short() {
+        var x;
+        return 5;
+      }
+    )";
+
+  std::shared_ptr<ASTProgram> ast = std::move(ASTHelper::build_ast(stream));
+  SyntaxTree syntaxTree(ast);
+  auto begin = PreOrderIterator(syntaxTree, false);
+  auto end = PreOrderIterator(syntaxTree, true);
+
+  REQUIRE(begin != end);
 }

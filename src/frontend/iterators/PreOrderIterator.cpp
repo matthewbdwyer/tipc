@@ -13,15 +13,7 @@ SyntaxTree PreOrderIterator::operator*() {
   return stack.top();
 }
 
-SyntaxTree const PreOrderIterator::operator*() const {
-  return stack.top();
-}
-
 SyntaxTree *PreOrderIterator::operator->() {
-  return &stack.top();
-}
-
-const SyntaxTree *PreOrderIterator::operator->() const {
   return &stack.top();
 }
 
@@ -53,5 +45,5 @@ void PreOrderIterator::operator++() {
 
 IteratorImpl * PreOrderIterator::clone() {
   return new PreOrderIterator(*this);
-}
+}  // LCOV_EXCL_LINE
 

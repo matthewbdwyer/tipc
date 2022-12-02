@@ -22,7 +22,6 @@ public:
     bool visit(ASTFunction* element) override;
     bool visit(ASTFunAppExpr* element) override;
     bool visit(ASTVariableExpr* element) override;
-    bool visit(ASTReturnStmt* element) override;
 
     /*! \brief Returns the call graph, call graph a map from caller to callee, the callee is a set of ASTFunction* and the caller is an ASTFunction*
     */

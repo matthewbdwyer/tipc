@@ -31,6 +31,12 @@ public:
    */
   std::shared_ptr<ASTProgram> build(TIPParser::ProgramContext *ctx);
 
+  /**
+   * a helper function to build binary expressions
+   */  
+  template <typename T>
+  void visitBinaryExpr(T* ctx, const std::string& op);
+
   Any visitFunction(TIPParser::FunctionContext *ctx) override;
   Any visitNegNumber(TIPParser::NegNumberContext *ctx) override;
   Any visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) override;
