@@ -6,9 +6,9 @@
 
 using namespace llvm;
 
-std::unique_ptr<Module> CodeGenerator::generate(ASTProgram* program, 
+std::shared_ptr<Module> CodeGenerator::generate(ASTProgram* program, 
                                 SemanticAnalysis* analysisResults, std::string fileName) {
-  return std::move(program->codegen(analysisResults, fileName));
+  return program->codegen(analysisResults, fileName);
 }  // LCOV_EXCL_LINE
 
 void CodeGenerator::emit(llvm::Module* m, std::string filename) {

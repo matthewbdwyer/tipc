@@ -42,7 +42,7 @@ public:
    * \param stream the input stream holding the program text.
    * \return the generated AST.
    */
-  static std::unique_ptr<ASTProgram> parse(std::istream& stream);
+  static std::shared_ptr<ASTProgram> parse(std::istream& stream);
 
   /*! \fn print
    *  \brief Print program in a standard form to cout.

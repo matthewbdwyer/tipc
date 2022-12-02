@@ -8,7 +8,7 @@ program : (function)+
 
 function : nameDeclaration 
            '(' (nameDeclaration (',' nameDeclaration)*)? ')' 
-           '{' (declaration*) (statement*) returnStmt '}' 
+           '{' (declaration*) (statement*) '}' 
 ;
 
 ////////////////////// TIP Declarations ///////////////////////// 
@@ -65,6 +65,7 @@ statement : blockStmt
     | ifStmt
     | outputStmt
     | errorStmt
+    | returnStmt
 ;
 
 assignStmt : expr '=' expr ';' ;

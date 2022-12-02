@@ -2,10 +2,9 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-ASTProgram::ASTProgram(std::vector<std::unique_ptr<ASTFunction>> FUNCTIONS) {
+ASTProgram::ASTProgram(std::vector<std::shared_ptr<ASTFunction>> FUNCTIONS) {
   for(auto &func : FUNCTIONS) {
-    std::shared_ptr<ASTFunction> f = std::move(func);
-    this->FUNCTIONS.push_back(f);
+    this->FUNCTIONS.push_back(func);
   }
 }
 

@@ -15,26 +15,49 @@
 
 using namespace llvm;
 
-void Optimizer::optimize(Module* theModule) {
+void Optimizer::optimize(Module* theModule, DisoptPass pass) {
   LOG_S(1) << "Optimizing program " << theModule->getName().str();
+
+  if (pass == Optimizer::DisoptPass::all) return;
 
   // Create a pass manager to simplify generated module
   auto TheFPM = std::make_unique<legacy::FunctionPassManager>(theModule);
 
   // Promote allocas to registers.
-  TheFPM->add(createPromoteMemoryToRegisterPass());
+  if (pass != Optimizer::DisoptPass::pmr) {
+    LOG_S(1) << "Enabling Promote Memory to Register Pass";
+    TheFPM->add(createPromoteMemoryToRegisterPass());
+  }
 
   // Do simple "peephole" optimizations
-  TheFPM->add(createInstructionCombiningPass());
+  if (pass != Optimizer::DisoptPass::ic) {
+    LOG_S(1) << "Enabling Instruction Combining Pass";
+    TheFPM->add(createInstructionCombiningPass());
+  }
 
   // Reassociate expressions.
-  TheFPM->add(createReassociatePass());
+  if (pass != Optimizer::DisoptPass::re) {
+    LOG_S(1) << "Enabling Reassociation Pass";
+    TheFPM->add(createReassociatePass());
+  }
 
   // Eliminate Common SubExpressions.
-  TheFPM->add(createGVNPass());
+  if (pass != Optimizer::DisoptPass::gvn) {
+    LOG_S(1) << "Enabling Elimination of Common Subexpression Pass";
+    TheFPM->add(createGVNPass());
+  }
 
   // Simplify the control flow graph (deleting unreachable blocks, etc).
-  TheFPM->add(createCFGSimplificationPass());
+  if (pass != Optimizer::DisoptPass::cfgs) {
+    LOG_S(1) << "Enabling Simplify Control Flow Graph Pass";
+    TheFPM->add(createCFGSimplificationPass());
+  }
+
+  // Eliminate tail calls
+  if (pass != Optimizer::DisoptPass::tce) {
+    LOG_S(1) << "Enabling Tail Call Elimination Pass";
+    TheFPM->add(createTailCallEliminationPass());
+  }
 
   // initialize and run simplification pass on each function
   TheFPM->doInitialization();

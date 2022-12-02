@@ -9,7 +9,7 @@ class ASTOutputStmt : public ASTStmt {
   std::shared_ptr<ASTExpr> ARG;
 public:
   std::vector<std::shared_ptr<ASTNode>> getChildren() override;
-  ASTOutputStmt(std::unique_ptr<ASTExpr> ARG) : ARG(std::move(ARG)) {}
+  ASTOutputStmt(std::shared_ptr<ASTExpr> ARG) : ARG(ARG) {}
   ASTExpr* getArg() const { return ARG.get(); }
   void accept(ASTVisitor * visitor) override;
   llvm::Value* codegen() override;

@@ -103,7 +103,7 @@ std::map<std::basic_string<char>, int> fieldIndex;
 std::vector<std::basic_string<char>> fieldVector;
 
 // Permits getFunction to access the current module being compiled
-std::unique_ptr<Module> CurrentModule;
+std::shared_ptr<Module> CurrentModule;
 
 /*
  * We use calls to llvm intrinsics for several purposes.  To construct a "nop",
@@ -217,24 +217,21 @@ AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::strin
 
 /********************* codegen() routines ************************/
 
-std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
+std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
                                                   std::string programName) {
   LOG_S(1) << "Generating code for program " << programName;
 
   // Create module to hold generated code
-  auto TheModule = std::make_unique<Module>(programName, TheContext);
+  CurrentModule = std::make_shared<Module>(programName, TheContext);
 
   // Set the default target triple for this platform
   llvm:Triple targetTriple(llvm::sys::getProcessTriple());
-  TheModule->setTargetTriple(targetTriple.str());
+  CurrentModule->setTargetTriple(targetTriple.str());
 
   // Initialize nop declaration
-  nop = Intrinsic::getDeclaration(TheModule.get(), Intrinsic::donothing);
+  nop = Intrinsic::getDeclaration(CurrentModule.get(), Intrinsic::donothing);
 
   labelNum = 0;
-
-  // Transfer the module for access by shared codegen routines
-  CurrentModule = std::move(TheModule);
 
   /*
    * This shallow pass over the function declarations builds the
@@ -375,11 +372,9 @@ std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
     fn->codegen();
   }
 
-  TheModule = std::move(CurrentModule);
+  verifyModule(*CurrentModule);
 
-  verifyModule(*TheModule);
-
-  return TheModule;
+  return CurrentModule;
 }
 
 llvm::Value* ASTFunction::codegen() {
@@ -447,6 +442,12 @@ llvm::Value* ASTFunction::codegen() {
       throw InternalError("failed to generate bitcode for the function statement"); // LCOV_EXCL_LINE
     }
   }
+
+  // To support multiple return statements, we introduce an "after return" basic
+  // block.  For the last return statement in the program this block will have
+  // a call to "nop", but will not be terminated by a branch or return.  This
+  // violates an LLVM basic block invariant, so we add an unreachable return here.
+  Builder.CreateRet(zeroV);
 
   verifyFunction(*TheFunction);
   return TheFunction;
@@ -1046,9 +1047,29 @@ llvm::Value* ASTErrorStmt::codegen() {
   return Builder.CreateCall(errorIntrinsic, ArgsV);
 }
 
+/* Basic Blocks in LLVM must be terminated with a branch or return statement.
+ * Most codegen routines manage this by ensuring the blocks end with branches.
+ * Returns, however, are just emitted at the current insertion point.  To
+ * maintain the LLVM block structure, we create a new block and set the insertion
+ * point for any statements following the return.  This ensures that they 
+ * are in a different basic block.  To avoid generating an empty basic block
+ * we add a "nop" call to it.  Note that this basic block will be unreachable
+ * but that will be cleaned up by the CFG simplification optimization pass.
+ */
 llvm::Value* ASTReturnStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   Value *argVal = getArg()->codegen();
-  return Builder.CreateRet(argVal);
+  if (argVal == nullptr) {
+    throw InternalError("failed to generate bitcode for the argument of return statement");
+  }
+  auto retCode = Builder.CreateRet(argVal);
+
+  // Setup the after return basic block as the insertion point
+  llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
+  labelNum++; 
+  BasicBlock *AfterReturnBB = BasicBlock::Create(
+      TheContext, "afterreturn" + std::to_string(labelNum), TheFunction);
+  Builder.SetInsertPoint(AfterReturnBB);
+  return Builder.CreateCall(nop);
 } // LCOV_EXCL_LINE

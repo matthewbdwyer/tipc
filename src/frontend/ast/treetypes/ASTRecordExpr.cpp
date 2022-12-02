@@ -2,10 +2,9 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-ASTRecordExpr::ASTRecordExpr(std::vector<std::unique_ptr<ASTFieldExpr>> FIELDS) {
+ASTRecordExpr::ASTRecordExpr(std::vector<std::shared_ptr<ASTFieldExpr>> FIELDS) {
   for(auto &field : FIELDS) {
-    std::shared_ptr<ASTFieldExpr> f = std::move(field);
-    this->FIELDS.push_back(f);
+    this->FIELDS.push_back(field);
   }
 }
 

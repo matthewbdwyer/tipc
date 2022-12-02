@@ -38,12 +38,13 @@ bool TypeConstraintVisitor::visit(ASTFunction * element) {
 
 /*! \brief Type constraints for function definition.
  *
- * Type rules for "main(X1, ..., Xn) { ... return E; }":
- *   [[X1]] = [[Xn]] = [[E]] = int
+ * Type rules for "main(X1, ..., Xn) { ... return E1; ... return En;}":
+ *   [[X1]] = ... = [[Xn]] = [[E1]] = ... = [[En]] = int
  * To express this we will equate all type variables to int.
  *
- * Type rules for "X(X1, ..., Xn) { ... return E; }":
- *   [[X]] = ([[X1]], ..., [[Xn]]) -> [[E]]
+ * Type rules for "X(X1, ..., Xn) { ... return E1; ... return En;}":
+ *   [[X]] = ([[X1]], ..., [[Xn]]) -> [[E1]]
+ *   [[E1]] = ... = [[En]]
  */
 void TypeConstraintVisitor::endVisit(ASTFunction * element) {
   if (element->getName() == "main") {
@@ -54,23 +55,34 @@ void TypeConstraintVisitor::endVisit(ASTFunction * element) {
       constraintHandler->handle(astToVar(f), std::make_shared<TipInt>());
     }
 
-    // Return is the last statement and must be int
-    auto ret = dynamic_cast<ASTReturnStmt*>(element->getStmts().back());
-    constraintHandler->handle(astToVar(ret->getArg()), std::make_shared<TipInt>());
+    ASTExpr* ret = nullptr;
+    for(auto &e : element->getReturnExprs()) {
+       auto r = dynamic_cast<ASTExpr*>(e);
+       // all return expressions are int
+       constraintHandler->handle(astToVar(r), std::make_shared<TipInt>());
+       ret = r; 
+    }
 
     constraintHandler->handle(astToVar(element->getDecl()),
-                              std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
+                              std::make_shared<TipFunction>(formals, astToVar(ret)));
+
   } else {
     std::vector<std::shared_ptr<TipType>> formals;
     for(auto &f : element->getFormals()) {
       formals.push_back(astToVar(f));
     }
 
-    // Return is the last statement 
-    auto ret = dynamic_cast<ASTReturnStmt*>(element->getStmts().back());
+    ASTExpr* ret = nullptr;
+    for(auto &e : element->getReturnExprs()) {
+       auto r = dynamic_cast<ASTExpr*>(e);
+       if (ret != nullptr) {
+         constraintHandler->handle(astToVar(r), astToVar(ret));
+       }
+       ret = r; 
+    }
 
     constraintHandler->handle(astToVar(element->getDecl()),
-                              std::make_shared<TipFunction>(formals, astToVar(ret->getArg())));
+                              std::make_shared<TipFunction>(formals, astToVar(ret)));
   }
 }
 
