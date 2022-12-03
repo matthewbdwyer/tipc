@@ -44,6 +44,10 @@ bootstrap_ubuntu_dependencies() {
     antlr$ANTLR_VERSION \
     zlib1g-dev \
     lcov
+
+  if [ "$VERSION_ID" = "18.04" ]; then 
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  fi
   
   wget https://apt.llvm.org/llvm.sh
   sed -i -E 's,Ubuntu_(.*),&\n    Pop_\1,g' llvm.sh
