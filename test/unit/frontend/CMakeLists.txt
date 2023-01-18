@@ -8,7 +8,6 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/PrettyPrinterTest.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/PreOrderIteratorTest.cpp
 		  ${CMAKE_CURRENT_SOURCE_DIR}/SyntaxTreeTest.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTNodeTest.cpp
 		  ${CMAKE_CURRENT_SOURCE_DIR}/treetypes/ASTProgramTest.cpp)
 target_include_directories(
   frontend_unit_tests
