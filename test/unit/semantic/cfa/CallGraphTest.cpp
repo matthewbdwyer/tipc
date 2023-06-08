@@ -18,12 +18,18 @@ TEST_CASE("CallGraph: getter for num of vertices and edges" "[CallGraph]") {
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   bar->foo
+     */
 
-     REQUIRE(callGraph.get()->getTotalVertices() == 2); // 2 subroutines
-     REQUIRE(callGraph.get()->getTotalEdges() == 1); // 1 edge from bar ->foo
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+    REQUIRE(callGraph.get()->getTotalVertices() == 2); 
+    REQUIRE(callGraph.get()->getTotalEdges() == 1); 
+
+    REQUIRE(callGraph.get()->existEdge("bar", "foo"));
 }
 
 
@@ -48,17 +54,20 @@ TEST_CASE("CallGraph: simple call graph with cycle(recursion)" "[CallGraph]") {
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   main->foo	direct call
+     *   foo->foo	indirect call through 2nd parameter
+     */
 
-     REQUIRE(callGraph.get()->getTotalVertices() == 2); // 2 subroutines
-     REQUIRE(callGraph.get()->getTotalEdges() == 2); // 1 edge from main ->foo and foo->foo
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
 
+    REQUIRE(callGraph.get()->getTotalVertices() == 2); 
+    REQUIRE(callGraph.get()->getTotalEdges() == 2); 
 
-      //std::vector<std::pair<ASTFunction*, ASTFunction*>> edges =  callGraph.get()->getEdges();
-      //check if there is an edge between foo and foo
-      REQUIRE(true == callGraph.get()->existEdge("foo", "foo"));
+    REQUIRE(callGraph.get()->existEdge("main", "foo"));
+    REQUIRE(callGraph.get()->existEdge("foo", "foo"));
 }
 
 
@@ -90,19 +99,28 @@ TEST_CASE("CallGraph: test complex call graph (overapproximations)" "[CallGraph]
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   main->h	direct call
+     *   main->f	direct call
+     *   h->g		indirect call through local from parameter
+     *   h->f		indirect call through local from parameter
+     *   g->f		direct call
+     */
 
-    // callGraph.get()->print(std::cout);
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
 
-     REQUIRE(callGraph.get()->getTotalVertices() == 4); // 2 subroutines
-     REQUIRE(callGraph.get()->getTotalEdges() == 6);
+    REQUIRE(callGraph.get()->getTotalVertices() == 4);
+    REQUIRE(callGraph.get()->getTotalEdges() == 5);
 
-     //check overapproximations, e.g., edge from h->g and h->f
-     REQUIRE(true == callGraph.get()->existEdge("h", "g"));
-     REQUIRE(true == callGraph.get()->existEdge("h", "f"));  //check some false properties
-     REQUIRE(false == callGraph.get()->existEdge("f", "f"));  //check some false properties
+    REQUIRE(callGraph.get()->existEdge("main", "h"));
+    REQUIRE(callGraph.get()->existEdge("main", "f"));
+    REQUIRE(callGraph.get()->existEdge("h", "g"));
+    REQUIRE(callGraph.get()->existEdge("h", "f"));  
+    REQUIRE(callGraph.get()->existEdge("g", "f"));
+
+    REQUIRE_FALSE(callGraph.get()->existEdge("f", "f"));  
 
 }
 
@@ -134,19 +152,24 @@ TEST_CASE("CallGraph: test getCallee by function name" "[CallGraph]") {
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   main->h	direct call
+     *   main->f	direct call
+     *   h->g		indirect call through local from parameter
+     *   h->f		indirect call through local from parameter
+     *   g->f		direct call
+     */
 
-     //check the size of callees, also can be checked whether a function is being called by another function
-     REQUIRE(callGraph.get()->getCallees("main").size()==3);
-     REQUIRE(callGraph.get()->getCallees("h").size()==2);
-     REQUIRE(callGraph.get()->getCallees("g").size()==1);
-     REQUIRE(callGraph.get()->getCallees("f").size()==0);
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+    REQUIRE(callGraph.get()->getCallees("main").size()==2);
+    REQUIRE(callGraph.get()->getCallees("h").size()==2);
+    REQUIRE(callGraph.get()->getCallees("g").size()==1);
+    REQUIRE(callGraph.get()->getCallees("f").size()==0);
 
 }
-
-
 
 TEST_CASE("CallGraph: test getCallee by ASTFunction*" "[CallGraph]") {
     std::stringstream program;
@@ -176,16 +199,26 @@ TEST_CASE("CallGraph: test getCallee by ASTFunction*" "[CallGraph]") {
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   main->h	direct call
+     *   main->f	direct call
+     *   h->g		indirect call through local from parameter
+     *   h->f		indirect call through local from parameter
+     *   g->f		direct call
+     */
 
-     ASTFunction* caller = callGraph.get()->getASTFun("main");
-     ASTFunction* callee = callGraph.get()->getASTFun("h");
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
 
-     std::set<ASTFunction*> callees = callGraph.get()->getCallees(caller);
-     REQUIRE(callees.size() == 3); // as main called h,g,f, size should be 3
-     REQUIRE(true == (callees.find(callee)!= callees.end())); // h should be in the callee set
+    ASTFunction* caller = callGraph.get()->getASTFun("main");
+    ASTFunction* callee = callGraph.get()->getASTFun("h");
+
+    std::set<ASTFunction*> callees = callGraph.get()->getCallees(caller);
+    REQUIRE(callees.size() == 2); 
+
+    // h is one of main's callees
+    REQUIRE(callees.find(callee)!= callees.end()); 
 }
 
 TEST_CASE("CallGraph: test getCallers" "[CallGraph]") {
@@ -199,18 +232,20 @@ TEST_CASE("CallGraph: test getCallers" "[CallGraph]") {
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   bar->foo	direct call
+     */
 
-     //ASTFunction* callee = (ASTFunction*) symTable.get()->getFunction("foo");
-     //ASTFunction* caller = (ASTFunction*) symTable.get()->getFunction("bar");
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
 
-     std::set<std::string> callers = callGraph.get()->getCallers("foo");
-     REQUIRE(callers.size() == 1); // as bar called foo, size should be 1
-     REQUIRE(true == (callers.find("bar")!= callers.end())); // bar should be in the set
+    std::set<std::string> callers = callGraph.get()->getCallers("foo");
+    REQUIRE(callers.size() == 1); 
+
+    // bar is one of foo's callers
+    REQUIRE(callers.find("bar")!= callers.end()); 
 }
-
 
 TEST_CASE("CallGraph: test getCallers by ASTFunction*" "[CallGraph]") {
     std::stringstream program;
@@ -223,16 +258,22 @@ TEST_CASE("CallGraph: test getCallers by ASTFunction*" "[CallGraph]") {
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   bar->foo	direct call
+     */
 
-     ASTFunction* callee = callGraph.get()->getASTFun("foo");
-     ASTFunction* caller = callGraph.get()->getASTFun("bar");
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
 
-     std::set<ASTFunction*> callers = callGraph.get()->getCallers(callee);
-     REQUIRE(callers.size() == 1); // as bar called foo, size should be 1
-     REQUIRE(true == (callers.find(caller)!= callers.end())); // bar should be in the set
+    ASTFunction* callee = callGraph.get()->getASTFun("foo");
+    ASTFunction* caller = callGraph.get()->getASTFun("bar");
+
+    std::set<ASTFunction*> callers = callGraph.get()->getCallers(callee);
+    REQUIRE(callers.size() == 1); 
+
+    // bar is one of foo's callers
+    REQUIRE(callers.find(caller)!= callers.end());
 }
 
 TEST_CASE("CallGraph: test getEdges" "[CallGraph]") {
@@ -249,20 +290,25 @@ TEST_CASE("CallGraph: test getEdges" "[CallGraph]") {
       }
     )";
 
-     auto ast = ASTHelper::build_ast(program);
-     auto symTable = SymbolTable::build(ast.get());
-     auto callGraph = CallGraph::build(ast.get(), symTable.get());
+    /* Call graph should be:
+     *   bar->foo2	direct call
+     *   foo2->foo1	direct call
+     */
 
-     ASTFunction* foo2 = callGraph.get()->getASTFun("foo2");
-     ASTFunction* foo1 = callGraph.get()->getASTFun("foo1");
-     ASTFunction* bar = callGraph.get()->getASTFun("bar");
+    auto ast = ASTHelper::build_ast(program);
+    auto symTable = SymbolTable::build(ast.get());
+    auto callGraph = CallGraph::build(ast.get(), symTable.get());
+
+    ASTFunction* foo2 = callGraph.get()->getASTFun("foo2");
+    ASTFunction* foo1 = callGraph.get()->getASTFun("foo1");
+    ASTFunction* bar = callGraph.get()->getASTFun("bar");
 
      std::vector<std::pair<ASTFunction*, ASTFunction*>> edges = callGraph.get()->getEdges();
-     REQUIRE(edges.size() == 2); //size should be 2
+     REQUIRE(edges.size() == 2); 
 
-     //check if two edges in the graph
-     REQUIRE(true ==(std::find(edges.begin(), edges.end(), std::make_pair(foo2, foo1))!=edges.end()));
-     REQUIRE(true ==(std::find(edges.begin(), edges.end(), std::make_pair(bar, foo2))!=edges.end()));
+     // check for the two edges
+     REQUIRE(std::find(edges.begin(), edges.end(), std::make_pair(foo2, foo1))!=edges.end());
+     REQUIRE(std::find(edges.begin(), edges.end(), std::make_pair(bar, foo2))!=edges.end());
 }
 
 TEST_CASE("CallGraph: test SemanticAnalysis" "[CallGraph]") {
@@ -299,6 +345,11 @@ TEST_CASE("CallGraph: test print method" "[CallGraph]") {
       }
     )";
 
+    /* Call graph should be:
+     *   bar->foo2	direct call
+     *   foo2->foo1	direct call
+     */
+
     auto ast = ASTHelper::build_ast(program);
     auto analysisResults = SemanticAnalysis::analyze(ast.get());
     auto callGraph = analysisResults.get()->getCallGraph();
@@ -306,6 +357,8 @@ TEST_CASE("CallGraph: test print method" "[CallGraph]") {
     std::stringstream outputStream;
     callGraph->print(outputStream);
     std::string output = outputStream.str();
+
+    // The following are the elements expected in the dot file format
 
     std::size_t found = output.find("digraph CFG{");
     REQUIRE(found!=std::string::npos);
