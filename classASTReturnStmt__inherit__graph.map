@@ -1,4 +1,5 @@
 <map id="ASTReturnStmt" name="ASTReturnStmt">
-<area shape="rect" id="node2" href="$classASTStmt.html" title="Base class for all statement nodes. " alt="" coords="26,80,105,107"/>
-<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes. " alt="" coords="25,5,106,32"/>
+<area shape="rect" id="node1" title="Class for a return statement." alt="" coords="5,155,127,181"/>
+<area shape="rect" id="node2" href="$classASTStmt.html" title="Base class for all statement nodes." alt="" coords="27,80,105,107"/>
+<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="25,5,107,32"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="ASTFunAppExpr" name="ASTFunAppExpr">
-<area shape="rect" id="node2" href="$classASTExpr.html" title="Abstract class for all expression subtypes. " alt="" coords="29,80,105,107"/>
-<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes. " alt="" coords="26,5,107,32"/>
+<area shape="rect" id="node1" title="Class for function call expressions." alt="" coords="5,155,129,181"/>
+<area shape="rect" id="node2" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="29,80,105,107"/>
+<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="27,5,108,32"/>
 </map>

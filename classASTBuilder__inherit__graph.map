@@ -1,2 +1,4 @@
 <map id="ASTBuilder" name="ASTBuilder">
+<area shape="rect" id="node1" title="Parse tree visitor that generates a program AST." alt="" coords="17,80,110,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,121,32"/>
 </map>

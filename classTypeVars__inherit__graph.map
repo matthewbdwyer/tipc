@@ -1,3 +1,4 @@
 <map id="TypeVars" name="TypeVars">
-<area shape="rect" id="node2" href="$classTipTypeVisitor.html" title="Base class for TIP type visitors. " alt="" coords="5,5,120,32"/>
+<area shape="rect" id="node1" title="Produces set of type variables in a type expression." alt="" coords="23,80,103,107"/>
+<area shape="rect" id="node2" href="$classTipTypeVisitor.html" title="Base class for TIP type visitors." alt="" coords="5,5,120,32"/>
 </map>

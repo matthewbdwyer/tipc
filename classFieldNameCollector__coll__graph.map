@@ -1,3 +1,4 @@
 <map id="FieldNameCollector" name="FieldNameCollector">
-<area shape="rect" id="node2" href="$classASTVisitor.html" title="Base class for AST visitors. " alt="" coords="35,5,125,32"/>
+<area shape="rect" id="node1" title="Collects all field names referenced within the program." alt="" coords="5,80,156,107"/>
+<area shape="rect" id="node2" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="36,5,125,32"/>
 </map>

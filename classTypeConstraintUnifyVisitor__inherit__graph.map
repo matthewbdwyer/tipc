@@ -1,4 +1,5 @@
 <map id="TypeConstraintUnifyVisitor" name="TypeConstraintUnifyVisitor">
-<area shape="rect" id="node2" href="$classTypeConstraintVisitor.html" title="Visitor generates type constraints and processes them. " alt="" coords="23,80,184,107"/>
-<area shape="rect" id="node3" href="$classASTVisitor.html" title="Base class for AST visitors. " alt="" coords="59,5,148,32"/>
+<area shape="rect" id="node1" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="5,155,200,181"/>
+<area shape="rect" id="node2" href="$classTypeConstraintVisitor.html" title="Visitor generates type constraints and processes them." alt="" coords="22,80,183,107"/>
+<area shape="rect" id="node3" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="58,5,147,32"/>
 </map>

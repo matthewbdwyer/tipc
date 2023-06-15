@@ -1,4 +1,5 @@
 <map id="ASTDeRefExpr" name="ASTDeRefExpr">
-<area shape="rect" id="node2" href="$classASTExpr.html" title="Abstract class for all expression subtypes. " alt="" coords="25,80,101,107"/>
-<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes. " alt="" coords="22,5,103,32"/>
+<area shape="rect" id="node1" title="Class for dereferencing a pointer expression." alt="" coords="5,155,121,181"/>
+<area shape="rect" id="node2" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="25,80,101,107"/>
+<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="23,5,104,32"/>
 </map>

@@ -1,3 +1,4 @@
 <map id="ASTProgram" name="ASTProgram">
-<area shape="rect" id="node2" href="$classASTNode.html" title="Abstract base class for all AST nodes. " alt="" coords="16,5,97,32"/>
+<area shape="rect" id="node1" title="Class for a program which is a name and a list of functions." alt="" coords="5,80,108,107"/>
+<area shape="rect" id="node2" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="16,5,97,32"/>
 </map>

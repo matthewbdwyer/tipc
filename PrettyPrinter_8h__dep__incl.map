@@ -1,5 +1,6 @@
 <map id="/home/runner/work/tipc/tipc/src/frontend/prettyprint/PrettyPrinter.h" name="/home/runner/work/tipc/tipc/src/frontend/prettyprint/PrettyPrinter.h">
-<area shape="rect" id="node2" href="$FrontEnd_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/frontend/FrontEnd.cpp" alt="" coords="5,117,224,158"/>
-<area shape="rect" id="node3" href="$PrettyPrinter_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/frontend/prettyprint\l/PrettyPrinter.cpp" alt="" coords="248,109,453,165"/>
-<area shape="rect" id="node4" href="$CheckAssignable_8cpp.html" title="/home/runner/work/tipc\l/tipc/src/semantic/weeding\l/CheckAssignable.cpp" alt="" coords="478,109,674,165"/>
+<area shape="rect" id="node1" title=" " alt="" coords="250,5,455,61"/>
+<area shape="rect" id="node2" href="$FrontEnd_8cpp.html" title=" " alt="" coords="5,117,225,158"/>
+<area shape="rect" id="node3" href="$PrettyPrinter_8cpp.html" title=" " alt="" coords="250,109,455,165"/>
+<area shape="rect" id="node4" href="$CheckAssignable_8cpp.html" title=" " alt="" coords="480,109,676,165"/>
 </map>
