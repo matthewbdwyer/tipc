@@ -19,9 +19,10 @@ public:
     * \return the CallGraphBuilder for the given program
     */
     static CallGraphBuilder build(ASTProgram* ast, CFAnalyzer cfa);
+
+    // Methods for constructing call graph edges from CFA results
     bool visit(ASTFunction* element) override;
     bool visit(ASTFunAppExpr* element) override;
-    bool visit(ASTVariableExpr* element) override;
 
     /*! \brief Returns the call graph, call graph a map from caller to callee, the callee is a set of ASTFunction* and the caller is an ASTFunction*
     */
