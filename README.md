@@ -43,11 +43,11 @@ All of the tests should pass.
 
 ### Ubuntu Linux
 
-Our continuous integration process builds on both Ubuntu 18.04 and 20.04, so these are well-supported.  We do not support other linux distributions, but we know that people in the past have ported `tipc` to different distributions. 
+Our continuous integration process builds on both Ubuntu 22.04 and 20.04, so these are well-supported.  We do not support other linux distributions, but we know that people in the past have ported `tipc` to different distributions. 
 
 ### Mac OS
 
-Our continuous integration process builds on Mac OS 12, so modern versions of Mac OS are well-supported.  `tipc` builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.  
+Our continuous integration process builds on macOS 12 and macOS 13 so modern versions of macOS are well-supported.  `tipc` builds on both Intel and Apple Silicon, i.e., Apple's M1 ARM processor.  
 
 ### Windows Subsystem for Linux
 
