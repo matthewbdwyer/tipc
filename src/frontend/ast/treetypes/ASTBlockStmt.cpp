@@ -2,9 +2,9 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-ASTBlockStmt::ASTBlockStmt(std::vector<std::unique_ptr<ASTStmt>> STMTS) {
+ASTBlockStmt::ASTBlockStmt(std::vector<std::shared_ptr<ASTStmt>> STMTS) {
   for(auto &stmt : STMTS) {
-    std::shared_ptr<ASTStmt> s = std::move(stmt);
+    std::shared_ptr<ASTStmt> s = stmt;
     this->STMTS.push_back(s);
   }
 }

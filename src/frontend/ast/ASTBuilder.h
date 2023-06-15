@@ -15,7 +15,7 @@ using namespace antlrcpp;
  * This is an ANTLR4 parse tree visitor, not to be confused with an ASTVisitor.
  * As such its structure follows that of the ANTLR4 generated TIPBaseVisitor.
  * The primary entry point is the build method which initiates the traversal
- * of the parse tree and, if succesful, generates a unique ASTProgram whose 
+ * of the parse tree and, if succesful, generates a shared ASTProgram whose 
  * ownership is transferred to the caller.  
  */
 class ASTBuilder : public TIPBaseVisitor {
@@ -32,7 +32,7 @@ public:
    *
    * The caller obtains "ownership" of the resulting ASTProgram.
    */
-  std::unique_ptr<ASTProgram> build(TIPParser::ProgramContext *ctx);
+  std::shared_ptr<ASTProgram> build(TIPParser::ProgramContext *ctx);
 
   /**
    * a helper function to build binary expressions

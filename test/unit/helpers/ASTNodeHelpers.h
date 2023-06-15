@@ -37,14 +37,14 @@ namespace nullcodegen {
 namespace simplenodes {
 
   ASTFunction mockFunction(std::string fname) {
-    std::vector<std::unique_ptr<ASTDeclNode>> formals;
-    std::vector<std::unique_ptr<ASTDeclStmt>> decls;
-    std::vector<std::unique_ptr<ASTStmt>> body;
+    std::vector<std::shared_ptr<ASTDeclNode>> formals;
+    std::vector<std::shared_ptr<ASTDeclStmt>> decls;
+    std::vector<std::shared_ptr<ASTStmt>> body;
     ASTFunction mockFunction(
-        std::make_unique<ASTDeclNode>(fname),
-        std::move(formals),
-        std::move(decls),
-        std::move(body)
+        std::make_shared<ASTDeclNode>(fname),
+        formals,
+        decls,
+        body
     );
     return std::move(mockFunction);
   }
