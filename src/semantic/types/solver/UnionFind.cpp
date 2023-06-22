@@ -1,8 +1,10 @@
 #include "UnionFind.h"
-#include "Substituter.h"
+#include "Copier.h"
 
 #include "loguru.hpp"
-#include <iostream>
+#include <string>
+#include <list>
+#include <algorithm>
 
 namespace { // Anonymous namespace for local helpers
 bool verbose = false;
@@ -14,36 +16,27 @@ UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
     }
 }
 
-/*
 std::ostream& operator<<(std::ostream& os, const UnionFind& obj) {
-  return obj.print(os);
+    return obj.print(os);
 }
 
 std::ostream &UnionFind::print(std::ostream &out) const {
   out << "UnionFind edges {\n"; 
-  for(auto const &edge : edges) {
-    out << *edge.first << " -> " << *edge.second << std::endl;
+  for(auto edge : edges) {
+    out << "  " << *edge.first << " => " << *edge.second << "\n";
   }
-  out << "}\n"; 
+  out << "}"; 
   return out; 
 }
-*/
 
-std::unique_ptr<UnionFind> UnionFind::copy() {
-  std::vector<std::shared_ptr<TipType>> emptySeed;
-  auto ufCopy = std::make_unique<UnionFind>(emptySeed);
-
-  // Insert the vertices and edges in the copy
-  for(auto const &edge : edges) {
-    auto src = Copier::copy(edge.first);
-    auto dest = Copier::copy(edge.second);
-    ufCopy->edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(src, dest));
-  } 
-  return std::move(ufCopy);
+void UnionFind::add(std::vector<std::shared_ptr<TipType>> seed) {
+    for(auto &term : seed) {
+        smart_insert(term);
+    }
 }
 
 /*
- * Add path compression instead of iterative parent lookup.
+ * TBD: Add path compression instead of iterative parent lookup.
  */
 std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
     LOG_S(3) << "UnionFind looking for representive of " << *t;
@@ -80,7 +73,7 @@ void UnionFind::quick_union(std::shared_ptr<TipType> t1, std::shared_ptr<TipType
 
 bool UnionFind::connected(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     return *find(t1) == *find(t2);
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
 /*! \fn get_parent
  *
@@ -107,17 +100,19 @@ void UnionFind::smart_insert(std::shared_ptr<TipType> t) {
     if(t == nullptr) {
         throw std::invalid_argument("Refusing to insert a nullptr into the map.");
     }
-    
-    LOG_S(3) << "UnionFind inserting term " << *t;
 
     for(auto const &edge : edges) {
         if(*t == *edge.first) {
-            LOG_S(3) << " ; already in the graph as " << *edge.first;
+            LOG_S(3) << "UnionFind found " << *edge.first << " in graph";
             return;
         }
     }
 
-    LOG_S(3) << " ; adding new edge\n";
+    LOG_S(3) << "UnionFind adding " << *t << " to graph";
     edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t, t));
+}
+
+std::map<std::shared_ptr<TipType>, std::shared_ptr<TipType>> UnionFind::getEdges() {
+  return edges;
 }
 

@@ -2,6 +2,7 @@
 
 #include <map>
 #include <vector>
+#include <iostream>
 #include <TipType.h>
 
 /*!
@@ -16,6 +17,10 @@ public:
     explicit UnionFind(std::vector<std::shared_ptr<TipType>> seed);
     ~UnionFind() = default;
 
+    /*! \brief add additional types to the union find structure
+     */
+    void add(std::vector<std::shared_ptr<TipType>> seed);
+
     std::shared_ptr<TipType> find(std::shared_ptr<TipType> t1);
     void quick_union(std::shared_ptr<TipType> t1, std::shared_ptr<TipType>t2);
     bool connected(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2);
@@ -24,12 +29,16 @@ public:
      */
     std::unique_ptr<UnionFind> copy();
 
+    std::map<std::shared_ptr<TipType>, std::shared_ptr<TipType>> getEdges();
+
+    friend std::ostream& operator<<(std::ostream& os, const UnionFind& obj);
 private:
     // A mapping from terms to parents.
     std::map<std::shared_ptr<TipType>, std::shared_ptr<TipType>> edges;
 
     std::shared_ptr<TipType> get_parent(std::shared_ptr<TipType> t);
     void smart_insert(std::shared_ptr<TipType> t);
+
     std::ostream& print(std::ostream &out) const;
 };
 

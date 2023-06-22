@@ -48,6 +48,10 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/TypeVars.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/TypeVars.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/Copier.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/Copier.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/FreshAlphaCopier.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/FreshAlphaCopier.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Substituter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Substituter.h)
 target_include_directories(

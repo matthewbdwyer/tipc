@@ -37,6 +37,10 @@ public:
      */
     void unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2);
 
+    /*! \brief Add constraints to this unifier.
+     */
+    void add(std::vector<TypeConstraint>);
+
     /*! \brief Solve the system of constraints that have presented to this unifier.
      *  \pre The unifier has been constructed with seed values. That is, we are not unifying on-the-fly.
      */
@@ -49,12 +53,18 @@ public:
      * proper type. 
      */
     std::shared_ptr<TipType> inferred(std::shared_ptr<TipType> t);
-private:
+
+    /*! \brief Returns a map of unified types.
+     */
+    std::map<std::shared_ptr<TipType>,std::shared_ptr<TipType>> getUnifiedTypes();
+
     static bool isCons(std::shared_ptr<TipType> type);
     static bool isMu(std::shared_ptr<TipType> type);
     static bool isVar(std::shared_ptr<TipType> type);
     static bool isAlpha(std::shared_ptr<TipType> type);
     static bool isProperType(std::shared_ptr<TipType> type);
+
+private:
     std::shared_ptr<TipType> close(std::shared_ptr<TipType> type, std::set<std::shared_ptr<TipVar>> visited);
     void throwUnifyException(std::shared_ptr<TipType> TipType1, std::shared_ptr<TipType> TipType2);
 
