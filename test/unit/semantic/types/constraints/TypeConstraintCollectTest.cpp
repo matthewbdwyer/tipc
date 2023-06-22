@@ -274,7 +274,7 @@ TEST_CASE("TypeConstraintVisitor: access expr", "[TypeConstraintVisitor]") {
       "\u27E613@4:24\u27E7 = int",                           		// int constant
       "\u27E6{f:4,g:13}@4:14\u27E7 = {f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7}",	// uber record
       "\u27E6r@3:14\u27E7 = \u27E6{f:4,g:13}@4:14\u27E7",                	// assignment
-      "\u27E6r@3:14\u27E7 = {f:\u03B1<(r.g):f>,g:\u27E6(r.g)@5:17\u27E7}",      // field access
+      "\u27E6r@3:14\u27E7 = {f:\u03B1<(r.g)@5:17[f]>,g:\u27E6(r.g)@5:17\u27E7}",      // field access
       "\u27E6(r.g)@5:17\u27E7 = int",                          		// main return int
       "\u27E6main@2:6\u27E7 = () -> \u27E6(r.g)@5:17\u27E7"                	// function decl
     };
@@ -299,7 +299,7 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
       "\u27E613@4:24\u27E7 = int",                           		// int constant
       "\u27E6{f:4,g:13}@4:14\u27E7 = {f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7,n:\u25C7}",	// uber record
       "\u27E6r@3:14\u27E7 = \u27E6{f:4,g:13}@4:14\u27E7",                	// assignment
-      "\u27E6null@5:18\u27E7 = \u2B61\u03B1<null>",                		// null
+      "\u27E6null@5:18\u27E7 = \u2B61\u03B1<null@5:18>",                		// null
       "\u27E613@5:27\u27E7 = int",                           		// int constant
       "\u27E6{n:null,f:13}@5:14\u27E7 = {f:\u27E613@5:27\u27E7,g:\u25C7,n:\u27E6null@5:18\u27E7}",	// uber record
       "\u27E6r@3:14\u27E7 = \u27E6{n:null,f:13}@5:14\u27E7",      		// assignment
@@ -335,7 +335,7 @@ main() {
       "\u27E6{p:5,q:6}@5:9\u27E7 = {p:\u27E65@5:12\u27E7,q:\u27E66@5:18\u27E7}",  // record
       "\u27E6n@3:8\u27E7 = \u2B61\u27E6{p:5,q:6}@5:9\u27E7",                   // assign through ptr
       "\u27E6n@3:8\u27E7 = \u2B61\u27E6(*n)@6:10\u27E7",			  // deref
-      "\u27E6(*n)@6:10\u27E7 = {p:\u27E6((*n).p)@6:9\u27E7,q:\u03B1<((*n).p):q>}",       // field access
+      "\u27E6(*n)@6:10\u27E7 = {p:\u27E6((*n).p)@6:9\u27E7,q:\u03B1<((*n).p)@6:9[q]>}",       // field access
       "\u27E6r1@3:11\u27E7 = \u27E6((*n).p)@6:9\u27E7",			  // assign 
       "\u27E6r1@3:11\u27E7 = int",				  // output
       "\u27E60@8:11\u27E7 = int",				  // main return int
@@ -369,9 +369,9 @@ main() {
       "\u27E64@5:19\u27E7 = int",                                    // int constant
       "\u27E6{c:&k,d:4}@5:8\u27E7 = {a:\u25C7,b:\u25C7,c:\u27E6&k@5:12\u27E7,d:\u27E64@5:19\u27E7}", // record
       "\u27E6n@3:8\u27E7 = \u27E6{c:&k,d:4}@5:8\u27E7",		     	     // assign
-      "\u27E6n@3:8\u27E7 = {a:\u03B1<(n.c):a>,b:\u03B1<(n.c):b>,c:\u27E6(n.c)@6:13\u27E7,d:\u03B1<(n.c):d>}", // access
+      "\u27E6n@3:8\u27E7 = {a:\u03B1<(n.c)@6:13[a]>,b:\u03B1<(n.c)@6:13[b]>,c:\u27E6(n.c)@6:13\u27E7,d:\u03B1<(n.c)@6:13[d]>}", // access
       "\u27E6(n.c)@6:13\u27E7 = \u2B61\u27E6(*(n.c))@6:11\u27E7",		     // assign through ptr
-      "\u27E6(*(n.c))@6:11\u27E7 = {a:\u27E6((*(n.c)).a)@6:10\u27E7,b:\u03B1<((*(n.c)).a):b>,c:\u03B1<((*(n.c)).a):c>,d:\u03B1<((*(n.c)).a):d>}", // access
+      "\u27E6(*(n.c))@6:11\u27E7 = {a:\u27E6((*(n.c)).a)@6:10\u27E7,b:\u03B1<((*(n.c)).a)@6:10[b]>,c:\u03B1<((*(n.c)).a)@6:10[c]>,d:\u03B1<((*(n.c)).a)@6:10[d]>}", // access
       "\u27E6r1@3:14\u27E7 = \u27E6((*(n.c)).a)@6:10\u27E7",	  	     // assign 
       "\u27E6r1@3:14\u27E7 = int",				     // output
       "\u27E60@8:11\u27E7 = int",                                    // main return int
