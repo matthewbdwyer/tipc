@@ -5,10 +5,7 @@
 
 #include <sstream>
 
-#include "loguru.hpp"
-
 std::unique_ptr<SymbolTable> SymbolTable::build(ASTProgram* p) {
-  LOG_S(1) << "Building symbol table";
   auto fMap = FunctionNameCollector::build(p);
   auto lMap = LocalNameCollector::build(p, fMap);
   auto fSet = FieldNameCollector::build(p); 
@@ -20,13 +17,22 @@ ASTDeclNode* SymbolTable::getFunction(std::string s) {
   if(func == functionNames.end()) {
     return nullptr;
   }
-  return func->second;
+  return func->second.first;
 }
+
+bool SymbolTable::getPoly(std::string s) {
+  auto func = functionNames.find(s);
+  if(func == functionNames.end()) {
+    return false;
+  }
+  return func->second.second;
+}
+
 
 std::vector<ASTDeclNode*> SymbolTable::getFunctions() {
   std::vector<ASTDeclNode*> funDecls;
   for (auto &pair : functionNames) {
-    funDecls.push_back(pair.second); 
+    funDecls.push_back(pair.second.first); 
   }
   return funDecls;
 }

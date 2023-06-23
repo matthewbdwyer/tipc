@@ -59,10 +59,10 @@ void PrettyPrinter::endVisit(ASTFunction * element) {
   auto bodyString = joinWithDelim(visitResults, "\n", element->getStmts().size(), 0);
   auto declString = joinWithDelim(visitResults, "\n", element->getDeclarations().size(), 0);
   auto formalsString = joinWithDelim(visitResults, ", ", element->getFormals().size(), 1);
+  auto polyString = element->isPoly() ? "poly" : "";
 
-  // function name is last element on stack
-  // we modify it in place
-  visitResults.back() += "(" + formalsString + ") \n{\n" + declString + bodyString + "}\n";
+  // function name is last element on stack, we modify it in place
+  visitResults.back() += "(" + formalsString + ") " + polyString + "\n{\n" + declString + bodyString + "}\n";
   indentLevel--;
 }
 

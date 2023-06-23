@@ -4,7 +4,7 @@
 
 std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> 
 LocalNameCollector::build(ASTProgram* p, 
-                          std::map<std::string, ASTDeclNode*> fMap) {
+                          std::map<std::string, std::pair<ASTDeclNode*, bool>> fMap) {
   LocalNameCollector visitor(fMap);
   p->accept(&visitor);
   return visitor.lMap;
@@ -20,7 +20,8 @@ bool LocalNameCollector::visit(ASTFunction * element) {
 void LocalNameCollector::endVisit(ASTFunction * element) {
   auto decl = element->getDecl();
   LOG_S(1) <<"Adding fun [["<< decl->getName()<<"@"<<decl->getLine()<<":"<<decl->getColumn()<<"]] to symbol table.";
-  lMap.emplace(decl, std::move(curMap));
+  lMap.insert(std::pair<ASTDeclNode*,
+                        std::map<std::string, ASTDeclNode*>>(decl, curMap));
 }
 
 void LocalNameCollector::endVisit(ASTDeclNode * element) {
@@ -29,9 +30,9 @@ void LocalNameCollector::endVisit(ASTDeclNode * element) {
     first = false;
   } else {
     if (fMap.count(element->getName()) == 0) {
-      auto[_, success] = curMap.try_emplace(element->getName(), element);
-      if (success) {
+      if (curMap.count(element->getName()) == 0) {
         LOG_S(1) <<"Adding var [["<< element->getName()<<"@"<<element->getLine()<<":"<<element->getColumn()<<"]] to symbol table.";
+        curMap.insert(std::pair<std::string, ASTDeclNode*>(element->getName(), element));
       } else {
         throw SemanticError("Symbol error line " + std::to_string(element->getLine()) + " in column " + std::to_string(element->getColumn()) +": " + element->getName() + " redeclared in function " + funName + "\n");
       }

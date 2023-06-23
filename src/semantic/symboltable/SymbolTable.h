@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTVisitor.h"
+
 #include <map>
 #include <vector>
 
@@ -14,11 +15,11 @@
  * \sa SemanticError
  */ 
 class SymbolTable {
-  std::map<std::string, ASTDeclNode*> functionNames;
+  std::map<std::string, std::pair<ASTDeclNode*, bool>> functionNames;
   std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> localNames;
   std::vector<std::string> fieldNames;
 public:
-  SymbolTable(std::map<std::string, ASTDeclNode*> fMap,
+  SymbolTable(std::map<std::string, std::pair<ASTDeclNode*, bool>> fMap,
               std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> lMap,
               std::vector<std::string> fSet)
       : functionNames(fMap), localNames(lMap), fieldNames(fSet) {}
@@ -28,6 +29,12 @@ public:
    * \return The declaration node of the function
    */
   ASTDeclNode* getFunction(std::string s);
+
+  /*! \brief Return an indication of whether the function was declared as polymorphic
+   * \param s The Function name
+   * \return True if the function is declared polymorphic
+   */
+  bool getPoly(std::string s);
 
   /*! \brief Return the declaration nodes for functions in the program.
    */

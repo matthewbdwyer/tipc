@@ -55,15 +55,15 @@ TEST_CASE("TypeConstraintVisitor: const, input, alloc, assign through ptr", "[Ty
      * Note that spacing is calculated immediately after the R"( in the program string literals.
      */
     std::vector<std::string> expected {
-            "\u27E6input@3:5\u27E7 = int",
-            "\u27E6x@2:5\u27E7 = \u27E6input@3:5\u27E7",
-            "\u27E6alloc x@4:5\u27E7 = \u2B61\u27E6x@2:5\u27E7",
-            "\u27E6y@2:7\u27E7 = \u27E6alloc x@4:5\u27E7",
-            "\u27E6y@2:7\u27E7 = \u2B61\u27E6(*y)@5:1\u27E7",
-            "\u27E6y@2:7\u27E7 = \u2B61\u27E6x@2:5\u27E7",
-            "\u27E6y@2:7\u27E7 = \u2B61\u27E6(*y)@6:5\u27E7",
-            "\u27E6z@2:9\u27E7 = \u27E6(*y)@6:5\u27E7",
-            "\u27E6short@1:0\u27E7 = () -> \u27E6z@2:9\u27E7"
+            "?input@3:5? = int",
+            "?x@2:5? = ?input@3:5?",
+            "?alloc x@4:5? = ??x@2:5?",
+            "?y@2:7? = ?alloc x@4:5?",
+            "?y@2:7? = ??(*y)@5:1?",
+            "?y@2:7? = ??x@2:5?",
+            "?y@2:7? = ??(*y)@6:5?",
+            "?z@2:9? = ?(*y)@6:5?",
+            "?short@1:0? = () -> ?z@2:9?"
     };
 
     runtest(program, expected);
@@ -218,17 +218,17 @@ TEST_CASE("TypeConstraintVisitor: main", "[TypeConstraintVisitor]") {
     runtest(program, expected);
 }
 
-TEST_CASE("TypeConstraintVisitor: poly", "[TypeConstraintVisitor]") {
+TEST_CASE("TypeConstraintVisitor: polymorphic type inference", "[TypeConstraintVisitor]") {
     std::stringstream program;
     program << R"(
-      poly(p) {
+      deref(p) {
         return *p;
       }
     )";
 
     std::vector<std::string> expected {
-      "\u27E6p@2:11\u27E7 = \u2B61\u27E6(*p)@3:15\u27E7",              	// deref
-      "\u27E6poly@2:6\u27E7 = (\u27E6p@2:11\u27E7) -> \u27E6(*p)@3:15\u27E7", 	// function with param
+      "\u27E6p@2:12\u27E7 = \u2B61\u27E6(*p)@3:15\u27E7",              	// deref
+      "\u27E6deref@2:6\u27E7 = (\u27E6p@2:12\u27E7) -> \u27E6(*p)@3:15\u27E7", 	// function with param
     };
 
     runtest(program, expected);

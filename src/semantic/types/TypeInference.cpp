@@ -1,34 +1,200 @@
 #include "TypeInference.h"
 #include "TypeConstraint.h"
 #include "TypeConstraintCollectVisitor.h"
+#include "PolyTypeConstraintCollectVisitor.h"
 #include "AbsentFieldChecker.h"
 #include "Unifier.h"
 #include "loguru.hpp"
-
 #include <memory>
 
-/*
- * This implementation collects the constraints and then solves them with a
- * unifier instance.  The unifier then records the inferred type results that
- * can be subsequently queried.   It also checks for accesses to absent
- * fields.
+
+/* Local name space for DFS visit variables */
+namespace {
+  std::deque<ASTFunction*> sorted;
+  std::vector<ASTFunction*> unmarked;
+}
+
+/* DFS to compute call dependence assuming that the graph 
+ * does not have cycles.  The DFS updates the unmarked vector
+ * which records the functions whose dependences have been computed.
  */
-std::unique_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable* symbols) {
-  LOG_S(1) << "Performing type inference";
+void topoVisit(CallGraph* cg, ASTFunction* f) {
+  // If f is marked, i.e., not in unmarked, then backtrack DFS
+  if (std::find(unmarked.begin(), unmarked.end(), f) == unmarked.end()) {
+    return;
+  }
+
+  // remove it from unmarked 
+  auto fPosition = std::find(unmarked.begin(), unmarked.end(), f);
+  assert(fPosition != unmarked.end()); // f must be in the unmarked list
+  unmarked.erase(fPosition);
+
+  // visit called functions
+  for (auto c : cg->getCallees(f)) {
+    topoVisit(cg, c);
+  }
+
+  // add it to sorted 
+  sorted.push_back(f); 
+}
+
+/* Determine whether there is a call chain from function f to g.
+ * To determine if a function is recursive call with f==g.
+ */
+bool mayIndirectlyCall(CallGraph* cg, ASTFunction* f, ASTFunction* g) {
+  bool result = false;
+  auto callees = cg->getCallees(f);
+  for (auto c : callees) {
+    if (c == g) {
+      return true;
+    } else {
+      result = result || mayIndirectlyCall(cg, c, g); 
+    }
+  }
+  return result;
+}
+
+// Topologically sort the set of functions based on the call graph.
+std::deque<ASTFunction*> topoSort(CallGraph* cg, 
+                                  std::vector<ASTFunction*> funcs) {
+  /* Initialize globals for sort DFS */
+  sorted = std::deque<ASTFunction*>();
+  unmarked = funcs;
+
+  while (!unmarked.empty()) {
+    auto f = unmarked.back();
+    topoVisit(cg, f);
+  }
+  return sorted;
+}
+
+std::vector<ASTFunction*> recursiveFuncs(CallGraph* cg) {
+  auto funcs = cg->getVertices();
+  auto recursiveFuncs = std::vector<ASTFunction*>();
+  for (auto f : funcs) {
+    if (mayIndirectlyCall(cg,f,f)) {
+      recursiveFuncs.push_back(f);
+    }
+  }
+  return recursiveFuncs;
+}
+
+/* Filters the call graph to eliminate any functions that call, either
+ * directly or indirectly, a recursive function.
+ * Returns a topological ordering of functions in the filtered graph.
+ */
+std::deque<ASTFunction*> topoSortNonRecursive(CallGraph* cg) {
+  auto recFuncs = recursiveFuncs(cg);
+
+  // Filter functions that directly or indirectly call a recursive function
+  auto nonRecursiveFuncs = std::vector<ASTFunction*>();
+  for (auto f : cg->getVertices()) {
+    bool filter = false;
+    for (auto r : recFuncs) {
+      if (f == r) {
+        filter = true;
+      } else {
+        filter = mayIndirectlyCall(cg,f,r);
+      }
+      if (filter) break;
+    }
+  
+    if (!filter) {
+      nonRecursiveFuncs.push_back(f);
+    }
+  }
+
+  // Topologically sort the graph comprised of the non-recursive functions.
+  return topoSort(cg, nonRecursiveFuncs);
+}
+
+/*
+ * The returned unifier accounts for all of the program that is NOT
+ * handled within the elements of the unifier map, i.e., is not 
+ * subjected to polymorphic type inference.  
+ */
+std::unique_ptr<TypeInference> runPoly(ASTProgram* ast, SymbolTable* symbols, 
+                                       CallGraph* cg) {
+  LOG_S(1) <<"Generating Polymorphic Type Constraints";
+
+  /* A single unifier is used for the staged polymorphic inference
+   * and then the final monomorphic inference process.  The unifier
+   * is solved after each stage, which corresponds to processing the
+   * constraints of a non-recursive function.
+   */
+  auto unifier =  std::make_shared<Unifier>();
+
+  /* Generate and solve constraints for the non-recursive functions
+   * in topological order for the call graph.
+   */
+  auto nonRecursiveFuncs = topoSortNonRecursive(cg);
+  for (auto f : nonRecursiveFuncs) {
+    LOG_S(1) << "Generating Polymorphic Type Constraints for " << *f;
+
+    PolyTypeConstraintCollectVisitor polyVisitor(symbols, cg, unifier);
+    f->accept(&polyVisitor);
+
+    unifier->add(polyVisitor.getCollectedConstraints());
+    unifier->solve();
+  }
+
+  LOG_S(1) << "Generating Residual Monomorphic Type Constraints";
+
+  /* Iterate over functions those that are recursive, or that may directly 
+   * or indirectly call a recursive function, generate their constraints.
+   */
+  for (auto f : cg->getVertices()) {
+    // Skip the functions for which polymorphic inference was applied
+    if (std::find(nonRecursiveFuncs.begin(), 
+                  nonRecursiveFuncs.end(), f) == nonRecursiveFuncs.end()) {
+      TypeConstraintCollectVisitor monoVisitor(symbols);
+      f->accept(&monoVisitor);
+      unifier->add(monoVisitor.getCollectedConstraints());
+    }
+  }
+
+  /* Solve monomorphic constraints in combination with the
+   * previously collected polymorphic constraints.
+   */ 
+  unifier->solve();
+
+  AbsentFieldChecker::check(ast, unifier.get());
+
+  return std::make_unique<TypeInference>(symbols, unifier);
+}
+
+/* 
+ * Performs monomorphic type inference on the entire program.
+ */
+std::unique_ptr<TypeInference> runMono(ASTProgram* ast, SymbolTable* symbols) {
+  LOG_S(1) <<"Generating Monomorphic Type Constraints";
 
   TypeConstraintCollectVisitor visitor(symbols);
   ast->accept(&visitor);
 
-  LOG_S(1) << "Solving type constraints";
-
-  auto unifier =  std::make_unique<Unifier>(visitor.getCollectedConstraints());
+  auto unifier =  std::make_shared<Unifier>(visitor.getCollectedConstraints());
   unifier->solve();
-
-  LOG_S(1) << "Checking that field accesses are defined";
 
   AbsentFieldChecker::check(ast, unifier.get());
 
-  return std::make_unique<TypeInference>(symbols, std::move(unifier));
+  return std::make_unique<TypeInference>(symbols, unifier);
+}
+
+/*
+ * This implementation collects the constraints and then solves them with a
+ * unifier instance.  The unifier then records the inferred type results that
+ * can be subsequently queried.
+ */
+std::unique_ptr<TypeInference> TypeInference::run(ASTProgram* ast, bool doPoly, CallGraph* cg, SymbolTable* symbols) {
+  std::unique_ptr<TypeInference> typeInf;
+
+  if (doPoly) {
+    typeInf = std::move(runPoly(ast, symbols, cg));
+  } else {
+    typeInf = std::move(runMono(ast, symbols));
+  }
+
+  return typeInf;
 }
 
 std::shared_ptr<TipType> TypeInference::getInferredType(ASTDeclNode *node) {

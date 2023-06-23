@@ -3,6 +3,7 @@
 #include "ASTProgram.h"
 #include "ASTDeclNode.h"
 #include "SymbolTable.h"
+#include "CallGraph.h"
 #include "Unifier.h"
 #include <memory>
 
@@ -14,24 +15,32 @@
  */
 class TypeInference {
   SymbolTable* symbols;
-  std::unique_ptr<Unifier> unifier;
-public:
-  TypeInference(SymbolTable* s, std::unique_ptr<Unifier> u) : symbols(s), unifier(std::move(u)) {}
 
-  /*! \fn check
-   *  \brief Generate type constraints, unify them, and report any errors.
+  // This unifier stores either the monomorphic or polymorphic type inference results
+  std::shared_ptr<Unifier> unifier;
+
+public:
+  TypeInference(SymbolTable* s, std::shared_ptr<Unifier> u) :
+                symbols(s), unifier(std::move(u)) {}
+
+  /*! \fn run
+   *  \brief Generate and solve type constraints and report any errors.
    *
    * Visits the AST generating type constraints for each expression and solves
    * the resulting constraints.   If a term unification error is detected a
-   * UnificationError, a subtype fo SemanticError, is raised.  If an access
-   * to a field whose definition is absent is performed a SemanticError is
-   * raised.
+   * UnificationError, a subtype of SemanticError, is raised.  If an access
+   * to a field whose definition is absent is detected a SemanticError is
+   * raised.  If no errors are found, then the inferred types for all symbols
+   * are recorded in the symbol table.
+   *
    * \sa UnificationError
    * \sa SemanticError
    * \param ast The program AST
+   * \param polyInf Flag indicating whether to perform polymorphic or monomorphic inference
+   * \param cg The program call graph
    * \param symbols The symbol table
    */
-  static std::unique_ptr<TypeInference> check(ASTProgram* ast, SymbolTable* symbols); 
+  static std::unique_ptr<TypeInference> run(ASTProgram* ast, bool polyInf, CallGraph* cg, SymbolTable* symbols);
 
   /*! \fn getInferredType
    *  \brief Returns the type expression inferred for the given ASTDeclNode.
