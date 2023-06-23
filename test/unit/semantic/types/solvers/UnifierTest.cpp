@@ -61,10 +61,10 @@ TEST_CASE("Unifier: Collect and then unify constraints", "[Unifier, Collect]") {
         REQUIRE(*unifier.inferred(zType) == *intType);
     }
 
-    SECTION("Test type-safe poly") {
+    SECTION("Test type-safe deref") {
         std::stringstream program;
         program << R"(
-// poly is (&\alpha<*p>) -> \alpha<*p>, p is &\alpha<*p>
+// deref is (&\alpha<*p>) -> \alpha<*p>, p is &\alpha<*p>
 deref(p){
     return *p;
 }
@@ -236,10 +236,10 @@ main() {
         REQUIRE_NOTHROW(ast->accept(&visitor));
     }
 
-    SECTION("Test type-safe poly") {
+    SECTION("Test type-safe deref") {
         std::stringstream program;
         program << R"(
-poly(p){
+deref(p){
     return *p;
 }
          )";

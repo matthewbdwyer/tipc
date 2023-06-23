@@ -12,7 +12,7 @@
 
 TEST_CASE("PolyTypeConstraintVisitor: polymorphic identity function", "[TypeConstraintVisitor]") {
     std::stringstream program;
-    program << R"(ident(p) {
+    program << R"(ident(p) poly {
  return p;
 }
 
@@ -24,11 +24,11 @@ main() {
 })";
 
     std::vector<std::string> expected{
+            "(\u03B1<p@1:6{ident(&x)@8:6}>) -> \u03B1<p@1:6{ident(&x)@8:6}> = (\u27E6&x@8:12\u27E7) -> \u27E6ident(&x)@8:6\u27E7", // Instantiation of generic type for second call
+            "(\u03B1<p@1:6{ident(42)@7:6}>) -> \u03B1<p@1:6{ident(42)@7:6}> = (\u27E642@7:12\u27E7) -> \u27E6ident(42)@7:6\u27E7", // Instantiation of generic type for first call
             "\u27E6&x@8:12\u27E7 = \u2B61\u27E6x@6:6\u27E7",
             "\u27E6(*x)@9:9\u27E7 = int",
             "\u27E642@7:12\u27E7 = int",
-            "\u27E6ident@1:0\u27E7 = (\u27E6&x@8:12\u27E7) -> \u27E6ident(&x)@8:6\u27E7", // Instantiation of generic type for first call
-            "\u27E6ident@1:0\u27E7 = (\u27E642@7:12\u27E7) -> \u27E6ident(42)@7:6\u27E7", // Instantiation of generic type for second call
             "\u27E6main@5:0\u27E7 = () -> \u27E6(*x)@9:9\u27E7",
             "\u27E6x@6:6\u27E7 = \u27E6ident(42)@7:6\u27E7",
             "\u27E6x@6:6\u27E7 = \u2B61\u27E6(*x)@9:9\u27E7",
