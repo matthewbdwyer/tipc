@@ -24,15 +24,15 @@ main() {
 })";
 
     std::vector<std::string> expected{
-            "⟦&x@8:12⟧ = ⭡⟦x@6:6⟧",
-            "⟦(*x)@9:9⟧ = int",
-            "⟦42@7:12⟧ = int",
-            "⟦ident@1:0⟧ = (⟦&x@8:12⟧) -> ⟦ident(&x)@8:6⟧", // Instantiation of generic type for first call
-            "⟦ident@1:0⟧ = (⟦42@7:12⟧) -> ⟦ident(42)@7:6⟧", // Instantiation of generic type for second call
-            "⟦main@5:0⟧ = () -> ⟦(*x)@9:9⟧",
-            "⟦x@6:6⟧ = ⟦ident(42)@7:6⟧",
-            "⟦x@6:6⟧ = ⭡⟦(*x)@9:9⟧",
-            "⟦y@6:9⟧ = ⟦ident(&x)@8:6⟧"
+            "\u27E6&x@8:12\u27E7 = \u2B61\u27E6x@6:6\u27E7",
+            "\u27E6(*x)@9:9\u27E7 = int",
+            "\u27E642@7:12\u27E7 = int",
+            "\u27E6ident@1:0\u27E7 = (\u27E6&x@8:12\u27E7) -> \u27E6ident(&x)@8:6\u27E7", // Instantiation of generic type for first call
+            "\u27E6ident@1:0\u27E7 = (\u27E642@7:12\u27E7) -> \u27E6ident(42)@7:6\u27E7", // Instantiation of generic type for second call
+            "\u27E6main@5:0\u27E7 = () -> \u27E6(*x)@9:9\u27E7",
+            "\u27E6x@6:6\u27E7 = \u27E6ident(42)@7:6\u27E7",
+            "\u27E6x@6:6\u27E7 = \u2B61\u27E6(*x)@9:9\u27E7",
+            "\u27E6y@6:9\u27E7 = \u27E6ident(&x)@8:6\u27E7"
     };
 
     auto ast = ASTHelper::build_ast(program);
