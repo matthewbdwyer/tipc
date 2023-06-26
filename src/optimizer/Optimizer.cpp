@@ -1,46 +1,107 @@
 #include "Optimizer.h"
 
-#include "llvm/Pass.h"
-#include "llvm/IR/Function.h"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/IR/LegacyPassManager.h"
-#include "llvm/Transforms/IPO/PassManagerBuilder.h"
-#include "llvm/IR/LegacyPassManager.h"
-#include "llvm/Transforms/Utils.h"
+//New PassBuilder
+#include "llvm/Passes/PassBuilder.h"
+
+// New Passes
+#include "llvm/Transforms/Scalar/Reassociate.h"
 #include "llvm/Transforms/InstCombine/InstCombine.h"
-#include "llvm/Transforms/Scalar.h"
+#include "llvm/Transforms/Scalar/SimplifyCFG.h"
+#include "llvm/Transforms/Utils/Mem2Reg.h"
+#include "llvm/Passes/StandardInstrumentations.h"
 #include "llvm/Transforms/Scalar/GVN.h"
 
+
+//Extra Passes
+#include "llvm/Transforms/Scalar/SCCP.h"
+#include "llvm/Transforms/Scalar/TailRecursionElimination.h" //Tail Call Elimination
+#include "llvm/Transforms/Scalar/DeadStoreElimination.h"
+#include "llvm/Transforms/Scalar/SimpleLoopUnswitch.h"
+#include "llvm/Transforms/Scalar/LoopRotation.h"
+
+//For logging
 #include "loguru.hpp"
 
-using namespace llvm;
 
-void Optimizer::optimize(Module* theModule) {
-  LOG_S(1) << "Optimizing program " << theModule->getName().str();
+//void Optimizer::optimize(llvm::Module *theModule, bool extraOptEnable) {
+void Optimizer::optimize(llvm::Module *theModule) {
+    LOG_S(1) << "Optimizing program " << theModule->getName().str();
 
-  // Create a pass manager to simplify generated module
-  auto TheFPM = std::make_unique<legacy::FunctionPassManager>(theModule);
+    /**
+     * New pass builder
+     */
+    llvm::PassBuilder passBuilder;
+    /**
+     * New Analysis Managers
+     */
+    llvm::FunctionAnalysisManager functionAnalysisManager;
+    llvm::ModuleAnalysisManager moduleAnalysisManager;
+    llvm::LoopAnalysisManager loopAnalysisManager;
+    llvm::CGSCCAnalysisManager cgsccAnalysisManager;
 
-  // Promote allocas to registers.
-  TheFPM->add(createPromoteMemoryToRegisterPass());
+    /**
+     * Registering the analysis managers with the pass builder
+     */
+    passBuilder.registerModuleAnalyses(moduleAnalysisManager);
+    passBuilder.registerCGSCCAnalyses(cgsccAnalysisManager);
+    passBuilder.registerFunctionAnalyses(functionAnalysisManager);
+    passBuilder.registerLoopAnalyses(loopAnalysisManager);
+    //Cross Register Proxies
+    passBuilder.crossRegisterProxies(loopAnalysisManager, functionAnalysisManager, cgsccAnalysisManager,
+                                     moduleAnalysisManager);
 
-  // Do simple "peephole" optimizations
-  TheFPM->add(createInstructionCombiningPass());
+    /**
+     * New Function and Module level PassManagers
+     */
 
-  // Reassociate expressions.
-  TheFPM->add(createReassociatePass());
+    llvm::ModulePassManager modulePassManager;
+    llvm::FunctionPassManager functionPassManager;
 
-  // Eliminate Common SubExpressions.
-  TheFPM->add(createGVNPass());
+    /**
+     * Adding passes to pipeline
+     */
+    functionPassManager.addPass(llvm::PromotePass()); //New Reg2Mem
+    functionPassManager.addPass(llvm::InstCombinePass());
+    // Reassociate expressions.
+    functionPassManager.addPass(llvm::ReassociatePass());
+    // Eliminate Common SubExpressions.
+    functionPassManager.addPass(llvm::GVNPass());
+    // Simplify the control flow graph (deleting unreachable blocks, etc).
+    functionPassManager.addPass(llvm::SimplifyCFGPass());
 
-  // Simplify the control flow graph (deleting unreachable blocks, etc).
-  TheFPM->add(createCFGSimplificationPass());
+    /**
+     * Checking for extra optimisation flag
+     * -Saket
+     */
 
-  // initialize and run simplification pass on each function
-  TheFPM->doInitialization();
-  for (auto &fun : theModule->getFunctionList()) {
-    LOG_S(1) << "Optimizing function " << fun.getName().str();
+//    if (extraOptEnable) {
+//        LOG_S(1) << "-> Extra Passes Enabled.";
+//        /**
+//         * We have to use llvm Adaptors to run per-loop passes in function pass manager.
+//         * In LLVM14+, The hierarchy for code sections is :
+//         *  Module -> (CGSCC)* -> Functions -> Loops
+//         *
+//         *  [*] is optional.
+//         *
+//         *  ModulePassManager.add(functionAdaptor(LoopAdaptor(llvm::LoopPass())))
+//         *
+//
+//         */
+//
+//        functionPassManager.addPass(llvm::createFunctionToLoopPassAdaptor(llvm::SimpleLoopUnswitchPass()));
+//        functionPassManager.addPass(llvm::createFunctionToLoopPassAdaptor(llvm::LoopRotatePass()));
+//        functionPassManager.addPass(llvm::SCCPPass()); // Constant Propagation Pass ; runIPSCCP | from llvm13 it
+//        // is called "Sparse Conditional Constant Propagation" SCCP
+//        functionPassManager.addPass(llvm::TailCallElimPass()); //Tail Call Elimination
+//        functionPassManager.addPass(llvm::DSEPass()); //Dead Store Elimination
+//    }
 
-    TheFPM->run(fun);
-  }
+
+    /**
+     * Passing the function pass manager to the modulePassManager using function adaptor, then passing theModule to the
+     * ModulePassManager along with ModuleAnalysisManager.
+     */
+    modulePassManager.addPass(createModuleToFunctionPassAdaptor(std::move(functionPassManager)));
+    modulePassManager.run(*theModule, moduleAnalysisManager);
+
 }
