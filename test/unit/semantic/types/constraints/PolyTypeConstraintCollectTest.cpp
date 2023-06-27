@@ -10,7 +10,7 @@
 #include <sstream>
 #include <set>
 
-static void runIdentMain(std::stringstream &program, std::set<std::string> &expected) {
+static void testidentmain(std::stringstream &program, std::set<std::string> &expected) {
     auto ast = ASTHelper::build_ast(program);
     auto symbols = SymbolTable::build(ast.get());
     auto unifier = std::__1::make_shared<Unifier>();
@@ -65,7 +65,7 @@ main() {
             "\u27E6y@6:9\u27E7 = \u27E6ident(&x)@8:6\u27E7"
     };
 
-    runIdentMain(program, expected);
+    testidentmain(program, expected);
 }
 
 TEST_CASE("PolyTypeConstraintVisitor: polymorphic identity function", "[TypeConstraintVisitor]") {
@@ -93,6 +93,6 @@ main() {
             "\u27E6y@6:9\u27E7 = \u27E6ident(&x)@8:6\u27E7"
     };
 
-    runIdentMain(program, expected);
+    testidentmain(program, expected);
 }
 
