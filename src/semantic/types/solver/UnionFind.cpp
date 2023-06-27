@@ -21,13 +21,36 @@ std::ostream& operator<<(std::ostream& os, const UnionFind& obj) {
 }
 
 std::ostream &UnionFind::print(std::ostream &out) const {
+    std::set<std::string> edgeSet;
+    for(auto edge : edges) {
+        std::stringstream edgeStr;
+        edgeStr << "  " << *edge.first << " => " << *edge.second;
+        edgeSet.insert(edgeStr.str());
+    }
   out << "UnionFind edges {\n"; 
-  for(auto edge : edges) {
-    out << "  " << *edge.first << " => " << *edge.second << "\n";
+  for(auto es : edgeSet) {
+    out << es << "\n";
   }
   out << "}"; 
   return out; 
 }
+
+std::unique_ptr<UnionFind> UnionFind::copy() {
+    std::vector<std::shared_ptr<TipType>> emptySeed;
+    auto ufCopy = std::make_unique<UnionFind>(emptySeed);
+
+    // Insert the vertices and edges in the copy
+    for(auto const &edge : edges) {
+        auto src = Copier::copy(edge.first);
+        auto dest = Copier::copy(edge.second);
+        smart_insert(src);
+        smart_insert(dest);
+        ufCopy->edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(src, dest));
+    }
+    return std::move(ufCopy);
+}
+
+
 
 void UnionFind::add(std::vector<std::shared_ptr<TipType>> seed) {
     for(auto &term : seed) {

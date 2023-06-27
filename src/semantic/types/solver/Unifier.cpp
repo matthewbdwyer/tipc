@@ -281,9 +281,17 @@ std::shared_ptr<TipType> Unifier::close(
  * is essential for the staged nature of polymorphic type inference.
  */ 
 std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipType> v) {
+    // This is the old version
+    auto unionFindCopy = unionFind->copy();
+    std::set<std::shared_ptr<TipVar>> visited;
+    auto closedV = close(v, visited);
+    unionFind = std::move(unionFindCopy);
+    return closedV;
+/*
   std::set<std::shared_ptr<TipVar>> visited;
   auto closedV = close(v, visited);
   return closedV;
+  */
 }
 
 std::map<std::shared_ptr<TipType>, std::shared_ptr<TipType>> Unifier::getUnifiedTypes() {
