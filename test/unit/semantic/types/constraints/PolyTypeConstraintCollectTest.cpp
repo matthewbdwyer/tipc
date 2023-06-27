@@ -10,7 +10,7 @@
 #include <sstream>
 #include <set>
 
-static void testidentmain(std::stringstream &program, std::vector<std::string> &expected) {
+static void runIdentMain(std::stringstream &program, std::set<std::string> &expected) {
     auto ast = ASTHelper::build_ast(program);
     auto symbols = SymbolTable::build(ast.get());
     auto unifier = std::__1::make_shared<Unifier>();
@@ -30,19 +30,14 @@ static void testidentmain(std::stringstream &program, std::vector<std::string> &
     mainAST->accept(&mainVisitor);
     auto collected = mainVisitor.getCollectedConstraints();
 
-    // Copy the vectors to sets to allow for a single equality test
-    std::__1::set<std::string> expectedSet;
-    copy(expected.begin(), expected.end(),
-         inserter(expectedSet, expectedSet.end()));
-
-    std::__1::set<std::string> collectedSet;
+    std::set<std::string> collectedSet;
     for (int i = 0; i < collected.size(); i++) {
         std::stringstream stream;
         stream << collected.at(i);
         collectedSet.insert(stream.str());
     }
 
-    REQUIRE(expectedSet == collectedSet);
+    REQUIRE(expected == collectedSet);
 }
 
 TEST_CASE("PolyTypeConstraintVisitor: monomorphic identity function", "[TypeConstraintVisitor]") {
@@ -58,7 +53,7 @@ main() {
   return *x;
 })";
 
-    std::vector<std::string> expected{
+    std::set<std::string> expected{
             "\u27E6ident@1:0\u27E7 = (\u27E6&x@8:12\u27E7) -> \u27E6ident(&x)@8:6\u27E7", // no instantiation of generic type ident
             "\u27E6ident@1:0\u27E7 = (\u27E642@7:12\u27E7) -> \u27E6ident(42)@7:6\u27E7", // no instantiation of generic type for ident
             "\u27E6&x@8:12\u27E7 = \u2B61\u27E6x@6:6\u27E7",
@@ -70,7 +65,7 @@ main() {
             "\u27E6y@6:9\u27E7 = \u27E6ident(&x)@8:6\u27E7"
     };
 
-    testidentmain(program, expected);
+    runIdentMain(program, expected);
 }
 
 TEST_CASE("PolyTypeConstraintVisitor: polymorphic identity function", "[TypeConstraintVisitor]") {
@@ -86,7 +81,7 @@ main() {
   return *x;
 })";
 
-    std::vector<std::string> expected{
+    std::set<std::string> expected{
             "(\u03B1<p@1:6{ident(&x)@8:6}>) -> \u03B1<p@1:6{ident(&x)@8:6}> = (\u27E6&x@8:12\u27E7) -> \u27E6ident(&x)@8:6\u27E7", // Instantiation of generic type for second call
             "(\u03B1<p@1:6{ident(42)@7:6}>) -> \u03B1<p@1:6{ident(42)@7:6}> = (\u27E642@7:12\u27E7) -> \u27E6ident(42)@7:6\u27E7", // Instantiation of generic type for first call
             "\u27E6&x@8:12\u27E7 = \u2B61\u27E6x@6:6\u27E7",
@@ -98,6 +93,6 @@ main() {
             "\u27E6y@6:9\u27E7 = \u27E6ident(&x)@8:6\u27E7"
     };
 
-    testidentmain(program, expected);
+    runIdentMain(program, expected);
 }
 
