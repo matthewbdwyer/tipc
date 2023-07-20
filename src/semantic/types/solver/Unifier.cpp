@@ -13,28 +13,18 @@
 #include <sstream>
 #include <utility>
 
-/*
- * This code makes use of the dangerous combination of smart pointers and
- * standard libraries.  After several painful debugging sessions things are
- * working, but this code should be refactored to better integrate these.
- * We really need to use the underlying notion of equality on TipType to
- * perform the operations below and when using smart pointers we end up
- * having to do things explicitly while accessing and dereferencing the
- * managed pointer. 
- */
-
 namespace { // Anonymous namespace for local helper functions
 
 bool contains(std::set<std::shared_ptr<TipVar>> s, std::shared_ptr<TipVar> t) {
-  LOG_S(3) << "Contains looking for " << *t;
+  //LOG_S(3) << "Contains looking for " << *t;
   for (auto e : s) {
     if (*e.get() == *t.get()) {
-      LOG_S(3) << "Contains found " << *e;
+      //LOG_S(3) << "Contains found " << *e;
       return true;
     } 
-    LOG_S(3) << "Contains checking " << *e;
+    //LOG_S(3) << "Contains checking " << *e;
   } 
-  LOG_S(3) << "Contains not found";
+  //LOG_S(3) << "Contains not found";
   return false;
 }
 
@@ -148,6 +138,7 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
         auto f1 = std::dynamic_pointer_cast<TipCons>(rep1);
         auto f2 = std::dynamic_pointer_cast<TipCons>(rep2);
         if(!f1->doMatch(f2.get())) {
+            LOG_S(3) << "Unifying failed with union-find " << *unionFind;
             throwUnifyException(t1,t2);
         } // LCOV_EXCL_LINE
 
@@ -158,6 +149,7 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
             unify(a1, a2);
         }
     } else {
+        LOG_S(3) << "Unifying failed with union-find " << *unionFind;
         throwUnifyException(t1,t2);
     }
 
@@ -181,7 +173,7 @@ std::shared_ptr<TipType> Unifier::close(
     auto v = std::dynamic_pointer_cast<TipVar>(type);
 
     LOG_S(3) << "Close starting var " << *v << " with visited " << print(visited);
-    LOG_S(3) << "Close starting var " << *v << " with union-find " << *(unionFind.get());
+    LOG_S(3) << "Close starting var " << *v << " with union-find " << *unionFind;
 
     if (!contains(visited, v) && (unionFind->find(v) != v)) {
       // No cyclic reference to v and it does not map to itself
@@ -193,8 +185,7 @@ std::shared_ptr<TipType> Unifier::close(
 
       auto closedV = close(unionFind->find(v), visited);
 
-      // If the variable is an alpha, then reuse it else create a new
-      // alpha with the node.
+      // If the variable is an alpha, then reuse it else create a new alpha with the node.
       auto newV = (isAlpha(v)) ? v : std::make_shared<TipAlpha>(v->getNode());
 
       LOG_S(3) << "Close var " << *v << " using new var " << *newV << " and closed var " << *closedV;
@@ -240,21 +231,24 @@ std::shared_ptr<TipType> Unifier::close(
       auto closedV = close(v, visited);
       for (auto a : current) {
 
-    LOG_S(3) << "Close cons substituting " << *closedV << " for " << *v << " in " << *a;
+        LOG_S(3) << "Close cons substituting " << *closedV << " for " << *v << " in " << *a;
         auto subst = Substituter::substitute(a.get(), v.get(), closedV);
-    LOG_S(3) << "Close cons substitution yielded " << *subst;
+        LOG_S(3) << "Close cons substitution yielded " << *subst;
         temp.push_back(subst);
       }
       current = temp;
       temp.clear();
     }
 
-    // replace arguments with current
-    c->setArguments(current);
+    // Perform the argument substitutions, if any, to form a new type, then add it and return it.
+    auto consCopy = std::dynamic_pointer_cast<TipCons>(copy);
+    consCopy->setArguments(current);
+    std::vector<std::shared_ptr<TipType>> newTypes{consCopy};
+    unionFind->add(newTypes);
 
-    LOG_S(3) << "Close making " << *c << " to end cons " << *copy;
+    LOG_S(3) << "Close making " << *consCopy << " to end cons " << *c;
 
-    return c;
+    return consCopy;
 
   } else if (isMu(type)) {
     auto m = std::dynamic_pointer_cast<TipMu>(type);
@@ -282,21 +276,18 @@ std::shared_ptr<TipType> Unifier::close(
  */ 
 std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipType> v) {
     // This is the old version
-    auto unionFindCopy = unionFind->copy();
+    //auto unionFindCopy = unionFind->copy();
     std::set<std::shared_ptr<TipVar>> visited;
     auto closedV = close(v, visited);
-    unionFind = std::move(unionFindCopy);
+    //unionFind = std::move(unionFindCopy);
     return closedV;
-/*
-  std::set<std::shared_ptr<TipVar>> visited;
-  auto closedV = close(v, visited);
-  return closedV;
-  */
 }
 
+/*
 std::map<std::shared_ptr<TipType>, std::shared_ptr<TipType>> Unifier::getUnifiedTypes() {
   return unionFind->getEdges();
 }
+ */
 
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     std::stringstream s;
