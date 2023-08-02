@@ -86,3 +86,23 @@ TEST_CASE("UnionFind: Test connected", "[UnionFind]") {
     REQUIRE_FALSE(unionFind.connected(five, six));
     cleanup(tipVars);
 }
+
+TEST_CASE("UnionFind: multiple entries", "[UnionFind]") {
+    std::vector<int> ints {3, 4, 5, 6, 7, 8, 9};
+    auto tipVars = std::move(intsToTipVars(ints));
+
+    auto three = tipVars.at(0);
+    auto four = tipVars.at(1);
+    auto five = tipVars.at(2);
+    auto six = tipVars.at(3);
+    auto seven = tipVars.at(4);
+    auto eight = tipVars.at(5);
+    auto nine = tipVars.at(6);
+
+    UnionFind unionFind(tipVars);
+    unionFind.quick_union(three, four);
+    unionFind.quick_union(three, five);
+
+    REQUIRE(*unionFind.find(three) == *five);
+    cleanup(tipVars);
+}

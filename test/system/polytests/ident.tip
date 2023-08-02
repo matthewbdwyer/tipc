@@ -1,0 +1,11 @@
+ident(p) poly {
+ return p;
+}
+
+main() {
+  var x, y;
+  x = ident(42);
+  y = ident(&x);
+  if (x + *y != 84) error x + *y;
+  return 0;
+}

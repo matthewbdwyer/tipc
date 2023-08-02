@@ -56,7 +56,7 @@ public:
 
     /*! \brief Returns a map of unified types.
      */
-    std::map<std::shared_ptr<TipType>,std::shared_ptr<TipType>> getUnifiedTypes();
+    //std::map<std::shared_ptr<TipType>,std::shared_ptr<TipType>> getUnifiedTypes();
 
     static bool isCons(std::shared_ptr<TipType> type);
     static bool isMu(std::shared_ptr<TipType> type);
