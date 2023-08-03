@@ -12,7 +12,7 @@ var searchData=
   ['typeconstraint_785',['TypeConstraint',['../classTypeConstraint.html#a89753836ee61db05f4f01e7e8c704e8d',1,'TypeConstraint::TypeConstraint()=delete'],['../classTypeConstraint.html#a00cb58d5922bac9bd042a56d5f0f371a',1,'TypeConstraint::TypeConstraint(std::shared_ptr&lt; TipType &gt; l, std::shared_ptr&lt; TipType &gt; r)']]],
   ['typeconstraintcollectvisitor_786',['TypeConstraintCollectVisitor',['../classTypeConstraintCollectVisitor.html#a1fc037d2da9499c536de3b94785f2cd7',1,'TypeConstraintCollectVisitor']]],
   ['typeconstraintunifyvisitor_787',['TypeConstraintUnifyVisitor',['../classTypeConstraintUnifyVisitor.html#a85882880ae7450b614a4300f8857a9c5',1,'TypeConstraintUnifyVisitor']]],
-  ['typeconstraintvisitor_788',['TypeConstraintVisitor',['../classTypeConstraintVisitor.html#a289355580240d96e6864bdc80dbf2d47',1,'TypeConstraintVisitor::TypeConstraintVisitor()=delete'],['../classTypeConstraintVisitor.html#afa81cd337f3f57ffd55aab65d51b9407',1,'TypeConstraintVisitor::TypeConstraintVisitor(SymbolTable *st, std::unique_ptr&lt; ConstraintHandler &gt; handler)']]],
-  ['typeinference_789',['TypeInference',['../classTypeInference.html#a0a0e7c2ab7ca1c00269cf31d80f00d32',1,'TypeInference']]],
+  ['typeconstraintvisitor_788',['TypeConstraintVisitor',['../classTypeConstraintVisitor.html#a289355580240d96e6864bdc80dbf2d47',1,'TypeConstraintVisitor::TypeConstraintVisitor()=delete'],['../classTypeConstraintVisitor.html#ae0c971fc97b5960ccb8dc25a810a984d',1,'TypeConstraintVisitor::TypeConstraintVisitor(SymbolTable *st, std::shared_ptr&lt; ConstraintHandler &gt; handler)']]],
+  ['typeinference_789',['TypeInference',['../classTypeInference.html#a698760b0da208c36855b5281a57e6168',1,'TypeInference']]],
   ['typevars_790',['TypeVars',['../classTypeVars.html#a975aba95a19700180d86b62be1b5d6d3',1,'TypeVars']]]
 ];

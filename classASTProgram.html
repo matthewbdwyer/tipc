@@ -113,8 +113,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac8da9fc8036a7b7dad637840e0e240a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTProgram.html#ac8da9fc8036a7b7dad637840e0e240a4">accept</a> (<a class="el" href="classASTVisitor.html">ASTVisitor</a> *visitor) override</td></tr>
 <tr class="memdesc:ac8da9fc8036a7b7dad637840e0e240a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visit the children of this node and apply the visitor.  <a href="classASTProgram.html#ac8da9fc8036a7b7dad637840e0e240a4">More...</a><br /></td></tr>
 <tr class="separator:ac8da9fc8036a7b7dad637840e0e240a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d8c6c2747f1efe9bee2a57795745fb2"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; llvm::Module &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTProgram.html#a6d8c6c2747f1efe9bee2a57795745fb2">codegen</a> (<a class="el" href="classSemanticAnalysis.html">SemanticAnalysis</a> *st, std::string name)</td></tr>
-<tr class="separator:a6d8c6c2747f1efe9bee2a57795745fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae4089a171ff60ba4dd7528fd1002ce2"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; llvm::Module &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTProgram.html#aae4089a171ff60ba4dd7528fd1002ce2">codegen</a> (<a class="el" href="classSemanticAnalysis.html">SemanticAnalysis</a> *st, std::string name)</td></tr>
+<tr class="separator:aae4089a171ff60ba4dd7528fd1002ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classASTNode"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classASTNode')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classASTNode.html">ASTNode</a></td></tr>
 <tr class="memitem:a578124183c58a444f3fd7668848ea887 inherit pub_methods_classASTNode"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTNode.html#a578124183c58a444f3fd7668848ea887">~ASTNode</a> ()=default</td></tr>
 <tr class="separator:a578124183c58a444f3fd7668848ea887 inherit pub_methods_classASTNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,14 +194,14 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a6d8c6c2747f1efe9bee2a57795745fb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d8c6c2747f1efe9bee2a57795745fb2">&#9670;&nbsp;</a></span>codegen()</h2>
+<a id="aae4089a171ff60ba4dd7528fd1002ce2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae4089a171ff60ba4dd7528fd1002ce2">&#9670;&nbsp;</a></span>codegen()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; llvm::Module &gt; ASTProgram::codegen </td>
+          <td class="memname">std::shared_ptr&lt; llvm::Module &gt; ASTProgram::codegen </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSemanticAnalysis.html">SemanticAnalysis</a> *&#160;</td>
           <td class="paramname"><em>st</em>, </td>

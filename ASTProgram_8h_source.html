@@ -88,7 +88,7 @@ $(function() {
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  std::vector&lt;ASTFunction*&gt; <a class="code" href="classASTProgram.html#ab74e052d3c2dc81e2aa902e412e66477">getFunctions</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <a class="code" href="classASTFunction.html">ASTFunction</a> * <a class="code" href="classASTProgram.html#a9f669425b59aba72cffaeafc4f7afcf2">findFunctionByName</a>(std::string);</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classASTProgram.html#ac8da9fc8036a7b7dad637840e0e240a4">accept</a>(<a class="code" href="classASTVisitor.html">ASTVisitor</a> * visitor) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  std::unique_ptr&lt;llvm::Module&gt; codegen(<a class="code" href="classSemanticAnalysis.html">SemanticAnalysis</a>* st, std::string name);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  std::shared_ptr&lt;llvm::Module&gt; codegen(<a class="code" href="classSemanticAnalysis.html">SemanticAnalysis</a>* st, std::string name);</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  llvm::Value *codegen() <span class="keyword">override</span>;</div>

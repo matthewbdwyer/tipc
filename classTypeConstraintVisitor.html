@@ -100,8 +100,8 @@ Collaboration diagram for TypeConstraintVisitor:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a289355580240d96e6864bdc80dbf2d47"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a289355580240d96e6864bdc80dbf2d47">TypeConstraintVisitor</a> ()=delete</td></tr>
 <tr class="separator:a289355580240d96e6864bdc80dbf2d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa81cd337f3f57ffd55aab65d51b9407"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#afa81cd337f3f57ffd55aab65d51b9407">TypeConstraintVisitor</a> (<a class="el" href="classSymbolTable.html">SymbolTable</a> *st, std::unique_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt; handler)</td></tr>
-<tr class="separator:afa81cd337f3f57ffd55aab65d51b9407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0c971fc97b5960ccb8dc25a810a984d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#ae0c971fc97b5960ccb8dc25a810a984d">TypeConstraintVisitor</a> (<a class="el" href="classSymbolTable.html">SymbolTable</a> *st, std::shared_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt; handler)</td></tr>
+<tr class="separator:ae0c971fc97b5960ccb8dc25a810a984d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac94229baaaaa698bba7f3960c448cab6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#ac94229baaaaa698bba7f3960c448cab6">visit</a> (<a class="el" href="classASTFunction.html">ASTFunction</a> *element) override</td></tr>
 <tr class="separator:ac94229baaaaa698bba7f3960c448cab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf7a325b9ae8cdacb8fafdeb663ce84b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#acf7a325b9ae8cdacb8fafdeb663ce84b">endVisit</a> (<a class="el" href="classASTAccessExpr.html">ASTAccessExpr</a> *element) override</td></tr>
@@ -214,8 +214,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a1cd2b254f0246ad2994c7939ab1595b8"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a1cd2b254f0246ad2994c7939ab1595b8">constraintHandler</a></td></tr>
-<tr class="separator:a1cd2b254f0246ad2994c7939ab1595b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a703db5229cb1847580ffa9585ab5dbb8"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a703db5229cb1847580ffa9585ab5dbb8">constraintHandler</a></td></tr>
+<tr class="separator:a703db5229cb1847580ffa9585ab5dbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Visitor generates type constraints and processes them. </p>
@@ -246,8 +246,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="afa81cd337f3f57ffd55aab65d51b9407"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa81cd337f3f57ffd55aab65d51b9407">&#9670;&nbsp;</a></span>TypeConstraintVisitor() <span class="overload">[2/2]</span></h2>
+<a id="ae0c971fc97b5960ccb8dc25a810a984d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0c971fc97b5960ccb8dc25a810a984d">&#9670;&nbsp;</a></span>TypeConstraintVisitor() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -261,7 +261,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt;&#160;</td>
           <td class="paramname"><em>handler</em>&#160;</td>
         </tr>
         <tr>
@@ -807,8 +807,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a1cd2b254f0246ad2994c7939ab1595b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cd2b254f0246ad2994c7939ab1595b8">&#9670;&nbsp;</a></span>constraintHandler</h2>
+<a id="a703db5229cb1847580ffa9585ab5dbb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a703db5229cb1847580ffa9585ab5dbb8">&#9670;&nbsp;</a></span>constraintHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -817,7 +817,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classConstraintHandler.html">ConstraintHandler</a>&gt; TypeConstraintVisitor::constraintHandler</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classConstraintHandler.html">ConstraintHandler</a>&gt; TypeConstraintVisitor::constraintHandler</td>
         </tr>
       </table>
   </td>

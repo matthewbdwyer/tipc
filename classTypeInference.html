@@ -78,8 +78,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0a0e7c2ab7ca1c00269cf31d80f00d32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeInference.html#a0a0e7c2ab7ca1c00269cf31d80f00d32">TypeInference</a> (<a class="el" href="classSymbolTable.html">SymbolTable</a> *s, std::unique_ptr&lt; <a class="el" href="classUnifier.html">Unifier</a> &gt; u)</td></tr>
-<tr class="separator:a0a0e7c2ab7ca1c00269cf31d80f00d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a698760b0da208c36855b5281a57e6168"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeInference.html#a698760b0da208c36855b5281a57e6168">TypeInference</a> (<a class="el" href="classSymbolTable.html">SymbolTable</a> *s, std::shared_ptr&lt; <a class="el" href="classUnifier.html">Unifier</a> &gt; u)</td></tr>
+<tr class="separator:a698760b0da208c36855b5281a57e6168"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa034a6ddf0df28a0a1ddb9c98a56f08f"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeInference.html#aa034a6ddf0df28a0a1ddb9c98a56f08f">getInferredType</a> (<a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *node)</td></tr>
 <tr class="memdesc:aa034a6ddf0df28a0a1ddb9c98a56f08f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the type expression inferred for the given <a class="el" href="classASTDeclNode.html" title="Class for declaring a name, e.g., function, parameter, variable.">ASTDeclNode</a>.  <a href="classTypeInference.html#aa034a6ddf0df28a0a1ddb9c98a56f08f">More...</a><br /></td></tr>
 <tr class="separator:aa034a6ddf0df28a0a1ddb9c98a56f08f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -89,7 +89,7 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac11c798c7dd5bbd28da4d11988e4451f"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classTypeInference.html">TypeInference</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeInference.html#ac11c798c7dd5bbd28da4d11988e4451f">check</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *ast, <a class="el" href="classSymbolTable.html">SymbolTable</a> *symbols)</td></tr>
+<tr class="memitem:ac11c798c7dd5bbd28da4d11988e4451f"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classTypeInference.html">TypeInference</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeInference.html#ac11c798c7dd5bbd28da4d11988e4451f">check</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *ast, <a class="el" href="classSymbolTable.html">SymbolTable</a> *symbols)</td></tr>
 <tr class="memdesc:ac11c798c7dd5bbd28da4d11988e4451f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate type constraints, unify them, and report any errors.  <a href="classTypeInference.html#ac11c798c7dd5bbd28da4d11988e4451f">More...</a><br /></td></tr>
 <tr class="separator:ac11c798c7dd5bbd28da4d11988e4451f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -97,8 +97,8 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Perform type inference and checking. </p>
 <p>This class provides the check method to run type inference/checking on a given program. The inferred types for names declared in the program can then be accessed. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a0a0e7c2ab7ca1c00269cf31d80f00d32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a0e7c2ab7ca1c00269cf31d80f00d32">&#9670;&nbsp;</a></span>TypeInference()</h2>
+<a id="a698760b0da208c36855b5281a57e6168"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a698760b0da208c36855b5281a57e6168">&#9670;&nbsp;</a></span>TypeInference()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -115,7 +115,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classUnifier.html">Unifier</a> &gt;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classUnifier.html">Unifier</a> &gt;&#160;</td>
           <td class="paramname"><em>u</em>&#160;</td>
         </tr>
         <tr>

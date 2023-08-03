@@ -114,9 +114,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:abe9c02308b24ecab32ea70d43eacaa74"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classCallGraph.html">CallGraph</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#abe9c02308b24ecab32ea70d43eacaa74">build</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *, <a class="el" href="classSymbolTable.html">SymbolTable</a> *st)</td></tr>
-<tr class="memdesc:abe9c02308b24ecab32ea70d43eacaa74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the unique pointer of the call graph for a given program.  <a href="classCallGraph.html#abe9c02308b24ecab32ea70d43eacaa74">More...</a><br /></td></tr>
-<tr class="separator:abe9c02308b24ecab32ea70d43eacaa74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a61731d27d26e5ff504d9c15b6d3f02"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classCallGraph.html">CallGraph</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#a5a61731d27d26e5ff504d9c15b6d3f02">build</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *, <a class="el" href="classSymbolTable.html">SymbolTable</a> *st)</td></tr>
+<tr class="memdesc:a5a61731d27d26e5ff504d9c15b6d3f02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the shared pointer of the call graph for a given program.  <a href="classCallGraph.html#a5a61731d27d26e5ff504d9c15b6d3f02">More...</a><br /></td></tr>
+<tr class="separator:a5a61731d27d26e5ff504d9c15b6d3f02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Performs control flow analysis and records results for subsequent phases Generates call graph of a program that represents calling relationships between subroutines in a computer program. Each node represents a subroutine and each edge (a1, a0) indicates that procedure a1 calls procedure a0. A cycle in the graph indicates recursive procedure calls, e.g., a0 -&gt; a0 indicates that a0 calls itself recursively this call graph is sometimes approximations. Not all the call relationship that exist in the graph will occur in the actual runs of the program. </p>
@@ -164,8 +164,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="abe9c02308b24ecab32ea70d43eacaa74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe9c02308b24ecab32ea70d43eacaa74">&#9670;&nbsp;</a></span>build()</h2>
+<a id="a5a61731d27d26e5ff504d9c15b6d3f02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a61731d27d26e5ff504d9c15b6d3f02">&#9670;&nbsp;</a></span>build()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -174,7 +174,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; <a class="el" href="classCallGraph.html">CallGraph</a> &gt; CallGraph::build </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classCallGraph.html">CallGraph</a> &gt; CallGraph::build </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classASTProgram.html">ASTProgram</a> *&#160;</td>
           <td class="paramname"><em>ast</em>, </td>
@@ -198,7 +198,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Return the unique pointer of the call graph for a given program. </p>
+<p>Return the shared pointer of the call graph for a given program. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">The</td><td>AST of the program and symbol table </td></tr>
