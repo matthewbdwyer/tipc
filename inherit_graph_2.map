@@ -1,8 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node1" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="5,208,95,235"/>
 <area shape="rect" id="node2" href="$classAbsentFieldChecker.html" title="Visits AST and checks that all field accesses are to defined fields." alt="" coords="155,5,305,32"/>
-<area shape="rect" id="node3" href="$classCallGraphBuilder.html" title="Builds call graph of a program that represents calling relationships between subroutines This class o..." alt="" coords="164,56,296,83"/>
-<area shape="rect" id="node4" href="$classCFAnalyzer.html" title="Performs control flow analyses with the help of AST and Symbol table of a program Provides helper fun..." alt="" coords="183,107,277,133"/>
+<area shape="rect" id="node3" href="$classCFAnalyzer.html" title="Performs control flow analyses with the help of AST and Symbol table of a program Provides helper fun..." alt="" coords="183,56,277,83"/>
+<area shape="rect" id="node4" href="$classCallGraphBuilder.html" title="Builds call graph of a program that represents calling relationships between subroutines This class o..." alt="" coords="164,107,296,133"/>
 <area shape="rect" id="node5" href="$classCheckAssignable.html" title="Check if left hand side of assignment is an l&#45;value." alt="" coords="163,157,297,184"/>
 <area shape="rect" id="node6" href="$classFieldNameCollector.html" title="Collects all field names referenced within the program." alt="" coords="155,208,305,235"/>
 <area shape="rect" id="node7" href="$classFunctionNameCollector.html" title="Collects the names of functions declared in the program." alt="" coords="143,259,317,285"/>

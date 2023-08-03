@@ -1,4 +1,4 @@
 <map id="ParserErrorListener" name="ParserErrorListener">
-<area shape="rect" id="node1" title="Parse error listener for redirecting ANTLR4 errors to ParseError." alt="" coords="5,80,151,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="9,5,147,32"/>
+<area shape="rect" id="node1" title="Parse error listener for redirecting ANTLR4 errors to ParseError." alt="" coords="24,80,169,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,188,32"/>
 </map>
