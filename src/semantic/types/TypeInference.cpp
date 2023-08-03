@@ -13,7 +13,7 @@
  * can be subsequently queried.   It also checks for accesses to absent
  * fields.
  */
-std::unique_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable* symbols) {
+std::shared_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable* symbols) {
   LOG_S(1) << "Performing type inference";
 
   TypeConstraintCollectVisitor visitor(symbols);
@@ -21,14 +21,14 @@ std::unique_ptr<TypeInference> TypeInference::check(ASTProgram* ast, SymbolTable
 
   LOG_S(1) << "Solving type constraints";
 
-  auto unifier =  std::make_unique<Unifier>(visitor.getCollectedConstraints());
+  auto unifier =  std::make_shared<Unifier>(visitor.getCollectedConstraints());
   unifier->solve();
 
   LOG_S(1) << "Checking that field accesses are defined";
 
   AbsentFieldChecker::check(ast, unifier.get());
 
-  return std::make_unique<TypeInference>(symbols, std::move(unifier));
+  return std::make_shared<TypeInference>(symbols, std::move(unifier));
 }
 
 std::shared_ptr<TipType> TypeInference::getInferredType(ASTDeclNode *node) {

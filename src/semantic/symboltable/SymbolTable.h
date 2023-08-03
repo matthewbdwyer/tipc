@@ -56,7 +56,7 @@ public:
    * \param p The AST for the program. 
    * \return The symbol table.
    */
-  static std::unique_ptr<SymbolTable> build(ASTProgram* p);
+  static std::shared_ptr<SymbolTable> build(ASTProgram* p);
 
   //! Print symbol table contents to output stream
   void print(std::ostream &os);

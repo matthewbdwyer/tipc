@@ -7,12 +7,12 @@
 
 #include "loguru.hpp"
 
-std::unique_ptr<SymbolTable> SymbolTable::build(ASTProgram* p) {
+std::shared_ptr<SymbolTable> SymbolTable::build(ASTProgram* p) {
   LOG_S(1) << "Building symbol table";
   auto fMap = FunctionNameCollector::build(p);
   auto lMap = LocalNameCollector::build(p, fMap);
   auto fSet = FieldNameCollector::build(p); 
-  return std::make_unique<SymbolTable>(fMap, lMap, fSet);
+  return std::make_shared<SymbolTable>(fMap, lMap, fSet);
 }
 
 ASTDeclNode* SymbolTable::getFunction(std::string s) {

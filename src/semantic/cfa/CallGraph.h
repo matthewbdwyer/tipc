@@ -34,11 +34,11 @@ public:
 
 
 
-    /*! \brief Return the unique pointer of the call graph for a given program.
+    /*! \brief Return the shared pointer of the call graph for a given program.
      * \param The AST of the program and symbol table
      */
 
-    static std::unique_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
+    static std::shared_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
 
     /*! \brief Return the total num of vertices for a given call graph.
     */
