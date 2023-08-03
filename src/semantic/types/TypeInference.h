@@ -14,9 +14,9 @@
  */
 class TypeInference {
   SymbolTable* symbols;
-  std::unique_ptr<Unifier> unifier;
+  std::shared_ptr<Unifier> unifier;
 public:
-  TypeInference(SymbolTable* s, std::unique_ptr<Unifier> u) : symbols(s), unifier(std::move(u)) {}
+  TypeInference(SymbolTable* s, std::shared_ptr<Unifier> u) : symbols(s), unifier(std::move(u)) {}
 
   /*! \fn check
    *  \brief Generate type constraints, unify them, and report any errors.
@@ -31,7 +31,7 @@ public:
    * \param ast The program AST
    * \param symbols The symbol table
    */
-  static std::unique_ptr<TypeInference> check(ASTProgram* ast, SymbolTable* symbols); 
+  static std::shared_ptr<TypeInference> check(ASTProgram* ast, SymbolTable* symbols); 
 
   /*! \fn getInferredType
    *  \brief Returns the type expression inferred for the given ASTDeclNode.

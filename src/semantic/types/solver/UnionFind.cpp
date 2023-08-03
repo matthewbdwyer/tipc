@@ -29,9 +29,9 @@ std::ostream &UnionFind::print(std::ostream &out) const {
 }
 */
 
-std::unique_ptr<UnionFind> UnionFind::copy() {
+std::shared_ptr<UnionFind> UnionFind::copy() {
   std::vector<std::shared_ptr<TipType>> emptySeed;
-  auto ufCopy = std::make_unique<UnionFind>(emptySeed);
+  auto ufCopy = std::make_shared<UnionFind>(emptySeed);
 
   // Insert the vertices and edges in the copy
   for(auto const &edge : edges) {

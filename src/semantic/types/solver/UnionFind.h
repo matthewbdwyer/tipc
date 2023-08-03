@@ -22,7 +22,7 @@ public:
 
     /*! \brief Returns a deep copy of the union-find structure.
      */
-    std::unique_ptr<UnionFind> copy();
+    std::shared_ptr<UnionFind> copy();
 
 private:
     // A mapping from terms to parents.

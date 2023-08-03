@@ -59,6 +59,6 @@ private:
     void throwUnifyException(std::shared_ptr<TipType> TipType1, std::shared_ptr<TipType> TipType2);
 
     std::vector<TypeConstraint> constraints;
-    std::unique_ptr<UnionFind> unionFind;
+    std::shared_ptr<UnionFind> unionFind;
 };
 

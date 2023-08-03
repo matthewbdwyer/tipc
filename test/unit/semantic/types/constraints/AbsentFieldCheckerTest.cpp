@@ -17,7 +17,7 @@ static void runtest(std::stringstream &program, bool expectPass) {
   TypeConstraintCollectVisitor visitor(symbols.get());
   ast->accept(&visitor);
 
-  auto unifier =  std::make_unique<Unifier>(visitor.getCollectedConstraints());
+  auto unifier =  std::make_shared<Unifier>(visitor.getCollectedConstraints());
   unifier->solve();
 
   if (expectPass) {

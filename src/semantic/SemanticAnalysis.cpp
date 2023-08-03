@@ -1,12 +1,12 @@
 #include "SemanticAnalysis.h"
 #include "CheckAssignable.h"
 
-std::unique_ptr<SemanticAnalysis> SemanticAnalysis::analyze(ASTProgram* ast) {
+std::shared_ptr<SemanticAnalysis> SemanticAnalysis::analyze(ASTProgram* ast) {
   auto symTable = SymbolTable::build(ast);
   CheckAssignable::check(ast);
   auto callGraph = CallGraph::build(ast, symTable.get());
   auto typeResults = TypeInference::check(ast, symTable.get());
-  return std::make_unique<SemanticAnalysis>(std::move(symTable), std::move(typeResults), std::move(callGraph));
+  return std::make_shared<SemanticAnalysis>(std::move(symTable), std::move(typeResults), std::move(callGraph));
 }
 
 SymbolTable* SemanticAnalysis::getSymbolTable() {

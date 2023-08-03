@@ -4,8 +4,8 @@
 TypeConstraintCollectVisitor::TypeConstraintCollectVisitor(SymbolTable *pTable)
   : TypeConstraintVisitor(pTable, std::move(buildConstraintHandler())) { }
 
-std::unique_ptr<ConstraintHandler> TypeConstraintCollectVisitor::buildConstraintHandler() {
-    return std::make_unique<ConstraintCollector>();
+std::shared_ptr<ConstraintHandler> TypeConstraintCollectVisitor::buildConstraintHandler() {
+    return std::make_shared<ConstraintCollector>();
 }
 
 std::vector<TypeConstraint> &TypeConstraintCollectVisitor::getCollectedConstraints() {

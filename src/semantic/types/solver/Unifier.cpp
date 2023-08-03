@@ -43,7 +43,7 @@ std::string print(std::set<std::shared_ptr<TipVar>> varSet) {
 
 }
 
-Unifier::Unifier() : unionFind(std::move(std::make_unique<UnionFind>())) {}
+Unifier::Unifier() : unionFind(std::move(std::make_shared<UnionFind>())) {}
 
 Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(constrs)) {
     std::vector<std::shared_ptr<TipType>> types;
@@ -65,7 +65,7 @@ Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(co
         }
     }
 
-    unionFind = std::make_unique<UnionFind>(types);
+    unionFind = std::make_shared<UnionFind>(types);
 }
 
 void Unifier::solve() {

@@ -193,8 +193,8 @@ TEST_CASE("ASTPrinterTest: conditional expression printers", "[ASTNodePrint]") {
 }
 
 TEST_CASE("ASTPrinterTest: local expr test", "[ASTNodePrint]") {
-    auto zero = std::make_unique<ASTNumberExpr>(0); 
-    auto var = std::make_unique<ASTVariableExpr>("y"); 
+    auto zero = std::make_shared<ASTNumberExpr>(0); 
+    auto var = std::make_shared<ASTVariableExpr>("y"); 
 
     // Here we just use the default constructor
     ASTBinaryExpr ypluszero("+", std::move(var), std::move(zero)); 
@@ -207,14 +207,14 @@ TEST_CASE("ASTPrinterTest: local expr test", "[ASTNodePrint]") {
 }
 
 TEST_CASE("ASTPrinterTest: local unique expr test", "[ASTNodePrint]") {
-    auto zero = std::make_unique<ASTNumberExpr>(0); 
-    auto var = std::make_unique<ASTVariableExpr>("y"); 
+    auto zero = std::make_shared<ASTNumberExpr>(0); 
+    auto var = std::make_shared<ASTVariableExpr>("y"); 
 
-    // Here we create a unique pointer to the binary expr
-    auto ypluszero = std::make_unique<ASTBinaryExpr>("+", std::move(var), std::move(zero)); 
+    // Here we create a shared pointer to the binary expr
+    auto ypluszero = std::make_shared<ASTBinaryExpr>("+", std::move(var), std::move(zero)); 
 
     std::stringstream  stream;
-    stream << *ypluszero; // dereference is an operation for unique pointers
+    stream << *ypluszero; // dereference is an operation for shared pointers
     auto actual = stream.str();
 
     REQUIRE(actual == "(y+0)");
