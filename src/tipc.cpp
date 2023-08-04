@@ -17,6 +17,7 @@ static cl::OptionCategory TIPcat("tipc Options","Options for controlling the TIP
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
+static cl::opt<bool> polyinf("pi", cl::desc("perform polymorphic type inference"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 1-3) \n Level 1 - Basic logging for every phase.\n Level 2 - Level 1 and type constraints being unified.\n Level 3 - Level 2 and union-find solving steps."), cl::cat(TIPcat));
 static cl::opt<bool> emitHrAsm("asm",
@@ -87,8 +88,7 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<ASTProgram> ast = std::move(FrontEnd::parse(stream));
 
     try {
-      auto analysisResults = SemanticAnalysis::analyze(ast.get());
-
+      auto analysisResults = SemanticAnalysis::analyze(ast.get(), polyinf);
 
       if (ppretty) {
         FrontEnd::prettyprint(ast.get(), std::cout);

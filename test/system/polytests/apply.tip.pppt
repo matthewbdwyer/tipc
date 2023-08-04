@@ -1,0 +1,49 @@
+apply(f, v) poly
+{
+  return f(v);
+}
+
+inc(x) 
+{
+  return (x + 1);
+}
+
+get(p) 
+{
+  return *p;
+}
+
+main() 
+{
+  var a, b;
+  a = apply(inc, 13);
+  b = apply(get, alloc 42);
+  if (((a + b) != 56)) 
+    error (a + b);
+  return 0;
+}
+
+Functions : {
+  apply : ((α<v@1:9>) -> α<f(v)@2:9>,α<v@1:9>) -> α<f(v)@2:9>,
+  get : (⭡int) -> int,
+  inc : (int) -> int,
+  main : () -> int
+}
+
+Locals for function apply : {
+  f : (α<v@1:9>) -> α<f(v)@2:9>,
+  v : α<v@1:9>
+}
+
+Locals for function get : {
+  p : ⭡int
+}
+
+Locals for function inc : {
+  x : int
+}
+
+Locals for function main : {
+  a : int,
+  b : int
+}

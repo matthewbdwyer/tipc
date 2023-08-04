@@ -4,7 +4,8 @@
 
 ASTFunction::ASTFunction(std::shared_ptr<ASTDeclNode> DECL, std::vector<std::shared_ptr<ASTDeclNode>> FORMALS,
                          const std::vector<std::shared_ptr<ASTDeclStmt>> &DECLS,
-                         std::vector<std::shared_ptr<ASTStmt>> BODY) {
+                         std::vector<std::shared_ptr<ASTStmt>> BODY,
+                         bool ISPOLY) {
 
   this->DECL = DECL;
 
@@ -16,6 +17,8 @@ ASTFunction::ASTFunction(std::shared_ptr<ASTDeclNode> DECL, std::vector<std::sha
   for(auto &d : DECLS) {
     this->DECLS.push_back(const_cast<std::shared_ptr<ASTDeclStmt>&>(d));
   }
+
+  this->ISPOLY = ISPOLY;
 
   for(auto &stmt : BODY) {
     std::shared_ptr<ASTStmt> s = stmt;

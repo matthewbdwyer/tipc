@@ -40,20 +40,5 @@ public:
   virtual void endVisit(TipAbsentField * element) override;
   virtual void endVisit(TipRef * element) override;
   virtual void endVisit(TipVar * element) override;
+
 };
-
-/*! \brief Makes a copy of a TipType
- *
- * This subtype of the Substituter overrides the behavior for TipVar
- * and TipAlpha to just copy that node rather than perform a substitution.
- */
-class Copier: public Substituter {
-public:
-  Copier() = default;
-
-  static std::shared_ptr<TipType> copy(std::shared_ptr<TipType> s);
-
-  virtual void endVisit(TipAlpha * element) override;
-  virtual void endVisit(TipVar * element) override;
-};
-

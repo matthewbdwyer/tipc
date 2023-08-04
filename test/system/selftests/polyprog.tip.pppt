@@ -1,4 +1,4 @@
-poly(p) 
+ident(p) 
 {
   return *p;
 }
@@ -7,20 +7,20 @@ main()
 {
   var n;
   n = alloc 42;
-  if ((poly(n) != 42)) 
-    error poly(n);
+  if ((ident(n) != 42)) 
+    error ident(n);
   return 0;
 }
 
 Functions : {
-  main : () -> int,
-  poly : (⭡int) -> int
+  ident : (⭡int) -> int,
+  main : () -> int
+}
+
+Locals for function ident : {
+  p : ⭡int
 }
 
 Locals for function main : {
   n : ⭡int
-}
-
-Locals for function poly : {
-  p : ⭡int
 }

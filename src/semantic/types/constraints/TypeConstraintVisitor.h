@@ -55,10 +55,10 @@ public:
 
 protected:
     std::shared_ptr<ConstraintHandler> constraintHandler;
+    SymbolTable *symbolTable;
+    std::shared_ptr<TipType> astToVar(ASTNode * n);
 
 private:
     std::stack<ASTDeclNode *> scope;
-    SymbolTable *symbolTable;
-    std::shared_ptr<TipType> astToVar(ASTNode * n);
 };
 

@@ -1,0 +1,15 @@
+apply(f, v) poly {
+  return f(v);
+}
+
+inc(x) { return x + 1; }
+
+get(p) { return *p; }            
+
+main() {
+  var a, b;
+  a = apply(inc, 13); 
+  b = apply(get, alloc 42);
+  if (a+b != 56) error a+b;
+  return 0;
+}

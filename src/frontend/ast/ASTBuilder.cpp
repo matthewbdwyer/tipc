@@ -112,6 +112,8 @@ Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
     }
   }
 
+  bool isPoly = ctx->KPOLY() != nullptr;
+
   for (auto decl : ctx->declaration()) {
     visit(decl);
     fDecls.push_back(visitedDeclStmt);
@@ -127,7 +129,7 @@ Any ASTBuilder::visitFunction(TIPParser::FunctionContext *ctx) {
   fBody.push_back(visitedStmt);
 
   visitedFunction = std::make_shared<ASTFunction>(
-      fName, fParams, fDecls, fBody);
+      fName, fParams, fDecls, fBody, isPoly);
 
   LOG_S(1) << "Built AST node for function " << *visitedFunction;
 

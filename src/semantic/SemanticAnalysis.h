@@ -34,9 +34,11 @@ public:
    * results are transferred to caller.
    * \sa SemanticError
    * \param ast The program AST
-   * \return The shared pointer to the semantic analysis structure.
+   * \param polyInf Indicate whether polymorphic type inference should be performed.
+   * \return The unique pointer to the semantic analysis structure.
    */
-  static std::shared_ptr<SemanticAnalysis> analyze(ASTProgram* ast); 
+  static std::shared_ptr<SemanticAnalysis> analyze(ASTProgram* ast, bool polyInf);
+
 
   /*! \fn getSymbolTable
    *  \brief Returns the symbol table computed for the program.

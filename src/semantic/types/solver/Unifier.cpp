@@ -1,33 +1,30 @@
 #include "Unifier.h"
+
 #include "Substituter.h"
+#include "Copier.h"
 #include "TipAlpha.h"
 #include "TipCons.h"
 #include "TipMu.h"
 #include "TypeVars.h"
 #include "UnificationError.h"
-
+#include "InternalError.h"
 #include "loguru.hpp"
-
 #include <iostream>
 #include <sstream>
 #include <utility>
 
-/*
- * This code makes use of the dangerous combination of smart pointers and
- * standard libraries.  After several painful debugging sessions things are
- * working, but this code should be refactored to better integrate these.
- * We really need to use the underlying notion of equality on TipType to
- * perform the operations below and when using smart pointers we end up
- * having to do things explicitly while accessing and dereferencing the
- * managed pointer. 
- */
-
 namespace { // Anonymous namespace for local helper functions
 
 bool contains(std::set<std::shared_ptr<TipVar>> s, std::shared_ptr<TipVar> t) {
+  //LOG_S(3) << "Contains looking for " << *t;
   for (auto e : s) {
-    if (*e.get() == *t.get()) return true;
+    if (*e.get() == *t.get()) {
+      //LOG_S(3) << "Contains found " << *e;
+      return true;
+    } 
+    //LOG_S(3) << "Contains checking " << *e;
   } 
+  //LOG_S(3) << "Contains not found";
   return false;
 }
 
@@ -68,6 +65,33 @@ Unifier::Unifier(std::vector<TypeConstraint> constrs) : constraints(std::move(co
     unionFind = std::make_shared<UnionFind>(types);
 }
 
+void Unifier::add(std::vector<TypeConstraint> constrs) {
+    std::vector<std::shared_ptr<TipType>> types;
+    for(TypeConstraint& constraint : constrs) {
+        // Add to the stored constraints
+        constraints.push_back(constraint);
+
+        // Extract the underylying types terms to add to the union-find structure
+        auto lhs = constraint.lhs;
+        auto rhs = constraint.rhs;
+        types.push_back(lhs);
+        types.push_back(rhs);
+
+        if(auto f1 = std::dynamic_pointer_cast<TipCons>(lhs)) {
+            for(auto &a : f1->getArguments()) {
+                types.push_back(a);
+            }
+        }
+        if(auto f2 = std::dynamic_pointer_cast<TipCons>(rhs)) {
+            for(auto &a : f2->getArguments()) {
+                types.push_back(a);
+            }
+        }
+    }
+
+    unionFind->add(types);
+}
+
 void Unifier::solve() {
     for(TypeConstraint &constraint: constraints) {
         unify(constraint.lhs, constraint.rhs);
@@ -93,12 +117,12 @@ void Unifier::solve() {
  * \sa t2
  */
 void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
-    LOG_S(2) << "Unifying " << *t1 << " and " << *t2;
+    LOG_S(3) << "Unifying " << *t1 << " and " << *t2;
 
     auto rep1 = unionFind->find(t1);
     auto rep2 = unionFind->find(t2);
 
-    LOG_S(2) << "Unifying with representatives " << *rep1 << " and " << *rep2;
+    LOG_S(3) << "Unifying with representatives " << *rep1 << " and " << *rep2;
 
     if(*rep1 == *rep2) {
        return;
@@ -114,8 +138,9 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
         auto f1 = std::dynamic_pointer_cast<TipCons>(rep1);
         auto f2 = std::dynamic_pointer_cast<TipCons>(rep2);
         if(!f1->doMatch(f2.get())) {
+            LOG_S(3) << "Unifying failed with union-find " << *unionFind;
             throwUnifyException(t1,t2);
-        }  // LCOV_EXCL_LINE
+        } // LCOV_EXCL_LINE
 
         unionFind->quick_union(rep1, rep2);
         for(int i = 0; i < f1->getArguments().size(); i++) {
@@ -124,11 +149,11 @@ void Unifier::unify(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
             unify(a1, a2);
         }
     } else {
-        // This case should be unreachable
-        assert(false); // LCOV_EXCL_LINE
+        LOG_S(3) << "Unifying failed with union-find " << *unionFind;
+        throwUnifyException(t1,t2);
     }
 
-    LOG_S(2) << "Unifying representatives to " << *unionFind->find(t1);
+    LOG_S(3) << "Unifying representatives to " << *unionFind->find(t1);
 }
 
 /*! \fn close
@@ -147,36 +172,47 @@ std::shared_ptr<TipType> Unifier::close(
   if (isVar(type)) {
     auto v = std::dynamic_pointer_cast<TipVar>(type);
 
-    LOG_S(2) << "Close starting var " << *v << " with visited " << print(visited);
+    LOG_S(3) << "Close starting var " << *v << " with visited " << print(visited);
+    LOG_S(3) << "Close starting var " << *v << " with union-find " << *unionFind;
 
-    if (!contains(visited, v) && (unionFind->find(type) != v)) {
+    if (!contains(visited, v) && (unionFind->find(v) != v)) {
       // No cyclic reference to v and it does not map to itself
       visited.insert(v);
 
-      auto closedV = close(unionFind->find(type), visited);
+      if (unionFind->find(v) != v) {
+        LOG_S(3) << "Close var " << *v << " does not map to itself, it maps to " << *unionFind->find(v);
+      }
 
-      // If the variable is an alpha, then reuse it else create a new
-      // alpha with the node.
+      auto closedV = close(unionFind->find(v), visited);
+
+      // If the variable is an alpha, then reuse it else create a new alpha with the node.
       auto newV = (isAlpha(v)) ? v : std::make_shared<TipAlpha>(v->getNode());
+
+      LOG_S(3) << "Close var " << *v << " using new var " << *newV << " and closed var " << *closedV;
+
       auto freeV = TypeVars::collect(closedV.get());
-      if (contains(freeV,newV)) {
+
+      if ((*closedV.get() != *newV.get()) && contains(freeV,newV)) {
         // Cyclic reference requires a mu type constructor
         auto substClosedV = Substituter::substitute(closedV.get(), v.get(), newV);
+
+        LOG_S(3) << "Close var " << *v << " making mu with " << *newV << " and subst closed " << *substClosedV;
+
         auto mu = std::make_shared<TipMu>(newV, substClosedV);
 
-        LOG_S(2) << "Close making " << *mu << " to end var " << *v;
+        LOG_S(3) << "Close making " << *mu << " to end var " << *v;
         return mu;
 
       } else {
         // No cyclic reference in closed type
-        LOG_S(2) << "Close making " << *closedV << " to end var " << *v;
+        LOG_S(3) << "Close making " << *closedV << " to end var " << *v;
         return closedV;
       }
     } else {
       // Unconstrained type variable - should we start with fresh names to make output cleaner?
       auto alpha = std::make_shared<TipAlpha>(v->getNode());
 
-      LOG_S(2) << "Close making " << *alpha << " to end var " << *v;
+      LOG_S(3) << "Close making " << *alpha << " to end var " << *v;
       return alpha;
     } 
 
@@ -184,7 +220,7 @@ std::shared_ptr<TipType> Unifier::close(
     auto c = std::dynamic_pointer_cast<TipCons>(type);
     auto copy = Copier::copy(c);
 
-    LOG_S(2) << "Close starting cons " << *c << " with visited " << print(visited);
+    LOG_S(3) << "Close starting cons " << *c << " with visited " << print(visited);
 
     // close each argument of the constructor for each free variable
     auto freeV = TypeVars::collect(c.get());
@@ -195,59 +231,63 @@ std::shared_ptr<TipType> Unifier::close(
       auto closedV = close(v, visited);
       for (auto a : current) {
 
-    LOG_S(2) << "Close cons substituting " << *closedV << " for " << *v << " in " << *a;
+        LOG_S(3) << "Close cons substituting " << *closedV << " for " << *v << " in " << *a;
         auto subst = Substituter::substitute(a.get(), v.get(), closedV);
-    LOG_S(2) << "Close cons substitution yielded " << *subst;
+        LOG_S(3) << "Close cons substitution yielded " << *subst;
         temp.push_back(subst);
       }
       current = temp;
       temp.clear();
     }
 
-    // replace arguments with current
-    c->setArguments(current);
+    // Perform the argument substitutions, if any, to form a new type, then add it and return it.
+    auto consCopy = std::dynamic_pointer_cast<TipCons>(copy);
+    consCopy->setArguments(current);
+    std::vector<std::shared_ptr<TipType>> newTypes{consCopy};
+    unionFind->add(newTypes);
 
-    LOG_S(2) << "Close making " << *c << " to end cons " << *copy;
+    LOG_S(3) << "Close making " << *consCopy << " to end cons " << *c;
 
-    return c;
+    return consCopy;
 
   } else if (isMu(type)) {
     auto m = std::dynamic_pointer_cast<TipMu>(type);
 
-    LOG_S(2) << "Close starting mu " << *m << " with visited " << print(visited);
+    LOG_S(3) << "Close starting mu " << *m << " with visited " << print(visited);
 
     auto closedMu = std::make_shared<TipMu>(m->getV(), close(m->getT(), visited));
 
-    LOG_S(2) << "Close making " << *closedMu << " to end mu " << *m;
+    LOG_S(3) << "Close making " << *closedMu << " to end mu " << *m;
 
     return closedMu;
   } 
 
-  /* This should be unreachable since all subtypes of TipType are
-   * subtypes of TipVar, TipCons, or TipMu -- the three cases above.
-   * We could have left the final "else if" implicit above, but add the
-   * assertion here to catch any problematic type extensions.  Note
-   * that this necessitates the return statement.
-   */
-  assert(false);  // LCOV_EXCL_LINE
-  return type;  // LCOV_EXCL_LINE
+  // This should be unreachable
+  throw InternalError("unreachable : type must be Var, Cons or Mu"); // LCOV_EXCL_LINE
 }
 
 /*! \brief Looks up the inferred type in the type solution.
  *
  * Here we want to produce an inferred type that is "closed" in the
  * sense that all variables in the type definition are replaced with
- * their base types.  Because the close() function may destructively update
- * the unionFind structure, by generating new types, we save a copy
- * and restore it after closing.
+ * their base types.  The close() function may update
+ * the unionFind structure, by generating new types, and this
+ * is essential for the staged nature of polymorphic type inference.
  */ 
 std::shared_ptr<TipType> Unifier::inferred(std::shared_ptr<TipType> v) {
-  auto unionFindCopy = unionFind->copy();
-  std::set<std::shared_ptr<TipVar>> visited;
-  auto closedV = close(v, visited);
-  unionFind = std::move(unionFindCopy);
-  return closedV;
+    // This is the old version
+    //auto unionFindCopy = unionFind->copy();
+    std::set<std::shared_ptr<TipVar>> visited;
+    auto closedV = close(v, visited);
+    //unionFind = std::move(unionFindCopy);
+    return closedV;
 }
+
+/*
+std::map<std::shared_ptr<TipType>, std::shared_ptr<TipType>> Unifier::getUnifiedTypes() {
+  return unionFind->getEdges();
+}
+ */
 
 void Unifier::throwUnifyException(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     std::stringstream s;

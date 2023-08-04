@@ -39,6 +39,10 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintUnifyVisitor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/TypeConstraintVisitor.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/PolyTypeConstraintCollectVisitor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/PolyTypeConstraintCollectVisitor.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/PolyTypeConstraintVisitor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/constraints/PolyTypeConstraintVisitor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AbsentFieldChecker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/constraints/AbsentFieldChecker.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnificationError.h
@@ -48,6 +52,10 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/UnionFind.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/TypeVars.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/TypeVars.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/Copier.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/Copier.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/FreshAlphaCopier.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/solver/FreshAlphaCopier.h
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Substituter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/solver/Substituter.h)
 target_include_directories(
@@ -57,6 +65,7 @@ target_include_directories(
           ${CMAKE_SOURCE_DIR}/src/frontend/ast
           ${CMAKE_SOURCE_DIR}/src/frontend/ast/treetypes
           ${CMAKE_SOURCE_DIR}/src/semantic/symboltable
+          ${CMAKE_SOURCE_DIR}/src/semantic/cfa
           ${CMAKE_CURRENT_SOURCE_DIR}/concrete
           ${CMAKE_CURRENT_SOURCE_DIR}/constraints
           ${CMAKE_CURRENT_SOURCE_DIR}/solver)

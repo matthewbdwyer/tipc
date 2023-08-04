@@ -20,13 +20,22 @@ ASTDeclNode* SymbolTable::getFunction(std::string s) {
   if(func == functionNames.end()) {
     return nullptr;
   }
-  return func->second;
+  return func->second.first;
 }
+
+bool SymbolTable::getPoly(std::string s) {
+  auto func = functionNames.find(s);
+  if(func == functionNames.end()) {
+    return false;
+  }
+  return func->second.second;
+}
+
 
 std::vector<ASTDeclNode*> SymbolTable::getFunctions() {
   std::vector<ASTDeclNode*> funDecls;
   for (auto &pair : functionNames) {
-    funDecls.push_back(pair.second); 
+    funDecls.push_back(pair.second.first); 
   }
   return funDecls;
 }

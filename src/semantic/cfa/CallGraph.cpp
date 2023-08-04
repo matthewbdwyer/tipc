@@ -2,10 +2,10 @@
 #include "loguru.hpp"
 
 std::shared_ptr<CallGraph> CallGraph::build(ASTProgram* ast, SymbolTable* st){
-  LOG_S(1) << "Building call graph";
-  auto cfa = CFAnalyzer::analyze(ast,st);
-  auto cgb = CallGraphBuilder::build(ast,cfa);
-  return std::make_shared<CallGraph>(cgb.getCallGraph(), ast -> getFunctions(), cgb.getFunMap());
+    LOG_S(1) << "Generating Control Flow Constraints";
+    auto cfa = CFAnalyzer::analyze(ast,st);
+    auto cgb = CallGraphBuilder::build(ast,cfa);
+    return std::make_shared<CallGraph>(cgb.getCallGraph(), cgb.getMayCall(), ast -> getFunctions(), cgb.getFunMap());
 }
 
 int CallGraph::getTotalVertices()
@@ -39,9 +39,19 @@ std::vector<std::pair<ASTFunction*, ASTFunction*>> CallGraph::getEdges()
     return edges;
 }  // LCOV_EXCL_LINE
 
+std::set<ASTFunction*> CallGraph::getCalledFuns(ASTFunAppExpr* e)
+{
+   return mayCall[e];
+}
+
 std::set<ASTFunction*> CallGraph::getCallees(ASTFunction* f)
 {
-   return callGraph.find(f)->second;
+  if (callGraph.find(f) != callGraph.end()) {
+    return callGraph.find(f)->second;
+  } else {
+    std::set<ASTFunction*> callees;
+    return callees;
+  }
 }
 
 std::set<ASTFunction*> CallGraph::getCallees(std::string caller)

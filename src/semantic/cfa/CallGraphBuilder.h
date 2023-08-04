@@ -19,14 +19,18 @@ public:
     * \return the CallGraphBuilder for the given program
     */
     static CallGraphBuilder build(ASTProgram* ast, CFAnalyzer cfa);
-
-    // Methods for constructing call graph edges from CFA results
     bool visit(ASTFunction* element) override;
     bool visit(ASTFunAppExpr* element) override;
 
     /*! \brief Returns the call graph, call graph a map from caller to callee, the callee is a set of ASTFunction* and the caller is an ASTFunction*
     */
     std::map<ASTFunction*, std::set<ASTFunction*> > getCallGraph();
+
+    /*! \brief Returns the may call relation, which relates each call expression to the set of possible called functions
+     *
+    */
+    std::map<ASTFunAppExpr*, std::set<ASTFunction*> > getMayCall();
+
 
     /*! \brief Returns the map from a function name to its ASTFunction*, ASTFunction* is then used to fetch further information from the graph
     * such as to fetch the subroutines called by a function, or that call the function
@@ -39,6 +43,7 @@ private:
     ASTNode* getCanonical(ASTNode* n);
     ASTFunction* cfun;
     CFAnalyzer cfa;
-    std::map<ASTFunction*, std::set<ASTFunction*> > graph;
+    std::map<ASTFunction*, std::set<ASTFunction*>> graph;
+    std::map<ASTFunAppExpr*, std::set<ASTFunction*>> mayCall;
     std::map<std::string, ASTFunction*> fromFunNameToASTFun;
 };

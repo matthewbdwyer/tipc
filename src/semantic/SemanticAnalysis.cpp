@@ -1,12 +1,12 @@
 #include "SemanticAnalysis.h"
 #include "CheckAssignable.h"
 
-std::shared_ptr<SemanticAnalysis> SemanticAnalysis::analyze(ASTProgram* ast) {
+std::shared_ptr<SemanticAnalysis> SemanticAnalysis::analyze(ASTProgram* ast, bool polyInf) {
   auto symTable = SymbolTable::build(ast);
   CheckAssignable::check(ast);
   auto callGraph = CallGraph::build(ast, symTable.get());
-  auto typeResults = TypeInference::check(ast, symTable.get());
-  return std::make_shared<SemanticAnalysis>(std::move(symTable), std::move(typeResults), std::move(callGraph));
+  auto typeResults = TypeInference::run(ast, polyInf, callGraph.get(), symTable.get());
+  return std::make_shared<SemanticAnalysis>(symTable, typeResults, callGraph);
 }
 
 SymbolTable* SemanticAnalysis::getSymbolTable() {
