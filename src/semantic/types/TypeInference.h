@@ -21,7 +21,8 @@ class TypeInference {
 
 public:
   TypeInference(SymbolTable* s, std::shared_ptr<Unifier> u) :
-                symbols(s), unifier(std::move(u)) {}
+                symbols(s), unifier(u) {}
+
 
   /*! \fn run
    *  \brief Generate and solve type constraints and report any errors.
@@ -40,7 +41,7 @@ public:
    * \param cg The program call graph
    * \param symbols The symbol table
    */
-  static std::unique_ptr<TypeInference> run(ASTProgram* ast, bool polyInf, CallGraph* cg, SymbolTable* symbols);
+  static std::shared_ptr<TypeInference> run(ASTProgram* ast, bool polyInf, CallGraph* cg, SymbolTable* symbols);
 
   /*! \fn getInferredType
    *  \brief Returns the type expression inferred for the given ASTDeclNode.

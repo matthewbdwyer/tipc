@@ -26,6 +26,7 @@ public:
     bool connected(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2);
 
     friend std::ostream& operator<<(std::ostream& os, const UnionFind& obj);
+
 private:
     // A mapping from terms to parents.
     std::map<std::shared_ptr<TipType>, std::shared_ptr<TipType>> edges;

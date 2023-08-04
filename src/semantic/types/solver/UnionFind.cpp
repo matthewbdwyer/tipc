@@ -74,9 +74,6 @@ std::ostream &UnionFind::print(std::ostream &out) const {
   return out;
 }
 
-/*
- * TBD: Add path compression instead of iterative parent lookup.
- */
 std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
     LOG_S(3) << "UnionFind looking for representive of " << *t;
 

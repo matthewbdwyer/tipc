@@ -19,7 +19,7 @@ void Optimizer::optimize(Module* theModule) {
   LOG_S(1) << "Optimizing program " << theModule->getName().str();
 
   // Create a pass manager to simplify generated module
-  auto TheFPM = std::make_unique<legacy::FunctionPassManager>(theModule);
+  auto TheFPM = std::make_shared<legacy::FunctionPassManager>(theModule);
 
   // Promote allocas to registers.
   TheFPM->add(createPromoteMemoryToRegisterPass());

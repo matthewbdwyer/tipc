@@ -4,6 +4,6 @@
 TypeConstraintUnifyVisitor::TypeConstraintUnifyVisitor(SymbolTable *pTable)
   : TypeConstraintVisitor(pTable, std::move(buildConstraintHandler())) { }
 
-std::unique_ptr<ConstraintHandler> TypeConstraintUnifyVisitor::buildConstraintHandler() {
-    return std::make_unique<ConstraintUnifier>();
+std::shared_ptr<ConstraintHandler> TypeConstraintUnifyVisitor::buildConstraintHandler() {
+    return std::make_shared<ConstraintUnifier>();
 }

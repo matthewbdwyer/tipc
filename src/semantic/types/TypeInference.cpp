@@ -113,7 +113,7 @@ std::deque<ASTFunction*> topoSortNonRecursive(CallGraph* cg) {
  * handled within the elements of the unifier map, i.e., is not 
  * subjected to polymorphic type inference.  
  */
-std::unique_ptr<TypeInference> runPoly(ASTProgram* ast, SymbolTable* symbols, 
+std::shared_ptr<TypeInference> runPoly(ASTProgram* ast, SymbolTable* symbols, 
                                        CallGraph* cg) {
   LOG_S(1) <<"Generating Polymorphic Type Constraints";
 
@@ -160,24 +160,26 @@ std::unique_ptr<TypeInference> runPoly(ASTProgram* ast, SymbolTable* symbols,
 
   AbsentFieldChecker::check(ast, unifier.get());
 
-  return std::make_unique<TypeInference>(symbols, unifier);
+  return std::make_shared<TypeInference>(symbols, unifier);
 }
 
 /* 
  * Performs monomorphic type inference on the entire program.
  */
 std::unique_ptr<TypeInference> runMono(ASTProgram* ast, SymbolTable* symbols) {
-  LOG_S(1) <<"Generating Monomorphic Type Constraints";
+  LOG_S(1) << "Generating Monomorphic Type Constraints";
 
   TypeConstraintCollectVisitor visitor(symbols);
   ast->accept(&visitor);
+  
+  LOG_S(1) << "Solving type constraints";
 
   auto unifier =  std::make_shared<Unifier>(visitor.getCollectedConstraints());
   unifier->solve();
 
   AbsentFieldChecker::check(ast, unifier.get());
 
-  return std::make_unique<TypeInference>(symbols, unifier);
+  return std::make_shared<TypeInference>(symbols, unifier);
 }
 
 /*
@@ -185,16 +187,8 @@ std::unique_ptr<TypeInference> runMono(ASTProgram* ast, SymbolTable* symbols) {
  * unifier instance.  The unifier then records the inferred type results that
  * can be subsequently queried.
  */
-std::unique_ptr<TypeInference> TypeInference::run(ASTProgram* ast, bool doPoly, CallGraph* cg, SymbolTable* symbols) {
-  std::unique_ptr<TypeInference> typeInf;
-
-  if (doPoly) {
-    typeInf = std::move(runPoly(ast, symbols, cg));
-  } else {
-    typeInf = std::move(runMono(ast, symbols));
-  }
-
-  return typeInf;
+std::shared_ptr<TypeInference> TypeInference::run(ASTProgram* ast, bool doPoly, CallGraph* cg, SymbolTable* symbols) {
+  return (doPoly) ? runPoly(ast, symbols, cg) : runMono(ast, symbols);
 }
 
 std::shared_ptr<TipType> TypeInference::getInferredType(ASTDeclNode *node) {

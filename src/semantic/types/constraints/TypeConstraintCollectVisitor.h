@@ -21,6 +21,6 @@ public:
     explicit TypeConstraintCollectVisitor(SymbolTable *pTable);
     std::vector<TypeConstraint>& getCollectedConstraints();
 private:
-    static std::unique_ptr<ConstraintHandler> buildConstraintHandler();
+    static std::shared_ptr<ConstraintHandler> buildConstraintHandler();
 };
 
