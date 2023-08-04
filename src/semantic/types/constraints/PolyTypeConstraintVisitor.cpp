@@ -13,20 +13,25 @@ PolyTypeConstraintVisitor::PolyTypeConstraintVisitor(
  * Type Rules for "E(E1, ..., En)":
  *  [[E]] = ([[E1]], ..., [[En]]) -> [[E(E1, ..., En)]]
  *
- * Polymorphic typing handles the case where expression "E" has
- * a function type involving free type variables, i.e., \alpha.
- * In this case, rather than force such type variables to be unified
- * across all call sites, instead we create a copy of the function
- * type with unique free type variables, i.e., the instantiated type,
- * that can be unified with the function expression in the function application.
+ * Polymorphic typing handles the case where expression "E" can
+ * have a value of a function declared with the "poly" keyword.
+ * The set of functions that may be called at this call site
+ * is computed by CFA and accessed through the call graph.   The "poly"
+ * attribute is accessed through the symbol table.
  *
- * An additional complexity is that we will perform this process for each
- * function that may be called from this call site.  Since unification solves
- * the conjunction of constraints this forces all of the corresponding free
- * type variables for each called function to be consistently typed at this call
- * site.  Different typings are possible at other call sites.
+ * For such functions, we generate constraints for this call site by
+ * creating a copy of the type for the called function with "fresh"
+ * type variables for its arguments.  The type for the called function
+ * has already been computed, this is enforced by type analysis, and it
+ * is called the "generic" type.   The copy is called the "instantiated"
+ * type.  The idea is that for each call site we create distinct instantiated
+ * types and this makes it possible for a function to match distinct argument
+ * and return value typings, e.g., to be polymorphic.
  *
- * FIX THE ABOVE ONCE THINGS ARE WORKING
+ * Note that code generation works just fine with polymorphic typing as long
+ * as all of the types have a common representation, i.e., they fit into the
+ * same number of bits.
+ *
  */
 void PolyTypeConstraintVisitor::endVisit(ASTFunAppExpr  * element) {
   std::vector<std::shared_ptr<TipType>> actuals;

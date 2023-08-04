@@ -1,4 +1,6 @@
 #include "ASTFunAppExpr.h"
+#include "ASTVisitor.h"
+#include "ASTinternal.h"
 
 ASTFunAppExpr::ASTFunAppExpr(std::shared_ptr<ASTExpr> FUN, std::vector<std::shared_ptr<ASTExpr>> ACTUALS) {
   this->FUN = FUN;
@@ -8,8 +10,6 @@ ASTFunAppExpr::ASTFunAppExpr(std::shared_ptr<ASTExpr> FUN, std::vector<std::shar
     this->ACTUALS.push_back(a);
   }
 }
-#include "ASTVisitor.h"
-#include "ASTinternal.h"
 
 std::vector<ASTExpr*> ASTFunAppExpr::getActuals() const {
   return rawRefs(ACTUALS);
