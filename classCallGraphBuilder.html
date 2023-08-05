@@ -103,6 +103,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aab853cdafe24aefe301ac737f4c18ece"><td class="memItemLeft" align="right" valign="top">std::map&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraphBuilder.html#aab853cdafe24aefe301ac737f4c18ece">getCallGraph</a> ()</td></tr>
 <tr class="memdesc:aab853cdafe24aefe301ac737f4c18ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the call graph, call graph a map from caller to callee, the callee is a set of ASTFunction* and the caller is an ASTFunction*.  <a href="classCallGraphBuilder.html#aab853cdafe24aefe301ac737f4c18ece">More...</a><br /></td></tr>
 <tr class="separator:aab853cdafe24aefe301ac737f4c18ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7cbfba3caa0e779ef99b2076c662272"><td class="memItemLeft" align="right" valign="top">std::map&lt; <a class="el" href="classASTFunAppExpr.html">ASTFunAppExpr</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraphBuilder.html#ab7cbfba3caa0e779ef99b2076c662272">getMayCall</a> ()</td></tr>
+<tr class="memdesc:ab7cbfba3caa0e779ef99b2076c662272"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the may call relation, which relates each call expression to the set of possible called functions.  <a href="classCallGraphBuilder.html#ab7cbfba3caa0e779ef99b2076c662272">More...</a><br /></td></tr>
+<tr class="separator:ab7cbfba3caa0e779ef99b2076c662272"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71649de0b9f6b6d3e79e03e7f7dbcb2e"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraphBuilder.html#a71649de0b9f6b6d3e79e03e7f7dbcb2e">getFunMap</a> ()</td></tr>
 <tr class="memdesc:a71649de0b9f6b6d3e79e03e7f7dbcb2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the map from a function name to its ASTFunction*, ASTFunction* is then used to fetch further information from the graph such as to fetch the subroutines called by a function, or that call the function.  <a href="classCallGraphBuilder.html#a71649de0b9f6b6d3e79e03e7f7dbcb2e">More...</a><br /></td></tr>
 <tr class="separator:a71649de0b9f6b6d3e79e03e7f7dbcb2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,6 +201,25 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Returns the map from a function name to its ASTFunction*, ASTFunction* is then used to fetch further information from the graph such as to fetch the subroutines called by a function, or that call the function. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::map&lt;std::string, ASTFunction*&gt; fromFunNameToASTFun </dd></dl>
+
+</div>
+</div>
+<a id="ab7cbfba3caa0e779ef99b2076c662272"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7cbfba3caa0e779ef99b2076c662272">&#9670;&nbsp;</a></span>getMayCall()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; <a class="el" href="classASTFunAppExpr.html">ASTFunAppExpr</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt; CallGraphBuilder::getMayCall </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the may call relation, which relates each call expression to the set of possible called functions. </p>
 
 </div>
 </div>

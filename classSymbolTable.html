@@ -78,11 +78,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa3ecb6fc1a375d600bf661dfbedf97fd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymbolTable.html#aa3ecb6fc1a375d600bf661dfbedf97fd">SymbolTable</a> (std::map&lt; std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt; fMap, std::map&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *, std::map&lt; std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt;&gt; lMap, std::vector&lt; std::string &gt; fSet)</td></tr>
-<tr class="separator:aa3ecb6fc1a375d600bf661dfbedf97fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcbabe1b991356e990a1719e6ab89d83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymbolTable.html#adcbabe1b991356e990a1719e6ab89d83">SymbolTable</a> (std::map&lt; std::string, std::pair&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *, bool &gt;&gt; fMap, std::map&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *, std::map&lt; std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt;&gt; lMap, std::vector&lt; std::string &gt; fSet)</td></tr>
+<tr class="separator:adcbabe1b991356e990a1719e6ab89d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42552a6096c8cd445e68abf872ffb0b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymbolTable.html#a42552a6096c8cd445e68abf872ffb0b1">getFunction</a> (std::string s)</td></tr>
 <tr class="memdesc:a42552a6096c8cd445e68abf872ffb0b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the declaration node for a given function name.  <a href="classSymbolTable.html#a42552a6096c8cd445e68abf872ffb0b1">More...</a><br /></td></tr>
 <tr class="separator:a42552a6096c8cd445e68abf872ffb0b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a290ca2daabe32124a26978e89ce1f61c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymbolTable.html#a290ca2daabe32124a26978e89ce1f61c">getPoly</a> (std::string s)</td></tr>
+<tr class="memdesc:a290ca2daabe32124a26978e89ce1f61c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an indication of whether the function was declared as polymorphic.  <a href="classSymbolTable.html#a290ca2daabe32124a26978e89ce1f61c">More...</a><br /></td></tr>
+<tr class="separator:a290ca2daabe32124a26978e89ce1f61c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09802b43094c4f48afec6e1ede886d60"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymbolTable.html#a09802b43094c4f48afec6e1ede886d60">getFunctions</a> ()</td></tr>
 <tr class="memdesc:a09802b43094c4f48afec6e1ede886d60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the declaration nodes for functions in the program.  <a href="classSymbolTable.html#a09802b43094c4f48afec6e1ede886d60">More...</a><br /></td></tr>
 <tr class="separator:a09802b43094c4f48afec6e1ede886d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,8 +112,8 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Performs symbol analysis and records results for subsequent phases. </p>
 <p>The symbol table maps names of identifiers to declaration nodes. There is a global map of for function names and a local map for each function. In addition it records the set of field names used in the program. Errors are reported by raising a <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> exception. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa3ecb6fc1a375d600bf661dfbedf97fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3ecb6fc1a375d600bf661dfbedf97fd">&#9670;&nbsp;</a></span>SymbolTable()</h2>
+<a id="adcbabe1b991356e990a1719e6ab89d83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcbabe1b991356e990a1719e6ab89d83">&#9670;&nbsp;</a></span>SymbolTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -121,7 +124,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">SymbolTable::SymbolTable </td>
           <td>(</td>
-          <td class="paramtype">std::map&lt; std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt;&#160;</td>
+          <td class="paramtype">std::map&lt; std::string, std::pair&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *, bool &gt;&gt;&#160;</td>
           <td class="paramname"><em>fMap</em>, </td>
         </tr>
         <tr>
@@ -313,6 +316,33 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a290ca2daabe32124a26978e89ce1f61c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a290ca2daabe32124a26978e89ce1f61c">&#9670;&nbsp;</a></span>getPoly()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SymbolTable::getPoly </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return an indication of whether the function was declared as polymorphic. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>The Function name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the function is declared polymorphic </dd></dl>
 
 </div>
 </div>

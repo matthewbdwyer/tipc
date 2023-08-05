@@ -72,11 +72,13 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="Unifier_8h_source.html">Unifier.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Substituter_8h_source.html">Substituter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Copier_8h_source.html">Copier.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="TipAlpha_8h_source.html">TipAlpha.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="TipCons_8h_source.html">TipCons.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="TipMu_8h_source.html">TipMu.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="TypeVars_8h_source.html">TypeVars.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="UnificationError_8h_source.html">UnificationError.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="InternalError_8h_source.html">InternalError.h</a>&quot;</code><br />
 <code>#include &quot;loguru.hpp&quot;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
@@ -86,56 +88,56 @@ Include dependency graph for Unifier.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="Unifier_8cpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2tipc_2tipc_2src_2semantic_2types_2solver_2Unifier_8cpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2tipc_2tipc_2src_2semantic_2types_2solver_2Unifier_8cpp" id="a_2home_2runner_2work_2tipc_2tipc_2src_2semantic_2types_2solver_2Unifier_8cpp">
-<area shape="rect" title=" " alt="" coords="880,5,1058,61"/>
-<area shape="rect" href="Unifier_8h.html" title=" " alt="" coords="296,333,372,360"/>
-<area shape="rect" title=" " alt="" coords="2500,483,2580,509"/>
-<area shape="rect" href="Substituter_8h.html" title=" " alt="" coords="828,109,932,136"/>
-<area shape="rect" href="TipAlpha_8h.html" title=" " alt="" coords="777,333,868,360"/>
-<area shape="rect" href="TipCons_8h.html" title=" " alt="" coords="439,408,526,435"/>
-<area shape="rect" href="TipMu_8h.html" title=" " alt="" coords="628,333,702,360"/>
-<area shape="rect" href="TypeVars_8h.html" title=" " alt="" coords="711,109,803,136"/>
-<area shape="rect" href="UnificationError_8h.html" title=" " alt="" coords="1582,184,1716,211"/>
-<area shape="rect" title=" " alt="" coords="1108,109,1198,136"/>
-<area shape="rect" title=" " alt="" coords="1222,109,1297,136"/>
-<area shape="rect" title=" " alt="" coords="1322,109,1382,136"/>
-<area shape="rect" href="TipType_8h.html" title=" " alt="" coords="231,483,315,509"/>
-<area shape="rect" href="TipVar_8h.html" title=" " alt="" coords="702,408,777,435"/>
-<area shape="rect" title=" " alt="" coords="126,931,188,957"/>
-<area shape="rect" href="TypeConstraint_8h.html" title=" " alt="" coords="166,408,297,435"/>
-<area shape="rect" href="UnionFind_8h.html" title=" " alt="" coords="44,408,142,435"/>
-<area shape="rect" title=" " alt="" coords="372,408,414,435"/>
-<area shape="rect" title=" " alt="" coords="610,931,686,957"/>
-<area shape="rect" title=" " alt="" coords="245,931,322,957"/>
-<area shape="rect" href="AST_8h.html" title=" " alt="" coords="1317,483,1376,509"/>
-<area shape="rect" title=" " alt="" coords="2486,931,2545,957"/>
-<area shape="rect" href="ASTAccessExpr_8h.html" title=" " alt="" coords="1769,632,1900,659"/>
-<area shape="rect" href="ASTExpr_8h.html" title=" " alt="" coords="1466,707,1552,733"/>
-<area shape="rect" href="ASTNode_8h.html" title=" " alt="" coords="601,856,694,883"/>
-<area shape="rect" href="ASTAllocExpr_8h.html" title=" " alt="" coords="2098,632,2216,659"/>
-<area shape="rect" href="ASTAssignStmt_8h.html" title=" " alt="" coords="714,632,846,659"/>
-<area shape="rect" href="ASTBinaryExpr_8h.html" title=" " alt="" coords="870,632,999,659"/>
-<area shape="rect" href="ASTBlockStmt_8h.html" title=" " alt="" coords="1703,557,1830,584"/>
-<area shape="rect" href="ASTDeRefExpr_8h.html" title=" " alt="" coords="1023,632,1150,659"/>
-<area shape="rect" href="ASTDeclNode_8h.html" title=" " alt="" coords="497,781,620,808"/>
-<area shape="rect" href="ASTDeclStmt_8h.html" title=" " alt="" coords="474,707,592,733"/>
-<area shape="rect" href="ASTErrorStmt_8h.html" title=" " alt="" coords="1572,632,1694,659"/>
-<area shape="rect" href="ASTFieldExpr_8h.html" title=" " alt="" coords="1327,632,1446,659"/>
-<area shape="rect" href="ASTFunAppExpr_8h.html" title=" " alt="" coords="2292,632,2427,659"/>
-<area shape="rect" href="ASTFunction_8h.html" title=" " alt="" coords="524,632,638,659"/>
-<area shape="rect" href="ASTIfStmt_8h.html" title=" " alt="" coords="1974,632,2073,659"/>
-<area shape="rect" href="ASTInputExpr_8h.html" title=" " alt="" coords="865,557,985,584"/>
-<area shape="rect" href="ASTNullExpr_8h.html" title=" " alt="" coords="1010,557,1123,584"/>
-<area shape="rect" href="ASTNumberExpr_8h.html" title=" " alt="" coords="1489,557,1628,584"/>
-<area shape="rect" href="ASTOutputStmt_8h.html" title=" " alt="" coords="1854,557,1988,584"/>
-<area shape="rect" href="ASTProgram_8h.html" title=" " alt="" coords="574,557,689,584"/>
-<area shape="rect" href="ASTRecordExpr_8h.html" title=" " alt="" coords="1332,557,1464,584"/>
-<area shape="rect" href="ASTRefExpr_8h.html" title=" " alt="" coords="1148,557,1257,584"/>
-<area shape="rect" href="ASTReturnStmt_8h.html" title=" " alt="" coords="2216,557,2349,584"/>
-<area shape="rect" title=" " alt="" coords="44,483,94,509"/>
-<area shape="rect" href="TipTypeVisitor_8h.html" title=" " alt="" coords="702,184,828,211"/>
-<area shape="rect" href="Type_8h.html" title=" " alt="" coords="708,259,772,285"/>
-<area shape="rect" href="SemanticError_8h.html" title=" " alt="" coords="1682,259,1808,285"/>
-<area shape="rect" href="Error_8h.html" title=" " alt="" coords="2508,408,2572,435"/>
+<area shape="rect" title=" " alt="" coords="2578,5,2755,61"/>
+<area shape="rect" href="Unifier_8h.html" title=" " alt="" coords="1649,408,1725,435"/>
+<area shape="rect" title=" " alt="" coords="2795,557,2875,584"/>
+<area shape="rect" href="Substituter_8h.html" title=" " alt="" coords="2445,184,2549,211"/>
+<area shape="rect" href="TipAlpha_8h.html" title=" " alt="" coords="2464,408,2555,435"/>
+<area shape="rect" href="TipCons_8h.html" title=" " alt="" coords="1926,483,2013,509"/>
+<area shape="rect" href="TipMu_8h.html" title=" " alt="" coords="2579,408,2653,435"/>
+<area shape="rect" href="Copier_8h.html" title=" " alt="" coords="2504,109,2579,136"/>
+<area shape="rect" href="TypeVars_8h.html" title=" " alt="" coords="2329,184,2421,211"/>
+<area shape="rect" href="UnificationError_8h.html" title=" " alt="" coords="2755,109,2890,136"/>
+<area shape="rect" href="InternalError_8h.html" title=" " alt="" coords="2908,184,3023,211"/>
+<area shape="rect" title=" " alt="" coords="2965,109,3056,136"/>
+<area shape="rect" title=" " alt="" coords="3080,109,3155,136"/>
+<area shape="rect" title=" " alt="" coords="3179,109,3239,136"/>
+<area shape="rect" href="TipType_8h.html" title=" " alt="" coords="1510,557,1594,584"/>
+<area shape="rect" href="TipVar_8h.html" title=" " alt="" coords="2472,483,2547,509"/>
+<area shape="rect" title=" " alt="" coords="125,1005,187,1032"/>
+<area shape="rect" href="TypeConstraint_8h.html" title=" " alt="" coords="1519,483,1649,509"/>
+<area shape="rect" href="UnionFind_8h.html" title=" " alt="" coords="1396,483,1495,509"/>
+<area shape="rect" title=" " alt="" coords="1728,483,1771,509"/>
+<area shape="rect" title=" " alt="" coords="245,1005,321,1032"/>
+<area shape="rect" title=" " alt="" coords="492,1005,569,1032"/>
+<area shape="rect" href="AST_8h.html" title=" " alt="" coords="1619,557,1677,584"/>
+<area shape="rect" title=" " alt="" coords="2883,1005,2941,1032"/>
+<area shape="rect" href="ASTAccessExpr_8h.html" title=" " alt="" coords="813,632,944,659"/>
+<area shape="rect" href="ASTExpr_8h.html" title=" " alt="" coords="1733,707,1819,733"/>
+<area shape="rect" href="ASTNode_8h.html" title=" " alt="" coords="484,931,577,957"/>
+<area shape="rect" href="ASTAllocExpr_8h.html" title=" " alt="" coords="969,632,1087,659"/>
+<area shape="rect" href="ASTAssignStmt_8h.html" title=" " alt="" coords="1111,632,1243,659"/>
+<area shape="rect" href="ASTBinaryExpr_8h.html" title=" " alt="" coords="1267,632,1397,659"/>
+<area shape="rect" href="ASTBlockStmt_8h.html" title=" " alt="" coords="611,632,738,659"/>
+<area shape="rect" href="ASTDeRefExpr_8h.html" title=" " alt="" coords="1421,632,1547,659"/>
+<area shape="rect" href="ASTDeclNode_8h.html" title=" " alt="" coords="371,856,493,883"/>
+<area shape="rect" href="ASTDeclStmt_8h.html" title=" " alt="" coords="557,781,675,808"/>
+<area shape="rect" href="ASTErrorStmt_8h.html" title=" " alt="" coords="1571,632,1693,659"/>
+<area shape="rect" href="ASTFieldExpr_8h.html" title=" " alt="" coords="1717,632,1835,659"/>
+<area shape="rect" href="ASTFunAppExpr_8h.html" title=" " alt="" coords="1859,632,1994,659"/>
+<area shape="rect" href="ASTFunction_8h.html" title=" " alt="" coords="421,707,536,733"/>
+<area shape="rect" href="ASTIfStmt_8h.html" title=" " alt="" coords="2019,632,2117,659"/>
+<area shape="rect" href="ASTInputExpr_8h.html" title=" " alt="" coords="2141,632,2261,659"/>
+<area shape="rect" href="ASTNullExpr_8h.html" title=" " alt="" coords="2286,632,2399,659"/>
+<area shape="rect" href="ASTNumberExpr_8h.html" title=" " alt="" coords="2424,632,2563,659"/>
+<area shape="rect" href="ASTOutputStmt_8h.html" title=" " alt="" coords="2587,632,2722,659"/>
+<area shape="rect" href="ASTProgram_8h.html" title=" " alt="" coords="371,632,485,659"/>
+<area shape="rect" title=" " alt="" coords="43,557,93,584"/>
+<area shape="rect" href="TipTypeVisitor_8h.html" title=" " alt="" coords="2399,259,2524,285"/>
+<area shape="rect" href="Type_8h.html" title=" " alt="" coords="2429,333,2493,360"/>
+<area shape="rect" href="SemanticError_8h.html" title=" " alt="" coords="2759,184,2884,211"/>
+<area shape="rect" href="Error_8h.html" title=" " alt="" coords="2896,259,2960,285"/>
+<area shape="rect" title=" " alt="" coords="2885,333,2971,360"/>
 </map>
 </div>
 </div></div><!-- contents -->

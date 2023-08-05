@@ -89,9 +89,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac11c798c7dd5bbd28da4d11988e4451f"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classTypeInference.html">TypeInference</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeInference.html#ac11c798c7dd5bbd28da4d11988e4451f">check</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *ast, <a class="el" href="classSymbolTable.html">SymbolTable</a> *symbols)</td></tr>
-<tr class="memdesc:ac11c798c7dd5bbd28da4d11988e4451f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate type constraints, unify them, and report any errors.  <a href="classTypeInference.html#ac11c798c7dd5bbd28da4d11988e4451f">More...</a><br /></td></tr>
-<tr class="separator:ac11c798c7dd5bbd28da4d11988e4451f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b6e6fec4dd8f3b115b272c89f088dc9"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classTypeInference.html">TypeInference</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeInference.html#a4b6e6fec4dd8f3b115b272c89f088dc9">run</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *ast, bool polyInf, <a class="el" href="classCallGraph.html">CallGraph</a> *cg, <a class="el" href="classSymbolTable.html">SymbolTable</a> *symbols)</td></tr>
+<tr class="memdesc:a4b6e6fec4dd8f3b115b272c89f088dc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate and solve type constraints and report any errors.  <a href="classTypeInference.html#a4b6e6fec4dd8f3b115b272c89f088dc9">More...</a><br /></td></tr>
+<tr class="separator:a4b6e6fec4dd8f3b115b272c89f088dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Perform type inference and checking. </p>
@@ -134,54 +134,6 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac11c798c7dd5bbd28da4d11988e4451f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac11c798c7dd5bbd28da4d11988e4451f">&#9670;&nbsp;</a></span>check()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">TypeInference::check </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classASTProgram.html">ASTProgram</a> *&#160;</td>
-          <td class="paramname"><em>ast</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSymbolTable.html">SymbolTable</a> *&#160;</td>
-          <td class="paramname"><em>symbols</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Generate type constraints, unify them, and report any errors. </p>
-<p>Visits the AST generating type constraints for each expression and solves the resulting constraints. If a term unification error is detected a <a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms.">UnificationError</a>, a subtype fo <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a>, is raised. If an access to a field whose definition is absent is performed a <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> is raised. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms.">UnificationError</a> </dd>
-<dd>
-<a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> </dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ast</td><td>The program AST </td></tr>
-    <tr><td class="paramname">symbols</td><td>The symbol table </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="aa034a6ddf0df28a0a1ddb9c98a56f08f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa034a6ddf0df28a0a1ddb9c98a56f08f">&#9670;&nbsp;</a></span>getInferredType()</h2>
 
@@ -230,6 +182,69 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Print type inference results to output stream. </p>
+
+</div>
+</div>
+<a id="a4b6e6fec4dd8f3b115b272c89f088dc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b6e6fec4dd8f3b115b272c89f088dc9">&#9670;&nbsp;</a></span>run()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TypeInference::run </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classASTProgram.html">ASTProgram</a> *&#160;</td>
+          <td class="paramname"><em>ast</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>polyInf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCallGraph.html">CallGraph</a> *&#160;</td>
+          <td class="paramname"><em>cg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSymbolTable.html">SymbolTable</a> *&#160;</td>
+          <td class="paramname"><em>symbols</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generate and solve type constraints and report any errors. </p>
+<p>Visits the AST generating type constraints for each expression and solves the resulting constraints. If a term unification error is detected a <a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms.">UnificationError</a>, a subtype of <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a>, is raised. If an access to a field whose definition is absent is detected a <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> is raised. If no errors are found, then the inferred types for all symbols are recorded in the symbol table.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classUnificationError.html" title="A runtime error when unifying type terms.">UnificationError</a> </dd>
+<dd>
+<a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ast</td><td>The program AST </td></tr>
+    <tr><td class="paramname">polyInf</td><td>Flag indicating whether to perform polymorphic or monomorphic inference </td></tr>
+    <tr><td class="paramname">cg</td><td>The program call graph </td></tr>
+    <tr><td class="paramname">symbols</td><td>The symbol table </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

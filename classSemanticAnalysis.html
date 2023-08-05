@@ -92,9 +92,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:af931a61209a247fdfc137f16911ce244"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classSemanticAnalysis.html">SemanticAnalysis</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSemanticAnalysis.html#af931a61209a247fdfc137f16911ce244">analyze</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *ast)</td></tr>
-<tr class="memdesc:af931a61209a247fdfc137f16911ce244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform semantic analysis on program AST.  <a href="classSemanticAnalysis.html#af931a61209a247fdfc137f16911ce244">More...</a><br /></td></tr>
-<tr class="separator:af931a61209a247fdfc137f16911ce244"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac36eff076f7a2993c63c074afba381a"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classSemanticAnalysis.html">SemanticAnalysis</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSemanticAnalysis.html#aac36eff076f7a2993c63c074afba381a">analyze</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *ast, bool polyInf)</td></tr>
+<tr class="memdesc:aac36eff076f7a2993c63c074afba381a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform semantic analysis on program AST.  <a href="classSemanticAnalysis.html#aac36eff076f7a2993c63c074afba381a">More...</a><br /></td></tr>
+<tr class="separator:aac36eff076f7a2993c63c074afba381a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stores the results of semantic analysis passes. </p>
@@ -147,8 +147,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af931a61209a247fdfc137f16911ce244"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af931a61209a247fdfc137f16911ce244">&#9670;&nbsp;</a></span>analyze()</h2>
+<a id="aac36eff076f7a2993c63c074afba381a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac36eff076f7a2993c63c074afba381a">&#9670;&nbsp;</a></span>analyze()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -160,8 +160,18 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">SemanticAnalysis::analyze </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classASTProgram.html">ASTProgram</a> *&#160;</td>
-          <td class="paramname"><em>ast</em></td><td>)</td>
+          <td class="paramname"><em>ast</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>polyInf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -176,10 +186,11 @@ Static Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ast</td><td>The program AST </td></tr>
+    <tr><td class="paramname">polyInf</td><td>Indicate whether polymorphic type inference should be performed. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The shared pointer to the semantic analysis structure. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The unique pointer to the semantic analysis structure. </dd></dl>
 
 </div>
 </div>

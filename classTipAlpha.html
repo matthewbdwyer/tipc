@@ -91,8 +91,8 @@ Collaboration diagram for TipAlpha:</div>
 <div class="dyncontent">
 <div class="center"><img src="classTipAlpha__coll__graph.png" border="0" usemap="#aTipAlpha_coll__map" alt="Collaboration graph"/></div>
 <map name="aTipAlpha_coll__map" id="aTipAlpha_coll__map">
-<area shape="rect" title="Class for free type variables." alt="" coords="53,171,131,197"/>
-<area shape="rect" href="classTipVar.html" title="Class representing a type variable." alt="" coords="61,95,123,121"/>
+<area shape="rect" title="Class for free type variables." alt="" coords="63,171,142,197"/>
+<area shape="rect" href="classTipVar.html" title="Class representing a type variable." alt="" coords="31,95,94,121"/>
 <area shape="rect" href="classTipType.html" title="Abstract base class of all types." alt="" coords="5,5,77,32"/>
 <area shape="rect" href="classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="102,5,183,32"/>
 </map>
@@ -108,6 +108,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad20860a29c7345147eb64ddd5c79ee51"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTipAlpha.html#ad20860a29c7345147eb64ddd5c79ee51">TipAlpha</a> (<a class="el" href="classASTNode.html">ASTNode</a> *<a class="el" href="classTipVar.html#aaac111ac8d6de9917ead0f47da1024d1">node</a>, std::string const <a class="el" href="classTipAlpha.html#a2b31365594e4de12c4574b610feecd39">name</a>)</td></tr>
 <tr class="memdesc:ad20860a29c7345147eb64ddd5c79ee51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for record or access exprs.  <a href="classTipAlpha.html#ad20860a29c7345147eb64ddd5c79ee51">More...</a><br /></td></tr>
 <tr class="separator:ad20860a29c7345147eb64ddd5c79ee51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af581df47ffed73397774f1653c31ac68"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTipAlpha.html#af581df47ffed73397774f1653c31ac68">TipAlpha</a> (<a class="el" href="classASTNode.html">ASTNode</a> *<a class="el" href="classTipVar.html#aaac111ac8d6de9917ead0f47da1024d1">node</a>, <a class="el" href="classASTNode.html">ASTNode</a> *<a class="el" href="classTipAlpha.html#a5492bcac42ca189c6848a6cadca905cb">context</a>, std::string const <a class="el" href="classTipAlpha.html#a2b31365594e4de12c4574b610feecd39">name</a>)</td></tr>
+<tr class="memdesc:af581df47ffed73397774f1653c31ac68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for creating context specific alphas.  <a href="classTipAlpha.html#af581df47ffed73397774f1653c31ac68">More...</a><br /></td></tr>
+<tr class="separator:af581df47ffed73397774f1653c31ac68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa415b448ef42f011890940de4f459e1d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classASTNode.html">ASTNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTipAlpha.html#aa415b448ef42f011890940de4f459e1d">getContext</a> () const</td></tr>
+<tr class="separator:aa415b448ef42f011890940de4f459e1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad60bff29f93f9fa61c13971613eeb8f4"><td class="memItemLeft" align="right" valign="top">std::string const  &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTipAlpha.html#ad60bff29f93f9fa61c13971613eeb8f4">getName</a> () const</td></tr>
 <tr class="separator:ad60bff29f93f9fa61c13971613eeb8f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63753b996bf59b73de44257139c167a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTipAlpha.html#a63753b996bf59b73de44257139c167a0">operator==</a> (const <a class="el" href="classTipType.html">TipType</a> &amp;other) const override</td></tr>
@@ -144,6 +149,8 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:a5492bcac42ca189c6848a6cadca905cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classASTNode.html">ASTNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTipAlpha.html#a5492bcac42ca189c6848a6cadca905cb">context</a></td></tr>
+<tr class="separator:a5492bcac42ca189c6848a6cadca905cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b31365594e4de12c4574b610feecd39"><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTipAlpha.html#a2b31365594e4de12c4574b610feecd39">name</a></td></tr>
 <tr class="separator:a2b31365594e4de12c4574b610feecd39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classTipVar"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classTipVar')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classTipVar.html">TipVar</a></td></tr>
@@ -154,7 +161,7 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><p>Class for free type variables. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0ff8ff5280f913c0b48c809f17985b03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ff8ff5280f913c0b48c809f17985b03">&#9670;&nbsp;</a></span>TipAlpha() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ff8ff5280f913c0b48c809f17985b03">&#9670;&nbsp;</a></span>TipAlpha() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +186,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="af7d7849f04ca70f38c1d886292af8c30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7d7849f04ca70f38c1d886292af8c30">&#9670;&nbsp;</a></span>TipAlpha() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af7d7849f04ca70f38c1d886292af8c30">&#9670;&nbsp;</a></span>TipAlpha() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -205,7 +212,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad20860a29c7345147eb64ddd5c79ee51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad20860a29c7345147eb64ddd5c79ee51">&#9670;&nbsp;</a></span>TipAlpha() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad20860a29c7345147eb64ddd5c79ee51">&#9670;&nbsp;</a></span>TipAlpha() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,6 +248,50 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af581df47ffed73397774f1653c31ac68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af581df47ffed73397774f1653c31ac68">&#9670;&nbsp;</a></span>TipAlpha() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TipAlpha::TipAlpha </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classASTNode.html">ASTNode</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classASTNode.html">ASTNode</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string const&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor for creating context specific alphas. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The <a class="el" href="classASTNode.html" title="Abstract base class for all AST nodes.">ASTNode</a> for the original alpha </td></tr>
+    <tr><td class="paramname">node</td><td>The <a class="el" href="classASTNode.html" title="Abstract base class for all AST nodes.">ASTNode</a> for its usage context </td></tr>
+    <tr><td class="paramname">name</td><td>The field name or empty </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad620682abb3518857c3155ad10fc74a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad620682abb3518857c3155ad10fc74a8">&#9670;&nbsp;</a></span>accept()</h2>
@@ -267,6 +318,23 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classTipType.html#a513b8a0a0a12e3ba2896c702bf8e9c93">TipType</a>.</p>
+
+</div>
+</div>
+<a id="aa415b448ef42f011890940de4f459e1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa415b448ef42f011890940de4f459e1d">&#9670;&nbsp;</a></span>getContext()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classASTNode.html">ASTNode</a> * TipAlpha::getContext </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -372,6 +440,28 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a5492bcac42ca189c6848a6cadca905cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5492bcac42ca189c6848a6cadca905cb">&#9670;&nbsp;</a></span>context</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classASTNode.html">ASTNode</a>* TipAlpha::context</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2b31365594e4de12c4574b610feecd39"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b31365594e4de12c4574b610feecd39">&#9670;&nbsp;</a></span>name</h2>
 

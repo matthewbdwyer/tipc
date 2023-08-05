@@ -64,6 +64,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classUnifier-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Unifier Class Reference</div>  </div>
@@ -88,12 +89,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af9b78755693c9a99f0c02a4b59beae89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#af9b78755693c9a99f0c02a4b59beae89">unify</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; t1, std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; t2)</td></tr>
 <tr class="memdesc:af9b78755693c9a99f0c02a4b59beae89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to unify the two types.  <a href="classUnifier.html#af9b78755693c9a99f0c02a4b59beae89">More...</a><br /></td></tr>
 <tr class="separator:af9b78755693c9a99f0c02a4b59beae89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749935fa8ab5975d92b94ad6d90e2222"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#a749935fa8ab5975d92b94ad6d90e2222">add</a> (std::vector&lt; <a class="el" href="classTypeConstraint.html">TypeConstraint</a> &gt;)</td></tr>
+<tr class="memdesc:a749935fa8ab5975d92b94ad6d90e2222"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add constraints to this unifier.  <a href="classUnifier.html#a749935fa8ab5975d92b94ad6d90e2222">More...</a><br /></td></tr>
+<tr class="separator:a749935fa8ab5975d92b94ad6d90e2222"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad41bdd0ae9aa974aaffca9ee8394c328"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#ad41bdd0ae9aa974aaffca9ee8394c328">solve</a> ()</td></tr>
 <tr class="memdesc:ad41bdd0ae9aa974aaffca9ee8394c328"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the system of constraints that have presented to this unifier.  <a href="classUnifier.html#ad41bdd0ae9aa974aaffca9ee8394c328">More...</a><br /></td></tr>
 <tr class="separator:ad41bdd0ae9aa974aaffca9ee8394c328"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad029120070162d2da60f61e1be5344bc"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#ad029120070162d2da60f61e1be5344bc">inferred</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; t)</td></tr>
 <tr class="memdesc:ad029120070162d2da60f61e1be5344bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the inferred type for a given type.  <a href="classUnifier.html#ad029120070162d2da60f61e1be5344bc">More...</a><br /></td></tr>
 <tr class="separator:ad029120070162d2da60f61e1be5344bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a6dd4981cf58fd796699945da343b73b3"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#a6dd4981cf58fd796699945da343b73b3">isCons</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; type)</td></tr>
+<tr class="memdesc:a6dd4981cf58fd796699945da343b73b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a map of unified types.  <a href="classUnifier.html#a6dd4981cf58fd796699945da343b73b3">More...</a><br /></td></tr>
+<tr class="separator:a6dd4981cf58fd796699945da343b73b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69c4361086a8d7c0dbff8fa34a0c4fd0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#a69c4361086a8d7c0dbff8fa34a0c4fd0">isMu</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; type)</td></tr>
+<tr class="separator:a69c4361086a8d7c0dbff8fa34a0c4fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07c8a3731eb9472d0f9bc8967b4e0af0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#a07c8a3731eb9472d0f9bc8967b4e0af0">isVar</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; type)</td></tr>
+<tr class="separator:a07c8a3731eb9472d0f9bc8967b4e0af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add395e8335d59965581c98bf8e40f1c1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#add395e8335d59965581c98bf8e40f1c1">isAlpha</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; type)</td></tr>
+<tr class="separator:add395e8335d59965581c98bf8e40f1c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fd331230a0f553c8de7ba3fad69d4cf"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#a5fd331230a0f553c8de7ba3fad69d4cf">isProperType</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; type)</td></tr>
+<tr class="separator:a5fd331230a0f553c8de7ba3fad69d4cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class used to solve type constraints and establish typability. </p>
@@ -174,6 +192,26 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a749935fa8ab5975d92b94ad6d90e2222"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a749935fa8ab5975d92b94ad6d90e2222">&#9670;&nbsp;</a></span>add()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Unifier::add </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classTypeConstraint.html">TypeConstraint</a> &gt;&#160;</td>
+          <td class="paramname"><em>constrs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add constraints to this unifier. </p>
+
+</div>
+</div>
 <a id="ad029120070162d2da60f61e1be5344bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad029120070162d2da60f61e1be5344bc">&#9670;&nbsp;</a></span>inferred()</h2>
 
@@ -193,7 +231,139 @@ Public Member Functions</h2></td></tr>
 <p>Returns the inferred type for a given type. </p>
 <p>Looks up the inferred type in the type solution.</p>
 <dl class="section pre"><dt>Precondition</dt><dd>The unifier has computed a solution. This will close the type by replacing any variables that are bound to proper types in the inferred solution with that proper type.</dd></dl>
-<p>Here we want to produce an inferred type that is "closed" in the sense that all variables in the type definition are replaced with their base types. Because the close() function may destructively update the unionFind structure, by generating new types, we save a copy and restore it after closing. </p>
+<p>Here we want to produce an inferred type that is "closed" in the sense that all variables in the type definition are replaced with their base types. The close() function may update the unionFind structure, by generating new types, and this is essential for the staged nature of polymorphic type inference. </p>
+
+</div>
+</div>
+<a id="add395e8335d59965581c98bf8e40f1c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add395e8335d59965581c98bf8e40f1c1">&#9670;&nbsp;</a></span>isAlpha()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Unifier::isAlpha </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6dd4981cf58fd796699945da343b73b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6dd4981cf58fd796699945da343b73b3">&#9670;&nbsp;</a></span>isCons()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Unifier::isCons </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a map of unified types. </p>
+
+</div>
+</div>
+<a id="a69c4361086a8d7c0dbff8fa34a0c4fd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69c4361086a8d7c0dbff8fa34a0c4fd0">&#9670;&nbsp;</a></span>isMu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Unifier::isMu </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5fd331230a0f553c8de7ba3fad69d4cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fd331230a0f553c8de7ba3fad69d4cf">&#9670;&nbsp;</a></span>isProperType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Unifier::isProperType </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a07c8a3731eb9472d0f9bc8967b4e0af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07c8a3731eb9472d0f9bc8967b4e0af0">&#9670;&nbsp;</a></span>isVar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Unifier::isVar </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

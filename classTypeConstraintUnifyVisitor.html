@@ -89,9 +89,10 @@ Collaboration diagram for TypeConstraintUnifyVisitor:</div>
 <div class="dyncontent">
 <div class="center"><img src="classTypeConstraintUnifyVisitor__coll__graph.png" border="0" usemap="#aTypeConstraintUnifyVisitor_coll__map" alt="Collaboration graph"/></div>
 <map name="aTypeConstraintUnifyVisitor_coll__map" id="aTypeConstraintUnifyVisitor_coll__map">
-<area shape="rect" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="5,155,200,181"/>
-<area shape="rect" href="classTypeConstraintVisitor.html" title="Visitor generates type constraints and processes them." alt="" coords="22,80,183,107"/>
-<area shape="rect" href="classASTVisitor.html" title="Base class for AST visitors." alt="" coords="58,5,147,32"/>
+<area shape="rect" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="13,171,207,197"/>
+<area shape="rect" href="classTypeConstraintVisitor.html" title="Visitor generates type constraints and processes them." alt="" coords="29,95,191,121"/>
+<area shape="rect" href="classASTVisitor.html" title="Base class for AST visitors." alt="" coords="5,5,95,32"/>
+<area shape="rect" href="classSymbolTable.html" title="Performs symbol analysis and records results for subsequent phases." alt="" coords="119,5,224,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -216,9 +217,14 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classTypeConstraintVisitor"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classTypeConstraintVisitor')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classTypeConstraintVisitor.html">TypeConstraintVisitor</a></td></tr>
+<tr class="memitem:a03ab322be48519bbafc10748474ded68 inherit pro_methods_classTypeConstraintVisitor"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a03ab322be48519bbafc10748474ded68">astToVar</a> (<a class="el" href="classASTNode.html">ASTNode</a> *n)</td></tr>
+<tr class="separator:a03ab322be48519bbafc10748474ded68 inherit pro_methods_classTypeConstraintVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classTypeConstraintVisitor"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classTypeConstraintVisitor')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classTypeConstraintVisitor.html">TypeConstraintVisitor</a></td></tr>
 <tr class="memitem:a703db5229cb1847580ffa9585ab5dbb8 inherit pro_attribs_classTypeConstraintVisitor"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a703db5229cb1847580ffa9585ab5dbb8">constraintHandler</a></td></tr>
 <tr class="separator:a703db5229cb1847580ffa9585ab5dbb8 inherit pro_attribs_classTypeConstraintVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a771b91050e935bcdccb386e3d381da3b inherit pro_attribs_classTypeConstraintVisitor"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSymbolTable.html">SymbolTable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a771b91050e935bcdccb386e3d381da3b">symbolTable</a></td></tr>
+<tr class="separator:a771b91050e935bcdccb386e3d381da3b inherit pro_attribs_classTypeConstraintVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Visitor generates type constraints and unifies them on-the-fly. </p>

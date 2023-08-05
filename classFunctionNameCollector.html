@@ -195,17 +195,17 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac54158d6ebbd11fcfbc4aa6e306c35d9"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionNameCollector.html#ac54158d6ebbd11fcfbc4aa6e306c35d9">build</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *p)</td></tr>
-<tr class="separator:ac54158d6ebbd11fcfbc4aa6e306c35d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae581c0bbf073f981668044bfd7fc613b"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, std::pair&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionNameCollector.html#ae581c0bbf073f981668044bfd7fc613b">build</a> (<a class="el" href="classASTProgram.html">ASTProgram</a> *p)</td></tr>
+<tr class="separator:ae581c0bbf073f981668044bfd7fc613b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:abf774f257e7e36fe6bc612e7d7fb6a36"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionNameCollector.html#abf774f257e7e36fe6bc612e7d7fb6a36">fMap</a></td></tr>
-<tr class="separator:abf774f257e7e36fe6bc612e7d7fb6a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7af39e39eca4bd9563829c5faba1ac4"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::pair&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionNameCollector.html#ab7af39e39eca4bd9563829c5faba1ac4">fMap</a></td></tr>
+<tr class="separator:ab7af39e39eca4bd9563829c5faba1ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Collects the names of functions declared in the program. </p>
-<p>The function name builder visits a restricted set of nodes, just functions, It records the name in the function map and checks that a name is declared at most once. Errors are reported by throwing <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> exceptions. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> </dd></dl>
+<p>The function name builder visits a restricted set of nodes, just functions, It records the name in the function map as well as whether it is a polymorphic function. It checks that a name is declared at most once. Errors are reported by throwing <a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> exceptions. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classSemanticError.html" title="Class for tipc semantic errors.">SemanticError</a> </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af4d714283985354c487bf96a7a35b4ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4d714283985354c487bf96a7a35b4ae">&#9670;&nbsp;</a></span>FunctionNameCollector()</h2>
@@ -233,8 +233,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac54158d6ebbd11fcfbc4aa6e306c35d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac54158d6ebbd11fcfbc4aa6e306c35d9">&#9670;&nbsp;</a></span>build()</h2>
+<a id="ae581c0bbf073f981668044bfd7fc613b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae581c0bbf073f981668044bfd7fc613b">&#9670;&nbsp;</a></span>build()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,7 +243,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt; std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> * &gt; FunctionNameCollector::build </td>
+          <td class="memname">std::map&lt; std::string, std::pair&lt; <a class="el" href="classASTDeclNode.html">ASTDeclNode</a> *, bool &gt; &gt; FunctionNameCollector::build </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classASTProgram.html">ASTProgram</a> *&#160;</td>
           <td class="paramname"><em>p</em></td><td>)</td>
@@ -288,14 +288,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="abf774f257e7e36fe6bc612e7d7fb6a36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf774f257e7e36fe6bc612e7d7fb6a36">&#9670;&nbsp;</a></span>fMap</h2>
+<a id="ab7af39e39eca4bd9563829c5faba1ac4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7af39e39eca4bd9563829c5faba1ac4">&#9670;&nbsp;</a></span>fMap</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, <a class="el" href="classASTDeclNode.html">ASTDeclNode</a>*&gt; FunctionNameCollector::fMap</td>
+          <td class="memname">std::map&lt;std::string, std::pair&lt;<a class="el" href="classASTDeclNode.html">ASTDeclNode</a>*, bool&gt; &gt; FunctionNameCollector::fMap</td>
         </tr>
       </table>
 </div><div class="memdoc">

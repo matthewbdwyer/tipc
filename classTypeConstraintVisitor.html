@@ -64,6 +64,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classTypeConstraintVisitor-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -80,10 +81,12 @@ Inheritance diagram for TypeConstraintVisitor:</div>
 <div class="dyncontent">
 <div class="center"><img src="classTypeConstraintVisitor__inherit__graph.png" border="0" usemap="#aTypeConstraintVisitor_inherit__map" alt="Inheritance graph"/></div>
 <map name="aTypeConstraintVisitor_inherit__map" id="aTypeConstraintVisitor_inherit__map">
-<area shape="rect" title="Visitor generates type constraints and processes them." alt="" coords="140,80,301,107"/>
-<area shape="rect" href="classTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="5,155,212,181"/>
-<area shape="rect" href="classTypeConstraintUnifyVisitor.html" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="237,155,431,181"/>
-<area shape="rect" href="classASTVisitor.html" title="Base class for AST visitors." alt="" coords="176,5,265,32"/>
+<area shape="rect" title="Visitor generates type constraints and processes them." alt="" coords="243,80,405,107"/>
+<area shape="rect" href="classPolyTypeConstraintVisitor.html" title="Visitor generates polymorphic type constraints and collects them. This visitor is called for a functi..." alt="" coords="7,155,196,181"/>
+<area shape="rect" href="classTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="221,155,427,181"/>
+<area shape="rect" href="classTypeConstraintUnifyVisitor.html" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="452,155,647,181"/>
+<area shape="rect" href="classASTVisitor.html" title="Base class for AST visitors." alt="" coords="279,5,369,32"/>
+<area shape="rect" href="classPolyTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="5,229,197,271"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -91,8 +94,9 @@ Collaboration diagram for TypeConstraintVisitor:</div>
 <div class="dyncontent">
 <div class="center"><img src="classTypeConstraintVisitor__coll__graph.png" border="0" usemap="#aTypeConstraintVisitor_coll__map" alt="Collaboration graph"/></div>
 <map name="aTypeConstraintVisitor_coll__map" id="aTypeConstraintVisitor_coll__map">
-<area shape="rect" title="Visitor generates type constraints and processes them." alt="" coords="5,80,167,107"/>
-<area shape="rect" href="classASTVisitor.html" title="Base class for AST visitors." alt="" coords="41,5,131,32"/>
+<area shape="rect" title="Visitor generates type constraints and processes them." alt="" coords="29,95,191,121"/>
+<area shape="rect" href="classASTVisitor.html" title="Base class for AST visitors." alt="" coords="5,5,95,32"/>
+<area shape="rect" href="classSymbolTable.html" title="Performs symbol analysis and records results for subsequent phases." alt="" coords="119,5,224,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -212,10 +216,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1242ba07a2cd138dec93c1027ff0be77 inherit pub_methods_classASTVisitor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classASTVisitor.html#a1242ba07a2cd138dec93c1027ff0be77">endVisit</a> (<a class="el" href="classASTBlockStmt.html">ASTBlockStmt</a> *element)</td></tr>
 <tr class="separator:a1242ba07a2cd138dec93c1027ff0be77 inherit pub_methods_classASTVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a03ab322be48519bbafc10748474ded68"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a03ab322be48519bbafc10748474ded68">astToVar</a> (<a class="el" href="classASTNode.html">ASTNode</a> *n)</td></tr>
+<tr class="separator:a03ab322be48519bbafc10748474ded68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a703db5229cb1847580ffa9585ab5dbb8"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classConstraintHandler.html">ConstraintHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a703db5229cb1847580ffa9585ab5dbb8">constraintHandler</a></td></tr>
 <tr class="separator:a703db5229cb1847580ffa9585ab5dbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a771b91050e935bcdccb386e3d381da3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSymbolTable.html">SymbolTable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTypeConstraintVisitor.html#a771b91050e935bcdccb386e3d381da3b">symbolTable</a></td></tr>
+<tr class="separator:a771b91050e935bcdccb386e3d381da3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Visitor generates type constraints and processes them. </p>
@@ -278,6 +289,32 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a03ab322be48519bbafc10748474ded68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03ab322be48519bbafc10748474ded68">&#9670;&nbsp;</a></span>astToVar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; TypeConstraintVisitor::astToVar </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classASTNode.html">ASTNode</a> *&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acf7a325b9ae8cdacb8fafdeb663ce84b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acf7a325b9ae8cdacb8fafdeb663ce84b">&#9670;&nbsp;</a></span>endVisit() <span class="overload">[1/16]</span></h2>
 
@@ -818,6 +855,28 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::shared_ptr&lt;<a class="el" href="classConstraintHandler.html">ConstraintHandler</a>&gt; TypeConstraintVisitor::constraintHandler</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a771b91050e935bcdccb386e3d381da3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a771b91050e935bcdccb386e3d381da3b">&#9670;&nbsp;</a></span>symbolTable</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSymbolTable.html">SymbolTable</a>* TypeConstraintVisitor::symbolTable</td>
         </tr>
       </table>
   </td>

@@ -1,6 +1,8 @@
 <map id="TypeConstraintVisitor" name="TypeConstraintVisitor">
-<area shape="rect" id="node1" title="Visitor generates type constraints and processes them." alt="" coords="140,80,301,107"/>
-<area shape="rect" id="node3" href="$classTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="5,155,212,181"/>
-<area shape="rect" id="node4" href="$classTypeConstraintUnifyVisitor.html" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="237,155,431,181"/>
-<area shape="rect" id="node2" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="176,5,265,32"/>
+<area shape="rect" id="node1" title="Visitor generates type constraints and processes them." alt="" coords="243,80,405,107"/>
+<area shape="rect" id="node3" href="$classPolyTypeConstraintVisitor.html" title="Visitor generates polymorphic type constraints and collects them. This visitor is called for a functi..." alt="" coords="7,155,196,181"/>
+<area shape="rect" id="node5" href="$classTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="221,155,427,181"/>
+<area shape="rect" id="node6" href="$classTypeConstraintUnifyVisitor.html" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="452,155,647,181"/>
+<area shape="rect" id="node2" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="279,5,369,32"/>
+<area shape="rect" id="node4" href="$classPolyTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="5,229,197,271"/>
 </map>

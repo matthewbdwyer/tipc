@@ -9,6 +9,8 @@
 <area shape="rect" id="node8" href="$classLocalNameCollector.html" title="Records local names declared in each function and checks for errors." alt="" coords="153,309,307,336"/>
 <area shape="rect" id="node9" href="$classPrettyPrinter.html" title="GNU Style PrettyPrinter." alt="" coords="178,360,282,387"/>
 <area shape="rect" id="node10" href="$classTypeConstraintVisitor.html" title="Visitor generates type constraints and processes them." alt="" coords="149,411,311,437"/>
-<area shape="rect" id="node11" href="$classTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="365,385,572,412"/>
-<area shape="rect" id="node12" href="$classTypeConstraintUnifyVisitor.html" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="371,436,566,463"/>
+<area shape="rect" id="node11" href="$classPolyTypeConstraintVisitor.html" title="Visitor generates polymorphic type constraints and collects them. This visitor is called for a functi..." alt="" coords="374,360,563,387"/>
+<area shape="rect" id="node13" href="$classTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="365,411,572,437"/>
+<area shape="rect" id="node14" href="$classTypeConstraintUnifyVisitor.html" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="371,461,566,488"/>
+<area shape="rect" id="node12" href="$classPolyTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="620,353,812,394"/>
 </map>

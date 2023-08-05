@@ -66,72 +66,111 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">UnionFind.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="UnionFind_8h_source.html">UnionFind.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Substituter_8h_source.html">Substituter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Copier_8h_source.html">Copier.h</a>&quot;</code><br />
 <code>#include &quot;loguru.hpp&quot;</code><br />
-<code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;list&gt;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for UnionFind.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="UnionFind_8cpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2tipc_2tipc_2src_2semantic_2types_2solver_2UnionFind_8cpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2tipc_2tipc_2src_2semantic_2types_2solver_2UnionFind_8cpp" id="a_2home_2runner_2work_2tipc_2tipc_2src_2semantic_2types_2solver_2UnionFind_8cpp">
-<area shape="rect" title=" " alt="" coords="1681,5,1858,61"/>
-<area shape="rect" href="UnionFind_8h.html" title=" " alt="" coords="8,781,107,808"/>
-<area shape="rect" href="Substituter_8h.html" title=" " alt="" coords="1673,109,1777,136"/>
-<area shape="rect" title=" " alt="" coords="3668,483,3748,509"/>
-<area shape="rect" title=" " alt="" coords="2603,109,2693,136"/>
-<area shape="rect" title=" " alt="" coords="5,856,56,883"/>
-<area shape="rect" title=" " alt="" coords="214,931,277,957"/>
-<area shape="rect" href="TipType_8h.html" title=" " alt="" coords="675,856,759,883"/>
-<area shape="rect" title=" " alt="" coords="694,931,770,957"/>
-<area shape="rect" title=" " alt="" coords="825,931,903,957"/>
-<area shape="rect" href="TipTypeVisitor_8h.html" title=" " alt="" coords="1159,184,1284,211"/>
-<area shape="rect" href="Type_8h.html" title=" " alt="" coords="813,259,877,285"/>
-<area shape="rect" href="TipAlpha_8h.html" title=" " alt="" coords="2125,333,2216,360"/>
-<area shape="rect" href="TipVar_8h.html" title=" " alt="" coords="2453,408,2528,435"/>
-<area shape="rect" href="TipFunction_8h.html" title=" " alt="" coords="349,707,459,733"/>
-<area shape="rect" href="TipInt_8h.html" title=" " alt="" coords="787,707,858,733"/>
-<area shape="rect" href="TipMu_8h.html" title=" " alt="" coords="947,333,1021,360"/>
-<area shape="rect" href="TipRecord_8h.html" title=" " alt="" coords="216,707,315,733"/>
-<area shape="rect" href="TipAbsentField_8h.html" title=" " alt="" coords="632,707,763,733"/>
-<area shape="rect" href="TipRef_8h.html" title=" " alt="" coords="533,707,608,733"/>
-<area shape="rect" title=" " alt="" coords="984,931,1043,957"/>
-<area shape="rect" href="TipCons_8h.html" title=" " alt="" coords="537,781,623,808"/>
-<area shape="rect" href="AST_8h.html" title=" " alt="" coords="2461,483,2520,509"/>
-<area shape="rect" href="ASTAccessExpr_8h.html" title=" " alt="" coords="2223,632,2353,659"/>
-<area shape="rect" href="ASTExpr_8h.html" title=" " alt="" coords="2066,707,2153,733"/>
-<area shape="rect" href="ASTNode_8h.html" title=" " alt="" coords="1119,856,1212,883"/>
-<area shape="rect" href="ASTAllocExpr_8h.html" title=" " alt="" coords="2378,632,2497,659"/>
-<area shape="rect" href="ASTAssignStmt_8h.html" title=" " alt="" coords="2989,632,3121,659"/>
-<area shape="rect" href="ASTStmt_8h.html" title=" " alt="" coords="2856,781,2947,808"/>
-<area shape="rect" href="ASTBinaryExpr_8h.html" title=" " alt="" coords="1510,557,1639,584"/>
-<area shape="rect" href="ASTBlockStmt_8h.html" title=" " alt="" coords="3354,707,3481,733"/>
-<area shape="rect" href="ASTDeRefExpr_8h.html" title=" " alt="" coords="1663,557,1790,584"/>
-<area shape="rect" href="ASTDeclNode_8h.html" title=" " alt="" coords="1104,781,1227,808"/>
-<area shape="rect" href="ASTDeclStmt_8h.html" title=" " alt="" coords="1238,707,1357,733"/>
-<area shape="rect" href="ASTErrorStmt_8h.html" title=" " alt="" coords="3197,632,3318,659"/>
-<area shape="rect" href="ASTFieldExpr_8h.html" title=" " alt="" coords="1775,632,1894,659"/>
-<area shape="rect" href="ASTFunAppExpr_8h.html" title=" " alt="" coords="2185,557,2319,584"/>
-<area shape="rect" href="ASTFunction_8h.html" title=" " alt="" coords="1136,632,1251,659"/>
-<area shape="rect" href="ASTIfStmt_8h.html" title=" " alt="" coords="3343,632,3441,659"/>
-<area shape="rect" href="ASTInputExpr_8h.html" title=" " alt="" coords="2508,557,2628,584"/>
-<area shape="rect" href="ASTNullExpr_8h.html" title=" " alt="" coords="2653,557,2766,584"/>
-<area shape="rect" href="ASTNumberExpr_8h.html" title=" " alt="" coords="1815,557,1953,584"/>
-<area shape="rect" href="ASTOutputStmt_8h.html" title=" " alt="" coords="2521,632,2655,659"/>
-<area shape="rect" href="ASTProgram_8h.html" title=" " alt="" coords="1085,557,1200,584"/>
-<area shape="rect" href="ASTRecordExpr_8h.html" title=" " alt="" coords="2029,557,2161,584"/>
-<area shape="rect" href="ASTRefExpr_8h.html" title=" " alt="" coords="1376,557,1485,584"/>
-<area shape="rect" href="ASTReturnStmt_8h.html" title=" " alt="" coords="2680,632,2813,659"/>
-<area shape="rect" href="ASTVariableExpr_8h.html" title=" " alt="" coords="2343,557,2483,584"/>
-<area shape="rect" href="ASTWhileStmt_8h.html" title=" " alt="" coords="2838,632,2965,659"/>
-<area shape="rect" title=" " alt="" coords="1096,931,1235,957"/>
+<area shape="rect" title=" " alt="" coords="3241,5,3418,61"/>
+<area shape="rect" href="UnionFind_8h.html" title=" " alt="" coords="173,483,272,509"/>
+<area shape="rect" href="Copier_8h.html" title=" " alt="" coords="3169,109,3244,136"/>
+<area shape="rect" title=" " alt="" coords="1051,1005,1109,1032"/>
+<area shape="rect" title=" " alt="" coords="3325,109,3416,136"/>
+<area shape="rect" title=" " alt="" coords="3440,109,3483,136"/>
+<area shape="rect" title=" " alt="" coords="3507,109,3592,136"/>
+<area shape="rect" title=" " alt="" coords="171,557,221,584"/>
+<area shape="rect" title=" " alt="" coords="75,1005,138,1032"/>
+<area shape="rect" title=" " alt="" coords="819,557,899,584"/>
+<area shape="rect" href="TipType_8h.html" title=" " alt="" coords="633,931,717,957"/>
+<area shape="rect" title=" " alt="" coords="870,1005,946,1032"/>
+<area shape="rect" title=" " alt="" coords="676,1005,753,1032"/>
+<area shape="rect" href="Substituter_8h.html" title=" " alt="" coords="1888,184,1992,211"/>
+<area shape="rect" href="TipTypeVisitor_8h.html" title=" " alt="" coords="1221,259,1347,285"/>
+<area shape="rect" href="Type_8h.html" title=" " alt="" coords="623,333,687,360"/>
+<area shape="rect" href="TipAlpha_8h.html" title=" " alt="" coords="840,408,931,435"/>
+<area shape="rect" href="TipVar_8h.html" title=" " alt="" coords="927,483,1001,509"/>
+<area shape="rect" href="TipFunction_8h.html" title=" " alt="" coords="115,781,224,808"/>
+<area shape="rect" href="TipInt_8h.html" title=" " alt="" coords="622,781,693,808"/>
+<area shape="rect" href="TipMu_8h.html" title=" " alt="" coords="741,408,816,435"/>
+<area shape="rect" href="TipRecord_8h.html" title=" " alt="" coords="448,781,547,808"/>
+<area shape="rect" href="TipAbsentField_8h.html" title=" " alt="" coords="717,781,848,808"/>
+<area shape="rect" href="TipRef_8h.html" title=" " alt="" coords="299,781,373,808"/>
+<area shape="rect" href="TipCons_8h.html" title=" " alt="" coords="499,856,586,883"/>
+<area shape="rect" href="AST_8h.html" title=" " alt="" coords="2411,557,2469,584"/>
+<area shape="rect" href="ASTAccessExpr_8h.html" title=" " alt="" coords="1589,707,1720,733"/>
+<area shape="rect" href="ASTExpr_8h.html" title=" " alt="" coords="1611,781,1698,808"/>
+<area shape="rect" href="ASTNode_8h.html" title=" " alt="" coords="1608,931,1701,957"/>
+<area shape="rect" href="ASTAllocExpr_8h.html" title=" " alt="" coords="1846,707,1965,733"/>
+<area shape="rect" href="ASTAssignStmt_8h.html" title=" " alt="" coords="2429,707,2561,733"/>
+<area shape="rect" href="ASTStmt_8h.html" title=" " alt="" coords="2416,856,2507,883"/>
+<area shape="rect" href="ASTBinaryExpr_8h.html" title=" " alt="" coords="1586,632,1715,659"/>
+<area shape="rect" href="ASTBlockStmt_8h.html" title=" " alt="" coords="2575,781,2702,808"/>
+<area shape="rect" href="ASTDeRefExpr_8h.html" title=" " alt="" coords="1739,632,1866,659"/>
+<area shape="rect" href="ASTDeclNode_8h.html" title=" " alt="" coords="2773,856,2896,883"/>
+<area shape="rect" href="ASTDeclStmt_8h.html" title=" " alt="" coords="2726,781,2845,808"/>
+<area shape="rect" href="ASTErrorStmt_8h.html" title=" " alt="" coords="2585,707,2706,733"/>
+<area shape="rect" href="ASTFieldExpr_8h.html" title=" " alt="" coords="1091,707,1210,733"/>
+<area shape="rect" href="ASTFunAppExpr_8h.html" title=" " alt="" coords="1427,632,1562,659"/>
+<area shape="rect" href="ASTFunction_8h.html" title=" " alt="" coords="2933,707,3048,733"/>
+<area shape="rect" href="ASTIfStmt_8h.html" title=" " alt="" coords="2147,707,2245,733"/>
+<area shape="rect" href="ASTInputExpr_8h.html" title=" " alt="" coords="1283,632,1403,659"/>
+<area shape="rect" href="ASTNullExpr_8h.html" title=" " alt="" coords="2025,632,2138,659"/>
+<area shape="rect" href="ASTNumberExpr_8h.html" title=" " alt="" coords="2264,632,2403,659"/>
+<area shape="rect" href="ASTOutputStmt_8h.html" title=" " alt="" coords="2270,707,2405,733"/>
+<area shape="rect" href="ASTProgram_8h.html" title=" " alt="" coords="2984,632,3099,659"/>
+<area shape="rect" href="ASTRecordExpr_8h.html" title=" " alt="" coords="1126,632,1258,659"/>
+<area shape="rect" href="ASTRefExpr_8h.html" title=" " alt="" coords="1891,632,2000,659"/>
+<area shape="rect" href="ASTReturnStmt_8h.html" title=" " alt="" coords="1989,707,2123,733"/>
 </map>
 </div>
-</div></div><!-- contents -->
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aa2fab714dec35eefda3875fe11c189a8"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="UnionFind_8cpp.html#aa2fab714dec35eefda3875fe11c189a8">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classUnionFind.html">UnionFind</a> &amp;obj)</td></tr>
+<tr class="separator:aa2fab714dec35eefda3875fe11c189a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="aa2fab714dec35eefda3875fe11c189a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2fab714dec35eefda3875fe11c189a8">&#9670;&nbsp;</a></span>operator&lt;&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream&amp; operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classUnionFind.html">UnionFind</a> &amp;&#160;</td>
+          <td class="paramname"><em>obj</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1

@@ -1,24 +1,28 @@
 <map id="/home/runner/work/tipc/tipc/src/semantic/symboltable/SymbolTable.h" name="/home/runner/work/tipc/tipc/src/semantic/symboltable/SymbolTable.h">
-<area shape="rect" id="node1" title=" " alt="" coords="530,5,753,61"/>
-<area shape="rect" id="node2" href="$CallGraph_8h.html" title=" " alt="" coords="5,339,179,395"/>
-<area shape="rect" id="node4" href="$SemanticAnalysis_8h.html" title=" " alt="" coords="340,458,609,499"/>
-<area shape="rect" id="node10" href="$CFAnalyzer_8h.html" title=" " alt="" coords="264,109,437,165"/>
-<area shape="rect" id="node14" href="$SymbolTable_8cpp.html" title=" " alt="" coords="1037,109,1259,165"/>
-<area shape="rect" id="node15" href="$TypeConstraintCollectVisitor_8h.html" title=" " alt="" coords="714,213,958,284"/>
-<area shape="rect" id="node18" href="$TypeConstraintUnifyVisitor_8h.html" title=" " alt="" coords="1274,213,1507,284"/>
-<area shape="rect" id="node20" href="$TypeConstraintVisitor_8h.html" title=" " alt="" coords="710,109,962,165"/>
-<area shape="rect" id="node22" href="$TypeInference_8h.html" title=" " alt="" coords="513,221,690,277"/>
-<area shape="rect" id="node3" href="$CallGraph_8cpp.html" title=" " alt="" coords="5,451,179,507"/>
-<area shape="rect" id="node5" href="$CodeGenerator_8h.html" title=" " alt="" coords="103,555,348,596"/>
-<area shape="rect" id="node7" href="$tipc_8cpp.html" title=" " alt="" coords="299,644,472,685"/>
-<area shape="rect" id="node8" href="$CodeGenFunctions_8cpp.html" title=" " alt="" coords="423,555,707,596"/>
-<area shape="rect" id="node9" href="$SemanticAnalysis_8cpp.html" title=" " alt="" coords="731,555,1015,596"/>
-<area shape="rect" id="node6" href="$CodeGenerator_8cpp.html" title=" " alt="" coords="14,644,274,685"/>
-<area shape="rect" id="node11" href="$CallGraphBuilder_8h.html" title=" " alt="" coords="67,221,240,277"/>
-<area shape="rect" id="node13" href="$CFAnalyzer_8cpp.html" title=" " alt="" coords="264,221,437,277"/>
-<area shape="rect" id="node12" href="$CallGraphBuilder_8cpp.html" title=" " alt="" coords="203,339,376,395"/>
-<area shape="rect" id="node16" href="$TypeConstraintCollectVisitor_8cpp.html" title=" " alt="" coords="765,332,1009,403"/>
-<area shape="rect" id="node17" href="$TypeInference_8cpp.html" title=" " alt="" coords="563,339,741,395"/>
-<area shape="rect" id="node19" href="$TypeConstraintUnifyVisitor_8cpp.html" title=" " alt="" coords="1274,332,1507,403"/>
-<area shape="rect" id="node21" href="$TypeConstraintVisitor_8cpp.html" title=" " alt="" coords="983,221,1249,277"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1120,5,1343,61"/>
+<area shape="rect" id="node2" href="$CallGraph_8h.html" title=" " alt="" coords="826,339,999,395"/>
+<area shape="rect" id="node4" href="$SemanticAnalysis_8h.html" title=" " alt="" coords="527,584,797,625"/>
+<area shape="rect" id="node11" href="$PolyTypeConstraintCollectVisitor_8h.html" title=" " alt="" coords="1443,569,1670,640"/>
+<area shape="rect" id="node15" href="$TypeInference_8h.html" title=" " alt="" coords="897,458,1075,514"/>
+<area shape="rect" id="node16" href="$CFAnalyzer_8h.html" title=" " alt="" coords="813,109,986,165"/>
+<area shape="rect" id="node20" href="$SymbolTable_8cpp.html" title=" " alt="" coords="1823,109,2045,165"/>
+<area shape="rect" id="node21" href="$TypeConstraintCollectVisitor_8h.html" title=" " alt="" coords="1112,213,1356,284"/>
+<area shape="rect" id="node23" href="$TypeConstraintUnifyVisitor_8h.html" title=" " alt="" coords="1773,213,2007,284"/>
+<area shape="rect" id="node25" href="$TypeConstraintVisitor_8h.html" title=" " alt="" coords="1269,109,1521,165"/>
+<area shape="rect" id="node3" href="$CallGraph_8cpp.html" title=" " alt="" coords="699,458,873,514"/>
+<area shape="rect" id="node10" href="$PolyTypeConstraintVisitor_8h.html" title=" " alt="" coords="1235,451,1462,521"/>
+<area shape="rect" id="node5" href="$CodeGenerator_8h.html" title=" " alt="" coords="622,703,867,744"/>
+<area shape="rect" id="node7" href="$tipc_8cpp.html" title=" " alt="" coords="818,807,991,848"/>
+<area shape="rect" id="node8" href="$CodeGenFunctions_8cpp.html" title=" " alt="" coords="5,703,289,744"/>
+<area shape="rect" id="node9" href="$SemanticAnalysis_8cpp.html" title=" " alt="" coords="313,703,597,744"/>
+<area shape="rect" id="node6" href="$CodeGenerator_8cpp.html" title=" " alt="" coords="533,807,793,848"/>
+<area shape="rect" id="node14" href="$PolyTypeConstraintVisitor_8cpp.html" title=" " alt="" coords="1193,569,1419,640"/>
+<area shape="rect" id="node12" href="$PolyTypeConstraintCollectVisitor_8cpp.html" title=" " alt="" coords="1443,688,1670,759"/>
+<area shape="rect" id="node13" href="$TypeInference_8cpp.html" title=" " alt="" coords="1024,695,1201,751"/>
+<area shape="rect" id="node17" href="$CallGraphBuilder_8h.html" title=" " alt="" coords="615,221,789,277"/>
+<area shape="rect" id="node19" href="$CFAnalyzer_8cpp.html" title=" " alt="" coords="813,221,986,277"/>
+<area shape="rect" id="node18" href="$CallGraphBuilder_8cpp.html" title=" " alt="" coords="615,339,789,395"/>
+<area shape="rect" id="node22" href="$TypeConstraintCollectVisitor_8cpp.html" title=" " alt="" coords="1151,332,1395,403"/>
+<area shape="rect" id="node24" href="$TypeConstraintUnifyVisitor_8cpp.html" title=" " alt="" coords="1773,332,2007,403"/>
+<area shape="rect" id="node26" href="$TypeConstraintVisitor_8cpp.html" title=" " alt="" coords="1431,221,1698,277"/>
 </map>

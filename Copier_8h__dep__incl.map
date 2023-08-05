@@ -1,0 +1,10 @@
+<map id="/home/runner/work/tipc/tipc/src/semantic/types/solver/Copier.h" name="/home/runner/work/tipc/tipc/src/semantic/types/solver/Copier.h">
+<area shape="rect" id="node1" title=" " alt="" coords="427,5,604,61"/>
+<area shape="rect" id="node2" href="$Copier_8cpp.html" title=" " alt="" coords="5,109,183,165"/>
+<area shape="rect" id="node3" href="$FreshAlphaCopier_8h.html" title=" " alt="" coords="207,109,402,165"/>
+<area shape="rect" id="node6" href="$Substituter_8cpp.html" title=" " alt="" coords="427,109,604,165"/>
+<area shape="rect" id="node7" href="$Unifier_8cpp.html" title=" " alt="" coords="628,109,805,165"/>
+<area shape="rect" id="node8" href="$UnionFind_8cpp.html" title=" " alt="" coords="829,109,1007,165"/>
+<area shape="rect" id="node4" href="$PolyTypeConstraintVisitor_8cpp.html" title=" " alt="" coords="70,213,297,284"/>
+<area shape="rect" id="node5" href="$FreshAlphaCopier_8cpp.html" title=" " alt="" coords="321,221,531,277"/>
+</map>

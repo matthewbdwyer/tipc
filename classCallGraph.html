@@ -78,8 +78,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa312efecb08244c6527cc5e7af193f1f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#aa312efecb08244c6527cc5e7af193f1f">CallGraph</a> (std::map&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt; cGraph, std::vector&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; funs, std::map&lt; std::string, <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; fmap)</td></tr>
-<tr class="separator:aa312efecb08244c6527cc5e7af193f1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92699908b7cb4094bfffb5a2e88224e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#a92699908b7cb4094bfffb5a2e88224e8">CallGraph</a> (std::map&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt; cGraph, std::map&lt; <a class="el" href="classASTFunAppExpr.html">ASTFunAppExpr</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt; mc, std::vector&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; funs, std::map&lt; std::string, <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; fmap)</td></tr>
+<tr class="separator:a92699908b7cb4094bfffb5a2e88224e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a73ad9feb157736e961953defb0611a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#a9a73ad9feb157736e961953defb0611a">getTotalVertices</a> ()</td></tr>
 <tr class="memdesc:a9a73ad9feb157736e961953defb0611a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the total num of vertices for a given call graph.  <a href="classCallGraph.html#a9a73ad9feb157736e961953defb0611a">More...</a><br /></td></tr>
 <tr class="separator:a9a73ad9feb157736e961953defb0611a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -92,6 +92,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2b517d3b1154a87d5c8da7cf47951a7c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> *, <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#a2b517d3b1154a87d5c8da7cf47951a7c">getEdges</a> ()</td></tr>
 <tr class="memdesc:a2b517d3b1154a87d5c8da7cf47951a7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the set of edges for a given call graph.  <a href="classCallGraph.html#a2b517d3b1154a87d5c8da7cf47951a7c">More...</a><br /></td></tr>
 <tr class="separator:a2b517d3b1154a87d5c8da7cf47951a7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1488f652ea4a001f92da18fa641720f"><td class="memItemLeft" align="right" valign="top">std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#aa1488f652ea4a001f92da18fa641720f">getCalledFuns</a> (<a class="el" href="classASTFunAppExpr.html">ASTFunAppExpr</a> *e)</td></tr>
+<tr class="memdesc:aa1488f652ea4a001f92da18fa641720f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the set of functions that may be called at an application expr.  <a href="classCallGraph.html#aa1488f652ea4a001f92da18fa641720f">More...</a><br /></td></tr>
+<tr class="separator:aa1488f652ea4a001f92da18fa641720f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60b1f0aa804784d9df4a3cf9a6905cdb"><td class="memItemLeft" align="right" valign="top">std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCallGraph.html#a60b1f0aa804784d9df4a3cf9a6905cdb">getCallees</a> (<a class="el" href="classASTFunction.html">ASTFunction</a> *f)</td></tr>
 <tr class="memdesc:a60b1f0aa804784d9df4a3cf9a6905cdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the subroutines called by function f. this is an overloaded function.  <a href="classCallGraph.html#a60b1f0aa804784d9df4a3cf9a6905cdb">More...</a><br /></td></tr>
 <tr class="separator:a60b1f0aa804784d9df4a3cf9a6905cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,8 +124,8 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Performs control flow analysis and records results for subsequent phases Generates call graph of a program that represents calling relationships between subroutines in a computer program. Each node represents a subroutine and each edge (a1, a0) indicates that procedure a1 calls procedure a0. A cycle in the graph indicates recursive procedure calls, e.g., a0 -&gt; a0 indicates that a0 calls itself recursively this call graph is sometimes approximations. Not all the call relationship that exist in the graph will occur in the actual runs of the program. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa312efecb08244c6527cc5e7af193f1f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa312efecb08244c6527cc5e7af193f1f">&#9670;&nbsp;</a></span>CallGraph()</h2>
+<a id="a92699908b7cb4094bfffb5a2e88224e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92699908b7cb4094bfffb5a2e88224e8">&#9670;&nbsp;</a></span>CallGraph()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -135,6 +138,12 @@ Static Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">std::map&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt;&#160;</td>
           <td class="paramname"><em>cGraph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::map&lt; <a class="el" href="classASTFunAppExpr.html">ASTFunAppExpr</a> *, std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; &gt;&#160;</td>
+          <td class="paramname"><em>mc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -269,6 +278,26 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ASTFunction* </dd></dl>
+
+</div>
+</div>
+<a id="aa1488f652ea4a001f92da18fa641720f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1488f652ea4a001f92da18fa641720f">&#9670;&nbsp;</a></span>getCalledFuns()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::set&lt; <a class="el" href="classASTFunction.html">ASTFunction</a> * &gt; CallGraph::getCalledFuns </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classASTFunAppExpr.html">ASTFunAppExpr</a> *&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the set of functions that may be called at an application expr. </p>
 
 </div>
 </div>

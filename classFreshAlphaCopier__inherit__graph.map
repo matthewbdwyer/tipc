@@ -1,0 +1,6 @@
+<map id="FreshAlphaCopier" name="FreshAlphaCopier">
+<area shape="rect" id="node1" title="Makes a copy of a TipType with fresh alphas for the given ASTnode." alt="" coords="5,229,141,256"/>
+<area shape="rect" id="node2" href="$classCopier.html" title="Makes a copy of a TipType." alt="" coords="41,155,105,181"/>
+<area shape="rect" id="node3" href="$classSubstituter.html" title="Produces a type with designated variable substitutions." alt="" coords="27,80,120,107"/>
+<area shape="rect" id="node4" href="$classTipTypeVisitor.html" title="Base class for TIP type visitors." alt="" coords="16,5,131,32"/>
+</map>
