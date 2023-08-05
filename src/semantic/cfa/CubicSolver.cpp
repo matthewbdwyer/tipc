@@ -4,14 +4,12 @@
 #include <map>
 
 CubicSolverNode::CubicSolverNode(int count) {
-    bitvector = new bool[count];
+    bitvector.resize(count);
+    conditionalConstraints.resize(count);
     for(int i = 0; i < count; i++){
         bitvector[i] = false;
     }
     size = count;
-    conditionalConstraints = new std::vector<std::pair<ASTNode*, ASTNode*>>[count];
-    supsets = {};
-    subsets = {};
 }
 
 CubicSolver::CubicSolver(std::vector <ASTFunction*> functions){
@@ -24,14 +22,14 @@ void CubicSolver::addEmptyVariableIfNecessary(ASTNode * node) {
     if(dagmapping.find(node) != dagmapping.end()){
         return;
     }
-    dagmapping[node] = new CubicSolverNode(fmapping.size());
+    dagmapping[node] = std::make_shared<CubicSolverNode>(fmapping.size());
 }
 
 void CubicSolver::addElementofConstraint(ASTFunction * fn, ASTNode * node) {
     LOG_S(1) << "Generating control flow constraint: " <<fn -> getName() << " \u2208 \u27e6" << *node << "\u27e7";
     addEmptyVariableIfNecessary(node);
     dagmapping[node]->bitvector[fmapping[fn]] = true;
-    propegateNodeChanges(dagmapping[node]);
+    propagateNodeChanges(dagmapping[node]);
 }
 
 void CubicSolver::addConditionalConstraint(ASTFunction* condition, ASTNode* in, ASTNode* from, ASTNode* to) {
@@ -40,7 +38,7 @@ void CubicSolver::addConditionalConstraint(ASTFunction* condition, ASTNode* in, 
     addEmptyVariableIfNecessary(from);
     addEmptyVariableIfNecessary(to);
     dagmapping[in]->conditionalConstraints[fmapping[condition]].push_back(std::pair(from, to));
-    propegateNodeChanges(dagmapping[in]);
+    propagateNodeChanges(dagmapping[in]);
 }
 
 void CubicSolver::addSubseteqConstraint(ASTNode* from, ASTNode* to) {
@@ -53,10 +51,10 @@ void CubicSolver::addSubseteqConstraint(ASTNode* from, ASTNode* to) {
     dagmapping[from] -> supsets.insert(dagmapping[to]);
     dagmapping[to] -> subsets.insert(dagmapping[from]);
     killCyclesAt(dagmapping[from]);
-    propegateNodeChanges(dagmapping[from]);
+    propagateNodeChanges(dagmapping[from]);
 }
 
-void CubicSolver::propegateNodeChanges(CubicSolverNode* node){
+void CubicSolver::propagateNodeChanges(std::shared_ptr<CubicSolverNode> node){
     for(int i = 0; i < node -> size; i++){
         if(node -> bitvector[i]){
             auto constraints = node->conditionalConstraints[i];
@@ -66,12 +64,12 @@ void CubicSolver::propegateNodeChanges(CubicSolverNode* node){
             }
         }
     }
-    for(CubicSolverNode* sups : node->supsets){
+    for(std::shared_ptr<CubicSolverNode> sups : node->supsets){
         for(int i = 0; i < node -> size; i++){
-            sups->bitvector[i] |= node->bitvector[i];
+            sups->bitvector[i] = sups->bitvector[i] || node->bitvector[i];
         }
         assert(sups != node);
-        propegateNodeChanges(sups);
+        propagateNodeChanges(sups);
     }
 }
 
@@ -82,14 +80,14 @@ void CubicSolver::activateConditionalConstraint(ASTNode * from, ASTNode * to) {
     dagmapping[from]->supsets.insert(dagmapping[to]);
     dagmapping[to]->subsets.insert(dagmapping[from]);
     killCyclesAt(dagmapping[from]);
-    propegateNodeChanges(dagmapping[from]);
+    propagateNodeChanges(dagmapping[from]);
 }
 
-CubicSolverNode * CubicSolver::killCyclesAt(CubicSolverNode * n) {
+std::shared_ptr<CubicSolverNode> CubicSolver::killCyclesAt(std::shared_ptr<CubicSolverNode> n) {
     bool collapsed;
     do{
         collapsed = false;
-        for(CubicSolverNode* t : n->supsets){
+        for(std::shared_ptr<CubicSolverNode> t : n->supsets){
             auto path = findPath(t, n);
             if(path.size() == 0){
                 continue;
@@ -102,28 +100,28 @@ CubicSolverNode * CubicSolver::killCyclesAt(CubicSolverNode * n) {
     return n;
 }  // LCOV_EXCL_LINE
 
-CubicSolverNode * CubicSolver::mergePath(std::vector<CubicSolverNode *>& path) {
+std::shared_ptr<CubicSolverNode> CubicSolver::mergePath(std::vector<std::shared_ptr<CubicSolverNode>>& path) {
     assert(path.size() != 0);
     while(true){
         if(path.size() == 1){
             return path[0];
         }
-        CubicSolverNode * a = path.back();
+        std::shared_ptr<CubicSolverNode> a = path.back();
         path.pop_back();
-        CubicSolverNode * b = path.back();
+        std::shared_ptr<CubicSolverNode> b = path.back();
         path.pop_back();
         path.push_back(mergeNodes(a, b));
     }
 }
 
-CubicSolverNode * CubicSolver::mergeNodes(CubicSolverNode * n1, CubicSolverNode * n2) {
+std::shared_ptr<CubicSolverNode> CubicSolver::mergeNodes(std::shared_ptr<CubicSolverNode> n1, std::shared_ptr<CubicSolverNode> n2) {
     for(auto& pair : dagmapping){
         if(pair.second == n2){
             pair.second = n1;
         }
     }
     for(int i = 0; i < n1->size; i++){
-        n1->bitvector[i] |= n2->bitvector[i];
+        n1->bitvector[i] = n1->bitvector[i] || n2->bitvector[i];
         for(auto a : n2 -> conditionalConstraints[i]){
             n1->conditionalConstraints[i].push_back(a);
         }
@@ -150,18 +148,17 @@ CubicSolverNode * CubicSolver::mergeNodes(CubicSolverNode * n1, CubicSolverNode 
     if(n1->subsets.find(n2) != n1->subsets.end()){
         n1->subsets.erase(n1->subsets.find(n2));
     }
-    delete n2;
     return n1;
 }
 
-std::vector<CubicSolverNode*> CubicSolver::findPath(CubicSolverNode* source, CubicSolverNode* target){
-    std::map<CubicSolverNode*, int> distances;
+std::vector<std::shared_ptr<CubicSolverNode>> CubicSolver::findPath(std::shared_ptr<CubicSolverNode> source, std::shared_ptr<CubicSolverNode> target){
+    std::map<std::shared_ptr<CubicSolverNode>, int> distances;
     distances[source] = 0;
-    std::queue<CubicSolverNode*> q;
+    std::queue<std::shared_ptr<CubicSolverNode>> q;
 
-    auto populateDistances = [&](CubicSolverNode* node){
+    auto populateDistances = [&](std::shared_ptr<CubicSolverNode>node){
         assert(node != NULL);
-        for(CubicSolverNode* n : node -> supsets){
+        for(std::shared_ptr<CubicSolverNode> n : node -> supsets){
             if(distances.find(n) != distances.end()){
                 continue;
             }
@@ -173,7 +170,7 @@ std::vector<CubicSolverNode*> CubicSolver::findPath(CubicSolverNode* source, Cub
     populateDistances(source);
 
     while(!q.empty()){
-        CubicSolverNode* curr = q.front();
+        std::shared_ptr<CubicSolverNode> curr = q.front();
         populateDistances(curr);
         q.pop();
         if(distances.find(target) != distances.end()){
@@ -181,16 +178,16 @@ std::vector<CubicSolverNode*> CubicSolver::findPath(CubicSolverNode* source, Cub
         }
     }
 
-    std::vector<CubicSolverNode*> out;
+    std::vector<std::shared_ptr<CubicSolverNode>> out;
 
     if(distances.find(target) == distances.end()){
         return out;
     }
     else{
-        CubicSolverNode* curr = target;
+        std::shared_ptr<CubicSolverNode> curr = target;
         out.push_back(target);
         while(curr != source){
-            for(CubicSolverNode* n : curr -> subsets){
+            for(std::shared_ptr<CubicSolverNode> n : curr -> subsets){
                 if(distances.find(n) == distances.end()){
                     continue;
                 }
