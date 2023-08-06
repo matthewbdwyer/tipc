@@ -167,10 +167,10 @@ CLion has great debugging support as well as test coverage support for the Catch
  2. run system tests with `runtests.sh`
  3. generate documentation with `gendocs.sh`
 
+CLion also has some nice plugins.  For example, there is an [ANTLR v4](https://plugins.jetbrains.com/plugin/7358-antlr-v4) plugin that allows you to more easily develop extensions to the grammar for TIP.  Installation is easy, just click on the `Install to CLion ...` button on the web-page.  Then right click on any rule and select `Test Rule ...` and two frames pop up at the bottom of the UI: the left frame allows you to type in fragments of input and the right frame shows the resulting parse tree.
+
 ### Log Messages
 When working on the tipc compiler, it may be helpful to enable logging messages when testing your changes on programs. We have inserted logging messages using loguru. These can be turned using the flag `--verbose [x]` where x is a number between 1-3. These messages get more verbose as you increase x. The first setting shows when symbols are added to the symbol table and when type constraints are generated for the type solver. The second setting shows the previous information and type constraints being unified. The third setting shows types being search for and added into the type graph. When adding to theses features, you can add logging messages by adding a line `LOG_S(x)` where x is an integer to describe the level of log verbosity you want. You can use the existing levels or make new levels.
-
-```
 
 ## Documentation
 
