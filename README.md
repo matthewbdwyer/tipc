@@ -122,6 +122,10 @@ Locals for function main : {
 
 ## Working with tipc
 
+The instructions above, and the scripts described below, make it possible to develop from the command line.  This gives you lots of control, but it means you will miss the benefit of modern IDEs.   Below we describe how to set up the CLion IDE for use with the project.
+
+### Command line
+
 During development you need only run build steps 1 through 5 a single time, unless you modify some `CMakeLists.txt` file.  Just run `make` in the build directory to rebuild after making changes to the source.
 
 If you do need to add a source file then you will have to edit the appropriate `CMakeLists.txt` file to add it.  In this case, you should:
@@ -133,43 +137,39 @@ which will regenerate the makefiles that you can then run, by typing `make`, to 
 
 Note that the `tipg4` directory has a standalone ANTLR4 grammar.  It's README describes how to build it in isolation and run it using the ANTLR4 jar file.
 
-### Logging Messages
-When working on the tipc compiler, it may be helpful to enable logging messages when testing your changes on programs. We have inserted logging messages using loguru. These can be turned using the flag `--verbose [x]` where x is a number between 1-3. These messages get more verbose as you increase x. The first setting shows when symbols are added to the symbol table and when type constraints are generated for the type solver. The second setting shows the previous information and type constraints being unified. The third setting shows types being search for and added into the type graph. When adding to theses features, you can add logging messages by adding a line `LOG_S(x)` where x is an integer to describe the level of log verbosity you want. You can use the existing levels or make new levels.
-
 ### The bin directory
 To facilitate development of `tipc` we have collected a number of helper scripts into the `bin` directory of the project. Among them are scripts to run the entire test bed (`runtests.sh`), to run a code coverage analysis (`gencov.sh`), and to generate the project documentation (`gendocs.sh`).  Please see the `README` in the bin directory for example usages.  
 
-### Visual Studio Code
-[Visual Studio Code](https://code.visualstudio.com/) (VSCode) is a popular, open source text editor. The community has created many extensions that make it far more powerful than meerly a text editor. As a result, developers using VSCode get many of the benefits of a normal IDE with less overhead. Using VSCode, you can build and develop tipc with or without the command line.
-
-#### Set-Up
-0. Follow steps 1-4 of the building tipc if you have not already
-1. Install VSCode using instructions listed for a supported operating system: [macOS](https://code.visualstudio.com/docs/setup/mac), [Linux](https://code.visualstudio.com/docs/setup/linux), [Windows](https://code.visualstudio.com/docs/setup/windows).
-2. Bring up the extension marketplace using Ctrl+Shift+X or clicking the four squares on the side bar
-3. Search for C++ to install the offical C/C++ extension produced by Microsoft
-4. Open the project in VSCode using File->Open or simply type the command "code [path/to/tipc]"
-5. If you are planning on building using the command line, proceed with steps 5-6 of building tipc, otherwise install the CMake Tools in the extension marketplace and proceed.
-6. Open the Command Palette (Ctrl+Shift+P) and run CMake: Select a Kit. Select clang++-11 from the listed compilers
-7. Open the Command Palette (Ctrl+Shift+P) and run CMake: Select Variant. Select the Debug variant
-8. Open the Command Palette (Ctrl+Shift+P) and run CMake: Configure
-9. Build the project using the CMake: Build command in the Command Palette (Ctrl+Shift+P) or select the Build button on the status bar at the bottom of VSCode.
-
-Whenever you make changes to the project, simply repeat step 9. If you have to make changes to the CMakeLists, repeat both 8 and 9. For more information, follow [this tutorial](https://code.visualstudio.com/docs/cpp/cmake-linux) on using CMake and VSCode.
-
+When rebuilding and rerunning tests you may get errors about 
+failing to merge `gcov` files. This happens when `gcov` files linger from previous
+runs. To cleanup these messages, simply run the `cleancov.sh` script.
 
 ### CLion
 
-[CLion](https://www.jetbrains.com/clion/) is a C and C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools, or as a standalone tool [here](https://www.jetbrains.com/help/clion/installation-guide.html#standalone). Once installed, you can start a 30 day trial license or, as a student, you can get a free educational license [here](https://www.jetbrains.com/community/education/#students).
+[CLion](https://www.jetbrains.com/clion/) is C++ IDE that can be used to develop and build tipc. CLion can be installed with the JetBrains suite of tools, or as a standalone tool [here](https://www.jetbrains.com/help/clion/installation-guide.html#standalone). Once installed, you can start a 30 day trial license or, as a student, you can get a free educational license [here](https://www.jetbrains.com/community/education/#students).
 
-If you are building for the first time with CLion, follow the first two steps of the installation process to install any needed tipc dependencies. The project can now be built or rebuilt by clicking the "Build" button in the toolbar.
+These instructions are with respect to CLion 2023.1.3, but older or new versions work similarly - though the UI may be a bit different.
 
-#### Troubleshooting
-When working with CLion you might see the output become cluttered with messages about 
-failing to merge `gcov` files. This happens when `gcov` files linger from previous
-runs. To cleanup these messages, simply remove the `gcov` files. You can do
-that quickly with the following one-liner.
-```bash
-find . -name '*gcda' -delete
+If you are building for the first time with CLion, follow the first two steps of the installation process to install any needed tipc dependencies. 
+
+From the `File` menu select `New` and then `Project from Version Control`.  You can type in the URL for this github repository and then hit the `Clone` button.   The scripts described above assume a directory structure, but a little bit of setup will synchronize your CLion project with those assumptions and allow for easy development using both CLion and scripts, when needed.
+
+From the `CLion` menu select `Build, Execution, Deployment` and then `CMake`.  You want to change the `Build directory` to `build` and then define an `Environment` variable.   When you ran the `bootstrap.sh` script it defined a shell variable `LLVM_DIR` in your `.bashrc`.  Copy that definition into the `Environment` field under `Cache variables`.  Your `Settings` should look as follows:
+
+![CLion CMake Settings](docs/CLion-Settings-For-tipc.png)
+
+Now you can click `Apply` and then `OK` to complete the setup.
+
+The project can now be built or rebuilt by clicking the "Build" button in the toolbar.
+
+CLion has great debugging support as well as test coverage support for the Catch2 tests included in the project.  You will rarely need to use the commandline scripts, but if you do just move to `~/CLionProjects/tipc` and you can execute them there to:
+ 1. resolve `gcov` merge errors by running `cleancov.sh`
+ 2. run system tests with `runtests.sh`
+ 3. generate documentation with `gendocs.sh`
+
+### Log Messages
+When working on the tipc compiler, it may be helpful to enable logging messages when testing your changes on programs. We have inserted logging messages using loguru. These can be turned using the flag `--verbose [x]` where x is a number between 1-3. These messages get more verbose as you increase x. The first setting shows when symbols are added to the symbol table and when type constraints are generated for the type solver. The second setting shows the previous information and type constraints being unified. The third setting shows types being search for and added into the type graph. When adding to theses features, you can add logging messages by adding a line `LOG_S(x)` where x is an integer to describe the level of log verbosity you want. You can use the existing levels or make new levels.
+
 ```
 
 ## Documentation
