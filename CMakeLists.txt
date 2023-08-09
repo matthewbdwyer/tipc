@@ -7,7 +7,6 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(UUID REQUIRED uuid)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/externals/CMake-codecov/cmake")
 
 # compiler must be 17
 set(CMAKE_CXX_STANDARD 17)
@@ -56,7 +55,7 @@ endif()
 add_definitions(-DANTLR4CPP_STATIC)
 
 set(ANTLR4_WITH_STATIC_CRT OFF)
-set(ANTLR4_TAG 4.10.1)
+set(ANTLR4_TAG 4.13.0)
 include(ExternalAntlr4Cpp)
 include_directories(${ANTLR4_INCLUDE_DIRS})
 
