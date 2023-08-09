@@ -36,13 +36,6 @@ endif()
 
 ######## ANTLR4 CPP target rules ###########
 
-cmake_policy(PUSH)
-# Allow the antlr jar to be found without execute permissions. 
-cmake_policy(SET CMP0109 OLD)
-cmake_policy(SET CMP0114 NEW)
-
-# required if linking to static library
-
 # Point CMake to the Corretto install location to avoid setting the system path.
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(JAVA_HOME "/usr/lib/jvm/java-11-amazon-corretto")
@@ -70,8 +63,6 @@ if(NOT ANTLR_FOUND)
   set(ANTLR_EXECUTABLE ${CMAKE_BINARY_DIR}/include/${ANTLR_JAR})
   find_package(ANTLR REQUIRED)
 endif()
-
-cmake_policy(POP)
 
 ######## LLVM rules for installed libraries ###########
 # We want to select the latest stable release even if others are installed
