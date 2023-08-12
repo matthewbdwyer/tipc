@@ -22,8 +22,18 @@
 //For logging
 #include "loguru.hpp"
 
+/**
+* NOTE:
+* We have to use llvm Adaptors to run per-loop passes in function pass manager.
+* In LLVM14+, The hierarchy for code sections is :
+*  Module -> (CGSCC)* -> Functions -> Loops
+*
+*  [*] is optional.
+*
+*  eg: To run a loop pass on a module -> ModulePassManager.add(functionAdaptor(LoopAdaptor(llvm::LoopPass())))
+*
+*/
 
-//void Optimizer::optimize(llvm::Module *theModule, bool extraOptEnable) {
 void Optimizer::optimize(llvm::Module *theModule) {
     LOG_S(1) << "Optimizing program " << theModule->getName().str();
 
@@ -32,7 +42,7 @@ void Optimizer::optimize(llvm::Module *theModule) {
      */
     llvm::PassBuilder passBuilder;
     /**
-     * New Analysis Managers
+     * Setting-up Analysis Managers
      */
     llvm::FunctionAnalysisManager functionAnalysisManager;
     llvm::ModuleAnalysisManager moduleAnalysisManager;
@@ -51,14 +61,14 @@ void Optimizer::optimize(llvm::Module *theModule) {
                                      moduleAnalysisManager);
 
     /**
-     * New Function and Module level PassManagers
+     * Initiating Function and Module level PassManagers
      */
 
     llvm::ModulePassManager modulePassManager;
     llvm::FunctionPassManager functionPassManager;
 
     /**
-     * Adding passes to pipeline
+     * Adding passes to the pipeline
      */
     functionPassManager.addPass(llvm::PromotePass()); //New Reg2Mem
     functionPassManager.addPass(llvm::InstCombinePass());
@@ -70,36 +80,7 @@ void Optimizer::optimize(llvm::Module *theModule) {
     functionPassManager.addPass(llvm::SimplifyCFGPass());
 
     /**
-     * Checking for extra optimisation flag
-     * -Saket
-     */
-
-//    if (extraOptEnable) {
-//        LOG_S(1) << "-> Extra Passes Enabled.";
-//        /**
-//         * We have to use llvm Adaptors to run per-loop passes in function pass manager.
-//         * In LLVM14+, The hierarchy for code sections is :
-//         *  Module -> (CGSCC)* -> Functions -> Loops
-//         *
-//         *  [*] is optional.
-//         *
-//         *  ModulePassManager.add(functionAdaptor(LoopAdaptor(llvm::LoopPass())))
-//         *
-//
-//         */
-//
-//        functionPassManager.addPass(llvm::createFunctionToLoopPassAdaptor(llvm::SimpleLoopUnswitchPass()));
-//        functionPassManager.addPass(llvm::createFunctionToLoopPassAdaptor(llvm::LoopRotatePass()));
-//        functionPassManager.addPass(llvm::SCCPPass()); // Constant Propagation Pass ; runIPSCCP | from llvm13 it
-//        // is called "Sparse Conditional Constant Propagation" SCCP
-//        functionPassManager.addPass(llvm::TailCallElimPass()); //Tail Call Elimination
-//        functionPassManager.addPass(llvm::DSEPass()); //Dead Store Elimination
-//    }
-
-
-    /**
-     * Passing the function pass manager to the modulePassManager using function adaptor, then passing theModule to the
-     * ModulePassManager along with ModuleAnalysisManager.
+     * Passing the function pass manager to the modulePassManager using function adaptor, then passing theModule to the ModulePassManager along with ModuleAnalysisManager.
      */
     modulePassManager.addPass(createModuleToFunctionPassAdaptor(std::move(functionPassManager)));
     modulePassManager.run(*theModule, moduleAnalysisManager);
