@@ -44,7 +44,8 @@ namespace simplenodes {
         std::make_shared<ASTDeclNode>(fname),
         formals,
         decls,
-        body
+        body,
+        false
     );
     return std::move(mockFunction);
   }

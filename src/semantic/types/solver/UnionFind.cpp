@@ -1,86 +1,120 @@
 #include "UnionFind.h"
-#include "Substituter.h"
+#include "Copier.h"
 
 #include "loguru.hpp"
-#include <iostream>
+#include <string>
+#include <list>
+#include <algorithm>
 
 namespace { // Anonymous namespace for local helpers
-bool verbose = false;
+    bool verbose = false;
+
+    bool equalType(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
+        return *(t1.get()) == *(t2.get());
+    }
+}
+
+// Check Union-Find data structure invariants
+void UnionFind::invariant() {
+    // No two edges in the Union-Find structure should the same originating TipType
+    for (auto edge1 : edges) {
+        for (auto edge2 : edges) {
+            if (edge1 != edge2) {
+                if (equalType(edge1.first, edge2.first)) {
+                    LOG_S(3)
+                    << "UnionFind invariant violated found pair of edges: " << *edge1.first << "(" << edge1.first.get()
+                    << ") => " << *edge1.second << " and " << *edge2.first << "(" << edge2.first.get() << ") => "
+                    << *edge2.second;
+                    assert(!equalType(edge1.first, edge2.first));
+                }
+            }
+        }
+    }
+}
+
+std::shared_ptr<TipType> UnionFind::lookup(std::shared_ptr<TipType> t) {
+    for(auto const &edge : edges) {
+        if(equalType(t, edge.first)) {
+            return edge.second;
+        }
+    }
+    return nullptr;
 }
 
 UnionFind::UnionFind(std::vector<std::shared_ptr<TipType>> seed) {
     for(auto &term : seed) {
         smart_insert(term);
     }
+    invariant();
 }
 
-/*
+void UnionFind::add(std::vector<std::shared_ptr<TipType>> seed) {
+    for(auto &term : seed) {
+        smart_insert(term);
+    }
+    invariant();
+}
+
 std::ostream& operator<<(std::ostream& os, const UnionFind& obj) {
-  return obj.print(os);
+    return obj.print(os);
 }
 
 std::ostream &UnionFind::print(std::ostream &out) const {
+    std::set<std::string> edgeSet;
+    for(auto edge : edges) {
+        std::stringstream edgeStr;
+        edgeStr << "  " << *edge.first << "(" << edge.first.get() << ")"<< " => " << *edge.second;
+        edgeSet.insert(edgeStr.str());
+    }
   out << "UnionFind edges {\n"; 
-  for(auto const &edge : edges) {
-    out << *edge.first << " -> " << *edge.second << std::endl;
+  for(auto es : edgeSet) {
+    out << es << "\n";
   }
-  out << "}\n"; 
-  return out; 
-}
-*/
-
-std::unique_ptr<UnionFind> UnionFind::copy() {
-  std::vector<std::shared_ptr<TipType>> emptySeed;
-  auto ufCopy = std::make_unique<UnionFind>(emptySeed);
-
-  // Insert the vertices and edges in the copy
-  for(auto const &edge : edges) {
-    auto src = Copier::copy(edge.first);
-    auto dest = Copier::copy(edge.second);
-    ufCopy->edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(src, dest));
-  } 
-  return std::move(ufCopy);
+  out << "}"; 
+  return out;
 }
 
-/*
- * Add path compression instead of iterative parent lookup.
- */
 std::shared_ptr<TipType> UnionFind::find(std::shared_ptr<TipType> t) {
     LOG_S(3) << "UnionFind looking for representive of " << *t;
 
-    // Effectively a noop if the term is already in the map.
-    smart_insert(t);
+    t = smart_insert(t);
 
     auto parent = t;
-    while(*get_parent(parent) != *parent) {
+    while(!equalType(get_parent(parent), parent)) {
         parent = get_parent(parent);
     }
 
     LOG_S(3) << "UnionFind found representative " << *parent;
 
+    invariant();
+
     return parent;
 }
 
 void UnionFind::quick_union(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
-    smart_insert(t1);
-    smart_insert(t2);
+    t1 = smart_insert(t1);
+    t2 = smart_insert(t2);
 
     auto t1_root = find(t1);
     auto t2_root = find(t2);
 
     // semantics-based insert
     for(auto const &edge : edges) {
-        if(*t1_root == *edge.first) {
+        // THINK
+        if(equalType(t1_root, edge.first)) {
+            LOG_S(3) << "UnionFind replacing " << *edge.first << " => " << *edge.second << " with " << *t1_root << " => " << *t2_root;
             edges.erase(edge.first);
             edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t1_root, t2_root));
             break;
         }
     }
+
+    invariant();
 }
 
 bool UnionFind::connected(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
     return *find(t1) == *find(t2);
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
 /*! \fn get_parent
  *
@@ -90,34 +124,34 @@ bool UnionFind::connected(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> 
  * When they are encountered they are added to the forest.
  */
 std::shared_ptr<TipType> UnionFind::get_parent(std::shared_ptr<TipType> t) {
-    for(auto const &edge : edges) {
-        if(*t == *edge.first) {
-            return edge.second;
-        }
-    }
-    
-    smart_insert(t);
-    return t;
+    auto parent = lookup(t);
+
+    if (parent != nullptr)
+        return parent;
+
+    auto inserted = smart_insert(t);
+
+    invariant();
+
+    return inserted;
 }
 
 /**
  * Inserts should be based on the dereferenced value.
  */
-void UnionFind::smart_insert(std::shared_ptr<TipType> t) {
+std::shared_ptr<TipType> UnionFind::smart_insert(std::shared_ptr<TipType> t) {
     if(t == nullptr) {
         throw std::invalid_argument("Refusing to insert a nullptr into the map.");
     }
-    
-    LOG_S(3) << "UnionFind inserting term " << *t;
 
-    for(auto const &edge : edges) {
-        if(*t == *edge.first) {
-            LOG_S(3) << " ; already in the graph as " << *edge.first;
-            return;
-        }
-    }
+    if (lookup(t) != nullptr)
+        return lookup(t);
 
-    LOG_S(3) << " ; adding new edge\n";
+    LOG_S(3) << "UnionFind adding " << *t << " to graph";
     edges.insert(std::pair<std::shared_ptr<TipType>, std::shared_ptr<TipType>>(t, t));
+
+    invariant();
+
+    return t;
 }
 

@@ -17,6 +17,7 @@ static cl::OptionCategory TIPcat("tipc Options","Options for controlling the TIP
 static cl::opt<bool> ppretty("pp", cl::desc("pretty print"), cl::cat(TIPcat));
 static cl::opt<bool> psym("ps", cl::desc("print symbols"), cl::cat(TIPcat));
 static cl::opt<bool> ptypes("pt", cl::desc("print symbols with types (supercedes --ps)"), cl::cat(TIPcat));
+static cl::opt<bool> polyinf("pi", cl::desc("perform polymorphic type inference"), cl::cat(TIPcat));
 static cl::opt<bool> disopt("do", cl::desc("disable bitcode optimization"), cl::cat(TIPcat));
 static cl::opt<int> debug("verbose", cl::desc("enable log messages (Levels 1-3) \n Level 1 - Basic logging for every phase.\n Level 2 - Level 1 and type constraints being unified.\n Level 3 - Level 2 and union-find solving steps."), cl::cat(TIPcat));
 static cl::opt<bool> emitHrAsm("asm",
@@ -74,7 +75,7 @@ int main(int argc, char *argv[]) {
   stream.open(sourceFile);
   if(!stream.good()) {
     LOG_S(ERROR) << "tipc: error: no such file: '" << sourceFile << "'";
-    exit(1);
+    std::exit(EXIT_FAILURE);
   }
 
   /*
@@ -84,11 +85,10 @@ int main(int argc, char *argv[]) {
    * the underlying pointer, i.e., via a call to get().
    */
   try {
-    std::shared_ptr<ASTProgram> ast = std::move(FrontEnd::parse(stream));
+    std::shared_ptr<ASTProgram> ast = FrontEnd::parse(stream);
 
     try {
-      auto analysisResults = SemanticAnalysis::analyze(ast.get());
-
+      auto analysisResults = SemanticAnalysis::analyze(ast.get(), polyinf);
 
       if (ppretty) {
         FrontEnd::prettyprint(ast.get(), std::cout);
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
         cgStream.open(cgFile);
         if(!cgStream.good()) {
           LOG_S(ERROR) << "tipc: error: failed to open '" << cgFile << "' for writing";
-          exit(1);
+          std::exit(EXIT_FAILURE);
         }
 
         analysisResults->getCallGraph()->print(cgStream);
@@ -129,17 +129,16 @@ int main(int argc, char *argv[]) {
         std::ofstream astStream;
         astStream.open(astFile);
         if(!astStream.good()) {
-          LOG_S(ERROR) << "tipc: error: failed to open '" << astFile << "' for writing";
-          exit(1);
+            LOG_S(ERROR) << "tipc: error: failed to open '" << astFile << "' for writing";
+        } else {
+            FrontEnd::astVisualize(ast, astStream);
         }
-
-        FrontEnd::astVisualize(ast, astStream);
       }
 
     } catch (SemanticError& e) {
       LOG_S(ERROR) << "tipc: " << e.what();
       LOG_S(ERROR) << "tipc: semantic error";
-      exit (EXIT_FAILURE);
+      std::exit (EXIT_FAILURE);
     } catch (InternalError& e) { // LCOV_EXCL_LINE
       /* Internal errors should never happen, but we have logic to catch 
        * them just in case.  We do not want to count these lines toward 
@@ -147,11 +146,11 @@ int main(int argc, char *argv[]) {
        */
       LOG_S(ERROR) << "tipc: " << e.what(); // LCOV_EXCL_LINE
       LOG_S(ERROR) << "tipc: internal error"; // LCOV_EXCL_LINE
-      exit (EXIT_FAILURE); // LCOV_EXCL_LINE
+      std::exit (EXIT_FAILURE); // LCOV_EXCL_LINE
     }
   } catch (ParseError& e) {
     LOG_S(ERROR) << "tipc: " << e.what();
     LOG_S(ERROR) << "tipc: parse error";
-    exit (EXIT_FAILURE);
+    std::exit (EXIT_FAILURE);
   }  // LCOV_EXCL_LINE
 }  // LCOV_EXCL_LINE

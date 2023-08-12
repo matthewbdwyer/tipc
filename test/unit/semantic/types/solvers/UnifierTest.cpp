@@ -61,11 +61,11 @@ TEST_CASE("Unifier: Collect and then unify constraints", "[Unifier, Collect]") {
         REQUIRE(*unifier.inferred(zType) == *intType);
     }
 
-    SECTION("Test type-safe poly") {
+    SECTION("Test type-safe deref") {
         std::stringstream program;
         program << R"(
-// poly is (&\alpha<*p>) -> \alpha<*p>, p is &\alpha<*p>
-poly(p){
+// deref is (&\alpha<*p>) -> \alpha<*p>, p is &\alpha<*p>
+deref(p){
     return *p;
 }
          )";
@@ -79,7 +79,7 @@ poly(p){
         Unifier unifier(visitor.getCollectedConstraints());
         REQUIRE_NOTHROW(unifier.solve());
 
-        auto fDecl = symbols->getFunction("poly"); 
+        auto fDecl = symbols->getFunction("deref");
         auto fType = std::make_shared<TipVar>(fDecl); 
         auto pType = std::make_shared<TipVar>(symbols->getLocal("p",fDecl));
 
@@ -236,10 +236,10 @@ main() {
         REQUIRE_NOTHROW(ast->accept(&visitor));
     }
 
-    SECTION("Test type-safe poly") {
+    SECTION("Test type-safe deref") {
         std::stringstream program;
         program << R"(
-poly(p){
+deref(p){
     return *p;
 }
          )";

@@ -18,5 +18,5 @@ Functions : {
 Locals for function main : {
   x : int,
   y : ⭡int,
-  z : α<z>
+  z : α<z@2:10>
 }

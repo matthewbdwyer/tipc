@@ -13,6 +13,6 @@ class TypeConstraintUnifyVisitor: public TypeConstraintVisitor {
 public:
     explicit TypeConstraintUnifyVisitor(SymbolTable *pTable);
 private:
-    static std::unique_ptr<ConstraintHandler> buildConstraintHandler();
+    static std::shared_ptr<ConstraintHandler> buildConstraintHandler();
 };
 

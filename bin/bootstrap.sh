@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=11
@@ -47,10 +47,6 @@ bootstrap_ubuntu_dependencies() {
     zlib1g-dev \
     lcov
 
-  if [ "$VERSION_ID" = "18.04" ]; then 
-    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  fi
-  
   wget https://apt.llvm.org/llvm.sh
   sed -i -E 's,Ubuntu_(.*),&\n    Pop_\1,g' llvm.sh
   chmod +x llvm.sh
@@ -81,7 +77,8 @@ bootstrap_ubuntu_dependencies() {
 
 
 bootstrap_ubuntu_env() {
-  echo export TIPCLANG=$(which clang-$LLVM_VERSION) >> ~/.bashrc
+  echo export LLVM_DIR=$(llvm-config-$LLVM_VERSION --prefix)/lib/cmake >> ~/.bashrc
+  echo export TIPCLANG=$(llvm-config-$LLVM_VERSION --bindir)/clang >> ~/.bashrc
 }
 
 

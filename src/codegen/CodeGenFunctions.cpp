@@ -103,7 +103,7 @@ std::map<std::basic_string<char>, int> fieldIndex;
 std::vector<std::basic_string<char>> fieldVector;
 
 // Permits getFunction to access the current module being compiled
-std::unique_ptr<Module> CurrentModule;
+std::shared_ptr<Module> CurrentModule;
 
 /*
  * We use calls to llvm intrinsics for several purposes.  To construct a "nop",
@@ -117,7 +117,7 @@ llvm::Function *errorIntrinsic = nullptr;
 llvm::Function *callocFun = nullptr;
 
 
-// A counter to create unique labels
+// A counter to create shared labels
 int labelNum = 0;
 
 // Indicate whether the expression code gen is for an L-value
@@ -217,12 +217,12 @@ AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::strin
 
 /********************* codegen() routines ************************/
 
-std::unique_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
+std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
                                                   std::string programName) {
   LOG_S(1) << "Generating code for program " << programName;
 
   // Create module to hold generated code
-  auto TheModule = std::make_unique<Module>(programName, TheContext);
+  auto TheModule = std::make_shared<Module>(programName, TheContext);
 
   // Set the default target triple for this platform
   llvm:Triple targetTriple(llvm::sys::getProcessTriple());
@@ -874,7 +874,7 @@ llvm::Value* ASTWhileStmt::codegen() {
    * any particular way because we will explicitly branch between them.
    * This can be optimized by later passes.
    */
-  labelNum++; // create unique labels for these BBs
+  labelNum++; // create shared labels for these BBs
 
   BasicBlock *HeaderBB = BasicBlock::Create(
       TheContext, "header" + std::to_string(labelNum), TheFunction);
@@ -958,7 +958,7 @@ llvm::Value* ASTIfStmt::codegen() {
    * any particular way because we will explicitly branch between them.
    * This can be optimized to fall through behavior by later passes.
    */
-  labelNum++; // create unique labels for these BBs
+  labelNum++; // create shared labels for these BBs
   BasicBlock *ThenBB = BasicBlock::Create(
       TheContext, "then" + std::to_string(labelNum), TheFunction);
   BasicBlock *ElseBB =

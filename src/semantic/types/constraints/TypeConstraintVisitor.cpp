@@ -7,7 +7,7 @@
 #include "TipAbsentField.h"
 #include "TipInt.h"
 
-TypeConstraintVisitor::TypeConstraintVisitor(SymbolTable* st, std::unique_ptr<ConstraintHandler> handler)
+TypeConstraintVisitor::TypeConstraintVisitor(SymbolTable* st, std::shared_ptr<ConstraintHandler> handler)
   : symbolTable(st), constraintHandler(std::move(handler)) {};
 
 /*! \fn astToVar

@@ -9,9 +9,9 @@
 
 TEST_CASE("LocalNameCollector: Test identifier conflicts with function declaration", "[LocalNameCollector]") {
   // Seed the function map and visit its declaration.
-  std::map<std::string, ASTDeclNode*> fmap;
+  std::map<std::string, std::pair<ASTDeclNode*, bool>> fmap;
   ASTDeclNode mockFunctionNameDecl("foobar");
-  fmap.insert({"foobar", &mockFunctionNameDecl});
+  fmap.insert({"foobar", std::make_pair(&mockFunctionNameDecl,false)});
   LocalNameCollector collector(fmap);
   mockFunctionNameDecl.accept(&collector);
 

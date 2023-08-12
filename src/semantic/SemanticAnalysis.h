@@ -17,13 +17,13 @@
  * \sa CallGraph
  */
 class SemanticAnalysis {
-  std::unique_ptr<SymbolTable> symTable;
-  std::unique_ptr<TypeInference> typeResults;
-  std::unique_ptr<CallGraph> callGraph;
+  std::shared_ptr<SymbolTable> symTable;
+  std::shared_ptr<TypeInference> typeResults;
+  std::shared_ptr<CallGraph> callGraph;
 
 
 public:
-  SemanticAnalysis(std::unique_ptr<SymbolTable> s, std::unique_ptr<TypeInference> t, std::unique_ptr<CallGraph> cg)
+  SemanticAnalysis(std::shared_ptr<SymbolTable> s, std::shared_ptr<TypeInference> t, std::shared_ptr<CallGraph> cg)
           : symTable(std::move(s)), typeResults(std::move(t)), callGraph(std::move(cg)) {}
 
   /*! \fn analyze
@@ -34,9 +34,11 @@ public:
    * results are transferred to caller.
    * \sa SemanticError
    * \param ast The program AST
+   * \param polyInf Indicate whether polymorphic type inference should be performed.
    * \return The unique pointer to the semantic analysis structure.
    */
-  static std::unique_ptr<SemanticAnalysis> analyze(ASTProgram* ast); 
+  static std::shared_ptr<SemanticAnalysis> analyze(ASTProgram* ast, bool polyInf);
+
 
   /*! \fn getSymbolTable
    *  \brief Returns the symbol table computed for the program.

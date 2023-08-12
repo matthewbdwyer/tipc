@@ -24,21 +24,24 @@ class CallGraph {
     int total_vertices;
     std::map<ASTFunction*, std::set<ASTFunction*> > callGraph;
     std::map<std::string, ASTFunction*> fromFunNameToASTFuns;
-
-
+    std::map<ASTFunAppExpr*, std::set<ASTFunction*> > mayCall;
 
 public:
 
-    CallGraph(std::map<ASTFunction*, std::set<ASTFunction*> > cGraph, std::vector<ASTFunction*> funs, std::map<std::string, ASTFunction*> fmap)
-        : callGraph(cGraph), vertices(funs), total_vertices(vertices.size()), fromFunNameToASTFuns(fmap){}
+    CallGraph(std::map<ASTFunction*, std::set<ASTFunction*> > cGraph, 
+              std::map<ASTFunAppExpr*, std::set<ASTFunction*> > mc, 
+              std::vector<ASTFunction*> funs, 
+              std::map<std::string, ASTFunction*> fmap)
+        : callGraph(cGraph), mayCall(mc), vertices(funs), 
+          total_vertices(vertices.size()), fromFunNameToASTFuns(fmap){}
 
 
 
-    /*! \brief Return the unique pointer of the call graph for a given program.
+    /*! \brief Return the shared pointer of the call graph for a given program.
      * \param The AST of the program and symbol table
      */
 
-    static std::unique_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
+    static std::shared_ptr<CallGraph> build(ASTProgram*, SymbolTable* st);
 
     /*! \brief Return the total num of vertices for a given call graph.
     */
@@ -57,13 +60,16 @@ public:
     */
     std::vector<std::pair<ASTFunction*, ASTFunction*>> getEdges();
 
+    /*! \brief Return the set of functions that may be called at an application expr
+    */
+    std::set<ASTFunction*> getCalledFuns(ASTFunAppExpr* e);
+
     /*! \brief Returns all the subroutines called by function f. this is an overloaded function
      * \param f The AST Function node, caller is the string name of a function
      * \return The set of all callee functions node
      */
     std::set<ASTFunction*> getCallees(ASTFunction* f);
     std::set<ASTFunction*> getCallees(std::string caller);
-
 
     /*! \brief Returns all the subroutines that call function f.
      * \param f The AST Function node or sting name of the function

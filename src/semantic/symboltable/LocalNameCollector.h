@@ -16,17 +16,17 @@
  */
 class LocalNameCollector : public ASTVisitor {
   std::map<std::string, ASTDeclNode*> curMap;
-  std::map<std::string, ASTDeclNode*> fMap;
+  std::map<std::string, std::pair<ASTDeclNode*, bool>> fMap;
   std::string funName;
   bool first = true;
 public:
-  LocalNameCollector(std::map<std::string, ASTDeclNode*> fMap) : fMap(fMap) {}
+  LocalNameCollector(std::map<std::string, std::pair<ASTDeclNode*, bool>> fMap) : fMap(fMap) {}
 
   // this map is public so that the static method can access it
   std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> lMap;
 
   static std::map<ASTDeclNode*, std::map<std::string, ASTDeclNode*>> build(
-      ASTProgram* p, std::map<std::string, ASTDeclNode*> fMap);
+      ASTProgram* p, std::map<std::string, std::pair<ASTDeclNode*, bool>> fMap);
 
   virtual bool visit(ASTFunction * element) override;
   virtual void endVisit(ASTFunction * element) override;

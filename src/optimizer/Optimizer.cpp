@@ -37,6 +37,7 @@
 void Optimizer::optimize(llvm::Module *theModule) {
     LOG_S(1) << "Optimizing program " << theModule->getName().str();
 
+
     /**
      * New pass builder
      */

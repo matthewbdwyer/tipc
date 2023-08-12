@@ -7,7 +7,8 @@ program : (function)+
 ;
 
 function : nameDeclaration 
-           '(' (nameDeclaration (',' nameDeclaration)*)? ')' 
+           '(' (nameDeclaration (',' nameDeclaration)*)? ')'
+           KPOLY?
            '{' (declaration*) (statement*) returnStmt '}' 
 ;
 
@@ -108,6 +109,9 @@ KRETURN : 'return' ;
 KNULL   : 'null' ;
 KOUTPUT : 'output' ;
 KERROR  : 'error' ;
+
+// Keyword to declare functions as polymorphic
+KPOLY   : 'poly' ;
 
 IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
 

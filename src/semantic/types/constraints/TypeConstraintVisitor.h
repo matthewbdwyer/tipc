@@ -33,7 +33,7 @@ public:
      * Scott Meyers defines this pattern in his Effective C++ series. You can read more about it here,
      * https://www.aristeia.com/EC3E/3E_item9.pdf.
      */
-    TypeConstraintVisitor(SymbolTable* st, std::unique_ptr<ConstraintHandler> handler);
+    TypeConstraintVisitor(SymbolTable* st, std::shared_ptr<ConstraintHandler> handler);
 
     bool visit(ASTFunction * element) override;
     void endVisit(ASTAccessExpr * element) override;
@@ -54,11 +54,11 @@ public:
     void endVisit(ASTWhileStmt * element) override;
 
 protected:
-    std::unique_ptr<ConstraintHandler> constraintHandler;
+    std::shared_ptr<ConstraintHandler> constraintHandler;
+    SymbolTable *symbolTable;
+    std::shared_ptr<TipType> astToVar(ASTNode * n);
 
 private:
     std::stack<ASTDeclNode *> scope;
-    SymbolTable *symbolTable;
-    std::shared_ptr<TipType> astToVar(ASTNode * n);
 };
 

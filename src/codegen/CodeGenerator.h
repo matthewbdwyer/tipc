@@ -25,7 +25,7 @@ public:
    * \param fileName the name of the source file holding the program
    * \return the LLVM module holding the generated program
    */
-  static std::unique_ptr<llvm::Module> generate(ASTProgram* program, SemanticAnalysis* analysisResults, std::string fileName);
+  static std::shared_ptr<llvm::Module> generate(ASTProgram* program, SemanticAnalysis* analysisResults, std::string fileName);
 
   /*! \fn emit
    *  \brief Emit LLVM IR to a file.

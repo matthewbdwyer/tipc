@@ -109,6 +109,39 @@ do
   fi 
 done
 
+# System tests for polymorphic type inference
+for i in polytests/*.tip
+do
+  base="$(basename $i .tip)"
+
+  # test optimized program
+  initialize_test
+  ${TIPC} --pi $i
+  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+
+  ./${base} &>/dev/null
+  exit_code=${?}
+  if [ ${exit_code} -ne 0 ]; then
+    echo -n "Test failure for : "
+    echo $i
+    ./${base}
+    ((numfailures++))
+  else
+    rm ${base}
+  fi
+  rm $i.bc
+
+  ${TIPC} --pp --pt --pi $i >${SCRATCH_DIR}/$base.pppt
+  diff $i.pppt ${SCRATCH_DIR}/$base.pppt >${SCRATCH_DIR}/$base.diff
+  if [[ -s ${SCRATCH_DIR}/$base.diff ]]
+  then
+    echo -n "Test differences for : " 
+    echo $i
+    cat ${SCRATCH_DIR}/$base.diff
+    ((numfailures++))
+  fi 
+done
+
 # Tests to cover argument handling
 # Test pretty printing and symbol printing.
 initialize_test
