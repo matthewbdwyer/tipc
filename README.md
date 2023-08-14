@@ -172,6 +172,26 @@ CLion also has some nice plugins.  For example, there is an [ANTLR v4](https://p
 ### Log Messages
 When working on the tipc compiler, it may be helpful to enable logging messages when testing your changes on programs. We have inserted logging messages using loguru. These can be turned using the flag `--verbose [x]` where x is a number between 1-3. These messages get more verbose as you increase x. The first setting shows when symbols are added to the symbol table and when type constraints are generated for the type solver. The second setting shows the previous information and type constraints being unified. The third setting shows types being search for and added into the type graph. When adding to theses features, you can add logging messages by adding a line `LOG_S(x)` where x is an integer to describe the level of log verbosity you want. You can use the existing levels or make new levels.
 
+## Code Style
+tipc follows [llvm coding
+standards](https://llvm.org/docs/CodingStandards.html#llvm-coding-standards).
+`clang-format` is used to apply the llvm style rules. The following command can
+be used to apply the llvm style across the tipc `src` directory. 
+```bash
+find src -iname *.h -o -iname *.cpp | xargs clang-format -style=llvm -i
+```
+
+Using [pre-commit](https://pre-commit.com/) we can enforce styling before each
+commit. This is encourged to keep a uniform style across the codebase. Install
+pre-commit by following the
+[instructions](https://pre-commit.com/#installation) in their documentation.
+Then, install the tipc hooks by running,
+```bash
+pre-commit install
+```
+
+Now, `c++` and `cmake` formatting will be checked before each commit. 
+
 ## Documentation
 
 The TIP grammar, [tipg4](./tipg4/TIP.g4), is implemented using ANTLR4.  This grammar is free of any semantic actions, though it does use ANTLR4 rule features which allow for control over the tree visitors that form key parts of the compiler.  This allows the structure of the grammar to remain relatively clean, i.e., no grammar factoring or stratification needed.  
