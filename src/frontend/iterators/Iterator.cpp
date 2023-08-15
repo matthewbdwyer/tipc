@@ -1,20 +1,12 @@
 #include "Iterator.h"
 
-Iterator::Iterator(const Iterator &ts): iteratorImpl(ts.iteratorImpl) {
+Iterator::Iterator(const Iterator &ts) : iteratorImpl(ts.iteratorImpl) {}
 
-}
+Iterator::Iterator(IteratorImpl *impl) : iteratorImpl(impl) {}
 
-Iterator::Iterator(IteratorImpl *impl): iteratorImpl(impl) {
+SyntaxTree Iterator::operator*() { return *(*iteratorImpl); }
 
-}
-
-SyntaxTree Iterator::operator*() {
-  return *(*iteratorImpl);
-}
-
-SyntaxTree const Iterator::operator*() const {
-  return *(*iteratorImpl);
-}
+SyntaxTree const Iterator::operator*() const { return *(*iteratorImpl); }
 
 Iterator &Iterator::operator++() {
   ++(*iteratorImpl);
@@ -27,9 +19,7 @@ Iterator Iterator::operator++(int) {
   return cloned;
 }
 
-SyntaxTree *Iterator::operator->() {
-  return iteratorImpl->operator->();
-}
+SyntaxTree *Iterator::operator->() { return iteratorImpl->operator->(); }
 
 SyntaxTree const *Iterator::operator->() const {
   return iteratorImpl->operator->();
@@ -39,9 +29,7 @@ bool Iterator::operator==(const Iterator &rhs) {
   return *iteratorImpl == *rhs.iteratorImpl;
 }
 
-bool Iterator::operator!=(const Iterator &rhs) {
-  return !(*this == rhs);
-}
+bool Iterator::operator!=(const Iterator &rhs) { return !(*this == rhs); }
 
 SyntaxTree const &Iterator::get_tree() const {
   return iteratorImpl->get_tree();

@@ -8,4 +8,3 @@ class ASTHelper {
 public:
   static std::shared_ptr<ASTProgram> build_ast(std::istream &stream);
 };
-

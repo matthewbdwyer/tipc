@@ -1,9 +1,9 @@
+#include "AbsentFieldChecker.h"
 #include "ASTHelper.h"
+#include "ExceptionContainsWhat.h"
+#include "SemanticError.h"
 #include "SymbolTable.h"
 #include "TypeConstraintCollectVisitor.h"
-#include "AbsentFieldChecker.h"
-#include "SemanticError.h"
-#include "ExceptionContainsWhat.h"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -17,22 +17,20 @@ static void runtest(std::stringstream &program, bool expectPass) {
   TypeConstraintCollectVisitor visitor(symbols.get());
   ast->accept(&visitor);
 
-  auto unifier =  std::make_shared<Unifier>(visitor.getCollectedConstraints());
+  auto unifier = std::make_shared<Unifier>(visitor.getCollectedConstraints());
   unifier->solve();
 
   if (expectPass) {
-    REQUIRE_NOTHROW(AbsentFieldChecker::check(ast.get(),unifier.get()));
+    REQUIRE_NOTHROW(AbsentFieldChecker::check(ast.get(), unifier.get()));
   } else {
-    REQUIRE_THROWS_MATCHES(AbsentFieldChecker::check(ast.get(),unifier.get()), 
-                           SemanticError, 
-                           ContainsWhat("absent field"));
+    REQUIRE_THROWS_MATCHES(AbsentFieldChecker::check(ast.get(), unifier.get()),
+                           SemanticError, ContainsWhat("absent field"));
   }
 }
 
-
 TEST_CASE("AbsentFieldChecker: record expr", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+  std::stringstream program;
+  program << R"(
       main() {
           var r;
           r = {f: 4, g: 13};
@@ -40,12 +38,12 @@ TEST_CASE("AbsentFieldChecker: record expr", "[AbsentFieldChecker]") {
       }
     )";
 
-    runtest(program, true);
+  runtest(program, true);
 }
 
 TEST_CASE("AbsentFieldChecker: direct read access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+  std::stringstream program;
+  program << R"(
       main() {
           var r;
           r = {f: 4, g: 13};
@@ -53,12 +51,12 @@ TEST_CASE("AbsentFieldChecker: direct read access", "[AbsentFieldChecker]") {
       }
     )";
 
-    runtest(program, true);
+  runtest(program, true);
 }
 
 TEST_CASE("AbsentFieldChecker: indirect read access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+  std::stringstream program;
+  program << R"(
       main() {
           var r;
           r = alloc {f: 4, g: 13};
@@ -66,13 +64,12 @@ TEST_CASE("AbsentFieldChecker: indirect read access", "[AbsentFieldChecker]") {
       }
     )";
 
-    runtest(program, true);
+  runtest(program, true);
 }
 
-
 TEST_CASE("AbsentFieldChecker: direct write access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+  std::stringstream program;
+  program << R"(
       main() {
           var r;
           r = {f: 4, g: 13};
@@ -81,12 +78,12 @@ TEST_CASE("AbsentFieldChecker: direct write access", "[AbsentFieldChecker]") {
       }
     )";
 
-    runtest(program, true);
+  runtest(program, true);
 }
 
 TEST_CASE("AbsentFieldChecker: indirect write access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+  std::stringstream program;
+  program << R"(
       main() {
           var r;
           r = alloc {f: 4, g: 13};
@@ -95,12 +92,12 @@ TEST_CASE("AbsentFieldChecker: indirect write access", "[AbsentFieldChecker]") {
       }
     )";
 
-    runtest(program, true);
+  runtest(program, true);
 }
 
 TEST_CASE("AbsentFieldChecker: record2", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+  std::stringstream program;
+  program << R"(
 main() {
     var n, r1;
     n = alloc {p: 4, q: 2};
@@ -111,12 +108,12 @@ main() {
 }
     )";
 
-    runtest(program, true);
+  runtest(program, true);
 }
 
 TEST_CASE("AbsentFieldChecker: record4", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+  std::stringstream program;
+  program << R"(
 main() {
     var n, k, r1;
     k = {a: 1, b: 2};
@@ -128,15 +125,15 @@ main() {
 
     )";
 
-    runtest(program, true);
+  runtest(program, true);
 }
 
 // The following are test that are expected to fail
 
-
-TEST_CASE("AbsentFieldChecker: absent direct read access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+TEST_CASE("AbsentFieldChecker: absent direct read access",
+          "[AbsentFieldChecker]") {
+  std::stringstream program;
+  program << R"(
       foo() {
           var r;
           r = {f: 4, g: 13};
@@ -144,12 +141,13 @@ TEST_CASE("AbsentFieldChecker: absent direct read access", "[AbsentFieldChecker]
       }
     )";
 
-    runtest(program, false);
+  runtest(program, false);
 }
 
-TEST_CASE("AbsentFieldChecker: absent indirect read access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+TEST_CASE("AbsentFieldChecker: absent indirect read access",
+          "[AbsentFieldChecker]") {
+  std::stringstream program;
+  program << R"(
       foo() {
           var r;
           r = alloc {f: 4, g: 13};
@@ -157,13 +155,13 @@ TEST_CASE("AbsentFieldChecker: absent indirect read access", "[AbsentFieldChecke
       }
     )";
 
-    runtest(program, false);
+  runtest(program, false);
 }
 
-
-TEST_CASE("AbsentFieldChecker: absent direct write access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+TEST_CASE("AbsentFieldChecker: absent direct write access",
+          "[AbsentFieldChecker]") {
+  std::stringstream program;
+  program << R"(
       foo() {
           var r, q;
           q = {f: 1, g: 3};
@@ -173,12 +171,13 @@ TEST_CASE("AbsentFieldChecker: absent direct write access", "[AbsentFieldChecker
       }
     )";
 
-    runtest(program, false);
+  runtest(program, false);
 }
 
-TEST_CASE("AbsentFieldChecker: absent indirect write access", "[AbsentFieldChecker]") {
-    std::stringstream program;
-    program << R"(
+TEST_CASE("AbsentFieldChecker: absent indirect write access",
+          "[AbsentFieldChecker]") {
+  std::stringstream program;
+  program << R"(
       foo() {
           var r, q;
           q = {f: 1, g: 3};
@@ -188,5 +187,5 @@ TEST_CASE("AbsentFieldChecker: absent indirect write access", "[AbsentFieldCheck
       }
     )";
 
-    runtest(program, false);
+  runtest(program, false);
 }

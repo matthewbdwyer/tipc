@@ -7,9 +7,7 @@
  *
  * \brief A runtime error when unifying type terms.
  */
-class UnificationError: public SemanticError {
+class UnificationError : public SemanticError {
 public:
-    UnificationError(const char * msg) : SemanticError(msg) {};
+  UnificationError(const char *msg) : SemanticError(msg){};
 };
-
-

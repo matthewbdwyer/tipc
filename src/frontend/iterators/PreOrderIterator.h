@@ -5,7 +5,7 @@
 
 /*! \brief An iterator implementation for a depth-first, pre-order, transversal.
  */
-class PreOrderIterator: public IteratorImpl {
+class PreOrderIterator : public IteratorImpl {
 
 public:
   explicit PreOrderIterator(SyntaxTree const &tree, bool end);
@@ -22,11 +22,10 @@ public:
 
   bool operator!=(const IteratorImpl &rhs) const override;
 
-  IteratorImpl * clone() override;
+  IteratorImpl *clone() override;
 
-//private:
+  // private:
   std::stack<SyntaxTree> stack;
-
 };
 
 #include "IteratorUtils.tpp"

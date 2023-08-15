@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <TipType.h>
+#include <memory>
 
 /*!
  * \class ConstraintHandler
@@ -10,6 +10,7 @@
  */
 class ConstraintHandler {
 public:
-    virtual ~ConstraintHandler() = default;
-    virtual void handle(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) = 0;
+  virtual ~ConstraintHandler() = default;
+  virtual void handle(std::shared_ptr<TipType> t1,
+                      std::shared_ptr<TipType> t2) = 0;
 };

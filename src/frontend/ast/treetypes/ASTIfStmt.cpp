@@ -1,7 +1,7 @@
 #include "ASTIfStmt.h"
 #include "ASTVisitor.h"
 
-void ASTIfStmt::accept(ASTVisitor * visitor) {
+void ASTIfStmt::accept(ASTVisitor *visitor) {
   if (visitor->visit(this)) {
     getCondition()->accept(visitor);
     getThen()->accept(visitor);
@@ -12,11 +12,11 @@ void ASTIfStmt::accept(ASTVisitor * visitor) {
   visitor->endVisit(this);
 }
 
-std::ostream& ASTIfStmt::print(std::ostream &out) const {
+std::ostream &ASTIfStmt::print(std::ostream &out) const {
   out << "if (" << *getCondition() << ") ";
   out << *getThen();
   if (getElse() != nullptr) {
-     out << " else " << *getElse();
+    out << " else " << *getElse();
   }
   return out;
 }
@@ -26,7 +26,7 @@ std::vector<std::shared_ptr<ASTNode>> ASTIfStmt::getChildren() {
 
   children.push_back(COND);
   children.push_back(THEN);
-  if(getElse() != nullptr) {
+  if (getElse() != nullptr) {
     children.push_back(ELSE);
   }
 

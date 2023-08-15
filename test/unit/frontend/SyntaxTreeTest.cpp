@@ -1,5 +1,5 @@
-#include "ASTHelper.h"
 #include "SyntaxTree.h"
+#include "ASTHelper.h"
 #include "Iterator.h"
 #include "PrettyPrinter.h"
 
@@ -7,10 +7,10 @@
 
 #include <iostream>
 
+class MockVisitor : public ASTVisitor {};
 
-class MockVisitor: public ASTVisitor {};
-
-TEST_CASE("SyntaxTree: Test assignment updates root on different AST", "[SyntaxTree]") {
+TEST_CASE("SyntaxTree: Test assignment updates root on different AST",
+          "[SyntaxTree]") {
   std::stringstream streamX;
   streamX << R"(
       progx() {
@@ -71,7 +71,7 @@ TEST_CASE("SyntaxTree: Test traversing a tree with a visitor", "[SyntaxTree]") {
 
   // Assert visiting logic is independent of iterating.
   MockVisitor mockVisitor;
-  for(auto iter = syntaxTreeX.begin(""); iter != syntaxTreeX.end(""); ++iter) {
+  for (auto iter = syntaxTreeX.begin(""); iter != syntaxTreeX.end(""); ++iter) {
     iter->accept(&mockVisitor);
   }
   REQUIRE(true);

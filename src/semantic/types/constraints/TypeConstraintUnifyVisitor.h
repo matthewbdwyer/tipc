@@ -9,10 +9,10 @@
  *
  *  \brief Visitor generates type constraints and unifies them on-the-fly.
  */
-class TypeConstraintUnifyVisitor: public TypeConstraintVisitor {
+class TypeConstraintUnifyVisitor : public TypeConstraintVisitor {
 public:
-    explicit TypeConstraintUnifyVisitor(SymbolTable *pTable);
-private:
-    static std::shared_ptr<ConstraintHandler> buildConstraintHandler();
-};
+  explicit TypeConstraintUnifyVisitor(SymbolTable *pTable);
 
+private:
+  static std::shared_ptr<ConstraintHandler> buildConstraintHandler();
+};

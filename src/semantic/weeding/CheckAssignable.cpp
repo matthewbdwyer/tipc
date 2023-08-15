@@ -9,49 +9,51 @@
 namespace {
 
 // Return true if expression has an l-value
-bool isAssignable(ASTExpr* e) {
-  if (dynamic_cast<ASTVariableExpr*>(e)) return true;
-  if (dynamic_cast<ASTAccessExpr*>(e)){
-    ASTAccessExpr* access = dynamic_cast<ASTAccessExpr*>(e);
-    if (dynamic_cast<ASTVariableExpr*>(access->getRecord())){
+bool isAssignable(ASTExpr *e) {
+  if (dynamic_cast<ASTVariableExpr *>(e))
+    return true;
+  if (dynamic_cast<ASTAccessExpr *>(e)) {
+    ASTAccessExpr *access = dynamic_cast<ASTAccessExpr *>(e);
+    if (dynamic_cast<ASTVariableExpr *>(access->getRecord())) {
       return true;
-    }
-    else if (dynamic_cast<ASTDeRefExpr*>(access->getRecord())){
+    } else if (dynamic_cast<ASTDeRefExpr *>(access->getRecord())) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
   return false;
 }
 
-}
+} // namespace
 
-void CheckAssignable::endVisit(ASTAssignStmt* element) {
+void CheckAssignable::endVisit(ASTAssignStmt *element) {
   LOG_S(1) << "Checking assignability of " << *element;
 
-  if (isAssignable(element->getLHS())) return;
+  if (isAssignable(element->getLHS()))
+    return;
 
   // Assigning through a pointer is also permitted
-  if (dynamic_cast<ASTDeRefExpr*>(element->getLHS())) return;
+  if (dynamic_cast<ASTDeRefExpr *>(element->getLHS()))
+    return;
 
   std::ostringstream oss;
   oss << "Assignment error on line " << element->getLine() << ": ";
-  if(dynamic_cast<ASTAccessExpr*>(element->getLHS())){
-    ASTAccessExpr* access = dynamic_cast<ASTAccessExpr*>(element->getLHS());
-    oss << *access->getRecord() << " is an expression, and not a variable corresponding to a record\n";  
-  }
-  else{
+  if (dynamic_cast<ASTAccessExpr *>(element->getLHS())) {
+    ASTAccessExpr *access = dynamic_cast<ASTAccessExpr *>(element->getLHS());
+    oss << *access->getRecord()
+        << " is an expression, and not a variable corresponding to a record\n";
+  } else {
     oss << *element->getLHS() << " not an l-value\n";
   }
   throw SemanticError(oss.str());
 }
 
-void CheckAssignable::endVisit(ASTRefExpr* element) {
+void CheckAssignable::endVisit(ASTRefExpr *element) {
   LOG_S(1) << "Checking assignability of " << *element;
 
-  if (isAssignable(element->getVar())) return;
+  if (isAssignable(element->getVar()))
+    return;
 
   std::ostringstream oss;
   oss << "Address of error on line " << element->getLine() << ": ";
@@ -59,7 +61,7 @@ void CheckAssignable::endVisit(ASTRefExpr* element) {
   throw SemanticError(oss.str());
 }
 
-void CheckAssignable::check(ASTProgram* p) {
+void CheckAssignable::check(ASTProgram *p) {
   LOG_S(1) << "Checking assignability";
   CheckAssignable visitor;
   p->accept(&visitor);

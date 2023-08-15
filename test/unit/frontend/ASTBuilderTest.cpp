@@ -1,8 +1,8 @@
 #include "ASTHelper.h"
 
+#include "antlr4-runtime.h"
 #include <TIPLexer.h>
 #include <TIPParser.h>
-#include "antlr4-runtime.h"
 
 #include <catch2/catch_test_macros.hpp>
 
