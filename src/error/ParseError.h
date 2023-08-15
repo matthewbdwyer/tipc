@@ -7,9 +7,8 @@
  * Errors in lexing or parsing generate instances of this type.
  * \sa Error
  */
-class ParseError: public Error {
+class ParseError : public Error {
 public:
-  ParseError(const std::string& msg) : Error(msg) {} //! Construct parse error with message
+  ParseError(const std::string &msg)
+      : Error(msg) {} //! Construct parse error with message
 };
-
-

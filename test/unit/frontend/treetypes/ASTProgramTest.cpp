@@ -4,7 +4,8 @@
 
 #include <iostream>
 
-TEST_CASE("ASTProgramTest: ASTProgram output is the hash of the source.", "[ASTProgram]") {
+TEST_CASE("ASTProgramTest: ASTProgram output is the hash of the source.",
+          "[ASTProgram]") {
   std::stringstream stream;
   stream << R"(
       foo(x) {
@@ -20,13 +21,16 @@ TEST_CASE("ASTProgramTest: ASTProgram output is the hash of the source.", "[ASTP
 
   auto ast = ASTHelper::build_ast(stream);
 
-  std::string expectedOutput = "29e272ab0b8752287594fb0014953a9cf7879e3687f4d481ced352a835b46359";
+  std::string expectedOutput =
+      "29e272ab0b8752287594fb0014953a9cf7879e3687f4d481ced352a835b46359";
   std::stringstream actualOutput;
   actualOutput << *ast;
   REQUIRE(expectedOutput == actualOutput.str());
 }
 
-TEST_CASE("ASTProgramTest: ASTProgram returns nullptr when getting nonexistent function", "[ASTProgram]") {
+TEST_CASE("ASTProgramTest: ASTProgram returns nullptr when getting nonexistent "
+          "function",
+          "[ASTProgram]") {
   std::stringstream stream;
   stream << R"(
       foo(x) { return x; }
@@ -35,7 +39,7 @@ TEST_CASE("ASTProgramTest: ASTProgram returns nullptr when getting nonexistent f
     )";
 
   auto ast = ASTHelper::build_ast(stream);
-  ASTFunction * expectedFunction = nullptr;
-  ASTFunction * actualFunction = ast->findFunctionByName("fred");
+  ASTFunction *expectedFunction = nullptr;
+  ASTFunction *actualFunction = ast->findFunctionByName("fred");
   REQUIRE(expectedFunction == actualFunction);
 }

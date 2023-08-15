@@ -63,7 +63,7 @@ target_sources(
 target_include_directories(
   ast
   PRIVATE ${ANTLR_TIPGrammar_OUTPUT_DIR}
-		  ${CMAKE_CURRENT_SOURCE_DIR}
+          ${CMAKE_CURRENT_SOURCE_DIR}
           ${CMAKE_CURRENT_SOURCE_DIR}/treetypes
           ${CMAKE_SOURCE_DIR}/externals/PicoSHA2
           ${CMAKE_SOURCE_DIR}/src/frontend/prettyprint

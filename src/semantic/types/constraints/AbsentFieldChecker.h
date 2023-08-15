@@ -16,19 +16,19 @@
  * \sa SemanticError
  */
 class AbsentFieldChecker : public ASTVisitor {
-  Unifier* unifier;
+  Unifier *unifier;
+
 public:
-  AbsentFieldChecker(Unifier* u) : unifier(u) {} 
+  AbsentFieldChecker(Unifier *u) : unifier(u) {}
 
   /*! \fn check
    *  \brief Generate and check absent field constraints and report any errors.
    *
-   * \sa Semantic Error  
+   * \sa Semantic Error
    * \param p The Program AST
    * \param u The unifier storing the computed type judgements
    */
-  static void check(ASTProgram* p, Unifier* u);
+  static void check(ASTProgram *p, Unifier *u);
 
-  void endVisit(ASTAccessExpr * element) override;
+  void endVisit(ASTAccessExpr *element) override;
 };
-

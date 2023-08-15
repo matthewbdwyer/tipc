@@ -6,13 +6,14 @@
 
 using namespace llvm;
 
-std::shared_ptr<Module> CodeGenerator::generate(ASTProgram* program, 
-                                SemanticAnalysis* analysisResults, std::string fileName) {
+std::shared_ptr<Module>
+CodeGenerator::generate(ASTProgram *program, SemanticAnalysis *analysisResults,
+                        std::string fileName) {
   return std::move(program->codegen(analysisResults, fileName));
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
-void CodeGenerator::emit(llvm::Module* m, std::string filename) {
-  if(filename.empty())  {
+void CodeGenerator::emit(llvm::Module *m, std::string filename) {
+  if (filename.empty()) {
     filename = m->getModuleIdentifier() + LLVM_BC_EXT;
   }
 
@@ -22,8 +23,9 @@ void CodeGenerator::emit(llvm::Module* m, std::string filename) {
   result.keep();
 }
 
-void CodeGenerator::emitHumanReadableAssembly(llvm::Module* m, std::string filename) {
-  if(filename.empty())  {
+void CodeGenerator::emitHumanReadableAssembly(llvm::Module *m,
+                                              std::string filename) {
+  if (filename.empty()) {
     filename = m->getModuleIdentifier() + LLVM_ASM_EXT;
   }
 

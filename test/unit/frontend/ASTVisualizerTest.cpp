@@ -1,8 +1,8 @@
-#include "ASTHelper.h"
-#include "SyntaxTree.h"
-#include "Iterator.h"
 #include "ASTVisualizer.h"
+#include "ASTHelper.h"
 #include "GeneralHelper.h"
+#include "Iterator.h"
+#include "SyntaxTree.h"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -30,7 +30,8 @@ TEST_CASE("ASTVisualizer: Generate dot graph", "[ASTVisualizer]") {
 
   int expectedNodeCount = 24;
   int expectedEdgeCount = 23;
-  REQUIRE(expectedNodeCount == GeneralHelper::countSubstrings(graph.str(), "label"));
-  REQUIRE(expectedEdgeCount == GeneralHelper::countSubstrings(graph.str(), "->"));
-
+  REQUIRE(expectedNodeCount ==
+          GeneralHelper::countSubstrings(graph.str(), "label"));
+  REQUIRE(expectedEdgeCount ==
+          GeneralHelper::countSubstrings(graph.str(), "->"));
 }

@@ -10,8 +10,8 @@ class Iterator;
 /*! \brief A convenient interface to the AST nodes.
  *
  * The SyntaxTree abstraction provides an interface for working with the AST.
- * It shelters clients from having to learn low-level details about the nodes. For
- * instance, STL like iterators are provided that handle traversal for you.
+ * It shelters clients from having to learn low-level details about the nodes.
+ * For instance, STL like iterators are provided that handle traversal for you.
  */
 class SyntaxTree {
 
@@ -19,7 +19,7 @@ public:
   SyntaxTree(std::shared_ptr<ASTNode> node);
   ~SyntaxTree();
   SyntaxTree(SyntaxTree const &tree);
-  SyntaxTree & operator=(SyntaxTree const &tree);
+  SyntaxTree &operator=(SyntaxTree const &tree);
 
   /*! \fn begin
    *  \brief Construct an iterator pointing at the root of the tree.
@@ -37,7 +37,6 @@ public:
    */
   Iterator end(std::string const &order);
 
-
   /*! \fn getRoot
    *  \brief Return the root of the tree.
    */
@@ -48,7 +47,7 @@ public:
    *
    *  \param visitor The visitor to apply.
    */
-  void accept(ASTVisitor * visitor);
+  void accept(ASTVisitor *visitor);
 
   /*! \fn getSubtrees
    *  \brief Return the children of the root as collection of SyntaxTrees.
@@ -57,8 +56,4 @@ public:
 
 private:
   std::shared_ptr<ASTNode> root;
-
-
 };
-
-

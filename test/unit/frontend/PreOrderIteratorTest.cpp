@@ -1,12 +1,12 @@
+#include "PreOrderIterator.h"
 #include "ASTHelper.h"
 #include "PrettyPrinter.h"
 #include "SyntaxTree.h"
-#include "PreOrderIterator.h"
 
 #include <catch2/catch_test_macros.hpp>
 
-#include <iostream>
 #include <Iterator.h>
+#include <iostream>
 
 TEST_CASE("PreOrderIterator: Test Traversal", "[PreOrderIterator]") {
   std::stringstream stream;
@@ -31,7 +31,7 @@ TEST_CASE("PreOrderIterator: Test Traversal", "[PreOrderIterator]") {
 
   SyntaxTree syntaxTree(ast);
   int i = 0;
-  for(auto iter = syntaxTree.begin(""); iter != syntaxTree.end(""); ++iter) {
+  for (auto iter = syntaxTree.begin(""); iter != syntaxTree.end(""); ++iter) {
     std::stringstream actual_node;
     actual_node << *iter->getRoot();
     REQUIRE(expected_node_order.at(i++) == actual_node.str());
@@ -53,7 +53,6 @@ TEST_CASE("PreOrderIterator: Test dereference", "[PreOrderIterator]") {
   REQUIRE(syntaxTree.getRoot() == iter->getRoot());
 }
 
-
 TEST_CASE("PreOrderIterator: Test Cloning", "[PreOrderIterator]") {
   std::stringstream stream;
   stream << R"(
@@ -71,7 +70,8 @@ TEST_CASE("PreOrderIterator: Test Cloning", "[PreOrderIterator]") {
   REQUIRE(iter->get_tree().getRoot() == cloned->get_tree().getRoot());
 }
 
-TEST_CASE("PreOrderIterator: Exhausted increment returns gracefully", "[PreOrderIterator]") {
+TEST_CASE("PreOrderIterator: Exhausted increment returns gracefully",
+          "[PreOrderIterator]") {
   std::stringstream stream;
   stream << R"(
       short() {
@@ -83,7 +83,8 @@ TEST_CASE("PreOrderIterator: Exhausted increment returns gracefully", "[PreOrder
   std::shared_ptr<ASTProgram> ast = std::move(ASTHelper::build_ast(stream));
   SyntaxTree syntaxTree(ast);
   auto iter = syntaxTree.begin("");
-  for(; iter != syntaxTree.end(""); ++iter);
+  for (; iter != syntaxTree.end(""); ++iter)
+    ;
 
   REQUIRE_NOTHROW(iter++);
 }

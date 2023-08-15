@@ -2,43 +2,42 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-ASTFunction::ASTFunction(std::shared_ptr<ASTDeclNode> DECL, std::vector<std::shared_ptr<ASTDeclNode>> FORMALS,
+ASTFunction::ASTFunction(std::shared_ptr<ASTDeclNode> DECL,
+                         std::vector<std::shared_ptr<ASTDeclNode>> FORMALS,
                          const std::vector<std::shared_ptr<ASTDeclStmt>> &DECLS,
                          std::vector<std::shared_ptr<ASTStmt>> BODY,
                          bool ISPOLY) {
 
   this->DECL = DECL;
 
-  for(auto &formal : FORMALS) {
+  for (auto &formal : FORMALS) {
     std::shared_ptr<ASTDeclNode> f = formal;
     this->FORMALS.push_back(f);
   }
 
-  for(auto &d : DECLS) {
-    this->DECLS.push_back(const_cast<std::shared_ptr<ASTDeclStmt>&>(d));
+  for (auto &d : DECLS) {
+    this->DECLS.push_back(const_cast<std::shared_ptr<ASTDeclStmt> &>(d));
   }
 
   this->ISPOLY = ISPOLY;
 
-  for(auto &stmt : BODY) {
+  for (auto &stmt : BODY) {
     std::shared_ptr<ASTStmt> s = stmt;
     this->BODY.push_back(s);
   }
 }
 
-std::vector<ASTDeclNode*> ASTFunction::getFormals() const {
+std::vector<ASTDeclNode *> ASTFunction::getFormals() const {
   return rawRefs(FORMALS);
 }
 
-std::vector<ASTDeclStmt*> ASTFunction::getDeclarations() const {
+std::vector<ASTDeclStmt *> ASTFunction::getDeclarations() const {
   return rawRefs(DECLS);
 }
 
-std::vector<ASTStmt*> ASTFunction::getStmts() const {
-  return rawRefs(BODY);
-}
+std::vector<ASTStmt *> ASTFunction::getStmts() const { return rawRefs(BODY); }
 
-void ASTFunction::accept(ASTVisitor * visitor) {
+void ASTFunction::accept(ASTVisitor *visitor) {
   if (visitor->visit(this)) {
     getDecl()->accept(visitor);
     for (auto p : getFormals()) {
@@ -55,7 +54,7 @@ void ASTFunction::accept(ASTVisitor * visitor) {
 }
 
 //! \brief Print an abbreviated shared string for the function
-std::ostream& ASTFunction::print(std::ostream &out) const {
+std::ostream &ASTFunction::print(std::ostream &out) const {
   out << *getDecl() << "(";
   bool skip = true;
   for (auto &p : getFormals()) {
@@ -68,7 +67,7 @@ std::ostream& ASTFunction::print(std::ostream &out) const {
   }
   out << ") {...}";
   return out;
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
 std::vector<std::shared_ptr<ASTNode>> ASTFunction::getChildren() {
   std::vector<std::shared_ptr<ASTNode>> children;

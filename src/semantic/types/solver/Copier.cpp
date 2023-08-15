@@ -10,10 +10,11 @@ std::shared_ptr<TipType> Copier::copy(std::shared_ptr<TipType> t) {
   return visitor.getResult();
 }
 
-void Copier::endVisit(TipVar * element) {
+void Copier::endVisit(TipVar *element) {
   visitedTypes.push_back(std::make_shared<TipVar>(element->getNode()));
 }
 
-void Copier::endVisit(TipAlpha * element) {
-  visitedTypes.push_back(std::make_shared<TipAlpha>(element->getNode(), element->getName()));
+void Copier::endVisit(TipAlpha *element) {
+  visitedTypes.push_back(
+      std::make_shared<TipAlpha>(element->getNode(), element->getName()));
 }

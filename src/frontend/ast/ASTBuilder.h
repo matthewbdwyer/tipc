@@ -2,8 +2,8 @@
 
 #include "AST.h"
 
-#include "TIPParser.h"
 #include "TIPBaseVisitor.h"
+#include "TIPParser.h"
 #include "antlr4-runtime.h"
 
 #include <string>
@@ -15,8 +15,8 @@ using namespace antlrcpp;
  * This is an ANTLR4 parse tree visitor, not to be confused with an ASTVisitor.
  * As such its structure follows that of the ANTLR4 generated TIPBaseVisitor.
  * The primary entry point is the build method which initiates the traversal
- * of the parse tree and, if succesful, generates a shared ASTProgram whose 
- * ownership is transferred to the caller.  
+ * of the parse tree and, if succesful, generates a shared ASTProgram whose
+ * ownership is transferred to the caller.
  */
 class ASTBuilder : public TIPBaseVisitor {
 private:
@@ -36,15 +36,15 @@ public:
 
   /**
    * a helper function to build binary expressions
-   */  
-  template <typename T>
-  void visitBinaryExpr(T* ctx, const std::string& op);
+   */
+  template <typename T> void visitBinaryExpr(T *ctx, const std::string &op);
 
   Any visitFunction(TIPParser::FunctionContext *ctx) override;
   Any visitNegNumber(TIPParser::NegNumberContext *ctx) override;
   Any visitAdditiveExpr(TIPParser::AdditiveExprContext *ctx) override;
   Any visitRelationalExpr(TIPParser::RelationalExprContext *ctx) override;
-  Any visitMultiplicativeExpr(TIPParser::MultiplicativeExprContext *ctx) override;
+  Any visitMultiplicativeExpr(
+      TIPParser::MultiplicativeExprContext *ctx) override;
   Any visitEqualityExpr(TIPParser::EqualityExprContext *ctx) override;
   Any visitParenExpr(TIPParser::ParenExprContext *ctx) override;
   Any visitNumExpr(TIPParser::NumExprContext *ctx) override;

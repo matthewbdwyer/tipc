@@ -1,8 +1,8 @@
 #include "ASTHelper.h"
+#include "ConsoleErrorListener.h"
+#include "antlr4-runtime.h"
 #include <TIPLexer.h>
 #include <TIPParser.h>
-#include "antlr4-runtime.h"
-#include "ConsoleErrorListener.h"
 
 std::shared_ptr<ASTProgram> ASTHelper::build_ast(std::istream &stream) {
   antlr4::ANTLRInputStream input(stream);
@@ -13,4 +13,3 @@ std::shared_ptr<ASTProgram> ASTHelper::build_ast(std::istream &stream) {
   ASTBuilder tb(&parser);
   return tb.build(tree);
 }
-

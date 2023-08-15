@@ -4,23 +4,23 @@
 #include "ConstraintHandler.h"
 #include "SymbolTable.h"
 #include "TipType.h"
+#include "TypeConstraint.h"
+#include "TypeConstraintVisitor.h"
 #include <memory>
 #include <set>
 #include <stack>
 #include <string>
 #include <vector>
-#include "TypeConstraintVisitor.h"
-#include "TypeConstraint.h"
 
 /*! \class TypeConstraintCollectVisitor
  *
  *  \brief Visitor generates type constraints and collects them.
  */
-class TypeConstraintCollectVisitor: public TypeConstraintVisitor {
+class TypeConstraintCollectVisitor : public TypeConstraintVisitor {
 public:
-    explicit TypeConstraintCollectVisitor(SymbolTable *pTable);
-    std::vector<TypeConstraint>& getCollectedConstraints();
-private:
-    static std::shared_ptr<ConstraintHandler> buildConstraintHandler();
-};
+  explicit TypeConstraintCollectVisitor(SymbolTable *pTable);
+  std::vector<TypeConstraint> &getCollectedConstraints();
 
+private:
+  static std::shared_ptr<ConstraintHandler> buildConstraintHandler();
+};

@@ -1,12 +1,11 @@
 #include "AbsentFieldChecker.h"
-#include "TipVar.h"
-#include "TipAbsentField.h"
 #include "SemanticError.h"
+#include "TipAbsentField.h"
+#include "TipVar.h"
 
 #include <sstream>
 
-void AbsentFieldChecker::check(ASTProgram* p, Unifier* u) 
-{
+void AbsentFieldChecker::check(ASTProgram *p, Unifier *u) {
   AbsentFieldChecker visitor(u);
   p->accept(&visitor);
 }
@@ -14,9 +13,10 @@ void AbsentFieldChecker::check(ASTProgram* p, Unifier* u)
 /*! \brief Check that the accessed field is defined somewhere in the program.
  *
  * This check is a bit less nuanced than in the TIP scala implementation.
- * We simply report absent field accesses and do not distinguish reads from writes.
+ * We simply report absent field accesses and do not distinguish reads from
+ * writes.
  */
-void AbsentFieldChecker::endVisit(ASTAccessExpr * element) {
+void AbsentFieldChecker::endVisit(ASTAccessExpr *element) {
   // Generate a new type variable for the access expression
   auto typeVar = std::make_shared<TipVar>(element);
 
@@ -25,13 +25,11 @@ void AbsentFieldChecker::endVisit(ASTAccessExpr * element) {
 
   // If the inferred type is an absent field, exit with an error message
   if (std::dynamic_pointer_cast<TipAbsentField>(inferredType) != nullptr) {
-    std::stringstream sstream; 
+    std::stringstream sstream;
     sstream << element;
-    throw SemanticError("Access to absent field on line " + 
-          std::to_string(element->getLine()) + " in column " + 
-          std::to_string(element->getColumn()) + ": " + 
-          sstream.str());
+    throw SemanticError("Access to absent field on line " +
+                        std::to_string(element->getLine()) + " in column " +
+                        std::to_string(element->getColumn()) + ": " +
+                        sstream.str());
   }
-
 }
-

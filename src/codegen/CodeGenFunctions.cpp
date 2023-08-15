@@ -2,28 +2,28 @@
 #include <ASTDeclNode.h>
 
 #include "AST.h"
-#include "SemanticAnalysis.h"
 #include "InternalError.h"
+#include "SemanticAnalysis.h"
 
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Bitcode/BitcodeWriter.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Intrinsics.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/LegacyPassManager.h"
+#include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Function.h"
-#include "llvm/Support/Host.h"
-#include "llvm/Support/TypeSize.h"
 #include "llvm/Support/FileSystem.h"
+#include "llvm/Support/Host.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/ToolOutputFile.h"
+#include "llvm/Support/TypeSize.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/InstCombine/InstCombine.h"
 #include "llvm/Transforms/Scalar.h"
@@ -58,7 +58,7 @@ using namespace llvm;
  * them to the appropriate type for an operator.
  *
  * This results in some suboptimal code, but we rely on the powerful LLVM
- * optimization passes to clean most of it up.  
+ * optimization passes to clean most of it up.
  */
 
 namespace {
@@ -70,9 +70,9 @@ namespace {
 LLVMContext TheContext;
 IRBuilder<> Builder(TheContext);
 
-/* 
- * Functions are represented with indices into a table. 
- * This permits function values to be passed, i.e, as Int64 indices. 
+/*
+ * Functions are represented with indices into a table.
+ * This permits function values to be passed, i.e, as Int64 indices.
  */
 std::map<std::string, int> functionIndex;
 
@@ -89,12 +89,12 @@ std::map<std::string, AllocaInst *> NamedValues;
  * The UberRecord is a the type of all records
  *  It has a field for every named field in the program
  */
-llvm::StructType * uberRecordType;
+llvm::StructType *uberRecordType;
 
 /**
  * The type for pointers to UberRecordType
  */
-llvm::PointerType * ptrToUberRecordType;
+llvm::PointerType *ptrToUberRecordType;
 
 // Maps field names to their index in the UberRecor
 std::map<std::basic_string<char>, int> fieldIndex;
@@ -115,7 +115,6 @@ llvm::Function *inputIntrinsic = nullptr;
 llvm::Function *outputIntrinsic = nullptr;
 llvm::Function *errorIntrinsic = nullptr;
 llvm::Function *callocFun = nullptr;
-
 
 // A counter to create shared labels
 int labelNum = 0;
@@ -186,10 +185,12 @@ llvm::Function *getFunction(std::string Name) {
 
     // function not found, so create it
 
-    std::vector<Type *> FormalTypes(formals.size(), Type::getInt64Ty(TheContext));
+    std::vector<Type *> FormalTypes(formals.size(),
+                                    Type::getInt64Ty(TheContext));
 
     // Use type factory to create function from formal type to int
-    auto *FT = FunctionType::get(Type::getInt64Ty(TheContext), FormalTypes, false);
+    auto *FT =
+        FunctionType::get(Type::getInt64Ty(TheContext), FormalTypes, false);
 
     auto *F = llvm::Function::Create(FT, llvm::Function::InternalLinkage, Name,
                                      CurrentModule.get());
@@ -208,24 +209,27 @@ llvm::Function *getFunction(std::string Name) {
  * Create an alloca instruction in the entry block of the function.
  * This is used for mutable variables, including arguments to functions.
  */
-AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::string &VarName) {
-  IRBuilder<> tmp(&TheFunction->getEntryBlock(), TheFunction->getEntryBlock().begin());
+AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction,
+                                   const std::string &VarName) {
+  IRBuilder<> tmp(&TheFunction->getEntryBlock(),
+                  TheFunction->getEntryBlock().begin());
   return tmp.CreateAlloca(Type::getInt64Ty(TheContext), 0, VarName);
 }
 
-} // end anonymous namespace for code generator data and functions
+} // namespace
 
 /********************* codegen() routines ************************/
 
-std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
+std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis *analysis,
                                                   std::string programName) {
   LOG_S(1) << "Generating code for program " << programName;
 
   // Create module to hold generated code
   auto TheModule = std::make_shared<Module>(programName, TheContext);
 
-  // Set the default target triple for this platform
-  llvm:Triple targetTriple(llvm::sys::getProcessTriple());
+// Set the default target triple for this platform
+llvm:
+  Triple targetTriple(llvm::sys::getProcessTriple());
   TheModule->setTargetTriple(targetTriple.str());
 
   // Initialize nop declaration
@@ -252,8 +256,8 @@ std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
 
       auto formals = fn->getFormals();
       std::vector<std::string> names;
-      std::transform(formals.begin(), formals.end(), 
-                     std::back_inserter(names), [](auto& d){return d->getName();});
+      std::transform(formals.begin(), formals.end(), std::back_inserter(names),
+                     [](auto &d) { return d->getName(); });
       functionFormalNames[fn->getName()] = names;
     }
 
@@ -336,7 +340,8 @@ std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
         "_tip_num_inputs");
 
     // create global _tip_input_array with up to numTIPArgs of Int64
-    auto *inputArrayType = ArrayType::get(Type::getInt64Ty(TheContext), numTIPArgs);
+    auto *inputArrayType =
+        ArrayType::get(Type::getInt64Ty(TheContext), numTIPArgs);
     std::vector<Constant *> zeros(numTIPArgs, zeroV);
     tipInputArray = new GlobalVariable(
         *CurrentModule, inputArrayType, false, llvm::GlobalValue::CommonLinkage,
@@ -344,28 +349,30 @@ std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
   }
 
   // declare the calloc function
-  // the calloc function takes in two ints: the number of items and the size of the items
+  // the calloc function takes in two ints: the number of items and the size of
+  // the items
   std::vector<Type *> twoInt(2, Type::getInt64Ty(TheContext));
   auto *FT = FunctionType::get(Type::getInt8PtrTy(TheContext), twoInt, false);
   callocFun = llvm::Function::Create(FT, llvm::Function::ExternalLinkage,
                                      "calloc", CurrentModule.get());
   callocFun->addFnAttr(llvm::Attribute::NoUnwind);
 
-  callocFun->setAttributes(callocFun->getAttributes().addAttributeAtIndex(callocFun->getContext(), 0, llvm::Attribute::NoAlias));
+  callocFun->setAttributes(callocFun->getAttributes().addAttributeAtIndex(
+      callocFun->getContext(), 0, llvm::Attribute::NoAlias));
 
   /* We create a single unified record structure that is capable of representing
-   * all records in a TIP program.  While wasteful of memory, this approach is 
+   * all records in a TIP program.  While wasteful of memory, this approach is
    * compatible with the limited type checking provided for records in TIP.
    *
    * We refer to this single unified record structure as the "uber record"
    */
   std::vector<Type *> member_values;
   int index = 0;
-  for(auto field : analysis->getSymbolTable()->getFields()){
-      member_values.push_back(IntegerType::getInt64Ty((TheContext)));
-      fieldVector.push_back(field);
-      fieldIndex[field] = index;
-      index++;
+  for (auto field : analysis->getSymbolTable()->getFields()) {
+    member_values.push_back(IntegerType::getInt64Ty((TheContext)));
+    fieldVector.push_back(field);
+    fieldIndex[field] = index;
+    index++;
   }
   uberRecordType = StructType::create(TheContext, member_values, "uberRecord");
   ptrToUberRecordType = PointerType::get(uberRecordType, 0);
@@ -382,12 +389,13 @@ std::shared_ptr<llvm::Module> ASTProgram::codegen(SemanticAnalysis* analysis,
   return TheModule;
 }
 
-llvm::Value* ASTFunction::codegen() {
+llvm::Value *ASTFunction::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   llvm::Function *TheFunction = getFunction(getName());
   if (TheFunction == nullptr) {
-    throw InternalError("failed to declare the function" + getName()); // LCOV_EXCL_LINE
+    throw InternalError("failed to declare the function" +
+                        getName()); // LCOV_EXCL_LINE
   }
 
   // create basic block to hold body of function definition
@@ -404,19 +412,23 @@ llvm::Value* ASTFunction::codegen() {
    */
   if (getName() == "main") {
     int argIdx = 0;
-    // Note that the args are not in the LLVM function decl, so we use the AST formals
+    // Note that the args are not in the LLVM function decl, so we use the AST
+    // formals
     for (auto &argName : functionFormalNames[getName()]) {
       // Create an alloca for this argument and store its value
       AllocaInst *argAlloc = CreateEntryBlockAlloca(TheFunction, argName);
 
       // Emit the GEP instruction to index into input array
       std::vector<Value *> indices;
-      indices.push_back(zeroV); 
+      indices.push_back(zeroV);
       indices.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), argIdx));
-      auto *gep = Builder.CreateInBoundsGEP(tipInputArray->getValueType(), tipInputArray, indices, "inputidx");
+      auto *gep = Builder.CreateInBoundsGEP(tipInputArray->getValueType(),
+                                            tipInputArray, indices, "inputidx");
 
       // Load the value and store it into the arg's alloca
-      auto *inVal = Builder.CreateLoad(gep->getType()->getPointerElementType(), gep, "tipinput" + std::to_string(argIdx++));
+      auto *inVal =
+          Builder.CreateLoad(gep->getType()->getPointerElementType(), gep,
+                             "tipinput" + std::to_string(argIdx++));
       Builder.CreateStore(inVal, argAlloc);
 
       // Record name binding to alloca
@@ -425,7 +437,8 @@ llvm::Value* ASTFunction::codegen() {
   } else {
     for (auto &arg : TheFunction->args()) {
       // Create an alloca for this argument and store its value
-      AllocaInst *argAlloc = CreateEntryBlockAlloca(TheFunction, arg.getName().str());
+      AllocaInst *argAlloc =
+          CreateEntryBlockAlloca(TheFunction, arg.getName().str());
       Builder.CreateStore(&arg, argAlloc);
 
       // Record name binding to alloca
@@ -437,28 +450,30 @@ llvm::Value* ASTFunction::codegen() {
   for (auto const &decl : getDeclarations()) {
     if (decl->codegen() == nullptr) {
       TheFunction->eraseFromParent(); // LCOV_EXCL_LINE
-      throw InternalError("failed to generate bitcode for the function declarations"); // LCOV_EXCL_LINE
+      throw InternalError("failed to generate bitcode for the function "
+                          "declarations"); // LCOV_EXCL_LINE
     }
   }
 
   for (auto &stmt : getStmts()) {
     if (stmt->codegen() == nullptr) {
       TheFunction->eraseFromParent(); // LCOV_EXCL_LINE
-      throw InternalError("failed to generate bitcode for the function statement"); // LCOV_EXCL_LINE
+      throw InternalError("failed to generate bitcode for the function "
+                          "statement"); // LCOV_EXCL_LINE
     }
   }
 
   verifyFunction(*TheFunction);
   return TheFunction;
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
-llvm::Value* ASTNumberExpr::codegen() {
+llvm::Value *ASTNumberExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   return ConstantInt::get(Type::getInt64Ty(TheContext), getValue());
 } // LCOV_EXCL_LINE
 
-llvm::Value* ASTBinaryExpr::codegen() {
+llvm::Value *ASTBinaryExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   Value *L = getLeft()->codegen();
@@ -493,7 +508,7 @@ llvm::Value* ASTBinaryExpr::codegen() {
  * This relies on the fact that TIP programs have been checked to
  * ensure that names obey the scope rules.
  */
-llvm::Value* ASTVariableExpr::codegen() {
+llvm::Value *ASTVariableExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   auto nv = NamedValues.find(getName());
@@ -501,7 +516,8 @@ llvm::Value* ASTVariableExpr::codegen() {
     if (lValueGen) {
       return NamedValues[nv->first];
     } else {
-      return Builder.CreateLoad(nv->second->getAllocatedType(), nv->second, getName().c_str());
+      return Builder.CreateLoad(nv->second->getAllocatedType(), nv->second,
+                                getName().c_str());
     }
   }
 
@@ -513,7 +529,7 @@ llvm::Value* ASTVariableExpr::codegen() {
   return ConstantInt::get(Type::getInt64Ty(TheContext), fidx->second);
 }
 
-llvm::Value* ASTInputExpr::codegen() {
+llvm::Value *ASTInputExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   if (inputIntrinsic == nullptr) {
@@ -534,7 +550,7 @@ llvm::Value* ASTInputExpr::codegen() {
  * The function name values and table are setup in a shallow-pass over
  * functions performed during codegen for the Program.
  */
-llvm::Value* ASTFunAppExpr::codegen() {
+llvm::Value *ASTFunAppExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   /*
@@ -551,27 +567,31 @@ llvm::Value* ASTFunAppExpr::codegen() {
    * pointer to be called.
    */
   std::vector<Value *> indices;
-  indices.push_back(zeroV); 
+  indices.push_back(zeroV);
   indices.push_back(funVal);
 
-  auto *gep = Builder.CreateInBoundsGEP(tipFTable->getValueType(), tipFTable, indices, "ftableidx");
+  auto *gep = Builder.CreateInBoundsGEP(tipFTable->getValueType(), tipFTable,
+                                        indices, "ftableidx");
 
   // Load the function pointer
-  auto *genericFunPtr = Builder.CreateLoad(gep->getType()->getPointerElementType(), gep, "genfptr");
+  auto *genericFunPtr = Builder.CreateLoad(
+      gep->getType()->getPointerElementType(), gep, "genfptr");
 
   /*
    * Compute the specific function pointer type based on the actual parameter
    * list.
    *
-   * TBD: Currently the type is Int64^N -> Int64, * where N is the length of the list
+   * TBD: Currently the type is Int64^N -> Int64, * where N is the length of the
+   * list
    *
    * Once type information is available we will need to iterate the actuals
    * and construct the per actual vector of types.
    */
-  std::vector<Type *> actualTypes(getActuals().size(), Type::getInt64Ty(TheContext));
-  auto *funType = FunctionType::get(Type::getInt64Ty(TheContext), actualTypes, false);
+  std::vector<Type *> actualTypes(getActuals().size(),
+                                  Type::getInt64Ty(TheContext));
+  auto *funType =
+      FunctionType::get(Type::getInt64Ty(TheContext), actualTypes, false);
   auto *funPtrType = PointerType::get(funType, 0);
-
 
   // Bitcast the function pointer to the call-site determined function type
   auto *castFunPtr =
@@ -582,7 +602,8 @@ llvm::Value* ASTFunAppExpr::codegen() {
   for (auto const &arg : getActuals()) {
     Value *argVal = arg->codegen();
     if (argVal == nullptr) {
-      throw InternalError("failed to generate bitcode for the argument"); // LCOV_EXCL_LINE
+      throw InternalError(
+          "failed to generate bitcode for the argument"); // LCOV_EXCL_LINE
     }
     argsV.push_back(argVal);
   }
@@ -593,17 +614,18 @@ llvm::Value* ASTFunAppExpr::codegen() {
 /* 'alloc' Allocate expression
  * Generates a pointer to the allocs arguments (ints, records, ...)
  */
-llvm::Value* ASTAllocExpr::codegen() {
+llvm::Value *ASTAllocExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   allocFlag = true;
   Value *argVal = getInitializer()->codegen();
   allocFlag = false;
   if (argVal == nullptr) {
-    throw InternalError("failed to generate bitcode for the initializer of the alloc expression");
+    throw InternalError("failed to generate bitcode for the initializer of the "
+                        "alloc expression");
   }
-  
-  //Allocate an int pointer with calloc
+
+  // Allocate an int pointer with calloc
   std::vector<Value *> twoArg;
   twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 1));
   twoArg.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), 8));
@@ -617,7 +639,7 @@ llvm::Value* ASTAllocExpr::codegen() {
                                 "allocIntVal");
 }
 
-llvm::Value* ASTNullExpr::codegen() {
+llvm::Value *ASTNullExpr::codegen() {
   auto *nullPtr = ConstantPointerNull::get(Type::getInt64PtrTy(TheContext));
   return Builder.CreatePtrToInt(nullPtr, Type::getInt64Ty(TheContext),
                                 "nullPtrIntVal");
@@ -626,10 +648,10 @@ llvm::Value* ASTNullExpr::codegen() {
 /* '&' address of expression
  *
  * The argument must be capable of generating an l-value.
- * This is checked in the weeding pass.  
+ * This is checked in the weeding pass.
  *
  */
-llvm::Value* ASTRefExpr::codegen() {
+llvm::Value *ASTRefExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   lValueGen = true;
@@ -640,8 +662,9 @@ llvm::Value* ASTRefExpr::codegen() {
     throw InternalError("could not generate l-value for address of");
   }
 
-  return Builder.CreatePtrToInt(lValue, Type::getInt64Ty(TheContext), "addrOfPtr");
-}  // LCOV_EXCL_LINE
+  return Builder.CreatePtrToInt(lValue, Type::getInt64Ty(TheContext),
+                                "addrOfPtr");
+} // LCOV_EXCL_LINE
 
 /* '*' dereference expression
  *
@@ -650,7 +673,7 @@ llvm::Value* ASTRefExpr::codegen() {
  * Consequently, we convert the value with "inttoptr" before loading
  * the value at the pointed-to memory location.
  */
-llvm::Value* ASTDeRefExpr::codegen() {
+llvm::Value *ASTDeRefExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   bool isLValue = lValueGen;
@@ -659,21 +682,23 @@ llvm::Value* ASTDeRefExpr::codegen() {
     // This flag is reset here so that sub-expressions are treated as r-values
     lValueGen = false;
   }
- 
+
   Value *argVal = getPtr()->codegen();
   if (argVal == nullptr) {
     throw InternalError("failed to generate bitcode for the pointer");
   }
 
   // compute the address
-  Value *address = Builder.CreateIntToPtr(argVal, Type::getInt64PtrTy(TheContext), "ptrIntVal");
+  Value *address = Builder.CreateIntToPtr(
+      argVal, Type::getInt64PtrTy(TheContext), "ptrIntVal");
 
   if (isLValue) {
     // For an l-value, return the address
     return address;
   } else {
     // For an r-value, return the value at the address
-    return Builder.CreateLoad(address->getType()->getPointerElementType(), address, "valueAt");
+    return Builder.CreateLoad(address->getType()->getPointerElementType(),
+                              address, "valueAt");
   }
 }
 
@@ -681,55 +706,65 @@ llvm::Value* ASTDeRefExpr::codegen() {
  *
  * Builds an instance of the UberRecord using the declared fields
  */
-llvm::Value* ASTRecordExpr::codegen() {
+llvm::Value *ASTRecordExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
-  //If this is an alloc, we calloc the record
-  if(allocFlag){
-    //Allocate the a pointer to an uber record
+  // If this is an alloc, we calloc the record
+  if (allocFlag) {
+    // Allocate the a pointer to an uber record
     auto *allocaRecord = Builder.CreateAlloca(ptrToUberRecordType);
 
     // Use Builder to create the calloc call using pre-defined callocFun
-    auto sizeOfUberRecord = CurrentModule->getDataLayout().getStructLayout(uberRecordType)->getSizeInBytes();
+    auto sizeOfUberRecord = CurrentModule->getDataLayout()
+                                .getStructLayout(uberRecordType)
+                                ->getSizeInBytes();
     std::vector<Value *> callocArgs;
-    callocArgs.push_back(oneV); 
-    callocArgs.push_back(ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
+    callocArgs.push_back(oneV);
+    callocArgs.push_back(
+        ConstantInt::get(Type::getInt64Ty(TheContext), sizeOfUberRecord));
     auto *calloc = Builder.CreateCall(callocFun, callocArgs, "callocedPtr");
 
-    //Bitcast the calloc call to theStruct Type
-    auto recordPtr = Builder.CreatePointerCast(calloc, ptrToUberRecordType, "recordCalloc");
+    // Bitcast the calloc call to theStruct Type
+    auto recordPtr =
+        Builder.CreatePointerCast(calloc, ptrToUberRecordType, "recordCalloc");
 
-    //Store the ptr to the record in the record alloc
+    // Store the ptr to the record in the record alloc
     Builder.CreateStore(recordPtr, allocaRecord);
 
-    //Load allocaRecord
-    auto loadInst = Builder.CreateLoad(ptrToUberRecordType,allocaRecord);
+    // Load allocaRecord
+    auto loadInst = Builder.CreateLoad(ptrToUberRecordType, allocaRecord);
 
-    //For each field, generate GEP for location of field in the uberRecord
-    //Generate the code for the field and store it in the GEP
-    for(auto const &field : getFields()){
-        auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst, fieldIndex[field->getField()], field->getField());
-        auto value = field->codegen();
-        Builder.CreateStore(value, gep);
-    }
-
-  //Return int64 pointer to the pointer to the record
-  return Builder.CreatePtrToInt(recordPtr, Type::getInt64Ty(TheContext), "recordPtr");
-  }
-  else{
-    //Allocate a the space for a uber record
-    auto *allocaRecord = Builder.CreateAlloca(uberRecordType);
-
-    //Codegen the fields present in this record and store them in the appropriate location
-    //We do not give a value to fields that are not explictly set. Thus, accessing them is
-    //undefined behavior
-    for(auto const &field : getFields()){
-      auto *gep = Builder.CreateStructGEP(allocaRecord->getAllocatedType(), allocaRecord, fieldIndex[field->getField()], field->getField());
+    // For each field, generate GEP for location of field in the uberRecord
+    // Generate the code for the field and store it in the GEP
+    for (auto const &field : getFields()) {
+      auto *gep = Builder.CreateStructGEP(uberRecordType, loadInst,
+                                          fieldIndex[field->getField()],
+                                          field->getField());
       auto value = field->codegen();
       Builder.CreateStore(value, gep);
     }
-    //Return int64 pointer to the record since all variables are pointers to ints
-    return Builder.CreatePtrToInt(allocaRecord, Type::getInt64Ty(TheContext), "record");
+
+    // Return int64 pointer to the pointer to the record
+    return Builder.CreatePtrToInt(recordPtr, Type::getInt64Ty(TheContext),
+                                  "recordPtr");
+  } else {
+    // Allocate a the space for a uber record
+    auto *allocaRecord = Builder.CreateAlloca(uberRecordType);
+
+    // Codegen the fields present in this record and store them in the
+    // appropriate location We do not give a value to fields that are not
+    // explictly set. Thus, accessing them is undefined behavior
+    for (auto const &field : getFields()) {
+      auto *gep = Builder.CreateStructGEP(
+          allocaRecord->getAllocatedType(), allocaRecord,
+          fieldIndex[field->getField()], field->getField());
+      auto value = field->codegen();
+      Builder.CreateStore(value, gep);
+    }
+    // Return int64 pointer to the record since all variables are pointers to
+    // ints
+    return Builder.CreatePtrToInt(allocaRecord, Type::getInt64Ty(TheContext),
+                                  "record");
   }
 }
 
@@ -737,7 +772,7 @@ llvm::Value* ASTRecordExpr::codegen() {
  *
  * Expression for generating the code for the value of a field
  */
-llvm::Value* ASTFieldExpr::codegen() {
+llvm::Value *ASTFieldExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   return this->getInitializer()->codegen();
@@ -748,47 +783,49 @@ llvm::Value* ASTFieldExpr::codegen() {
  * In an l-value context this returns the location of the field being accessed
  * In an r-value context this returns the value of the field being accessed
  */
-llvm::Value* ASTAccessExpr::codegen() {
+llvm::Value *ASTAccessExpr::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   bool isLValue = lValueGen;
 
   if (isLValue) {
-      // This flag is reset here so that sub-expressions are treated as r-values
-      lValueGen = false;
+    // This flag is reset here so that sub-expressions are treated as r-values
+    lValueGen = false;
   }
 
-  //Get current field and check if it exists
+  // Get current field and check if it exists
   auto currField = this->getField();
-  if(fieldIndex.count(currField) == 0){
+  if (fieldIndex.count(currField) == 0) {
     throw InternalError("This field doesn't exist");
   }
 
-  //Generate record instruction address
+  // Generate record instruction address
   Value *recordVal = this->getRecord()->codegen();
   Value *recordAddress = Builder.CreateIntToPtr(recordVal, ptrToUberRecordType);
 
-  //Generate the field index
+  // Generate the field index
   auto index = fieldIndex[currField];
 
-  //Generate the location of the field
-  auto *gep = Builder.CreateStructGEP(uberRecordType, recordAddress, index, currField);
+  // Generate the location of the field
+  auto *gep =
+      Builder.CreateStructGEP(uberRecordType, recordAddress, index, currField);
 
-  //If LHS, return location of field
-  if(isLValue){
+  // If LHS, return location of field
+  if (isLValue) {
     return gep;
   }
 
-  //Load value at GEP and return it
+  // Load value at GEP and return it
   auto fieldLoad = Builder.CreateLoad(IntegerType::getInt64Ty(TheContext), gep);
-  return Builder.CreatePtrToInt(fieldLoad, Type::getInt64Ty(TheContext), "fieldAccess");
+  return Builder.CreatePtrToInt(fieldLoad, Type::getInt64Ty(TheContext),
+                                "fieldAccess");
 }
 
-llvm::Value* ASTDeclNode::codegen() {
+llvm::Value *ASTDeclNode::codegen() {
   throw InternalError("Declarations do not emit code");
 }
 
-llvm::Value* ASTDeclStmt::codegen() {
+llvm::Value *ASTDeclStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   // The LLVM builder records the function we are currently generating
@@ -809,9 +846,9 @@ llvm::Value* ASTDeclStmt::codegen() {
 
   // Return the body computation.
   return localAlloca;
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
-llvm::Value* ASTAssignStmt::codegen() {
+llvm::Value *ASTAssignStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   // trigger code generation for l-value expressions
@@ -820,18 +857,20 @@ llvm::Value* ASTAssignStmt::codegen() {
   lValueGen = false;
 
   if (lValue == nullptr) {
-    throw InternalError("failed to generate bitcode for the lhs of the assignment");
+    throw InternalError(
+        "failed to generate bitcode for the lhs of the assignment");
   }
 
   Value *rValue = getRHS()->codegen();
   if (rValue == nullptr) {
-    throw InternalError("failed to generate bitcode for the rhs of the assignment");
+    throw InternalError(
+        "failed to generate bitcode for the rhs of the assignment");
   }
 
   return Builder.CreateStore(rValue, lValue);
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
-llvm::Value* ASTBlockStmt::codegen() {
+llvm::Value *ASTBlockStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   Value *lastStmt = nullptr;
@@ -842,7 +881,7 @@ llvm::Value* ASTBlockStmt::codegen() {
 
   // If the block was empty return a nop
   return (lastStmt == nullptr) ? Builder.CreateCall(nop) : lastStmt;
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
 /*
  * The code generated for an WhileStmt looks like this:
@@ -861,7 +900,7 @@ llvm::Value* ASTBlockStmt::codegen() {
  * is generated into a basic block since it will be branched to after the
  * body executes.
  */
-llvm::Value* ASTWhileStmt::codegen() {
+llvm::Value *ASTWhileStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
@@ -892,11 +931,13 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *CondV = getCondition()->codegen();
     if (CondV == nullptr) {
-      throw InternalError("failed to generate bitcode for the conditional"); // LCOV_EXCL_LINE
+      throw InternalError(
+          "failed to generate bitcode for the conditional"); // LCOV_EXCL_LINE
     }
 
     // Convert condition to a bool by comparing non-equal to 0.
-    CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0), "loopcond");
+    CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0),
+                                 "loopcond");
 
     Builder.CreateCondBr(CondV, BodyBB, ExitBB);
   }
@@ -908,7 +949,8 @@ llvm::Value* ASTWhileStmt::codegen() {
 
     Value *BodyV = getBody()->codegen();
     if (BodyV == nullptr) {
-      throw InternalError("failed to generate bitcode for the loop body"); // LCOV_EXCL_LINE
+      throw InternalError(
+          "failed to generate bitcode for the loop body"); // LCOV_EXCL_LINE
     }
 
     Builder.CreateBr(HeaderBB);
@@ -918,7 +960,7 @@ llvm::Value* ASTWhileStmt::codegen() {
   TheFunction->getBasicBlockList().push_back(ExitBB);
   Builder.SetInsertPoint(ExitBB);
   return Builder.CreateCall(nop);
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
 /*
  * The code generated for an IfStmt looks like this:
@@ -935,16 +977,18 @@ llvm::Value* ASTWhileStmt::codegen() {
  * the insertion point, and then letting other codegen functions write
  * code at that insertion point.
  */
-llvm::Value* ASTIfStmt::codegen() {
+llvm::Value *ASTIfStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   Value *CondV = getCondition()->codegen();
   if (CondV == nullptr) {
-    throw InternalError("failed to generate bitcode for the condition of the if statement");
+    throw InternalError(
+        "failed to generate bitcode for the condition of the if statement");
   }
 
   // Convert condition to a bool by comparing non-equal to 0.
-  CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0), "ifcond");
+  CondV = Builder.CreateICmpNE(CondV, ConstantInt::get(CondV->getType(), 0),
+                               "ifcond");
 
   llvm::Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -974,7 +1018,8 @@ llvm::Value* ASTIfStmt::codegen() {
 
     Value *ThenV = getThen()->codegen();
     if (ThenV == nullptr) {
-      throw InternalError("failed to generate bitcode for the then block"); // LCOV_EXCL_LINE
+      throw InternalError(
+          "failed to generate bitcode for the then block"); // LCOV_EXCL_LINE
     }
 
     Builder.CreateBr(MergeBB);
@@ -990,7 +1035,8 @@ llvm::Value* ASTIfStmt::codegen() {
     if (getElse() != nullptr) {
       ElseV = getElse()->codegen();
       if (ElseV == nullptr) {
-        throw InternalError("failed to generate bitcode for the else block"); // LCOV_EXCL_LINE
+        throw InternalError(
+            "failed to generate bitcode for the else block"); // LCOV_EXCL_LINE
       }
     } else {
       Builder.CreateCall(nop);
@@ -1003,9 +1049,9 @@ llvm::Value* ASTIfStmt::codegen() {
   TheFunction->getBasicBlockList().push_back(MergeBB);
   Builder.SetInsertPoint(MergeBB);
   return Builder.CreateCall(nop);
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
-llvm::Value* ASTOutputStmt::codegen() {
+llvm::Value *ASTOutputStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   if (outputIntrinsic == nullptr) {
@@ -1018,7 +1064,8 @@ llvm::Value* ASTOutputStmt::codegen() {
 
   Value *argVal = getArg()->codegen();
   if (argVal == nullptr) {
-    throw InternalError("failed to generate bitcode for the argument of the output statement");
+    throw InternalError(
+        "failed to generate bitcode for the argument of the output statement");
   }
 
   std::vector<Value *> ArgsV(1, argVal);
@@ -1026,7 +1073,7 @@ llvm::Value* ASTOutputStmt::codegen() {
   return Builder.CreateCall(outputIntrinsic, ArgsV);
 }
 
-llvm::Value* ASTErrorStmt::codegen() {
+llvm::Value *ASTErrorStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   if (errorIntrinsic == nullptr) {
@@ -1038,7 +1085,8 @@ llvm::Value* ASTErrorStmt::codegen() {
 
   Value *argVal = getArg()->codegen();
   if (argVal == nullptr) {
-    throw InternalError("failed to generate bitcode for the argument of the error statement");
+    throw InternalError(
+        "failed to generate bitcode for the argument of the error statement");
   }
 
   std::vector<Value *> ArgsV(1, argVal);
@@ -1046,7 +1094,7 @@ llvm::Value* ASTErrorStmt::codegen() {
   return Builder.CreateCall(errorIntrinsic, ArgsV);
 }
 
-llvm::Value* ASTReturnStmt::codegen() {
+llvm::Value *ASTReturnStmt::codegen() {
   LOG_S(1) << "Generating code for " << *this;
 
   Value *argVal = getArg()->codegen();

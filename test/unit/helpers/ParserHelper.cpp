@@ -1,18 +1,20 @@
 #include "ParserHelper.h"
+#include "ConsoleErrorListener.h"
+#include "antlr4-runtime.h"
 #include <TIPLexer.h>
 #include <TIPParser.h>
-#include "antlr4-runtime.h"
-#include "ConsoleErrorListener.h"
 
 // Handle parse errors
 class ErrorListener : public antlr4::BaseErrorListener {
   std::shared_ptr<bool> error;
+
 public:
   ErrorListener(std::shared_ptr<bool> e) : error(e) {}
 
-  void syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol,
-                   size_t line, size_t charPositionInLine,
-                   const std::string &msg, std::exception_ptr e) {
+  void syntaxError(antlr4::Recognizer *recognizer,
+                   antlr4::Token *offendingSymbol, size_t line,
+                   size_t charPositionInLine, const std::string &msg,
+                   std::exception_ptr e) {
     *error = true;
   }
 };
@@ -44,6 +46,5 @@ std::string ParserHelper::parsetree(std::istream &stream) {
   TIPParser parser(&tokens);
   TIPParser::ProgramContext *tree = parser.program();
   // Return printed string
-  return tree->toStringTree(&parser,false);
+  return tree->toStringTree(&parser, false);
 }
-

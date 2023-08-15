@@ -2,20 +2,21 @@
 #include "ASTVisitor.h"
 #include "ASTinternal.h"
 
-ASTFunAppExpr::ASTFunAppExpr(std::shared_ptr<ASTExpr> FUN, std::vector<std::shared_ptr<ASTExpr>> ACTUALS) {
+ASTFunAppExpr::ASTFunAppExpr(std::shared_ptr<ASTExpr> FUN,
+                             std::vector<std::shared_ptr<ASTExpr>> ACTUALS) {
   this->FUN = FUN;
 
-  for(auto &actual : ACTUALS) {
+  for (auto &actual : ACTUALS) {
     std::shared_ptr<ASTExpr> a = actual;
     this->ACTUALS.push_back(a);
   }
 }
 
-std::vector<ASTExpr*> ASTFunAppExpr::getActuals() const {
+std::vector<ASTExpr *> ASTFunAppExpr::getActuals() const {
   return rawRefs(ACTUALS);
 }
 
-void ASTFunAppExpr::accept(ASTVisitor * visitor) {
+void ASTFunAppExpr::accept(ASTVisitor *visitor) {
   if (visitor->visit(this)) {
     getFunction()->accept(visitor);
     for (auto a : getActuals()) {
@@ -25,7 +26,7 @@ void ASTFunAppExpr::accept(ASTVisitor * visitor) {
   visitor->endVisit(this);
 }
 
-std::ostream& ASTFunAppExpr::print(std::ostream &out) const {
+std::ostream &ASTFunAppExpr::print(std::ostream &out) const {
   out << *getFunction() << "(";
   bool skip = true;
   for (auto &arg : getActuals()) {
@@ -38,7 +39,7 @@ std::ostream& ASTFunAppExpr::print(std::ostream &out) const {
   }
   out << ")";
   return out;
-}  // LCOV_EXCL_LINE
+} // LCOV_EXCL_LINE
 
 std::vector<std::shared_ptr<ASTNode>> ASTFunAppExpr::getChildren() {
   std::vector<std::shared_ptr<ASTNode>> children;
