@@ -85,7 +85,7 @@ $(function() {
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <a class="code" href="classSyntaxTree.html#a4ac33146056cbcd281763410bd514637">SyntaxTree</a>(std::shared_ptr&lt;ASTNode&gt; node);</div>
 <div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classSyntaxTree.html#a483f022f28824b8c91d34e650c9ab50a">   20</a></span>&#160;  <a class="code" href="classSyntaxTree.html#a483f022f28824b8c91d34e650c9ab50a">~SyntaxTree</a>();</div>
 <div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classSyntaxTree.html#ae0fe2673b65764a888ab29e9a33845c2">   21</a></span>&#160;  <a class="code" href="classSyntaxTree.html#ae0fe2673b65764a888ab29e9a33845c2">SyntaxTree</a>(<a class="code" href="classSyntaxTree.html">SyntaxTree</a> <span class="keyword">const</span> &amp;tree);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <a class="code" href="classSyntaxTree.html">SyntaxTree</a> &amp; <a class="code" href="classSyntaxTree.html#aa4a4ae7e33ee4466a94f8d1291714f2a">operator=</a>(<a class="code" href="classSyntaxTree.html">SyntaxTree</a> <span class="keyword">const</span> &amp;tree);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <a class="code" href="classSyntaxTree.html">SyntaxTree</a> &amp;<a class="code" href="classSyntaxTree.html#aa4a4ae7e33ee4466a94f8d1291714f2a">operator=</a>(<a class="code" href="classSyntaxTree.html">SyntaxTree</a> <span class="keyword">const</span> &amp;tree);</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <a class="code" href="classIterator.html">Iterator</a> <a class="code" href="classSyntaxTree.html#a6acfab95d05aaab94d5e1a3086dbc1cb">begin</a>(std::string <span class="keyword">const</span> &amp;order);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
@@ -93,20 +93,15 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <a class="code" href="classIterator.html">Iterator</a> <a class="code" href="classSyntaxTree.html#ab51fc01c79229cec1dafc10bb3b1e126">end</a>(std::string <span class="keyword">const</span> &amp;order);</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  std::shared_ptr&lt;ASTNode&gt; <a class="code" href="classSyntaxTree.html#a818fd198ba463be17ac86ee5967e1d08">getRoot</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classSyntaxTree.html#a034eacd68e8c222dad60f2ebb9b95a38">accept</a>(<a class="code" href="classASTVisitor.html">ASTVisitor</a> * visitor);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  std::vector&lt;SyntaxTree&gt; <a class="code" href="classSyntaxTree.html#afad5b32286edc14712a15a78e7ff9ac4">getSubtrees</a>();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  std::shared_ptr&lt;ASTNode&gt; root;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  std::shared_ptr&lt;ASTNode&gt; <a class="code" href="classSyntaxTree.html#a818fd198ba463be17ac86ee5967e1d08">getRoot</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classSyntaxTree.html#a034eacd68e8c222dad60f2ebb9b95a38">accept</a>(<a class="code" href="classASTVisitor.html">ASTVisitor</a> *visitor);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  std::vector&lt;SyntaxTree&gt; <a class="code" href="classSyntaxTree.html#afad5b32286edc14712a15a78e7ff9ac4">getSubtrees</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  std::shared_ptr&lt;ASTNode&gt; root;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;};</div>
 <div class="ttc" id="aASTNode_8h_html"><div class="ttname"><a href="ASTNode_8h.html">ASTNode.h</a></div></div>
 <div class="ttc" id="aclassASTVisitor_html"><div class="ttname"><a href="classASTVisitor.html">ASTVisitor</a></div><div class="ttdoc">Base class for AST visitors.</div><div class="ttdef"><b>Definition:</b> ASTVisitor.h:23</div></div>
 <div class="ttc" id="aclassIterator_html"><div class="ttname"><a href="classIterator.html">Iterator</a></div><div class="ttdoc">The client-facing iterator interface.</div><div class="ttdef"><b>Definition:</b> Iterator.h:15</div></div>

@@ -198,6 +198,11 @@ CLion</h3>
 Log Messages</h3>
 <p>When working on the tipc compiler, it may be helpful to enable logging messages when testing your changes on programs. We have inserted logging messages using loguru. These can be turned using the flag <code>--verbose [x]</code> where x is a number between 1-3. These messages get more verbose as you increase x. The first setting shows when symbols are added to the symbol table and when type constraints are generated for the type solver. The second setting shows the previous information and type constraints being unified. The third setting shows types being search for and added into the type graph. When adding to theses features, you can add logging messages by adding a line <code>LOG_S(x)</code> where x is an integer to describe the level of log verbosity you want. You can use the existing levels or make new levels.</p>
 <h2><a class="anchor" id="autotoc_md13"></a>
+Code Style</h2>
+<p>tipc follows <a href="https://llvm.org/docs/CodingStandards.html#llvm-coding-standards">llvm coding standards</a>. <code>clang-format</code> is used to apply the llvm style rules. The following command can be used to apply the llvm style across the tipc <code>src</code> directory. </p><div class="fragment"><div class="line">find src -iname *.h -o -iname *.cpp | xargs clang-format -style=llvm -i</div>
+</div><!-- fragment --><p>Using <a href="https://pre-commit.com/">pre-commit</a> we can enforce styling before each commit. This is encourged to keep a uniform style across the codebase. Install pre-commit by following the <a href="https://pre-commit.com/#installation">instructions</a> in their documentation. Then, install the tipc hooks by running, </p><div class="fragment"><div class="line">pre-commit install</div>
+</div><!-- fragment --><p>Now, <code>c++</code> and <code>cmake</code> formatting will be checked before each commit.</p>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Documentation</h2>
 <p>The TIP grammar, <a href="./tipg4/TIP.g4">tipg4</a>, is implemented using ANTLR4. This grammar is free of any semantic actions, though it does use ANTLR4 rule features which allow for control over the tree visitors that form key parts of the compiler. This allows the structure of the grammar to remain relatively clean, i.e., no grammar factoring or stratification needed. <br  />
 </p>
@@ -209,7 +214,7 @@ Documentation</h2>
 </ul>
 <p>Doxygen <a href="https://matthewbdwyer.github.io/tipc">documentation</a> for the project is available for the project. The documentation is a work in progress and will improve over time.</p>
 <p>The <code>tipc</code> driver program only produces a bitcode file, <code>.bc</code>. You need to link it with the <a href="./rtlib/tip_rtlib.c">runtime library</a> which define the processing of command line arguments, which is non-trivial for TIP, establish necessary runtime structures, and implement IO routines. A <a href="./bin/build.sh">script</a> is available to link binaries compiled by <code>tipc</code> with the runtime library.</p>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Goals and Plans</h2>
 <p>The goal of this project is to provide a starting point for project work in an undergraduate compilers course. As such it similar to lots of other compiler projects, but there are some differences.</p>
 <p>First and foremost, the TIP language includes a number of rich features, e.g., high-order functions, and type inference, and the <code>tipc</code> compiler targets LLVM - a key component of a production compiler infrastructure. These choices are intentional and while they create some challenges the project is intended to help demystify complex language features, e.g., parametric polymorphism, by illustrating how they can be realized.</p>
@@ -219,7 +224,7 @@ Goals and Plans</h2>
 <p>Finally, the project is implemented in C++17 using modern features. For example, all memory allocation uses smart pointers, we use unique pointers where possible and shared pointers as well, to realize the <a href="https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization">RAII</a> pattern. Again this presents some challenges, but addressing them is illustrated in the <code>tipc</code> code base and hopefully they provide a good example for students. <br  />
 </p>
 <p>The project is a work-in-progress in the sense that we are planning to perform corrective maintenance, as needed, as well as perfective maintenance. For the latter, we expect to make a new release of the project in early August every year. This release will focus on improving the use of modern C++ and to incorporate better design principles, patterns, and practices. We welcome issue reports and pull-requests along these lines.</p>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Differences from TIP and Limitations</h2>
 <p>Other than issues related to the efficiency of the code that it generates, the <code>tipc</code> compiler has two limitations.</p>
 <p><code>tipc</code> supports a variant of the TIP language semantics in a few ways. It implements the <code>!=</code> operator which allows us to conveniently write self-contained system tests and it implements the <a href="https://en.cppreference.com/w/c/language/operator_precedence">C operator precedence rules</a>, whereas the original TIP uses a few different rules. This surfaces in the interplay between pointer dereference and field access. An expression <code>*r.f</code> is interpreted as <code>*(r.f)</code> according t the C precedence rules and as <code>(*r).f</code> according to the <a href="https://github.com/cs-au-dk/TIP">TIP Scala</a> implementation. If in doubt, add parentheses to express your meaning.</p>
@@ -278,43 +283,43 @@ Differences from TIP and Limitations</h2>
 </div><!-- fragment --><p> We can find that this program will not create a memory leak because rec will be allocated on the stack instead of the heap as the alloc would. <br  />
 </p>
 <p>Incorporating a garbage collector is a possible future extension to the runtime library.</p>
-<h2><a class="anchor" id="autotoc_md16"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Resources</h2>
 <p>To fully understand this project quite a bit of background is required. We collect a number of resources that we think can be helpful in that regard.</p>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md18"></a>
 C++ Resources</h3>
 <p>If you find yourself unfamiliar with certain aspects of the C++ programming language we encourage you to explore the <em>Back To Basics</em> videos that have been presented at <a href="https://cppcon.org/">CppCon</a>. Provided below are links to a number of these videos, as well as to other resources that are relevant to this project.</p>
-<h4><a class="anchor" id="autotoc_md18"></a>
+<h4><a class="anchor" id="autotoc_md19"></a>
 Move Semantics</h4>
 <ul>
 <li><a href="https://youtu.be/St0MNEU5b0o">Move Semantics (part 1 of 2)</a></li>
 <li><a href="https://youtu.be/pIzaZbKUw2s">Move Semantics (part 2 of 2)</a></li>
 </ul>
-<h4><a class="anchor" id="autotoc_md19"></a>
+<h4><a class="anchor" id="autotoc_md20"></a>
 Value Categories</h4>
 <ul>
 <li><a href="https://youtu.be/XS2JddPq7GQ">Understanding Value Categories</a></li>
 <li><a href="https://www.stroustrup.com/terminology.pdf">“New” Value Terminology</a></li>
 </ul>
-<h4><a class="anchor" id="autotoc_md20"></a>
+<h4><a class="anchor" id="autotoc_md21"></a>
 Smart pointers</h4>
 <ul>
 <li><a href="https://youtu.be/xGDLkt-jBJ4">Smart Pointers</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md21"></a>
+<h3><a class="anchor" id="autotoc_md22"></a>
 CMake Resources</h3>
 <ul>
 <li><a href="https://cmake.org/cmake/help/v3.7/">CMake docs</a></li>
 <li><a href="https://youtu.be/y7ndUhdQuU8">More Modern CMake</a></li>
 <li><a href="https://youtu.be/y9kSr5enrSk">Oh No! More Modern CMake</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md22"></a>
+<h3><a class="anchor" id="autotoc_md23"></a>
 Catch2 and Unit Testing Resources</h3>
 <ul>
 <li><a href="https://github.com/catchorg/Catch2/tree/master/docs">Catch2 docs</a></li>
 <li><a href="https://youtu.be/Ob5_XZrFQH0">Modern C++ Testing with Catch2</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md23"></a>
+<h3><a class="anchor" id="autotoc_md24"></a>
 LLVM Resources</h3>
 <p>To understand this code, and perhaps extend it, you will want to become familiar with the <a href="http://llvm.org/docs/ProgrammersManual.html#the-core-llvm-class-hierarchy-reference">core LLVM classes</a>. It can be difficult to absorb all of the information in this type of documentation just by reading it. A goal-directed strategy where you move back and forth between reading code and reading this documentation seems to work well for many people.</p>
 <p>If you are familiar with the <a href="https://llvm.org/docs/tutorial/">LLVM tutorial</a> you will see its influence on this compiler which leverages idioms, strategies, and code fragments from the tutorial. The LLVM tutorials are a great starting point for understanding the APIs in the context of compiling.</p>
@@ -324,13 +329,13 @@ LLVM Resources</h3>
 <li>someone once told me to just use a search engine to find the LLVM APIs and its a standard use case for me, e.g., I don't remember where the docs are I just search for <code>llvm irbuilder</code></li>
 <li>LLVM has some nuances that take a bit to understand. For instance, the <a href="https://llvm.org/docs/GetElementPtr.html">GEP</a> instruction, which <code>tipc</code> uses quite a bit given that it emits calls through a function table.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md24"></a>
+<h3><a class="anchor" id="autotoc_md25"></a>
 Git Resources</h3>
 <ul>
 <li><a href="https://git-scm.com/book/en/v2">Pro Git Book</a></li>
 <li><a href="https://www.youtube.com/watch?v=1ffBJ4sVUb4">Git For Ages 4 And Up</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md25"></a>
+<h3><a class="anchor" id="autotoc_md26"></a>
 CLion Resources</h3>
 <ul>
 <li><a href="https://www.jetbrains.com/help/clion/using-git-integration.html">Using Git in CLion</a></li>

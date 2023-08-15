@@ -71,26 +71,24 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a href="TipRef_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="TipType_8h.html">TipType.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="TipCons_8h.html">TipCons.h</a>&quot;</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="TipCons_8h.html">TipCons.h</a>&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="TipType_8h.html">TipType.h</a>&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classTipRef.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classTipRef.html">TipRef</a>: <span class="keyword">public</span> <a class="code" href="classTipCons.html">TipCons</a> {</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classTipRef.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classTipRef.html">TipRef</a> : <span class="keyword">public</span> <a class="code" href="classTipCons.html">TipCons</a> {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classTipRef.html#aca02920f1b624e294aa576dbfb8dbbf2">   12</a></span>&#160;    <a class="code" href="classTipRef.html#aca02920f1b624e294aa576dbfb8dbbf2">TipRef</a>() = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classTipRef.html#aca02920f1b624e294aa576dbfb8dbbf2">TipRef</a>(std::shared_ptr&lt;TipType&gt; of);</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classTipRef.html#aca02920f1b624e294aa576dbfb8dbbf2">   12</a></span>&#160;  <a class="code" href="classTipRef.html#aca02920f1b624e294aa576dbfb8dbbf2">TipRef</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;  <a class="code" href="classTipRef.html#aca02920f1b624e294aa576dbfb8dbbf2">TipRef</a>(std::shared_ptr&lt;TipType&gt; of);</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    std::shared_ptr&lt;TipType&gt; <a class="code" href="classTipRef.html#a6ec482597ca2269c95a2224f025dd589">getAddressOfField</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  std::shared_ptr&lt;TipType&gt; <a class="code" href="classTipRef.html#a6ec482597ca2269c95a2224f025dd589">getAddressOfField</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classTipRef.html#a35132bad326cd1ae6cf68ebd9c2a3304">operator==</a>(<span class="keyword">const</span> <a class="code" href="classTipType.html">TipType</a>&amp; other) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classTipRef.html#ae6d0c0a8b79d4e058c05f2bd7ee9b5a1">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classTipType.html">TipType</a>&amp; other) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classTipRef.html#a35132bad326cd1ae6cf68ebd9c2a3304">operator==</a>(<span class="keyword">const</span> <a class="code" href="classTipType.html">TipType</a> &amp;other) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classTipRef.html#ae6d0c0a8b79d4e058c05f2bd7ee9b5a1">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classTipType.html">TipType</a> &amp;other) <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classTipRef.html#a0d7ed04cdf645c263c009d1cbf24af3b">accept</a>(<a class="code" href="classTipTypeVisitor.html">TipTypeVisitor</a> *visitor) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classTipRef.html#a0d7ed04cdf645c263c009d1cbf24af3b">accept</a>(<a class="code" href="classTipTypeVisitor.html">TipTypeVisitor</a> *visitor) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::ostream&amp; <a class="code" href="classTipRef.html#af4dba7dfec3af4fffedfdafbdf625976">print</a>(std::ostream &amp;out) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  std::ostream &amp;<a class="code" href="classTipRef.html#af4dba7dfec3af4fffedfdafbdf625976">print</a>(std::ostream &amp;out) <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="ttc" id="aTipCons_8h_html"><div class="ttname"><a href="TipCons_8h.html">TipCons.h</a></div></div>
 <div class="ttc" id="aTipType_8h_html"><div class="ttname"><a href="TipType_8h.html">TipType.h</a></div></div>
 <div class="ttc" id="aclassTipCons_html"><div class="ttname"><a href="classTipCons.html">TipCons</a></div><div class="ttdoc">Abstract base class for all proper types.</div><div class="ttdef"><b>Definition:</b> TipCons.h:14</div></div>

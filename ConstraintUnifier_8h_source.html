@@ -76,21 +76,19 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="TypeConstraint_8h.html">TypeConstraint.h</a>&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Unifier_8h.html">Unifier.h</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classConstraintUnifier.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classConstraintUnifier.html">ConstraintUnifier</a>: <span class="keyword">public</span> <a class="code" href="classConstraintHandler.html">ConstraintHandler</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classConstraintUnifier.html#ab592d71dcb01027039c352388d77ed2d">handle</a>(std::shared_ptr&lt;TipType&gt; t1, std::shared_ptr&lt;TipType&gt; t2) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classConstraintUnifier.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classConstraintUnifier.html">ConstraintUnifier</a> : <span class="keyword">public</span> <a class="code" href="classConstraintHandler.html">ConstraintHandler</a> {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classConstraintUnifier.html#ab592d71dcb01027039c352388d77ed2d">handle</a>(std::shared_ptr&lt;TipType&gt; t1,</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;              std::shared_ptr&lt;TipType&gt; t2) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classUnifier.html">Unifier</a> unifier;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <a class="code" href="classUnifier.html">Unifier</a> unifier;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
 <div class="ttc" id="aConstraintHandler_8h_html"><div class="ttname"><a href="ConstraintHandler_8h.html">ConstraintHandler.h</a></div></div>
 <div class="ttc" id="aTypeConstraint_8h_html"><div class="ttname"><a href="TypeConstraint_8h.html">TypeConstraint.h</a></div></div>
 <div class="ttc" id="aUnifier_8h_html"><div class="ttname"><a href="Unifier_8h.html">Unifier.h</a></div></div>
 <div class="ttc" id="aclassConstraintHandler_html"><div class="ttname"><a href="classConstraintHandler.html">ConstraintHandler</a></div><div class="ttdoc">Abstract class for handling type constraints as they are generated.</div><div class="ttdef"><b>Definition:</b> ConstraintHandler.h:11</div></div>
-<div class="ttc" id="aclassConstraintUnifier_html"><div class="ttname"><a href="classConstraintUnifier.html">ConstraintUnifier</a></div><div class="ttdoc">A constraint handler to unify constraints on the fly.</div><div class="ttdef"><b>Definition:</b> ConstraintUnifier.h:13</div></div>
+<div class="ttc" id="aclassConstraintUnifier_html"><div class="ttname"><a href="classConstraintUnifier.html">ConstraintUnifier</a></div><div class="ttdoc">A constraint handler to unify constraints on the fly.</div><div class="ttdef"><b>Definition:</b> ConstraintUnifier.h:12</div></div>
 <div class="ttc" id="aclassConstraintUnifier_html_ab592d71dcb01027039c352388d77ed2d"><div class="ttname"><a href="classConstraintUnifier.html#ab592d71dcb01027039c352388d77ed2d">ConstraintUnifier::handle</a></div><div class="ttdeci">void handle(std::shared_ptr&lt; TipType &gt; t1, std::shared_ptr&lt; TipType &gt; t2) override</div><div class="ttdef"><b>Definition:</b> ConstraintUnifier.cpp:3</div></div>
 <div class="ttc" id="aclassUnifier_html"><div class="ttname"><a href="classUnifier.html">Unifier</a></div><div class="ttdoc">Class used to solve type constraints and establish typability.</div><div class="ttdef"><b>Definition:</b> Unifier.h:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
