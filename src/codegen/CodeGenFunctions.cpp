@@ -491,11 +491,17 @@ llvm::Value *ASTBinaryExpr::codegen() {
   } else if (getOp() == "/") {
     return Builder.CreateSDiv(L, R, "divtmp");
   } else if (getOp() == ">") {
-    return Builder.CreateICmpSGT(L, R, "gttmp");
+    auto *cmp = Builder.CreateICmpSGT(L, R, "_gttmp");
+    return Builder.CreateIntCast(cmp, IntegerType::getInt64Ty(TheContext),
+                                 false, "gttmp");
   } else if (getOp() == "==") {
-    return Builder.CreateICmpEQ(L, R, "eqtmp");
+    auto *cmp = Builder.CreateICmpEQ(L, R, "_eqtmp");
+    return Builder.CreateIntCast(cmp, IntegerType::getInt64Ty(TheContext),
+                                 false, "eqtmp");
   } else if (getOp() == "!=") {
-    return Builder.CreateICmpNE(L, R, "netmp");
+    auto *cmp = Builder.CreateICmpNE(L, R, "_neqtmp");
+    return Builder.CreateIntCast(cmp, IntegerType::getInt64Ty(TheContext),
+                                 false, "neqtmp");
   } else {
     throw InternalError("Invalid binary operator: " + OP);
   }

@@ -1,0 +1,14 @@
+main() 
+{
+  var x;
+  x = (42 > 41);
+  return x;
+}
+
+Functions : {
+  main : () -> int
+}
+
+Locals for function main : {
+  x : int
+}

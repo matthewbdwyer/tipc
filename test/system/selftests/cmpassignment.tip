@@ -1,0 +1,5 @@
+main() {
+  var x;
+  x = 42 > 41;
+  return x;
+}

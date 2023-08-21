@@ -17,8 +17,8 @@ header1:                                          ; preds = %body1, %entry
   %f1.0 = phi i64 [ 1, %entry ], [ %f2.0, %body1 ]
   %f2.0 = phi i64 [ 1, %entry ], [ %addtmp, %body1 ]
   %i.0 = phi i64 [ %n, %entry ], [ %subtmp, %body1 ]
-  %gttmp = icmp sgt i64 %i.0, 1
-  br i1 %gttmp, label %body1, label %exit1
+  %_gttmp = icmp sgt i64 %i.0, 1
+  br i1 %_gttmp, label %body1, label %exit1
 
 body1:                                            ; preds = %header1
   %addtmp = add i64 %f2.0, %f1.0
