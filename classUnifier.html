@@ -102,7 +102,6 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a6dd4981cf58fd796699945da343b73b3"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#a6dd4981cf58fd796699945da343b73b3">isCons</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; type)</td></tr>
-<tr class="memdesc:a6dd4981cf58fd796699945da343b73b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a map of unified types.  <a href="classUnifier.html#a6dd4981cf58fd796699945da343b73b3">More...</a><br /></td></tr>
 <tr class="separator:a6dd4981cf58fd796699945da343b73b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69c4361086a8d7c0dbff8fa34a0c4fd0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnifier.html#a69c4361086a8d7c0dbff8fa34a0c4fd0">isMu</a> (std::shared_ptr&lt; <a class="el" href="classTipType.html">TipType</a> &gt; type)</td></tr>
 <tr class="separator:a69c4361086a8d7c0dbff8fa34a0c4fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -285,8 +284,6 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns a map of unified types. </p>
-
 </div>
 </div>
 <a id="a69c4361086a8d7c0dbff8fa34a0c4fd0"></a>
@@ -383,7 +380,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Solve the system of constraints that have presented to this unifier. </p>
-<dl class="section pre"><dt>Precondition</dt><dd>The unifier has been constructed with seed values. That is, we are not unifying on-the-fly. </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>The unifier has been constructed with seed values. Incremental solving can be achieved by adding constraints, via the add method, after solving. This will cause the new constraints to be unified with the currently unified constraints. </dd></dl>
 
 </div>
 </div>
