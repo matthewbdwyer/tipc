@@ -74,7 +74,7 @@ $ echo $TIPCLANG
 /sw/ubuntu-22.04/llvm/14.0.6/bin/clang-14
 ```
 
-To load the `tipc `environment every time you ssh to portal, add the `module
+To load the `tipc` environment every time you ssh to portal, add the `module
 load` command to your `bashrc`.
 ```bash
 echo 'module load ~/tipc/conf/modulefiles/tipc/F23' >> ~/.bashrc
@@ -115,18 +115,19 @@ drop down.
 Select the "+" icon on the "SSH Configurations" page. Fill out the information
 as done in the screenshot below. Note the "Host" field should match the name of
 the entry in your ssh config. We chose the name, "portal", in our initial
-setup. If preferred, you can prevent the connection from being dropped for
-inactivity, by checking the "Send keep-alive messages..." box.  
+setup.   
 
 \image html gateway_ssh_configuration.png
 
-Verify you can establish a connection.
+If preferred, you can prevent the connection from being dropped for inactivity. Under "Connection Parameters" check the "Send keep-alive messages..." box.  
+
+Select "Test Conneection" to verify you can establish a connection.  
 
 \image html gateway_ssh_configuration_connection_success.png
 
-Select "Okay" and return to the "Connect to SSH" page. In the "Connection" drop
-down select the connection you just created. Select "Check Connection and
-Continue".  
+Select "Ok" on the "SSH Configurations" page and return to the "Connect to SSH"
+page. In the "Connection" drop down select the connection you just created.
+Select "Check Connection and Continue".  
 
 \image html gateway_connect_ssh_connection_check_and_continue.png
 
@@ -145,7 +146,7 @@ The `tipc` project will open in the JetBrains client.
 
 The IDE running on portal (that you are connected to) does not source the
 `bashrc` file as your shell does. As such, we need to configure your build
-environment withing CLion.  
+environment within CLion.  
 
 From the "Project Wizard" popup accept the default toolchain by pressing "Next".  
 
@@ -162,6 +163,7 @@ you can configure the default profile appropriately.
 
 Once complete, CLion will index your files and construct build configurations.  
 
+## Running tipc from CLion
 You should now be able to run and debug tipc with the "play" and "debug" icons respectively.  
 
 \image html client_run_debug.png
