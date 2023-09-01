@@ -70,8 +70,8 @@ the `topdir` variable in `conf/modules/tipc/F23` to the actual location of the
 To confirm the module was successfully loaded check the value of the `TIPCLANG`
 environment variable.  
 ```bash
-$ echo $TIPCLANG
-/sw/ubuntu-22.04/llvm/14.0.6/bin/clang-14
+echo $TIPCLANG
+# /sw/ubuntu-22.04/llvm/14.0.6/bin/clang-14
 ```
 
 To load the `tipc` environment every time you ssh to portal, add the `module
@@ -121,7 +121,7 @@ setup.
 
 If preferred, you can prevent the connection from being dropped for inactivity. Under "Connection Parameters" check the "Send keep-alive messages..." box.  
 
-Select "Test Conneection" to verify you can establish a connection.  
+Select "Test Connection" to verify you can establish a connection.  
 
 \image html gateway_ssh_configuration_connection_success.png
 
@@ -150,8 +150,8 @@ environment within CLion.
 
 From the "Project Wizard" popup accept the default toolchain by pressing "Next".  
 
-On the following page, update the default CMake profile to use `build` as the
-"Build directory" and set the "Environment" field to
+Update the default CMake profile on the following page. Set the "Generator" to
+"Unix Makefiles", the "Build directory" to `build`, and the "Environment" to
 `LLVM_DIR=/sw/ubuntu-22.04/llvm/14.0.6/lib/cmake`. Select "Finish".    
 
 \image html client_wizard_cmake.png
