@@ -156,7 +156,7 @@ From the `File` menu select `New` and then `Project from Version Control`.  You 
 
 From the `CLion` menu select `Build, Execution, Deployment` and then `CMake`.  You want to change the `Build directory` to `build` and then define an `Environment` variable.   When you ran the `bootstrap.sh` script it defined a shell variable `LLVM_DIR` in your `.bashrc`.  Copy that definition into the `Environment` field under `Cache variables`.  Your `Settings` should look as follows:
 
-![CLion CMake Settings](docs/CLion-Settings-For-tipc.png)
+![CLion CMake Settings](docs/assets/CLion-Settings-For-tipc.png)
 
 Now you can click `Apply` and then `OK` to complete the setup.
 

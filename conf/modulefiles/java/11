@@ -1,0 +1,23 @@
+#%Module1.0
+## 
+## modulefiles/java11-11.0.20
+
+# adds information to the 'module help' command
+proc ModulesHelp { } {
+    global version modroot
+    puts stderr "Sets the current environment to utilize Java JDK 11.0.20"
+}
+ 
+# adds information to the 'module whatis' command
+module-whatis "Java JDK 11.0.20"
+
+# specifies the binary file location
+set     topdir	    /usr/lib/jvm/java-11-openjdk-amd64
+set     version     11.0.20
+
+# set environment variables 
+prepend-path    PATH                $topdir/bin
+prepend-path    LD_LIBRARY_PATH     $topdir/lib
+prepend-path    LD_INCLUDE_PATH     $topdir/include
+prepend-path    MANPATH             $topdir/man
+setenv          JAVA_HOME           $topdir
