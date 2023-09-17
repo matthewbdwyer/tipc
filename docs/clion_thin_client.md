@@ -1,4 +1,4 @@
-# Developing on UVA hardware
+# Developing on UVA hardware (CLion)
 You can develop `tipc` on servers hosted by the CS department (e.g., portal,
 granger). The file system shared by these machines includes all of the required
 dependencies. For a familiar IDE experience, we can leverage JetBrains support
@@ -105,42 +105,42 @@ tested with CLion.
 First, launch the JetBrains Gateway application. From the "All Providers" page
 select "New Connection" under "SSH Connection".
 
-![](assets/gateway_all_provider_new_connection.png")
+![](assets/clion/gateway_all_provider_new_connection.png")
 
 From the "Connect to SSH" page, select the gear icon next to the "Connection"
 drop down.
 
-![](assets/gateway_connect_ssh_connection.png)
+![](assets/clion/gateway_connect_ssh_connection.png)
 
 Select the "+" icon on the "SSH Configurations" page. Fill out the information
 as done in the screenshot below. Note the "Host" field should match the name of
 the entry in your ssh config. We chose the name, "portal", in our initial
 setup.   
 
-![](assets/gateway_ssh_configuration.png)
+![](assets/clion/gateway_ssh_configuration.png)
 
 If preferred, you can prevent the connection from being dropped for inactivity. Under "Connection Parameters" check the "Send keep-alive messages..." box.  
 
 Select "Test Connection" to verify you can establish a connection.  
 
-![](assets/gateway_ssh_configuration_connection_success.png)
+![](assets/clion/gateway_ssh_configuration_connection_success.png)
 
 Select "Ok" on the "SSH Configurations" page and return to the "Connect to SSH"
 page. In the "Connection" drop down select the connection you just created.
 Select "Check Connection and Continue".  
 
-![](assets/gateway_connect_ssh_connection_check_and_continue.png)
+![](assets/clion/gateway_connect_ssh_connection_check_and_continue.png)
 
 You will then be prompted to "Choose IDE and Project". For the "IDE version",
 choose "CLion". For the "Project directory" choose the `tipc` repository we
 previously cloned to your home directory. Select "Download IDE and Connect"
 
-![](assets/gateway_choose_ide.png)
+![](assets/clion/gateway_choose_ide.png)
 
 This process may take several minutes. Once complete, `tipc` should appear as
 an SSH project running on "portal". Select the project to open it.
 
-![](assets/gateway_ssh_project.png)
+![](assets/clion/gateway_ssh_project.png)
 
 The `tipc` project will open in the JetBrains client.  
 
@@ -154,7 +154,7 @@ Update the default CMake profile on the following page. Set the "Generator" to
 "Unix Makefiles", the "Build directory" to `build`, and the "Environment" to
 `LLVM_DIR=/sw/ubuntu-22.04/llvm/14.0.6/lib/cmake`. Select "Finish".    
 
-![](assets/client_wizard_cmake.png)
+![](assets/clion/client_wizard_cmake.png)
 
 Note, if the "Project Wizard" does not appear, you can reach the same
 configuration page from the CLion settings. From the settings, navigate to
@@ -166,17 +166,17 @@ Once complete, CLion will index your files and construct build configurations.
 ## Running tipc from CLion
 You should now be able to run and debug tipc with the "play" and "debug" icons respectively.  
 
-![](assets/client_run_debug.png)
+![](assets/clion/client_run_debug.png)
 
 You can pass arguments to `tipc` just as you do on the command line by editing
 the Run/Debug configuration.  
 
-![](assets/client_edit_conf.png)
+![](assets/clion/client_edit_conf.png)
 
 The screenshot below shows how you can pass the `--help` flag as one of the
 "Program arguments".  
 
-![](assets/client_conf_tipc_args.png)
+![](assets/clion/client_conf_tipc_args.png)
 
 
 [1]: https://www.cs.virginia.edu/wiki/doku.php?id=compute_portal
