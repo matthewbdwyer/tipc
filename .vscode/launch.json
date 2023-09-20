@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "tipc (debug)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/src/tipc",
+            "args": [
+                "--help"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

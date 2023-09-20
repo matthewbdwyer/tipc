@@ -1,0 +1,8 @@
+{
+    "cmake.configureOnOpen": true,
+    "remote.SSH.defaultExtensions": [
+		"ms-vscode.cpptools-extension-pack",
+		"mike-lischke.vscode-antlr4",
+        "matepek.vscode-catch2-test-adapter"
+    ]
+}
