@@ -11,13 +11,23 @@
 #include "llvm/Transforms/Scalar/SimplifyCFG.h"
 #include "llvm/Transforms/Utils/Mem2Reg.h"
 
-// Extra Passes
-#include "llvm/Transforms/Scalar/SCCP.h"
-#include "llvm/Transforms/Scalar/SimpleLoopUnswitch.h"
-#include "llvm/Transforms/Scalar/TailRecursionElimination.h" //Tail Call Elimination
+// P5 passes
+#include "llvm/Transforms/Scalar/LICM.h"
+#include "llvm/Transforms/Scalar/LoopRotation.h"
 
 // For logging
 #include "loguru.hpp"
+
+namespace { // Anonymous namespace for local function
+	    
+bool contains(Optimization o, llvm::cl::list<Optimization> &l) {
+  for (unsigned i = 0; i != l.size(); ++i) {
+    if (o == l[i]) return true;
+  }
+  return false;
+}
+
+}
 
 //  NOTE:
 //  We must use llvm Adaptors to run per-loop passes in the function pass
@@ -29,7 +39,8 @@
 //  eg: To run a loop pass on a module ->
 //  ModulePassManager.add(functionAdaptor(LoopAdaptor(llvm::LoopPass())))
 
-void Optimizer::optimize(llvm::Module *theModule) {
+void Optimizer::optimize(llvm::Module *theModule, 
+		llvm::cl::list<Optimization> &enabledOpts) {
   LOG_S(1) << "Optimizing program " << theModule->getName().str();
 
   // New pass builder
@@ -68,6 +79,24 @@ void Optimizer::optimize(llvm::Module *theModule) {
   functionPassManager.addPass(llvm::GVNPass());
   // Simplify the control flow graph (deleting unreachable blocks, etc).
   functionPassManager.addPass(llvm::SimplifyCFGPass());
+
+  // https://www.npopov.com/2023/04/07/LLVM-middle-end-pipeline.html
+  //
+  // Look at llvm/include/Passes/PassBuilderPipelines for examples
+
+  /* New for P5 */
+
+  if (contains(licm,enabledOpts)) {
+    functionPassManager.addPass(
+        createFunctionToLoopPassAdaptor(llvm::LICMPass(), true)); 
+  }
+
+  if (contains(rot,enabledOpts)) {
+    functionPassManager.addPass(
+        createFunctionToLoopPassAdaptor(llvm::LoopRotatePass())); 
+  }   
+
+  //functionPassManager.addPass(llvm::LoopUnrollPass()); 
 
   // Passing the function pass manager to the modulePassManager using a function
   // adaptor, then passing theModule to the ModulePassManager along with
