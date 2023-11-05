@@ -57,7 +57,7 @@ static cl::list<Optimization> OptimizationList(
 		cl::desc("Available Optimizations:"),
 		cl::values(
 			clEnumVal(licm, "Loop Invariant Code Motion"),
-			clEnumVal(rot, "Loop Rotation")),
+			clEnumVal(del, "Loop Deletion")),
 		cl::cat(TIPcat));
 
 /*! \brief tipc driver.

@@ -13,7 +13,7 @@
 
 // P5 passes
 #include "llvm/Transforms/Scalar/LICM.h"
-#include "llvm/Transforms/Scalar/LoopRotation.h"
+#include "llvm/Transforms/Scalar/LoopDeletion.h"
 
 // For logging
 #include "loguru.hpp"
@@ -80,23 +80,17 @@ void Optimizer::optimize(llvm::Module *theModule,
   // Simplify the control flow graph (deleting unreachable blocks, etc).
   functionPassManager.addPass(llvm::SimplifyCFGPass());
 
-  // https://www.npopov.com/2023/04/07/LLVM-middle-end-pipeline.html
-  //
-  // Look at llvm/include/Passes/PassBuilderPipelines for examples
-
-  /* New for P5 */
-
-  if (contains(licm,enabledOpts)) {
+  if (contains(licm, enabledOpts)) {
+    // Add loop invariant code motion with option to use MemorySSA
     functionPassManager.addPass(
-        createFunctionToLoopPassAdaptor(llvm::LICMPass(), true)); 
+        llvm::createFunctionToLoopPassAdaptor(llvm::LICMPass(), true)); 
   }
 
-  if (contains(rot,enabledOpts)) {
+  if (contains(del, enabledOpts)) {
+    // Add loop deletion pass
     functionPassManager.addPass(
-        createFunctionToLoopPassAdaptor(llvm::LoopRotatePass())); 
+        llvm::createFunctionToLoopPassAdaptor(llvm::LoopDeletionPass())); 
   }   
-
-  //functionPassManager.addPass(llvm::LoopUnrollPass()); 
 
   // Passing the function pass manager to the modulePassManager using a function
   // adaptor, then passing theModule to the ModulePassManager along with
