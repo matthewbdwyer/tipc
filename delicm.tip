@@ -1,0 +1,36 @@
+/*
+ * Benchmark for LICM and loop deletion optimizations.
+ * 
+ * Compile with and without the --licm --del optimization then run:
+ *   time ./delinv 20000
+ * to observe the execution time of the benchmark.
+ * You should be able to see a x speedup over just licm.
+ * You should be able to see a x speedup over just del.
+ */
+main(n) {
+  var i, r, v;
+  i = 0;
+  v = 42;
+  r = 0;
+  /* 
+   * Need to create a loop that won't be deleted here so that the
+   * the benchmark measures speedup in the delete function.
+   * To do this we create a loop dependence with the returned value.
+   */
+  while (n > i) { 
+    r = r + delinv(n); 
+    i = i + 1;
+  }
+  return r;
+}
+
+delinv(n) {
+  var i,r;
+  i = 0;
+  r = 0;
+  while (n > i) {
+    i = i + 1;
+    r = n*(n+3)*(n/2)-(n*n)/(n-1);
+  }
+  return r;
+}

@@ -68,6 +68,7 @@ void Optimizer::optimize(llvm::Module *theModule,
 
   llvm::ModulePassManager modulePassManager;
   llvm::FunctionPassManager functionPassManager;
+  llvm::LoopPassManager loopPassManager;
 
   // Adding passes to the pipeline
 
@@ -81,16 +82,18 @@ void Optimizer::optimize(llvm::Module *theModule,
   functionPassManager.addPass(llvm::SimplifyCFGPass());
 
   if (contains(licm, enabledOpts)) {
-    // Add loop invariant code motion with option to use MemorySSA
-    functionPassManager.addPass(
-        llvm::createFunctionToLoopPassAdaptor(llvm::LICMPass(), true)); 
+    // Add loop invariant code motion 
+    loopPassManager.addPass(llvm::LICMPass()); 
   }
 
   if (contains(del, enabledOpts)) {
     // Add loop deletion pass
-    functionPassManager.addPass(
-        llvm::createFunctionToLoopPassAdaptor(llvm::LoopDeletionPass())); 
+    loopPassManager.addPass(llvm::LoopDeletionPass()); 
   }   
+
+  // True argument enables MemorySSA
+  functionPassManager.addPass(
+      createFunctionToLoopPassAdaptor(std::move(loopPassManager),true));
 
   // Passing the function pass manager to the modulePassManager using a function
   // adaptor, then passing theModule to the ModulePassManager along with

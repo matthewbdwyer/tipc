@@ -1,0 +1,33 @@
+/*
+ * Benchmark for loop deletion optimization.
+ * 
+ * Compile with and without the -del optimization then run:
+ *   time ./delete 20000
+ * to observe the execution time of the benchmark.
+ * You should be able to see a 1000x speedup with LICM.
+ */
+main(n) {
+  var i, r, v;
+  i = 0;
+  v = 42;
+  r = 0;
+  /* 
+   * Need to create a loop that won't be deleted here so that the
+   * the benchmark measures speedup in the delete function.
+   * To do this we create a loop dependence with the returned value.
+   */
+  while (n > i) { 
+    r = r + delete(n); 
+    i = i + 1;
+  }
+  return r;
+}
+
+delete(n) {
+  var i;
+  i = 0;
+  while (n > i) {
+    i = i + 1;
+  }
+  return n;
+}
