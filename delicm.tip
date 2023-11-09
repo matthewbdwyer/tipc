@@ -30,7 +30,7 @@ delinv(n) {
   r = 0;
   while (n > i) {
     i = i + 1;
-    r = n*(n+3)*(n/2)-(n*n)/(n-1);
+    r = n*(n+3)*(n/2)-(n*n);
   }
   return r;
 }
