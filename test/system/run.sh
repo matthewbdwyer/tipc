@@ -269,7 +269,7 @@ ${TIPC} --pa=$output_graph $input
 diff $output_graph $expected_output > $diffed_graph
 if [ -s $diffed_graph ]; then
   echo "Test differences for: $input"
-  cat $differences
+  cat $diffed_graph
   ((numfailures++))
 fi
 
@@ -282,7 +282,7 @@ ${TIPC} --pa=$output_graph $input
 diff $output_graph $expected_output > $diffed_graph
 if [ -s $diffed_graph ]; then
   echo "Test differences for: $input" 
-  cat $differences
+  cat $diffed_graph
   ((numfailures++))
 fi 
 
