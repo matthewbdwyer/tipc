@@ -20,7 +20,9 @@ public:
   ASTFunction(std::shared_ptr<ASTDeclNode> DECL,
               std::vector<std::shared_ptr<ASTDeclNode>> FORMALS,
               const std::vector<std::shared_ptr<ASTDeclStmt>> &DECLS,
-              std::vector<std::shared_ptr<ASTStmt>> BODY, bool ISPOLY);
+              std::vector<std::shared_ptr<ASTStmt>> BODY, bool ISPOLY)
+      : DECL(DECL), FORMALS(FORMALS), DECLS(DECLS), BODY(BODY), ISPOLY(ISPOLY) {
+  }
   ~ASTFunction() = default;
   ASTDeclNode *getDecl() const { return DECL.get(); };
   std::string getName() const { return DECL->getName(); };
