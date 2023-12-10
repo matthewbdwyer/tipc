@@ -1,0 +1,11 @@
+main() {
+    var i;
+    var x;
+    x = 0;
+    i = 0;
+    while (1000 > i) {
+        x = x + 1;
+        i = i + 1;
+    }
+    return x;
+}

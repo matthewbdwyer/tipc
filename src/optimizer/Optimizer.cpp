@@ -11,6 +11,13 @@
 #include "llvm/Transforms/Scalar/SimplifyCFG.h"
 #include "llvm/Transforms/Utils/Mem2Reg.h"
 
+// Deliverable 5 Passes
+#include "llvm/Transforms/Scalar/LoopFlatten.h"
+#include "llvm/Transforms/Scalar/SimpleLoopUnswitch.h"
+#include "llvm/Transforms/IPO/GlobalDCE.h"
+#include "llvm/Transforms/Scalar/LoopInstSimplify.h"
+#include "llvm/Transforms/Scalar/LoopSimplifyCFG.h"
+
 // P5 passes
 #include "llvm/Transforms/Scalar/LICM.h"
 #include "llvm/Transforms/Scalar/LoopDeletion.h"
@@ -71,27 +78,36 @@ void Optimizer::optimize(llvm::Module *theModule,
   llvm::LoopPassManager loopPassManagerWithMSSA;
   llvm::LoopPassManager loopPassManager;
 
-  // Adding passes to the pipeline
+  /* Adding passes to the pipeline */
 
+  // program passes
+  modulePassManager.addPass(llvm::GlobalDCEPass()); // delete dead code in program
+
+  // function passes
   functionPassManager.addPass(llvm::PromotePass()); // New Reg2Mem
-  functionPassManager.addPass(llvm::InstCombinePass());
-  // Reassociate expressions.
-  functionPassManager.addPass(llvm::ReassociatePass());
-  // Eliminate Common SubExpressions.
-  functionPassManager.addPass(llvm::GVNPass());
-  // Simplify the control flow graph (deleting unreachable blocks, etc).
-  functionPassManager.addPass(llvm::SimplifyCFGPass());
+  functionPassManager.addPass(llvm::InstCombinePass()); // combine nearby instructions
+  functionPassManager.addPass(llvm::ReassociatePass()); // reassociate expressions
+  functionPassManager.addPass(llvm::GVNPass()); // eliminate common subexpressions
+  functionPassManager.addPass(llvm::SimplifyCFGPass()); // simplify CFG (deleting unreachable blocks, etc)
 
+  // loop passes
   if (contains(licm, enabledOpts)) {
-    // Add loop invariant code motion 
-    loopPassManagerWithMSSA.addPass(llvm::LICMPass()); 
+      // Add loop invariant code motion
+       loopPassManagerWithMSSA.addPass(llvm::LICMPass());
   }
 
   if (contains(del, enabledOpts)) {
-    // Add loop deletion pass
-    loopPassManager.addPass(llvm::LoopDeletionPass()); 
-  }   
+      // Add loop deletion pass
+       loopPassManager.addPass(llvm::LoopDeletionPass());
+  }
 
+  loopPassManager.addPass(llvm::LoopFlattenPass()); // remove invariant code
+  loopPassManager.addPass(llvm::SimpleLoopUnswitchPass());
+
+  loopPassManager.addPass(llvm::LoopInstSimplifyPass()); // simplify loop body (move invariant code)
+  loopPassManager.addPass(llvm::LoopSimplifyCFGPass()); // simplify CFG
+
+  
   // Add loop pass managers with and w/out MemorySSA
   functionPassManager.addPass(
       createFunctionToLoopPassAdaptor(std::move(loopPassManagerWithMSSA),true));

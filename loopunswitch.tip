@@ -1,0 +1,13 @@
+main(flag) {
+    var i;
+    i = 0;
+    while (1000 > i) {
+        if (flag == 1) {
+            // branch 1
+        } else {
+            // branch 2
+        }
+        i = i + 1;
+    }
+    return 0;
+}

@@ -1,0 +1,12 @@
+main() {
+    var i, a, b;
+    i = 0;
+    a = 0;
+    b = 0;
+    while (1000 > i) {
+        a = i * 2;
+        b = a / 2;
+        i = i + 1;
+    }
+    return i;
+}

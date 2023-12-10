@@ -1,0 +1,8 @@
+// unused function
+unusedFunc() {
+    return 1;
+}
+
+main() {
+    return 0;
+}

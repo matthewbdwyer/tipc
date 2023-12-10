@@ -1,0 +1,17 @@
+main() {
+    var i;
+    i = 0;
+    while (1000 > i) {
+        if ((i / 2) * 2 == i) {
+            if (i > 500) {
+                // branch 1
+            } else {
+                // branch 2
+            }
+        } else {
+            // branch 3
+        }
+        i = i + 1;
+    }
+    return 0;
+}
