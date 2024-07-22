@@ -105,5 +105,11 @@ void Optimizer::optimize(llvm::Module *theModule,
 
   modulePassManager.addPass(
       createModuleToFunctionPassAdaptor(std::move(functionPassManager), true));
+
+
+  if (contains(fin, enabledOpts)) {
+    modulePassManager.addPass(llvm::ModuleInlinerPass());
+  }
+
   modulePassManager.run(*theModule, moduleAnalysisManager);
 }

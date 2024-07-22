@@ -57,7 +57,8 @@ static cl::list<Optimization> OptimizationList(
 		cl::desc("Available Optimizations:"),
 		cl::values(
 			clEnumVal(licm, "Loop Invariant Code Motion"),
-			clEnumVal(del, "Loop Deletion")),
+			clEnumVal(del, "Loop Deletion"),
+			clEnumVal(fin, "Function Inlining")),
 		cl::cat(TIPcat));
 
 /*! \brief tipc driver.
