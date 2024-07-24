@@ -11,7 +11,8 @@
 #include <sstream>
 
 /*
- * Run the front-end on the program and return the unifier storing the inferred types.
+ * Run the front-end on the program, collect the type constraints, solve the constraints
+ * and return the unifier storing the inferred types for the variables in the program.
  * This code expects that no type errors are present and throws an exception otherwise.
  */
 static std::pair<Unifier, std::shared_ptr<SymbolTable>> collectAndSolve(std::stringstream &program) {
@@ -33,7 +34,7 @@ TEST_CASE("TypeConstraintVisitor: input, const, arithmetic, return type",
           "[TypeConstraintVisitor]") {
     std::stringstream program;
     program << R"(
-            // x is int, y is int, short is () -> int
+            // [[x]] = int, [[y]] = int, [[test]] = () -> int
             test() {
               var x, y;
               x = input;
@@ -63,7 +64,7 @@ TEST_CASE("TypeConstraintVisitor: alloc, deref, assign through ptr",
           "[TypeConstraintVisitor]") {
     std::stringstream program;
     program << R"(
-            // x is int, y is ptr to int, test is () -> ptr to int
+            // [[x]] = int, [[y]] = ptr to int, [[test]] = () -> ptr to int
             test() {
                 var x,y,z;
                 x = input;
@@ -90,90 +91,72 @@ TEST_CASE("TypeConstraintVisitor: alloc, deref, assign through ptr",
     REQUIRE(*unifier.inferred(yType) == *TypeHelper::ptrType(TypeHelper::intType()));
 }
 
-/*
-TEST_CASE("TypeConstraintVisitor: const, input, alloc, assign through ptr",
-          "[TypeConstraintVisitor]") {
-  std::stringstream program;
-  program << R"(short() {
- var x,y,z;
- x = input;
- y = alloc x;
- *y = x;
- z = *y;
- return z;
-}
-    )";
 
 
-  std::vector<std::string> expected{
-      "\u27E6input@3:5\u27E7 = int",
-      "\u27E6x@2:5\u27E7 = \u27E6input@3:5\u27E7",
-      "\u27E6alloc x@4:5\u27E7 = \u2B61\u27E6x@2:5\u27E7",
-      "\u27E6y@2:7\u27E7 = \u27E6alloc x@4:5\u27E7",
-      "\u27E6y@2:7\u27E7 = \u2B61\u27E6(*y)@5:1\u27E7",
-      "\u27E6y@2:7\u27E7 = \u2B61\u27E6x@2:5\u27E7",
-      "\u27E6y@2:7\u27E7 = \u2B61\u27E6(*y)@6:5\u27E7",
-      "\u27E6z@2:9\u27E7 = \u27E6(*y)@6:5\u27E7",
-      "\u27E6short@1:0\u27E7 = () -> \u27E6z@2:9\u27E7"};
-
-  runtest(program, expected);
-}
-
-TEST_CASE("TypeConstraintVisitor: function reference",
+TEST_CASE("TypeConstraintVisitor: function reference, address of",
           "[TypeConstraintVisitor]") {
   std::stringstream program;
   program << R"(
+      // [[foo]] = [[x]] = () -> int), [[y]] = ptr to () -> int
       foo() {
-        var x, y, z;
-        x = 5;
-        y = &y;
-        z = foo;
-        return z;
+        var x, y;
+        x = foo;
+        y = &x;
+        return 13;
       }
     )";
 
-  std::vector<std::string> expected{
-      "\u27E65@4:12\u27E7 = int",
-      "\u27E6x@3:12\u27E7 = \u27E65@4:12\u27E7",
-      "\u27E6&y@5:12\u27E7 = \u2B61\u27E6y@3:15\u27E7",
-      "\u27E6y@3:15\u27E7 = \u27E6&y@5:12\u27E7",
-      "\u27E6z@3:18\u27E7 = \u27E6foo@2:6\u27E7",
-      "\u27E6foo@2:6\u27E7 = () -> \u27E6z@3:18\u27E7"};
+    auto unifierSymbols = collectAndSolve(program);
+    auto unifier = unifierSymbols.first;
+    auto symbols = unifierSymbols.second;
 
-  runtest(program, expected);
+    std::vector<std::shared_ptr<TipType>> empty;
+
+    auto fDecl = symbols->getFunction("foo");
+    auto fType = std::make_shared<TipVar>(fDecl);
+    REQUIRE(*unifier.inferred(fType) == *TypeHelper::funType(empty, TypeHelper::intType()));
+
+    auto xType = std::make_shared<TipVar>(symbols->getLocal("x", fDecl));
+    REQUIRE(*unifier.inferred(xType) == *unifier.inferred(fType));
+
+    auto yType = std::make_shared<TipVar>(symbols->getLocal("y", fDecl));
+    REQUIRE(*unifier.inferred(yType) == *TypeHelper::ptrType(TypeHelper::funType(empty, TypeHelper::intType())));
+
 }
 
-TEST_CASE("TypeConstraintVisitor: if ", "[TypeConstraintVisitor]") {
+TEST_CASE("TypeConstraintVisitor: relop, if ", "[TypeConstraintVisitor]") {
   std::stringstream program;
   program << R"(
-      foo() {
-        var x;
+      // [[x]] = int, [[y]] = int, [[test]] = (int) -> int
+      test(x) {
+        var y;
         if (x > 0) {
-          x = x + 1;
+          y = 0;
+        } else {
+          y = 1;
         }
-        return x;
+        return y;
       }
     )";
 
+    auto unifierSymbols = collectAndSolve(program);
+    auto unifier = unifierSymbols.first;
+    auto symbols = unifierSymbols.second;
 
-  std::vector<std::string> expected{
-      "\u27E60@4:16\u27E7 = int",                    // const is int
-      "\u27E6(x>0)@4:12\u27E7 = int",                // binexpr is int
-      "\u27E6x@3:12\u27E7 = int",                    // operand is int
-      "\u27E60@4:16\u27E7 = int",                    // operand is int
-      "\u27E61@5:18\u27E7 = int",                    // const is int
-      "\u27E6(x+1)@5:14\u27E7 = int",                // binexpr is int
-      "\u27E6x@3:12\u27E7 = int",                    // operands is int
-      "\u27E61@5:18\u27E7 = int",                    // operands is int
-      "\u27E6x@3:12\u27E7 = \u27E6(x+1)@5:14\u27E7", // sides of assignment have
-                                                     // same type
-      "\u27E6(x>0)@4:12\u27E7 = int",                // if condition is int
-      "\u27E6foo@2:6\u27E7 = () -> \u27E6x@3:12\u27E7" // function type
-  };
+    std::vector<std::shared_ptr<TipType>> oneInt{TypeHelper::intType()};
 
-  runtest(program, expected);
+    auto fDecl = symbols->getFunction("test");
+    auto fType = std::make_shared<TipVar>(fDecl);
+    REQUIRE(*unifier.inferred(fType) == *TypeHelper::funType(oneInt, TypeHelper::intType()));
+
+    auto xType = std::make_shared<TipVar>(symbols->getLocal("x", fDecl));
+    REQUIRE(*unifier.inferred(xType) == *TypeHelper::intType());
+
+    auto yType = std::make_shared<TipVar>(symbols->getLocal("y", fDecl));
+    REQUIRE(*unifier.inferred(yType) == *TypeHelper::intType());
 }
 
+/*
 TEST_CASE("TypeConstraintVisitor: while ", "[TypeConstraintVisitor]") {
   std::stringstream program;
   program << R"(
