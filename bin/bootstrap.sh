@@ -3,7 +3,7 @@ set -e
 
 declare -r ANTLR_VERSION=4
 declare -r JAVA_VERSION=11
-declare -r LLVM_VERSION=14
+declare -r LLVM_VERSION=17
 
 declare -r ROOT_DIR=${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}
 
