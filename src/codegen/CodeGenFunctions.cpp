@@ -20,11 +20,12 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
 #include "llvm/Support/FileSystem.h"
-#include "llvm/Support/Host.h"
+// #include "llvm/Support/Host.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/ToolOutputFile.h"
 #include "llvm/Support/TypeSize.h"
 #include "llvm/Target/TargetMachine.h"
+#include "llvm/TargetParser/Host.h"
 #include "llvm/Transforms/InstCombine/InstCombine.h"
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Scalar/GVN.h"
@@ -279,13 +280,14 @@ llvm:
      * bitcast the declared functions prior to inserting them.
      */
     auto *genFunPtrType = PointerType::get(
-        FunctionType::get(Type::getInt64Ty(TheContext), None, false), 0);
+        FunctionType::get(Type::getInt64Ty(TheContext), false), 0);
 
     // Create and record the function dispatch table
     auto *ftableType = ArrayType::get(genFunPtrType, funIndex);
 
     // Cast TIP functions to the generic function pointer type for initializer
     std::vector<Constant *> castProgramFunctions;
+    castProgramFunctions.reserve(programFunctions.size());
     for (auto const &pf : programFunctions) {
       castProgramFunctions.push_back(
           ConstantExpr::getPointerCast(pf, genFunPtrType));
@@ -368,7 +370,7 @@ llvm:
    */
   std::vector<Type *> member_values;
   int index = 0;
-  for (auto field : analysis->getSymbolTable()->getFields()) {
+  for (const auto& field : analysis->getSymbolTable()->getFields()) {
     member_values.push_back(IntegerType::getInt64Ty((TheContext)));
     fieldVector.push_back(field);
     fieldIndex[field] = index;
@@ -426,9 +428,13 @@ llvm::Value *ASTFunction::codegen() {
                                             tipInputArray, indices, "inputidx");
 
       // Load the value and store it into the arg's alloca
-      auto *inVal =
-          Builder.CreateLoad(gep->getType()->getPointerElementType(), gep,
-                             "tipinput" + std::to_string(argIdx++));
+      //      auto *inVal =
+      //          Builder.CreateLoad(gep->getType()->getPointerElementType(),
+      //          gep,
+      //                             "tipinput" + std::to_string(argIdx++));
+      auto *inVal = Builder.CreateLoad(gep->getType(), gep,
+                                       "tipinput" + std::to_string(argIdx++));
+
       Builder.CreateStore(inVal, argAlloc);
 
       // Record name binding to alloca
@@ -582,8 +588,8 @@ llvm::Value *ASTFunAppExpr::codegen() {
                                         indices, "ftableidx");
 
   // Load the function pointer
-  auto *genericFunPtr = Builder.CreateLoad(
-      gep->getType()->getPointerElementType(), gep, "genfptr");
+  auto *genericFunPtr = Builder.CreateLoad(gep->getType(), gep, "genfptr");
+  //      gep->getType()->getPointerElementType(), gep, "genfptr");
 
   /*
    * Compute the specific function pointer type based on the actual parameter
@@ -705,8 +711,8 @@ llvm::Value *ASTDeRefExpr::codegen() {
     return address;
   } else {
     // For an r-value, return the value at the address
-    return Builder.CreateLoad(address->getType()->getPointerElementType(),
-                              address, "valueAt");
+    return Builder.CreateLoad(address->getType(), address, "valueAt");
+    //    return Builder.CreateLoad(address->getType()->getPointerElementType(),
   }
 }
 
@@ -952,7 +958,7 @@ llvm::Value *ASTWhileStmt::codegen() {
 
   // Emit loop body
   {
-    TheFunction->getBasicBlockList().push_back(BodyBB);
+    TheFunction->insert(TheFunction->end(), BodyBB);
     Builder.SetInsertPoint(BodyBB);
 
     Value *BodyV = getBody()->codegen();
@@ -965,7 +971,7 @@ llvm::Value *ASTWhileStmt::codegen() {
   }
 
   // Emit loop exit block.
-  TheFunction->getBasicBlockList().push_back(ExitBB);
+  TheFunction->insert(TheFunction->end(), ExitBB);
   Builder.SetInsertPoint(ExitBB);
   return Builder.CreateCall(nop);
 } // LCOV_EXCL_LINE
@@ -1035,7 +1041,8 @@ llvm::Value *ASTIfStmt::codegen() {
 
   // Emit else block.
   {
-    TheFunction->getBasicBlockList().push_back(ElseBB);
+    TheFunction->insert(TheFunction->end(), ElseBB);
+
     Builder.SetInsertPoint(ElseBB);
 
     // if there is no ELSE then exist emit a "nop"
@@ -1054,7 +1061,7 @@ llvm::Value *ASTIfStmt::codegen() {
   }
 
   // Emit merge block.
-  TheFunction->getBasicBlockList().push_back(MergeBB);
+  TheFunction->insert(TheFunction->end(), MergeBB);
   Builder.SetInsertPoint(MergeBB);
   return Builder.CreateCall(nop);
 } // LCOV_EXCL_LINE
