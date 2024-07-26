@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.15)
 
 project(tipc)
 
+# Include CMake modules
+include(FetchContent)
+
 # Required packages
 find_package(PkgConfig REQUIRED)
 pkg_search_module(UUID REQUIRED uuid)
@@ -47,24 +50,31 @@ else()
   message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} is not supported")
 endif()
 
-add_definitions(-DANTLR4CPP_STATIC)
-
 set(ANTLR4_WITH_STATIC_CRT OFF)
-set(ANTLR4_TAG 4.13.0)
-include(ExternalAntlr4Cpp)
-include_directories(${ANTLR4_INCLUDE_DIRS})
+set(ANTLR_TAG 4.13.1)
+set(DISABLE_WARNINGS ON)
+set(ANTLR_BUILD_CPP_TESTS OFF)
+set(ANTLR_BUILD_SHARED OFF)
 
-# add macros to generate ANTLR Cpp code from grammar
-find_package(ANTLR)
-if(NOT ANTLR_FOUND)
-  set(ANTLR_JAR antlr-${ANTLR4_TAG}-complete.jar)
-  set(ANTLR_JAR_URL https://www.antlr.org/download/${ANTLR_JAR})
-  message(STATUS "Downloading antlr jar")
-  file(DOWNLOAD ${ANTLR_JAR_URL} ${CMAKE_BINARY_DIR}/include/${ANTLR_JAR})
-  message(STATUS "Downloading complete")
-  set(ANTLR_EXECUTABLE ${CMAKE_BINARY_DIR}/include/${ANTLR_JAR})
-  find_package(ANTLR REQUIRED)
+set(ANTLR_EXECUTABLE "${CMAKE_BINARY_DIR}/include/antlr-${ANTLR_TAG}-complete.jar")
+if(NOT EXISTS "${ANTLR_EXECUTABLE}")
+  file(
+          DOWNLOAD
+          "https://www.antlr.org/download/antlr-${ANTLR_TAG}-complete.jar"
+          "${ANTLR_EXECUTABLE}"
+  )
 endif()
+
+FetchContent_Declare(
+        antlr
+        GIT_REPOSITORY https://github.com/antlr/antlr4
+        GIT_TAG ${ANTLR_TAG}
+        SOURCE_SUBDIR "runtime/Cpp"
+)
+
+FetchContent_MakeAvailable(antlr)
+include(${antlr_SOURCE_DIR}/runtime/Cpp/cmake/FindANTLR.cmake)
+include_directories(${antlr_SOURCE_DIR}/runtime/Cpp/runtime/src)
 
 # LLVM rules for installed libraries ########### We want to select the latest
 # stable release even if others are installed
@@ -97,7 +107,6 @@ include_directories(${CMAKE_SOURCE_DIR}/externals/loguru)
 # build target including unit tests ###########
 add_subdirectory(src)
 
-include(FetchContent)
 
 FetchContent_Declare(
   Catch2
