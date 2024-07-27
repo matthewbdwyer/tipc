@@ -432,7 +432,7 @@ llvm::Value *ASTFunction::codegen() {
       //          Builder.CreateLoad(gep->getType()->getPointerElementType(),
       //          gep,
       //                             "tipinput" + std::to_string(argIdx++));
-      auto *inVal = Builder.CreateLoad(gep->getType(), gep,
+      auto *inVal = Builder.CreateLoad(llvm::PointerType::get(gep->getType(),0), gep,
                                        "tipinput" + std::to_string(argIdx++));
 
       Builder.CreateStore(inVal, argAlloc);
@@ -588,7 +588,7 @@ llvm::Value *ASTFunAppExpr::codegen() {
                                         indices, "ftableidx");
 
   // Load the function pointer
-  auto *genericFunPtr = Builder.CreateLoad(gep->getType(), gep, "genfptr");
+  auto *genericFunPtr = Builder.CreateLoad(llvm::PointerType::get(gep->getType(),0), gep, "genfptr");
   //      gep->getType()->getPointerElementType(), gep, "genfptr");
 
   /*
@@ -711,7 +711,7 @@ llvm::Value *ASTDeRefExpr::codegen() {
     return address;
   } else {
     // For an r-value, return the value at the address
-    return Builder.CreateLoad(address->getType(), address, "valueAt");
+    return Builder.CreateLoad(llvm::PointerType::get(address->getType(),0), address, "valueAt");
     //    return Builder.CreateLoad(address->getType()->getPointerElementType(),
   }
 }
