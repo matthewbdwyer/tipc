@@ -17,8 +17,8 @@ public:
   TipFunction(std::vector<std::shared_ptr<TipType>> params,
               std::shared_ptr<TipType> ret);
 
-  std::vector<std::shared_ptr<TipType>> getParams() const;
-  std::shared_ptr<TipType> getReturnValue() const;
+  std::vector<std::shared_ptr<TipType>> getParamTypes() const;
+  std::shared_ptr<TipType> getReturnType() const;
 
   bool operator==(const TipType &other) const override;
   bool operator!=(const TipType &other) const override;
