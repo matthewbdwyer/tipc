@@ -86,11 +86,11 @@ deref(p){
     auto polyInferred = unifier.inferred(fType);
     auto polyFun = std::dynamic_pointer_cast<TipFunction>(polyInferred);
     REQUIRE(polyFun != nullptr);               // function type
-    REQUIRE(polyFun->getParams().size() == 1); // single parameter
-    auto polyArg = polyFun->getParams().back();
+    REQUIRE(polyFun->getParamTypes().size() == 1); // single parameter
+    auto polyArg = polyFun->getParamTypes().back();
     auto polyArgRef = std::dynamic_pointer_cast<TipRef>(polyArg);
     REQUIRE(polyArgRef != nullptr); // param is ref
-    auto polyArgAddressOfField = polyArgRef->getAddressOfField();
+    auto polyArgAddressOfField = polyArgRef->getReferencedType();
     REQUIRE(std::dynamic_pointer_cast<TipAlpha>(
         polyArgAddressOfField)); // param is ref of an alpha
 

@@ -14,8 +14,8 @@ TEST_CASE("TipFunction: Test getters"
   auto ret = std::make_shared<TipRef>(std::make_shared<TipInt>());
   TipFunction tipFunction(params, ret);
 
-  REQUIRE(2 == tipFunction.getParams().size());
-  REQUIRE(*ret == *tipFunction.getReturnValue());
+  REQUIRE(2 == tipFunction.getParamTypes().size());
+  REQUIRE(*ret == *tipFunction.getReturnType());
 }
 
 TEST_CASE("TipFunction: Test equality"

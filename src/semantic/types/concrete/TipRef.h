@@ -12,7 +12,7 @@ public:
   TipRef() = delete;
   TipRef(std::shared_ptr<TipType> of);
 
-  std::shared_ptr<TipType> getAddressOfField() const;
+  std::shared_ptr<TipType> getReferencedType() const;
 
   bool operator==(const TipType &other) const override;
   bool operator!=(const TipType &other) const override;

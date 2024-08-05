@@ -43,7 +43,7 @@ TEST_CASE("TipRef: Test getter"
   auto tipFunction = std::make_shared<TipFunction>(params, ret);
   TipRef tipRef(tipFunction);
 
-  REQUIRE(*tipFunction == *tipRef.getAddressOfField());
+  REQUIRE(*tipFunction == *tipRef.getReferencedType());
 }
 
 TEST_CASE("TipRef: Test output stream"
