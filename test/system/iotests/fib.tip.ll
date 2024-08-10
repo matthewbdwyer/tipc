@@ -1,12 +1,12 @@
-; ModuleID = 'iotests/fib.tip'
-source_filename = "iotests/fib.tip"
-target triple = "x86_64-apple-darwin21.5.0"
+; ModuleID = 'fib.tip'
+source_filename = "fib.tip"
+target triple = "arm64-apple-darwin23.5.0"
 
-@_tip_ftable = internal constant [2 x i64 ()*] [i64 ()* bitcast (i64 (i64)* @fib to i64 ()*), i64 ()* @_tip_main]
+@_tip_ftable = internal constant [2 x ptr] [ptr @fib, ptr @_tip_main]
 @_tip_num_inputs = constant i64 1
 @_tip_input_array = common global [1 x i64] zeroinitializer
 
-; Function Attrs: nofree nosync nounwind readnone willreturn
+; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
 declare void @llvm.donothing() #0
 
 define internal i64 @fib(i64 %n) {
@@ -31,13 +31,13 @@ exit1:                                            ; preds = %header1
 
 define i64 @_tip_main() {
 entry:
-  %tipinput0 = load i64, i64* getelementptr inbounds ([1 x i64], [1 x i64]* @_tip_input_array, i64 0, i64 0), align 4
+  %tipinput0 = load i64, ptr @_tip_input_array, align 4
   %calltmp = call i64 @fib(i64 %tipinput0)
   ret i64 %calltmp
 }
 
 ; Function Attrs: nounwind
-declare noalias i8* @calloc(i64, i64) #1
+declare noalias ptr @calloc(i64, i64) #1
 
-attributes #0 = { nofree nosync nounwind readnone willreturn }
+attributes #0 = { nocallback nofree nosync nounwind willreturn memory(none) }
 attributes #1 = { nounwind }

@@ -289,6 +289,7 @@ TEST_CASE("TypeConstraintVisitor: polymorphic type inference",
 
     std::vector<std::shared_ptr<TipType>> onePtrToAlpha{TypeHelper::ptrType(TypeHelper::alphaType(pDecl))};
 
+
     // Equality on alpha type variables considers the actual AST node used to generate the alpha, but we
     // only want to check that the types are some alpha -- we don't care which one.  This is a bit clunky.
     auto fType = std::make_shared<TipVar>(fDecl);
@@ -307,6 +308,7 @@ TEST_CASE("TypeConstraintVisitor: polymorphic type inference",
     // Now we want the argument p to have the same type as the parameter type
     auto pType = std::make_shared<TipVar>(pDecl);
     REQUIRE(*unifier.inferred(pType) == *refType);
+
 }
 
 
@@ -338,9 +340,10 @@ TEST_CASE("TypeConstraintVisitor: access expr", "[TypeConstraintVisitor]") {
 
     auto xType = std::make_shared<TipVar>(symbols->getLocal("r", fDecl));
     REQUIRE(*unifier.inferred(xType) == *TypeHelper::recType(twoInts, twoNames));
+
 }
 
-TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
+TEST_CASE("TypeConstraintVisitor: global record", "[TypeConstraintVisitor]") {
   std::stringstream program;
   program << R"(
       // [[foo]] = ()->int, [[r1]] = {f:int, g:int, n:absent}, [[r2]] = {f:int, g:absent, n: ptr to int}
@@ -352,6 +355,7 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
       }
 
     )";
+
 
     auto unifierSymbols = collectAndSolve(program);
     auto unifier = unifierSymbols.first;
@@ -373,6 +377,7 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
 
     auto r1Type = std::make_shared<TipVar>(symbols->getLocal("r2", fDecl));
     REQUIRE(*unifier.inferred(r1Type) == *TypeHelper::recType(intAbsentPtrInt, threeNames));
+
 }
 
 TEST_CASE("TypeConstraintVisitor: record2", "[TypeConstraintVisitor]") {

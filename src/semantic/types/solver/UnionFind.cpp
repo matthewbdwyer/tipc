@@ -3,7 +3,7 @@
 
 #include "loguru.hpp"
 #include <algorithm>
-#include <list>
+#include <set>
 #include <string>
 
 namespace { // Anonymous namespace for local helpers

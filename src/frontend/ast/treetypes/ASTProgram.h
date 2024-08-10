@@ -20,7 +20,7 @@ public:
   std::vector<ASTFunction *> getFunctions() const;
   ASTFunction *findFunctionByName(std::string);
   void accept(ASTVisitor *visitor) override;
-  std::shared_ptr<llvm::Module> codegen(SemanticAnalysis *st, std::string name);
+  std::shared_ptr<llvm::Module> codegen(SemanticAnalysis *st, const std::string& name);
 
 private:
   llvm::Value *codegen() override;
