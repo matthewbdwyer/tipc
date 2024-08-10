@@ -12,7 +12,7 @@ bool TipRef::operator==(const TipType &other) const {
     return false;
   }
 
-  return *arguments.front() == *otherTipRef->getAddressOfField();
+  return *arguments.front() == *otherTipRef->getReferencedType();
 }
 
 bool TipRef::operator!=(const TipType &other) const {
@@ -24,7 +24,7 @@ std::ostream &TipRef::print(std::ostream &out) const {
   return out;
 }
 
-std::shared_ptr<TipType> TipRef::getAddressOfField() const {
+std::shared_ptr<TipType> TipRef::getReferencedType() const {
   return arguments.front();
 }
 

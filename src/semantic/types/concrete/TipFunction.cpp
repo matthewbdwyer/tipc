@@ -14,13 +14,13 @@ TipFunction::combine(std::vector<std::shared_ptr<TipType>> params,
   return params;
 }
 
-std::vector<std::shared_ptr<TipType>> TipFunction::getParams() const {
+std::vector<std::shared_ptr<TipType>> TipFunction::getParamTypes() const {
   std::vector<std::shared_ptr<TipType>> params(arguments.begin(),
                                                arguments.end() - 1);
   return params;
 }
 
-std::shared_ptr<TipType> TipFunction::getReturnValue() const {
+std::shared_ptr<TipType> TipFunction::getReturnType() const {
   return arguments.back();
 }
 

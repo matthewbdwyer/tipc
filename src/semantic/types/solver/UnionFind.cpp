@@ -16,21 +16,23 @@ bool equalType(std::shared_ptr<TipType> t1, std::shared_ptr<TipType> t2) {
 
 // Check Union-Find data structure invariants
 void UnionFind::invariant() {
-  // No two edges in the Union-Find structure should the same originating
-  // TipType
-  for (auto edge1 : edges) {
-    for (auto edge2 : edges) {
-      if (edge1 != edge2) {
-        if (equalType(edge1.first, edge2.first)) {
-          LOG_S(3) << "UnionFind invariant violated found pair of edges: "
-                   << *edge1.first << "(" << edge1.first.get() << ") => "
-                   << *edge1.second << " and " << *edge2.first << "("
-                   << edge2.first.get() << ") => " << *edge2.second;
-          assert(!equalType(edge1.first, edge2.first));
+    // No two edges in the Union-Find structure should the same originating
+    // TipType
+    for(auto outerIter = edges.begin(); outerIter != edges.end(); outerIter++) {
+        const auto& edge1 = *outerIter;
+        auto innerIter = outerIter;
+        innerIter++;
+        for(; innerIter != edges.end(); innerIter++) {
+            const auto& edge2 = *innerIter;
+            if(equalType(edge1.first, edge2.first)) {
+                LOG_S(3) << "UnionFind invariant violated found pair of edges: "
+                         << *edge1.first << "(" << edge1.first.get() << ") => "
+                         << *edge1.second << " and " << *edge2.first << "("
+                         << edge2.first.get() << ") => " << *edge2.second;
+                assert(!equalType(edge1.first, edge2.first));
+            }
         }
-      }
     }
-  }
 }
 
 std::shared_ptr<TipType> UnionFind::lookup(std::shared_ptr<TipType> t) {
