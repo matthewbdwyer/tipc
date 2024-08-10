@@ -111,7 +111,7 @@ bootstrap_mac_dependencies() {
     exit 1
   fi
 
-  brew install homebrew/cask-versions/corretto$JAVA_VERSION
+  brew install --cask corretto@$JAVA_VERSION
   brew install \
     git \
     cmake \
