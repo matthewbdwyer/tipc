@@ -238,7 +238,7 @@ void TypeConstraintVisitor::endVisit(ASTOutputStmt *element) {
  *
  * Type rule for "{ X1:E1, ..., Xn:En }":
  *   [[{ X1:E1, ..., Xn:En }]] = { f1:v1, ..., fn:vn }
- * where fi is the ith field in the program's uber record
+ * where fi is the ith field in the program's global record
  * and vi = [[Ei]] if fi = Xi and \alpha otherwise
  */
 void TypeConstraintVisitor::endVisit(ASTRecordExpr *element) {
@@ -266,7 +266,7 @@ void TypeConstraintVisitor::endVisit(ASTRecordExpr *element) {
  *
  * Type rule for "E.X":
  *   [[E]] = { f1:v1, ..., fn:vn }
- * where fi is the ith field in the program's uber record
+ * where fi is the ith field in the program's global record
  * and vi = [[E.X]] if fi = X and \alpha otherwise
  */
 void TypeConstraintVisitor::endVisit(ASTAccessExpr *element) {

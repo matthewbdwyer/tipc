@@ -290,7 +290,7 @@ TEST_CASE("TypeConstraintVisitor: record expr", "[TypeConstraintVisitor]") {
       "\u27E64@4:18\u27E7 = int",  // int constant
       "\u27E613@4:24\u27E7 = int", // int constant
       "\u27E6{f:4,g:13}@4:14\u27E7 = "
-      "{f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7}",     // uber record
+      "{f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7}",     // global record
       "\u27E6r@3:14\u27E7 = \u27E6{f:4,g:13}@4:14\u27E7", // assignment
       "\u27E60@5:17\u27E7 = int",                         // int constant
       "\u27E60@5:17\u27E7 = int",                         // main return is int
@@ -315,7 +315,7 @@ TEST_CASE("TypeConstraintVisitor: access expr", "[TypeConstraintVisitor]") {
       "\u27E64@4:18\u27E7 = int",  // int constant
       "\u27E613@4:24\u27E7 = int", // int constant
       "\u27E6{f:4,g:13}@4:14\u27E7 = "
-      "{f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7}",     // uber record
+      "{f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7}",     // global record
       "\u27E6r@3:14\u27E7 = \u27E6{f:4,g:13}@4:14\u27E7", // assignment
       "\u27E6r@3:14\u27E7 = "
       "{f:\u03B1<(r.g)@5:17[f]>,g:\u27E6(r.g)@5:17\u27E7}", // field access
@@ -326,7 +326,7 @@ TEST_CASE("TypeConstraintVisitor: access expr", "[TypeConstraintVisitor]") {
   runtest(program, expected);
 }
 
-TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
+TEST_CASE("TypeConstraintVisitor: global record", "[TypeConstraintVisitor]") {
   std::stringstream program;
   program << R"(
       foo() {
@@ -342,12 +342,12 @@ TEST_CASE("TypeConstraintVisitor: uber record", "[TypeConstraintVisitor]") {
       "\u27E64@4:18\u27E7 = int",  // int constant
       "\u27E613@4:24\u27E7 = int", // int constant
       "\u27E6{f:4,g:13}@4:14\u27E7 = "
-      "{f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7,n:\u25C7}", // uber record
+      "{f:\u27E64@4:18\u27E7,g:\u27E613@4:24\u27E7,n:\u25C7}", // global record
       "\u27E6r@3:14\u27E7 = \u27E6{f:4,g:13}@4:14\u27E7",      // assignment
       "\u27E6null@5:18\u27E7 = \u2B61\u03B1<null@5:18>",       // null
       "\u27E613@5:27\u27E7 = int",                             // int constant
       "\u27E6{n:null,f:13}@5:14\u27E7 = "
-      "{f:\u27E613@5:27\u27E7,g:\u25C7,n:\u27E6null@5:18\u27E7}", // uber record
+      "{f:\u27E613@5:27\u27E7,g:\u25C7,n:\u27E6null@5:18\u27E7}", // global record
       "\u27E6r@3:14\u27E7 = \u27E6{n:null,f:13}@5:14\u27E7",      // assignment
       "\u27E60@6:17\u27E7 = int",                      // main return int
       "\u27E6foo@2:6\u27E7 = () -> \u27E60@6:17\u27E7" // function decl
