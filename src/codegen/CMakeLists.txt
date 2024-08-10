@@ -20,3 +20,9 @@ target_include_directories(
 llvm_map_components_to_libnames(llvm_libs Support Core Passes)
 target_link_libraries(codegen PRIVATE ${llvm_libs} semantic error
                                       coverage_config loguru)
+# set C++ definition build flag
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DTIPC_DEBUG)
+else ()
+    add_definitions(-DTIPC_RELEASE)
+endif ()
