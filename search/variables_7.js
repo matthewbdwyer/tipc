@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['tree_923',['tree',['../classIteratorImpl.html#a9a6aabae44661f59043c51c1a9a8e982',1,'IteratorImpl']]]
+  ['stack_0',['stack',['../classPreOrderIterator.html#ad33792f8271bc704dd32eaeea1c74696',1,'PreOrderIterator']]],
+  ['symboltable_1',['symbolTable',['../classTypeConstraintVisitor.html#a771b91050e935bcdccb386e3d381da3b',1,'TypeConstraintVisitor']]]
 ];

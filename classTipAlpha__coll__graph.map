@@ -1,6 +1,10 @@
 <map id="TipAlpha" name="TipAlpha">
-<area shape="rect" id="node1" title="Class for free type variables." alt="" coords="63,171,142,197"/>
-<area shape="rect" id="node2" href="$classTipVar.html" title="Class representing a type variable." alt="" coords="31,95,94,121"/>
-<area shape="rect" id="node3" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="5,5,77,32"/>
-<area shape="rect" id="node4" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="102,5,183,32"/>
+<area shape="rect" id="Node000001" title="Class for free type variables." alt="" coords="63,168,142,193"/>
+<area shape="rect" id="Node000002" href="$classTipVar.html" title="Class representing a type variable." alt="" coords="31,93,94,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,130,99,166,94,169,73,132"/>
+<area shape="rect" id="Node000003" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="5,5,77,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="50,43,62,92,57,93,45,45"/>
+<area shape="rect" id="Node000004" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="102,5,183,31"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="139,45,108,169,103,167,134,43"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="108,40,89,56,76,75,69,94,64,92,72,73,85,53,105,36"/>
 </map>

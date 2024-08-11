@@ -1,12 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="5,171,77,197"/>
-<area shape="rect" id="node2" href="$classTipCons.html" title="Abstract base class for all proper types." alt="" coords="125,113,200,140"/>
-<area shape="rect" id="node8" href="$classTipMu.html" title="Class representing a recursive type." alt="" coords="131,171,194,197"/>
-<area shape="rect" id="node9" href="$classTipVar.html" title="Class representing a type variable." alt="" coords="131,233,194,260"/>
-<area shape="rect" id="node3" href="$classTipAbsentField.html" title="A proper type representing an absent record field." alt="" coords="248,5,367,32"/>
-<area shape="rect" id="node4" href="$classTipFunction.html" title="A proper type representing a function." alt="" coords="259,56,356,83"/>
-<area shape="rect" id="node5" href="$classTipInt.html" title="A proper type representing an int." alt="" coords="278,107,337,133"/>
-<area shape="rect" id="node6" href="$classTipRecord.html" title="A proper type representing a record." alt="" coords="264,157,351,184"/>
-<area shape="rect" id="node7" href="$classTipRef.html" title="A proper type representing a reference." alt="" coords="275,208,339,235"/>
-<area shape="rect" id="node10" href="$classTipAlpha.html" title="Class for free type variables." alt="" coords="268,259,347,285"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,120,80"/>
+<area shape="rect" id="Node000001" href="$classError.html" title="Base class for tipc errors." alt="" coords="168,55,221,80"/>
+<area shape="poly" id="edge80_Node000000_Node000001" title=" " alt="" coords="134,65,168,65,168,70,134,70"/>
+<area shape="rect" id="Node000002" href="$classInternalError.html" title="Class for tipc internal errors." alt="" coords="275,5,378,31"/>
+<area shape="poly" id="edge81_Node000001_Node000002" title=" " alt="" coords="233,50,291,28,293,33,235,55"/>
+<area shape="rect" id="Node000003" href="$classParseError.html" title="Class for tipc parse errors." alt="" coords="283,55,371,80"/>
+<area shape="poly" id="edge82_Node000001_Node000003" title=" " alt="" coords="235,65,283,65,283,70,235,70"/>
+<area shape="rect" id="Node000004" href="$classSemanticError.html" title="Class for tipc semantic errors." alt="" coords="269,104,384,129"/>
+<area shape="poly" id="edge83_Node000001_Node000004" title=" " alt="" coords="235,79,293,101,291,106,233,84"/>
+<area shape="rect" id="Node000005" href="$classUnificationError.html" title="A runtime error when unifying type terms." alt="" coords="432,104,555,129"/>
+<area shape="poly" id="edge84_Node000004_Node000005" title=" " alt="" coords="398,114,432,114,432,119,398,119"/>
 </map>

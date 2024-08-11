@@ -1,5 +1,7 @@
 <map id="ASTNullExpr" name="ASTNullExpr">
-<area shape="rect" id="node1" title="Class for a null expression." alt="" coords="5,155,108,181"/>
-<area shape="rect" id="node2" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="19,80,95,107"/>
-<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="16,5,97,32"/>
+<area shape="rect" id="Node000001" title="Class for a null expression." alt="" coords="5,152,108,177"/>
+<area shape="rect" id="Node000002" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="19,79,95,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,118,59,152,54,152,54,118"/>
+<area shape="rect" id="Node000003" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="16,5,97,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,44,59,79,54,79,54,44"/>
 </map>

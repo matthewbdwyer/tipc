@@ -1,5 +1,7 @@
 <map id="ASTIfStmt" name="ASTIfStmt">
-<area shape="rect" id="node1" title="Class for if&#45;then&#45;else." alt="" coords="5,155,92,181"/>
-<area shape="rect" id="node2" href="$classASTStmt.html" title="Base class for all statement nodes." alt="" coords="9,80,88,107"/>
-<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="8,5,89,32"/>
+<area shape="rect" id="Node000001" title="Class for if&#45;then&#45;else." alt="" coords="5,152,92,177"/>
+<area shape="rect" id="Node000002" href="$classASTStmt.html" title="Base class for all statement nodes." alt="" coords="9,79,88,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="51,118,51,152,46,152,46,118"/>
+<area shape="rect" id="Node000003" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="8,5,89,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="51,44,51,79,46,79,46,44"/>
 </map>

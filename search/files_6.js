@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['optimizer_2ecpp_610',['Optimizer.cpp',['../Optimizer_8cpp.html',1,'']]],
-  ['optimizer_2eh_611',['Optimizer.h',['../Optimizer_8h.html',1,'']]]
+  ['opaquepointers_2emd_0',['OpaquePointers.md',['../OpaquePointers_8md.html',1,'']]],
+  ['optimizer_2ecpp_1',['Optimizer.cpp',['../Optimizer_8cpp.html',1,'']]],
+  ['optimizer_2eh_2',['Optimizer.h',['../Optimizer_8h.html',1,'']]]
 ];

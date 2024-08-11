@@ -1,9 +1,18 @@
-<map id="/home/runner/work/tipc/tipc/src/semantic/types/concrete/TipFunction.h" name="/home/runner/work/tipc/tipc/src/semantic/types/concrete/TipFunction.h">
-<area shape="rect" id="node1" title=" " alt="" coords="75,5,252,61"/>
-<area shape="rect" id="node2" href="$TipCons_8h.html" title=" " alt="" coords="39,109,125,136"/>
-<area shape="rect" id="node3" href="$TipType_8h.html" title=" " alt="" coords="5,184,89,211"/>
-<area shape="rect" id="node4" title=" " alt="" coords="142,259,219,285"/>
-<area shape="rect" id="node6" title=" " alt="" coords="113,184,176,211"/>
-<area shape="rect" id="node7" title=" " alt="" coords="251,109,310,136"/>
-<area shape="rect" id="node5" title=" " alt="" coords="9,259,85,285"/>
+<map id="/tipc/src/semantic/types/concrete/TipFunction.h" name="/tipc/src/semantic/types/concrete/TipFunction.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="57,5,270,45"/>
+<area shape="rect" id="Node000002" href="$TipCons_8h.html" title=" " alt="" coords="39,93,125,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,47,106,85,102,82,142,44"/>
+<area shape="rect" id="Node000003" href="$TipType_8h.html" title=" " alt="" coords="5,167,89,192"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="90,48,55,67,40,80,28,95,23,109,24,124,35,154,30,155,19,125,18,108,24,92,36,76,52,62,88,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="142,240,219,265"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="172,45,186,110,191,151,191,192,187,227,182,226,186,192,186,151,181,110,166,46"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="113,167,176,192"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="164,46,150,153,145,153,158,46"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="251,93,310,119"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="193,43,254,84,251,88,190,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,120,61,155,57,153,74,118"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="94,117,127,154,123,158,90,121"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="70,190,148,231,146,236,68,194"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="9,240,85,265"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="50,192,50,226,45,226,45,192"/>
 </map>

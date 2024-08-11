@@ -1,5 +1,29 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classConstraintHandler.html" title="Abstract class for handling type constraints as they are generated." alt="" coords="5,31,145,57"/>
-<area shape="rect" id="node2" href="$classConstraintCollector.html" title="A constraint handler to collect constraints." alt="" coords="193,5,340,32"/>
-<area shape="rect" id="node3" href="$classConstraintUnifier.html" title="A constraint handler to unify constraints on the fly." alt="" coords="201,56,333,83"/>
+<area shape="rect" id="Node000000" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="5,203,95,228"/>
+<area shape="rect" id="Node000001" href="$classAbsentFieldChecker.html" title="Visits AST and checks that all field accesses are to defined fields." alt="" coords="155,5,305,31"/>
+<area shape="poly" id="edge64_Node000000_Node000001" title=" " alt="" coords="55,189,67,155,84,115,109,74,141,40,160,28,163,33,144,44,113,78,89,117,72,157,60,190"/>
+<area shape="rect" id="Node000002" href="$classCFAnalyzer.html" title="Performs control flow analyses with the help of AST and Symbol table of a program Provides helper fun..." alt="" coords="183,55,277,80"/>
+<area shape="poly" id="edge65_Node000000_Node000002" title=" " alt="" coords="61,189,92,138,115,112,141,89,161,79,182,72,183,77,163,84,144,94,119,116,97,142,65,192"/>
+<area shape="rect" id="Node000003" href="$classCallGraphBuilder.html" title="Builds call graph of a program that represents calling relationships between subroutines This class o..." alt="" coords="164,104,296,129"/>
+<area shape="poly" id="edge66_Node000000_Node000003" title=" " alt="" coords="72,191,103,163,141,138,170,127,172,132,144,143,106,168,75,195"/>
+<area shape="rect" id="Node000004" href="$classCheckAssignable.html" title="Check if left hand side of assignment is an l&#45;value." alt="" coords="163,153,297,179"/>
+<area shape="poly" id="edge67_Node000000_Node000004" title=" " alt="" coords="107,197,182,176,183,181,108,202"/>
+<area shape="rect" id="Node000005" href="$classFieldNameCollector.html" title="Collects all field names referenced within the program." alt="" coords="155,203,305,228"/>
+<area shape="poly" id="edge68_Node000000_Node000005" title=" " alt="" coords="108,213,155,213,155,218,108,218"/>
+<area shape="rect" id="Node000006" href="$classFunctionNameCollector.html" title="Collects the names of functions declared in the program." alt="" coords="143,252,317,277"/>
+<area shape="poly" id="edge69_Node000000_Node000006" title=" " alt="" coords="108,228,183,249,182,254,107,234"/>
+<area shape="rect" id="Node000007" href="$classLocalNameCollector.html" title="Records local names declared in each function and checks for errors." alt="" coords="153,301,307,327"/>
+<area shape="poly" id="edge70_Node000000_Node000007" title=" " alt="" coords="75,235,107,262,144,286,175,299,173,304,141,291,103,266,72,239"/>
+<area shape="rect" id="Node000008" href="$classPrettyPrinter.html" title="GNU Style PrettyPrinter." alt="" coords="178,351,282,376"/>
+<area shape="poly" id="edge71_Node000000_Node000008" title=" " alt="" coords="66,239,97,289,119,314,144,336,179,352,177,357,141,340,115,318,93,292,61,242"/>
+<area shape="rect" id="Node000009" href="$classTypeConstraintVisitor.html" title="Visitor generates type constraints and processes them." alt="" coords="149,400,311,425"/>
+<area shape="poly" id="edge72_Node000000_Node000009" title=" " alt="" coords="61,241,72,274,89,313,113,352,144,385,166,398,163,402,141,389,109,355,85,315,67,276,56,242"/>
+<area shape="rect" id="Node000010" href="$classPolyTypeConstraintVisitor.html" title="Visitor generates polymorphic type constraints and collects them. This visitor is called for a functi..." alt="" coords="374,351,563,376"/>
+<area shape="poly" id="edge73_Node000009_Node000010" title=" " alt="" coords="305,395,406,373,407,379,306,400"/>
+<area shape="rect" id="Node000012" href="$classTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="365,400,572,425"/>
+<area shape="poly" id="edge75_Node000009_Node000012" title=" " alt="" coords="325,410,365,410,365,415,325,415"/>
+<area shape="rect" id="Node000013" href="$classTypeConstraintUnifyVisitor.html" title="Visitor generates type constraints and unifies them on&#45;the&#45;fly." alt="" coords="371,449,566,475"/>
+<area shape="poly" id="edge76_Node000009_Node000013" title=" " alt="" coords="306,426,407,447,406,452,305,431"/>
+<area shape="rect" id="Node000011" href="$classPolyTypeConstraintCollectVisitor.html" title="Visitor generates type constraints and collects them." alt="" coords="620,343,812,383"/>
+<area shape="poly" id="edge74_Node000010_Node000011" title=" " alt="" coords="577,361,620,361,620,366,577,366"/>
 </map>

@@ -1,16 +1,29 @@
 <map id="ASTExpr" name="ASTExpr">
-<area shape="rect" id="node1" title="Abstract class for all expression subtypes." alt="" coords="135,284,211,311"/>
-<area shape="rect" id="node3" href="$classASTAccessExpr.html" title="Class for a record field access." alt="" coords="263,5,383,32"/>
-<area shape="rect" id="node4" href="$classASTAllocExpr.html" title="Class for alloc expression." alt="" coords="270,56,377,83"/>
-<area shape="rect" id="node5" href="$classASTBinaryExpr.html" title="Class for a binary operator." alt="" coords="264,107,383,133"/>
-<area shape="rect" id="node6" href="$classASTDeRefExpr.html" title="Class for dereferencing a pointer expression." alt="" coords="265,157,381,184"/>
-<area shape="rect" id="node7" href="$classASTFieldExpr.html" title="Class for the field of a record." alt="" coords="270,208,377,235"/>
-<area shape="rect" id="node8" href="$classASTFunAppExpr.html" title="Class for function call expressions." alt="" coords="261,259,385,285"/>
-<area shape="rect" id="node9" href="$classASTInputExpr.html" title="Class for input expression." alt="" coords="269,309,378,336"/>
-<area shape="rect" id="node10" href="$classASTNullExpr.html" title="Class for a null expression." alt="" coords="272,360,375,387"/>
-<area shape="rect" id="node11" href="$classASTNumberExpr.html" title="Class for numeric literals." alt="" coords="259,411,387,437"/>
-<area shape="rect" id="node12" href="$classASTRecordExpr.html" title="Class for defining a record." alt="" coords="263,461,384,488"/>
-<area shape="rect" id="node13" href="$classASTRefExpr.html" title="Class for referencing the address of an expression." alt="" coords="274,512,373,539"/>
-<area shape="rect" id="node14" href="$classASTVariableExpr.html" title="Class for referencing a variable." alt="" coords="259,563,388,589"/>
-<area shape="rect" id="node2" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="5,284,87,311"/>
+<area shape="rect" id="Node000001" title="Abstract class for all expression subtypes." alt="" coords="135,277,211,303"/>
+<area shape="rect" id="Node000003" href="$classASTAccessExpr.html" title="Class for a record field access." alt="" coords="263,5,383,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,263,180,217,194,157,218,95,236,66,257,40,273,29,276,33,260,44,240,69,223,97,199,159,185,218,178,264"/>
+<area shape="rect" id="Node000004" href="$classASTAllocExpr.html" title="Class for alloc expression." alt="" coords="270,55,377,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="176,263,185,225,201,178,224,131,257,89,274,78,277,82,260,93,229,134,205,180,190,226,181,264"/>
+<area shape="rect" id="Node000005" href="$classASTBinaryExpr.html" title="Class for a binary operator." alt="" coords="264,104,383,129"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="180,263,208,202,230,168,257,139,275,127,278,132,260,143,234,171,213,204,185,265"/>
+<area shape="rect" id="Node000006" href="$classASTDeRefExpr.html" title="Class for dereferencing a pointer expression." alt="" coords="265,153,381,179"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="187,264,217,225,257,188,278,177,280,181,260,192,221,229,191,268"/>
+<area shape="rect" id="Node000007" href="$classASTFieldExpr.html" title="Class for the field of a record." alt="" coords="270,203,377,228"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="203,268,257,237,284,226,286,231,260,242,206,272"/>
+<area shape="rect" id="Node000008" href="$classASTFunAppExpr.html" title="Class for function call expressions." alt="" coords="261,252,385,277"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="224,279,260,273,261,278,225,284"/>
+<area shape="rect" id="Node000009" href="$classASTInputExpr.html" title="Class for input expression." alt="" coords="269,301,378,327"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="225,296,269,303,268,308,224,301"/>
+<area shape="rect" id="Node000010" href="$classASTNullExpr.html" title="Class for a null expression." alt="" coords="272,351,375,376"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="207,308,260,337,286,348,284,353,258,342,204,312"/>
+<area shape="rect" id="Node000011" href="$classASTNumberExpr.html" title="Class for numeric literals." alt="" coords="259,400,387,425"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="192,313,221,350,260,386,281,398,278,402,257,391,217,354,188,316"/>
+<area shape="rect" id="Node000012" href="$classASTRecordExpr.html" title="Class for defining a record." alt="" coords="263,449,384,475"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="185,315,213,375,234,408,260,436,278,447,275,451,257,440,230,411,208,378,180,317"/>
+<area shape="rect" id="Node000013" href="$classASTRefExpr.html" title="Class for referencing the address of an expression." alt="" coords="274,499,373,524"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="181,316,190,353,206,399,229,445,260,485,277,496,274,501,257,489,224,448,201,401,185,355,176,317"/>
+<area shape="rect" id="Node000014" href="$classASTVariableExpr.html" title="Class for referencing a variable." alt="" coords="259,548,388,573"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="178,316,185,362,199,421,223,481,240,510,260,535,276,546,273,550,257,539,236,513,218,484,194,422,180,363,173,316"/>
+<area shape="rect" id="Node000002" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="5,277,87,303"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,287,135,287,135,293,101,293"/>
 </map>

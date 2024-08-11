@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['fieldnamecollector_472',['FieldNameCollector',['../classFieldNameCollector.html',1,'']]],
-  ['freshalphacopier_473',['FreshAlphaCopier',['../classFreshAlphaCopier.html',1,'']]],
-  ['frontend_474',['FrontEnd',['../classFrontEnd.html',1,'']]],
-  ['functionnamecollector_475',['FunctionNameCollector',['../classFunctionNameCollector.html',1,'']]]
+  ['declarationcontext_0',['DeclarationContext',['../classTIPParser_1_1DeclarationContext.html',1,'TIPParser']]],
+  ['derefexprcontext_1',['DeRefExprContext',['../classTIPParser_1_1DeRefExprContext.html',1,'TIPParser']]]
 ];

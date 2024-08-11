@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classFrontEnd.html" title="A collection of routines implementing the compiler front end." alt="" coords="5,5,84,32"/>
+<area shape="rect" id="Node000000" href="$classConstraintHandler.html" title="Abstract class for handling type constraints as they are generated." alt="" coords="5,31,145,56"/>
+<area shape="rect" id="Node000001" href="$classConstraintCollector.html" title="A constraint handler to collect constraints." alt="" coords="193,5,340,31"/>
+<area shape="poly" id="edge77_Node000000_Node000001" title=" " alt="" coords="159,30,193,25,193,30,160,35"/>
+<area shape="rect" id="Node000002" href="$classConstraintUnifier.html" title="A constraint handler to unify constraints on the fly." alt="" coords="201,55,333,80"/>
+<area shape="poly" id="edge78_Node000000_Node000002" title=" " alt="" coords="160,51,201,56,200,62,159,57"/>
 </map>

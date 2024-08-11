@@ -1,6 +1,9 @@
-<map id="/home/runner/work/tipc/tipc/src/error/InternalError.h" name="/home/runner/work/tipc/tipc/src/error/InternalError.h">
-<area shape="rect" id="node1" title=" " alt="" coords="300,5,504,47"/>
-<area shape="rect" id="node2" href="$CodeGenFunctions_8cpp.html" title=" " alt="" coords="5,102,289,143"/>
-<area shape="rect" id="node3" href="$Unifier_8cpp.html" title=" " alt="" coords="313,95,491,151"/>
-<area shape="rect" id="node4" href="$tipc_8cpp.html" title=" " alt="" coords="515,102,689,143"/>
+<map id="/tipc/src/error/InternalError.h" name="/tipc/src/error/InternalError.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="232,5,395,45"/>
+<area shape="rect" id="Node000002" href="$CodeGenFunctions_8cpp.html" title=" " alt="" coords="5,93,200,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,53,150,96,148,91,254,48"/>
+<area shape="rect" id="Node000003" href="$Unifier_8cpp.html" title=" " alt="" coords="224,93,403,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="316,59,316,93,311,93,311,59"/>
+<area shape="rect" id="Node000004" href="$tipc_8cpp.html" title=" " alt="" coords="427,101,555,126"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="366,49,468,98,466,103,364,54"/>
 </map>

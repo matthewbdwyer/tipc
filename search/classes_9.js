@@ -1,20 +1,7 @@
 var searchData=
 [
-  ['tipabsentfield_493',['TipAbsentField',['../classTipAbsentField.html',1,'']]],
-  ['tipalpha_494',['TipAlpha',['../classTipAlpha.html',1,'']]],
-  ['tipcons_495',['TipCons',['../classTipCons.html',1,'']]],
-  ['tipfunction_496',['TipFunction',['../classTipFunction.html',1,'']]],
-  ['tipint_497',['TipInt',['../classTipInt.html',1,'']]],
-  ['tipmu_498',['TipMu',['../classTipMu.html',1,'']]],
-  ['tiprecord_499',['TipRecord',['../classTipRecord.html',1,'']]],
-  ['tipref_500',['TipRef',['../classTipRef.html',1,'']]],
-  ['tiptype_501',['TipType',['../classTipType.html',1,'']]],
-  ['tiptypevisitor_502',['TipTypeVisitor',['../classTipTypeVisitor.html',1,'']]],
-  ['tipvar_503',['TipVar',['../classTipVar.html',1,'']]],
-  ['typeconstraint_504',['TypeConstraint',['../classTypeConstraint.html',1,'']]],
-  ['typeconstraintcollectvisitor_505',['TypeConstraintCollectVisitor',['../classTypeConstraintCollectVisitor.html',1,'']]],
-  ['typeconstraintunifyvisitor_506',['TypeConstraintUnifyVisitor',['../classTypeConstraintUnifyVisitor.html',1,'']]],
-  ['typeconstraintvisitor_507',['TypeConstraintVisitor',['../classTypeConstraintVisitor.html',1,'']]],
-  ['typeinference_508',['TypeInference',['../classTypeInference.html',1,'']]],
-  ['typevars_509',['TypeVars',['../classTypeVars.html',1,'']]]
+  ['namedeclarationcontext_0',['NameDeclarationContext',['../classTIPParser_1_1NameDeclarationContext.html',1,'TIPParser']]],
+  ['negnumbercontext_1',['NegNumberContext',['../classTIPParser_1_1NegNumberContext.html',1,'TIPParser']]],
+  ['nullexprcontext_2',['NullExprContext',['../classTIPParser_1_1NullExprContext.html',1,'TIPParser']]],
+  ['numexprcontext_3',['NumExprContext',['../classTIPParser_1_1NumExprContext.html',1,'TIPParser']]]
 ];

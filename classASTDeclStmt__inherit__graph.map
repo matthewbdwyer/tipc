@@ -1,5 +1,7 @@
 <map id="ASTDeclStmt" name="ASTDeclStmt">
-<area shape="rect" id="node1" title="Class for local variable declaration statement." alt="" coords="5,155,112,181"/>
-<area shape="rect" id="node2" href="$classASTStmt.html" title="Base class for all statement nodes." alt="" coords="19,80,98,107"/>
-<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="18,5,99,32"/>
+<area shape="rect" id="Node000001" title="Class for local variable declaration statement." alt="" coords="5,152,112,177"/>
+<area shape="rect" id="Node000002" href="$classASTStmt.html" title="Base class for all statement nodes." alt="" coords="19,79,98,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,118,61,152,56,152,56,118"/>
+<area shape="rect" id="Node000003" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="18,5,99,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,44,61,79,56,79,56,44"/>
 </map>
