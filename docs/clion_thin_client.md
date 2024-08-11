@@ -59,25 +59,25 @@ the environment. The modulefiles are in the `conf` directory.
 
 You can load the tipc module with the following command.
 ```bash
-module load ~/tipc/conf/modulefiles/tipc/F23
+module load ~/tipc/conf/modulefiles/tipc/F24
 ```
 
 Please note that there is an assumption in the stock modulefile that `tipc` is
 cloned to your home directory. If that assumption does not hold true, update
-the `topdir` variable in `conf/modules/tipc/F23` to the actual location of the
+the `topdir` variable in `conf/modules/tipc/F24` to the actual location of the
 `tipc` repository.  
 
 To confirm the module was successfully loaded check the value of the `TIPCLANG`
 environment variable.  
 ```bash
 echo $TIPCLANG
-# /sw/ubuntu-22.04/llvm/14.0.6/bin/clang-14
+# /sw/ubuntu-22.04/llvm/17.0.6/bin/clang-17
 ```
 
 To load the `tipc` environment every time you ssh to portal, add the `module
 load` command to your `bashrc`.
 ```bash
-echo 'module load ~/tipc/conf/modulefiles/tipc/F23' >> ~/.bashrc
+echo 'module load ~/tipc/conf/modulefiles/tipc/F24' >> ~/.bashrc
 ```
 
 ## Building tipc from the Command Line.
@@ -152,7 +152,7 @@ From the "Project Wizard" popup accept the default toolchain by pressing "Next".
 
 Update the default CMake profile on the following page. Set the "Generator" to
 "Unix Makefiles", the "Build directory" to `build`, and the "Environment" to
-`LLVM_DIR=/sw/ubuntu-22.04/llvm/14.0.6/lib/cmake`. Select "Finish".    
+`LLVM_DIR=/sw/ubuntu-22.04/llvm/17.0.6/lib/cmake`. Select "Finish".
 
 ![](assets/clion/client_wizard_cmake.png)
 
