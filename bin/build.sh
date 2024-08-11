@@ -21,7 +21,7 @@ fi
 
 ${TIPC} $@
 
-# Skip the link step if help is requested 
-if [ $1 != "--help" ]; then
+# Only perform link step if bitcode has been generated
+if [[ ! "$@" =~ "--help" ]] && [[ ! "$@" =~ "--asm" ]]; then
   ${TIPCLANG} -w ${@: -1}.bc ${RTLIB}/tip_rtlib.bc -o `basename ${@: -1} .tip`
 fi
