@@ -156,7 +156,7 @@ From the `File` menu select `New` and then `Project from Version Control`.  You 
 
 From the `CLion` menu select `Build, Execution, Deployment` and then `CMake`.  You want to change the `Build directory` to `build` and then define an `Environment` variable.   When you ran the `bootstrap.sh` script it defined a shell variable `LLVM_DIR` in your `.bashrc`.  Copy that definition into the `Environment` field under `Cache variables`.  Your `Settings` should look as follows:
 
-![CLion CMake Settings](docs/assets/clion/clion-settings-for-tipc.png)
+![CLion CMake Settings](docs/assets/clion/clion_settings_for_tipc.png)
 
 Now you can click `Apply` and then `OK` to complete the setup.
 
@@ -349,7 +349,9 @@ There is lots of great advice about using LLVM available:
   * the [LLVM Programmer's Manual](http://llvm.org/docs/ProgrammersManual.html) is a key resource
   * someone once told me to just use a search engine to find the LLVM APIs and its a standard use case for me, e.g., I don't remember where the docs are I just search for `llvm irbuilder`
   * LLVM has some nuances that take a bit to understand.  For instance, the [GEP](https://llvm.org/docs/GetElementPtr.html) instruction, which `tipc` uses quite a bit given that it emits calls through a function table.
-  
+  * LLVM15+ have implemented the concept of "Opaque Pointers", this removes all the typed pointer implementations and associated functions.
+    * [LLVM Docs on OpaquePointers](https://llvm.org/docs/OpaquePointers.html) talks about this in reasonable detail.
+    * [Here](docs/OpaquePointers.md) is a Quick summary of the change and how that affects tipc.
 ### Git Resources
 + [Pro Git Book](https://git-scm.com/book/en/v2)
 + [Git For Ages 4 And Up](https://www.youtube.com/watch?v=1ffBJ4sVUb4)
