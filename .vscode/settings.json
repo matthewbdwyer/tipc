@@ -4,5 +4,7 @@
 		"ms-vscode.cpptools-extension-pack",
 		"mike-lischke.vscode-antlr4",
         "matepek.vscode-catch2-test-adapter"
-    ]
+    ],
+    "cmake.generator": "Unix Makefiles",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
 }
