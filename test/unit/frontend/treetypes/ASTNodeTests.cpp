@@ -21,6 +21,6 @@ TEST_CASE("ASTAccessExprTest: Test methods of AST subtype.",
   REQUIRE(o1.str() == "f");
 
   std::stringstream o2;
-  o2 << accexpr->getRecord();
-  REQUIRE(o2.str() == "{f : 0}");
+  o2 << *accexpr->getRecord();
+  REQUIRE(o2.str() == "{f:0}");
 }
