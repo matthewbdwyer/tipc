@@ -2,6 +2,7 @@ add_library(test_helpers)
 target_sources(
   test_helpers
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ASTNodeHelpers.h
+          ${CMAKE_CURRENT_SOURCE_DIR}/ASTNodeFinder.h
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTHelper.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/ASTHelper.h
           ${CMAKE_CURRENT_SOURCE_DIR}/GeneralHelper.cpp
