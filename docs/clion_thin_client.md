@@ -71,7 +71,7 @@ To confirm the module was successfully loaded check the value of the `TIPCLANG`
 environment variable.  
 ```bash
 echo $TIPCLANG
-# /sw/ubuntu-22.04/llvm/17.0.6/bin/clang-17
+# /sw/ubuntu-22.04/clangllvm/17.0.6/bin/clang
 ```
 
 To load the `tipc` environment every time you ssh to portal, add the `module
