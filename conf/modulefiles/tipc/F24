@@ -15,5 +15,5 @@ set topdir $HOME/tipc
 module load $topdir/conf/modulefiles/java/11
 module load clang-llvm-17.0.6
 module load cmake-3.26.4
-setenv TIPCLANG /sw/ubuntu-22.04/llvm/17.0.6/bin/clang-17
+setenv TIPCLANG /sw/ubuntu-22.04/clangllvm/17.0.6/bin/clang
 setenv LLVM_DIR /sw/ubuntu-22.04/llvm/17.0.6/lib/cmake
