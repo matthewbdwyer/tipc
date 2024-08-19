@@ -17,7 +17,7 @@ This project implements `tipc` which compiles TIP programs into LLVM bitcode.  L
 
 ## Dependencies
 
-`tipc` is implemented in C++17 and depends on a number of tools and packages, e.g., [ANTLR4](https://www.antlr.org), [Catch2](https://github.com/catchorg/Catch2), [CMake](https://cmake.org/), [Doxygen](https://www.doxygen.nl/), [loguru](https://github.com/emilk/loguru), [Java](https://www.java.com), [LLVM](https://www.llvm.org).  To simplify dependency management the project provides a [bootstrap](bin/bootstrap.sh) script to install all of the required dependencies on linux ubuntu and mac platforms; if you are using `portal.cs.virginia.edu` to build then you can replace this script with running `module load <pathto>/tipc/conf/modulefiles/tipc/F24`.
+`tipc` is implemented in C++17 and depends on a number of tools and packages, e.g., [ANTLR4](https://www.antlr.org), [Catch2](https://github.com/catchorg/Catch2), [CMake](https://cmake.org/), [Doxygen](https://www.doxygen.nl/), [loguru](https://github.com/emilk/loguru), [Java](https://www.java.com), [LLVM](https://www.llvm.org).  To simplify dependency management the project provides a [bootstrap](bin/bootstrap.sh) script to install all of the required dependencies on linux ubuntu and mac platforms; if you are using `portal.cs.virginia.edu` to build then you can replace this script with running `module load <pathto>/tipc/conf/modulefiles/tipc/F24`, where `<pathto>` is the path to where you have installed `tipc`.
 
 ## Building tipc
 
