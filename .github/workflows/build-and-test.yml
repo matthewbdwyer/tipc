@@ -2,7 +2,10 @@ name: build
 
 defaults:
   run:
+    # NOTE: Runners only provide bash (even on macOS).
+    # NOTE: -i to load the bashrc settings.
     shell: bash -ieo pipefail {0}
+
 
 on:
   push:
@@ -15,8 +18,16 @@ jobs:
       matrix:
         os: 
           - ubuntu-22.04
+          - macos-13
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - run: |
+          # Let homebrew manage python instead of the 3rd party-install.
+          python_version_number=3.12
+          sudo rm -rf /Library/Frameworks/Python.framework/Versions/${python_version_number}/
+          sudo rm -rf "/Applications/Python ${python_version_number}/"
+          cd /usr/local/bin && ls -l | grep "/Library/Frameworks/Python.framework/Versions/${python_version_number}" | awk '{print $9}' | sudo xargs rm
+        if: runner.os == 'macOS'
       - run: ./bin/bootstrap.sh
       - run: |
           mkdir build
@@ -28,7 +39,7 @@ jobs:
       - name: Cache build
         if: runner.os == 'Linux'
         id: cache-build
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: build
           key: linux-build-${{ github.sha }}
@@ -36,10 +47,10 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Restore build
         id: cache-build
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: build
           key: linux-build-${{ github.sha }}
@@ -54,7 +65,7 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: sudo apt install lcov doxygen graphviz python3 python3-pip python3-setuptools
       - run: python3 -m pip install coverxygen
       - run: ./bin/gendocs.sh
