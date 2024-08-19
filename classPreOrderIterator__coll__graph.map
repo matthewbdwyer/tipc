@@ -1,7 +1,5 @@
 <map id="PreOrderIterator" name="PreOrderIterator">
-<area shape="rect" id="Node000001" title="An iterator implementation for a depth&#45;first, pre&#45;order, transversal." alt="" coords="5,168,132,193"/>
-<area shape="rect" id="Node000002" href="$classIteratorImpl.html" title="The interface that an iterator should follow." alt="" coords="19,93,118,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,133,71,168,66,168,66,133"/>
-<area shape="rect" id="Node000003" href="$classSyntaxTree.html" title="A convenient interface to the AST nodes." alt="" coords="21,5,116,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="71,45,71,93,66,93,66,45"/>
+<area shape="rect" id="node1" title="An iterator implementation for a depth&#45;first, pre&#45;order, transversal." alt="" coords="5,171,132,197"/>
+<area shape="rect" id="node2" href="$classIteratorImpl.html" title="The interface that an iterator should follow." alt="" coords="19,95,118,121"/>
+<area shape="rect" id="node3" href="$classSyntaxTree.html" title="A convenient interface to the AST nodes." alt="" coords="21,5,116,32"/>
 </map>

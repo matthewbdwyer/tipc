@@ -1,7 +1,5 @@
-<map id="/tipc/src/semantic/types/constraints/AbsentFieldChecker.h" name="/tipc/src/semantic/types/constraints/AbsentFieldChecker.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="100,5,319,60"/>
-<area shape="rect" id="Node000002" href="$TypeInference_8cpp.html" title=" " alt="" coords="5,115,189,155"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,72,120,117,117,113,168,68"/>
-<area shape="rect" id="Node000003" href="$AbsentFieldChecker_8cpp.html" title=" " alt="" coords="213,108,432,163"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,67,295,106,291,110,248,71"/>
+<map id="/home/runner/work/tipc/tipc/src/semantic/types/constraints/AbsentFieldChecker.h" name="/home/runner/work/tipc/tipc/src/semantic/types/constraints/AbsentFieldChecker.h">
+<area shape="rect" id="node1" title=" " alt="" coords="133,5,374,61"/>
+<area shape="rect" id="node2" href="$AbsentFieldChecker_8cpp.html" title=" " alt="" coords="5,109,261,165"/>
+<area shape="rect" id="node3" href="$TypeInference_8cpp.html" title=" " alt="" coords="286,109,463,165"/>
 </map>

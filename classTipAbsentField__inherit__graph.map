@@ -1,7 +1,5 @@
 <map id="TipAbsentField" name="TipAbsentField">
-<area shape="rect" id="Node000001" title="A proper type representing an absent record field." alt="" coords="5,152,124,177"/>
-<area shape="rect" id="Node000002" href="$classTipCons.html" title="Abstract base class for all proper types." alt="" coords="27,79,102,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,118,67,152,62,152,62,118"/>
-<area shape="rect" id="Node000003" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="29,5,101,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="67,44,67,79,62,79,62,44"/>
+<area shape="rect" id="node1" title="A proper type representing an absent record field." alt="" coords="5,155,124,181"/>
+<area shape="rect" id="node2" href="$classTipCons.html" title="Abstract base class for all proper types." alt="" coords="27,80,102,107"/>
+<area shape="rect" id="node3" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="29,5,101,32"/>
 </map>

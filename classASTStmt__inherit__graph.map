@@ -1,21 +1,12 @@
 <map id="ASTStmt" name="ASTStmt">
-<area shape="rect" id="Node000001" title="Base class for all statement nodes." alt="" coords="135,179,213,204"/>
-<area shape="rect" id="Node000003" href="$classASTAssignStmt.html" title="Class for assignment." alt="" coords="263,5,383,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,165,210,103,232,69,260,40,277,29,280,33,263,44,236,73,215,106,186,167"/>
-<area shape="rect" id="Node000004" href="$classASTBlockStmt.html" title="Class for block of statements." alt="" coords="265,55,380,80"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="189,166,219,127,260,89,280,78,282,83,263,93,223,131,193,169"/>
-<area shape="rect" id="Node000005" href="$classASTDeclStmt.html" title="Class for local variable declaration statement." alt="" coords="269,104,376,129"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="205,169,260,138,286,127,288,132,263,143,208,174"/>
-<area shape="rect" id="Node000006" href="$classASTErrorStmt.html" title="Class for a error statement." alt="" coords="268,153,377,179"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="227,180,267,173,268,178,227,185"/>
-<area shape="rect" id="Node000007" href="$classASTIfStmt.html" title="Class for if&#45;then&#45;else." alt="" coords="279,203,366,228"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="227,197,280,206,279,211,227,202"/>
-<area shape="rect" id="Node000008" href="$classASTOutputStmt.html" title="Class for an output statement." alt="" coords="261,252,384,277"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="209,209,263,238,288,249,286,254,260,243,206,214"/>
-<area shape="rect" id="Node000009" href="$classASTReturnStmt.html" title="Class for a return statement." alt="" coords="262,301,383,327"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="194,214,223,252,263,288,283,299,281,304,260,292,220,255,189,217"/>
-<area shape="rect" id="Node000010" href="$classASTWhileStmt.html" title="Class for a while loop." alt="" coords="265,351,380,376"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="187,216,215,277,237,309,263,337,280,348,277,353,260,341,233,312,211,279,182,218"/>
-<area shape="rect" id="Node000002" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="5,179,87,204"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,189,135,189,135,194,101,194"/>
+<area shape="rect" id="node1" title="Base class for all statement nodes." alt="" coords="135,183,213,209"/>
+<area shape="rect" id="node3" href="$classASTAssignStmt.html" title="Class for assignment." alt="" coords="263,5,383,32"/>
+<area shape="rect" id="node4" href="$classASTBlockStmt.html" title="Class for block of statements." alt="" coords="265,56,380,83"/>
+<area shape="rect" id="node5" href="$classASTDeclStmt.html" title="Class for local variable declaration statement." alt="" coords="269,107,376,133"/>
+<area shape="rect" id="node6" href="$classASTErrorStmt.html" title="Class for a error statement." alt="" coords="268,157,377,184"/>
+<area shape="rect" id="node7" href="$classASTIfStmt.html" title="Class for if&#45;then&#45;else." alt="" coords="279,208,366,235"/>
+<area shape="rect" id="node8" href="$classASTOutputStmt.html" title="Class for an output statement." alt="" coords="261,259,384,285"/>
+<area shape="rect" id="node9" href="$classASTReturnStmt.html" title="Class for a return statement." alt="" coords="262,309,383,336"/>
+<area shape="rect" id="node10" href="$classASTWhileStmt.html" title="Class for a while loop." alt="" coords="265,360,380,387"/>
+<area shape="rect" id="node2" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="5,183,87,209"/>
 </map>

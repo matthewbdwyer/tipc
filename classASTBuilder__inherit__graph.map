@@ -1,9 +1,4 @@
 <map id="ASTBuilder" name="ASTBuilder">
-<area shape="rect" id="Node000001" title="Parse tree visitor that generates a program AST." alt="" coords="54,240,147,265"/>
-<area shape="rect" id="Node000002" href="$classTIPBaseVisitor.html" title=" " alt="" coords="43,167,159,192"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,206,103,240,98,240,98,206"/>
-<area shape="rect" id="Node000003" href="$classTIPVisitor.html" title=" " alt="" coords="59,93,143,119"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,132,103,167,98,167,98,132"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,5,196,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,59,103,93,98,93,98,59"/>
+<area shape="rect" id="node1" title="Parse tree visitor that generates a program AST." alt="" coords="17,80,110,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,121,32"/>
 </map>

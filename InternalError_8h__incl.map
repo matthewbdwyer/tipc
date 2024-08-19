@@ -1,11 +1,7 @@
-<map id="/tipc/src/error/InternalError.h" name="/tipc/src/error/InternalError.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="75,5,238,45"/>
-<area shape="rect" id="Node000002" href="$Error_8h.html" title=" " alt="" coords="125,93,189,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,46,159,79,154,79,154,46"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,92,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="141,121,79,161,76,157,138,116"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="117,167,197,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="159,119,159,153,154,153,154,119"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="221,167,279,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="173,117,226,156,222,160,170,121"/>
+<map id="/home/runner/work/tipc/tipc/src/error/InternalError.h" name="/home/runner/work/tipc/tipc/src/error/InternalError.h">
+<area shape="rect" id="node1" title=" " alt="" coords="55,5,259,47"/>
+<area shape="rect" id="node2" href="$Error_8h.html" title=" " alt="" coords="125,95,189,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,169,92,196"/>
+<area shape="rect" id="node4" title=" " alt="" coords="117,169,197,196"/>
+<area shape="rect" id="node5" title=" " alt="" coords="221,169,279,196"/>
 </map>

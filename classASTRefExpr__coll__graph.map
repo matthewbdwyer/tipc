@@ -1,7 +1,5 @@
 <map id="ASTRefExpr" name="ASTRefExpr">
-<area shape="rect" id="Node000001" title="Class for referencing the address of an expression." alt="" coords="5,152,104,177"/>
-<area shape="rect" id="Node000002" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="17,79,93,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,118,57,152,52,152,52,118"/>
-<area shape="rect" id="Node000003" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="14,5,95,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="57,44,57,79,52,79,52,44"/>
+<area shape="rect" id="node1" title="Class for referencing the address of an expression." alt="" coords="5,155,104,181"/>
+<area shape="rect" id="node2" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="17,80,93,107"/>
+<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="14,5,95,32"/>
 </map>

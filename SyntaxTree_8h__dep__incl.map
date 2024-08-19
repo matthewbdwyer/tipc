@@ -1,28 +1,13 @@
-<map id="/tipc/src/frontend/ast/SyntaxTree.h" name="/tipc/src/frontend/ast/SyntaxTree.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="313,5,447,45"/>
-<area shape="rect" id="Node000002" href="$SyntaxTree_8cpp.html" title=" " alt="" coords="5,269,155,309"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,52,251,73,198,101,148,138,108,183,96,204,89,227,83,269,78,269,84,226,91,202,103,180,145,134,195,97,249,68,300,47"/>
-<area shape="rect" id="Node000003" href="$Iterator_8h.html" title=" " alt="" coords="117,181,261,221"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="337,55,282,95,238,141,205,183,201,180,234,137,278,91,334,50"/>
-<area shape="rect" id="Node000006" href="$IteratorImpl_8h.html" title=" " alt="" coords="293,93,467,133"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="383,59,383,93,377,93,377,59"/>
-<area shape="rect" id="Node000008" href="$PreOrderIterator_8h.html" title=" " alt="" coords="499,181,701,221"/>
-<area shape="poly" id="edge12_Node000001_Node000008" title=" " alt="" coords="423,51,480,91,582,179,578,183,477,95,420,55"/>
-<area shape="rect" id="Node000010" href="$ASTVisualizer_8h.html" title=" " alt="" coords="639,93,838,133"/>
-<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="461,43,660,91,659,96,460,48"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="156,232,106,271,103,267,153,228"/>
-<area shape="rect" id="Node000004" href="$Iterator_8cpp.html" title=" " alt="" coords="179,269,338,309"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="215,231,245,267,241,271,211,234"/>
-<area shape="rect" id="Node000005" href="$ASTVisualizer_8cpp.html" title=" " alt="" coords="362,269,577,309"/>
-<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="265,223,409,267,407,272,263,228"/>
-<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="327,141,232,184,230,179,325,137"/>
-<area shape="rect" id="Node000007" href="$IteratorImpl_8cpp.html" title=" " alt="" coords="285,181,475,221"/>
-<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="383,147,383,181,377,181,377,147"/>
-<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="442,136,553,179,551,184,440,141"/>
-<area shape="poly" id="edge10_Node000008_Node000002" title=" " alt="" coords="486,224,324,247,167,272,156,274,155,269,166,267,324,242,486,219"/>
-<area shape="rect" id="Node000009" href="$PreOrderIterator_8cpp.html" title=" " alt="" coords="601,269,817,309"/>
-<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="637,228,687,267,683,271,633,232"/>
-<area shape="poly" id="edge15_Node000010_Node000005" title=" " alt="" coords="741,148,735,186,726,206,714,223,692,238,659,251,578,272,577,267,657,246,689,233,710,219,722,203,729,185,736,147"/>
-<area shape="rect" id="Node000011" href="$FrontEnd_8cpp.html" title=" " alt="" coords="777,181,909,221"/>
-<area shape="poly" id="edge14_Node000010_Node000011" title=" " alt="" coords="774,140,821,179,818,183,771,144"/>
+<map id="/home/runner/work/tipc/tipc/src/frontend/ast/SyntaxTree.h" name="/home/runner/work/tipc/tipc/src/frontend/ast/SyntaxTree.h">
+<area shape="rect" id="node1" title=" " alt="" coords="353,5,527,61"/>
+<area shape="rect" id="node2" href="$SyntaxTree_8cpp.html" title=" " alt="" coords="5,317,179,373"/>
+<area shape="rect" id="node3" href="$Iterator_8h.html" title=" " alt="" coords="130,213,321,269"/>
+<area shape="rect" id="node6" href="$IteratorImpl_8h.html" title=" " alt="" coords="345,109,535,165"/>
+<area shape="rect" id="node8" href="$PreOrderIterator_8h.html" title=" " alt="" coords="559,213,750,269"/>
+<area shape="rect" id="node10" href="$ASTVisualizer_8h.html" title=" " alt="" coords="685,109,891,165"/>
+<area shape="rect" id="node4" href="$Iterator_8cpp.html" title=" " alt="" coords="203,317,394,373"/>
+<area shape="rect" id="node5" href="$ASTVisualizer_8cpp.html" title=" " alt="" coords="419,317,624,373"/>
+<area shape="rect" id="node7" href="$IteratorImpl_8cpp.html" title=" " alt="" coords="345,213,535,269"/>
+<area shape="rect" id="node9" href="$PreOrderIterator_8cpp.html" title=" " alt="" coords="649,317,839,373"/>
+<area shape="rect" id="node11" href="$FrontEnd_8cpp.html" title=" " alt="" coords="826,221,1046,262"/>
 </map>

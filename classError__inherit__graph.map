@@ -1,13 +1,8 @@
 <map id="Error" name="Error">
-<area shape="rect" id="Node000001" title="Base class for tipc errors." alt="" coords="150,79,203,104"/>
-<area shape="rect" id="Node000003" href="$classInternalError.html" title="Class for tipc internal errors." alt="" coords="5,152,108,177"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="147,113,78,154,75,149,144,109"/>
-<area shape="rect" id="Node000004" href="$classParseError.html" title="Class for tipc parse errors." alt="" coords="133,152,221,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="179,118,179,152,174,152,174,118"/>
-<area shape="rect" id="Node000005" href="$classSemanticError.html" title="Class for tipc semantic errors." alt="" coords="245,152,359,177"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="210,108,283,149,280,154,207,113"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="119,5,234,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,44,179,79,174,79,174,44"/>
-<area shape="rect" id="Node000006" href="$classUnificationError.html" title="A runtime error when unifying type terms." alt="" coords="241,225,363,251"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="305,191,305,225,299,225,299,191"/>
+<area shape="rect" id="node1" title="Base class for tipc errors." alt="" coords="150,80,203,107"/>
+<area shape="rect" id="node3" href="$classInternalError.html" title="Class for tipc internal errors." alt="" coords="5,155,108,181"/>
+<area shape="rect" id="node4" href="$classParseError.html" title="Class for tipc parse errors." alt="" coords="133,155,221,181"/>
+<area shape="rect" id="node5" href="$classSemanticError.html" title="Class for tipc semantic errors." alt="" coords="245,155,359,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="119,5,234,32"/>
+<area shape="rect" id="node6" href="$classUnificationError.html" title="A runtime error when unifying type terms." alt="" coords="241,229,363,256"/>
 </map>

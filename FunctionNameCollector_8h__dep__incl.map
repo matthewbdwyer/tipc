@@ -1,7 +1,5 @@
-<map id="/tipc/src/semantic/symboltable/FunctionNameCollector.h" name="/tipc/src/semantic/symboltable/FunctionNameCollector.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="153,5,427,45"/>
-<area shape="rect" id="Node000002" href="$FunctionNameCollector_8cpp.html" title=" " alt="" coords="5,93,295,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,55,182,96,179,91,246,50"/>
-<area shape="rect" id="Node000003" href="$SymbolTable_8cpp.html" title=" " alt="" coords="319,93,541,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="334,50,401,91,398,96,331,55"/>
+<map id="/home/runner/work/tipc/tipc/src/semantic/symboltable/FunctionNameCollector.h" name="/home/runner/work/tipc/tipc/src/semantic/symboltable/FunctionNameCollector.h">
+<area shape="rect" id="node1" title=" " alt="" coords="128,5,351,61"/>
+<area shape="rect" id="node2" href="$FunctionNameCollector_8cpp.html" title=" " alt="" coords="5,109,228,165"/>
+<area shape="rect" id="node3" href="$SymbolTable_8cpp.html" title=" " alt="" coords="252,109,475,165"/>
 </map>

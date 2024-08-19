@@ -1,7 +1,5 @@
-<map id="/tipc/src/semantic/types/constraints/PolyTypeConstraintCollectVisitor.h" name="/tipc/src/semantic/types/constraints/PolyTypeConstraintCollectVisitor.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="105,5,305,60"/>
-<area shape="rect" id="Node000002" href="$TypeInference_8cpp.html" title=" " alt="" coords="5,115,189,155"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,71,119,117,116,113,165,68"/>
-<area shape="rect" id="Node000003" href="$PolyTypeConstraintCollectVisitor_8cpp.html" title=" " alt="" coords="213,108,416,163"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,68,288,106,284,110,242,72"/>
+<map id="/home/runner/work/tipc/tipc/src/semantic/types/constraints/PolyTypeConstraintCollectVisitor.h" name="/home/runner/work/tipc/tipc/src/semantic/types/constraints/PolyTypeConstraintCollectVisitor.h">
+<area shape="rect" id="node1" title=" " alt="" coords="119,5,345,76"/>
+<area shape="rect" id="node2" href="$PolyTypeConstraintCollectVisitor_8cpp.html" title=" " alt="" coords="5,124,232,195"/>
+<area shape="rect" id="node3" href="$TypeInference_8cpp.html" title=" " alt="" coords="257,131,434,187"/>
 </map>

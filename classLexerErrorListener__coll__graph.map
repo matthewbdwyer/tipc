@@ -1,5 +1,4 @@
 <map id="LexerErrorListener" name="LexerErrorListener">
-<area shape="rect" id="Node000001" title="Lexer error listener for redirecting ANTLR4 errors to ParseError." alt="" coords="27,79,167,104"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,188,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,44,99,79,94,79,94,44"/>
+<area shape="rect" id="node1" title="Lexer error listener for redirecting ANTLR4 errors to ParseError." alt="" coords="27,80,167,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,188,32"/>
 </map>

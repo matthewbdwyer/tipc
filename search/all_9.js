@@ -1,28 +1,4 @@
 var searchData=
 [
-  ['identifier_0',['identifier',['../classTIPParser_1_1FieldExprContext.html#a73c7136ffbac1eda11e92fb2f88d7f97',1,'TIPParser::FieldExprContext::IDENTIFIER()'],['../classTIPParser_1_1AccessExprContext.html#ab08971a39e11f645effa04f4d51920ce',1,'TIPParser::AccessExprContext::IDENTIFIER()'],['../classTIPParser_1_1VarExprContext.html#a89bbb03131488631c2c506fc4b439d13',1,'TIPParser::VarExprContext::IDENTIFIER()'],['../classTIPParser_1_1NameDeclarationContext.html#a5f195bddd7b53792ddfb0d40bf074bfa',1,'TIPParser::NameDeclarationContext::IDENTIFIER()'],['../classTIPLexer.html#a8a901290ecd0133f653ddf428c7e65d6a1d561823434570de6b2855d7974d5b2f',1,'TIPLexer::IDENTIFIER'],['../classTIPParser.html#a8efaab2569c130673e8a239840a75645ad2d37edbcd62def4652fb8cdee160e84',1,'TIPParser::IDENTIFIER']]],
-  ['ifstmt_1',['ifstmt',['../classTIPParser.html#a21467904fa4840607cec41a6ba5e8062',1,'TIPParser::ifStmt()'],['../classTIPParser_1_1StatementContext.html#a1d65ba0965569f5bea1aa90158c88e64',1,'TIPParser::StatementContext::ifStmt()']]],
-  ['ifstmtcontext_2',['ifstmtcontext',['../classTIPParser_1_1IfStmtContext.html#a62e59b68f11de8b073e454419ca638b0',1,'TIPParser::IfStmtContext::IfStmtContext()'],['../classTIPParser_1_1IfStmtContext.html',1,'TIPParser::IfStmtContext']]],
-  ['in_20llvm15_20_3a_3',['Changes in LLVM15+:',['../md_OpaquePointers.html#autotoc_md44',1,'']]],
-  ['in_20the_20code_4',['Other minor changes in the code -',['../md_OpaquePointers.html#autotoc_md47',1,'']]],
-  ['in_20tipc_5',['Changes in TIPC',['../md_OpaquePointers.html#autotoc_md45',1,'']]],
-  ['in_20vs_20code_6',['in vs code',['../md_vscode__remote__ssh.html#autotoc_md40',1,'Building tipc in VS Code'],['../md_vscode__remote__ssh.html#autotoc_md41',1,'Running tipc in VS Code'],['../md_vscode__remote__ssh.html#autotoc_md42',1,'Testing tipc in VS Code']]],
-  ['inferred_7',['inferred',['../classUnifier.html#ad029120070162d2da60f61e1be5344bc',1,'Unifier']]],
-  ['initialize_8',['initialize',['../classTIPParser.html#a4a1bd50ca2932c249caa1b860fca7341',1,'TIPParser::initialize()'],['../classTIPLexer.html#a6c48ab1f06956c647898ea1ecf066472',1,'TIPLexer::initialize()']]],
-  ['inputexprcontext_9',['inputexprcontext',['../classTIPParser_1_1InputExprContext.html',1,'TIPParser::InputExprContext'],['../classTIPParser_1_1InputExprContext.html#ac38dd3a50278e8caccba9d1d325c6d44',1,'TIPParser::InputExprContext::InputExprContext()']]],
-  ['internalerror_10',['internalerror',['../classInternalError.html',1,'InternalError'],['../classInternalError.html#a66f35b6f8ecae69169bde66ac06bfc4d',1,'InternalError::InternalError()']]],
-  ['internalerror_2eh_11',['InternalError.h',['../InternalError_8h.html',1,'']]],
-  ['interpreter_20and_20analyzers_12',['TIP Language, Interpreter, and Analyzers',['../index.html#autotoc_md1',1,'']]],
-  ['isalpha_13',['isAlpha',['../classUnifier.html#add395e8335d59965581c98bf8e40f1c1',1,'Unifier']]],
-  ['iscons_14',['isCons',['../classUnifier.html#a6dd4981cf58fd796699945da343b73b3',1,'Unifier']]],
-  ['ismu_15',['isMu',['../classUnifier.html#a69c4361086a8d7c0dbff8fa34a0c4fd0',1,'Unifier']]],
-  ['ispoly_16',['isPoly',['../classASTFunction.html#a373e0032e639745bf49d2d30507722e0',1,'ASTFunction']]],
-  ['ispropertype_17',['isProperType',['../classUnifier.html#a5fd331230a0f553c8de7ba3fad69d4cf',1,'Unifier']]],
-  ['isvar_18',['isVar',['../classUnifier.html#a07c8a3731eb9472d0f9bc8967b4e0af0',1,'Unifier']]],
-  ['iterator_19',['iterator',['../classIterator.html#af6d718f5e8744075a5f71f398d8bd38b',1,'Iterator::Iterator(IteratorImpl *impl)'],['../classIterator.html#a460289d1ebd512ec12c0cb48b561344e',1,'Iterator::Iterator(const Iterator &amp;ts)'],['../classIterator.html',1,'Iterator']]],
-  ['iterator_2ecpp_20',['Iterator.cpp',['../Iterator_8cpp.html',1,'']]],
-  ['iterator_2eh_21',['Iterator.h',['../Iterator_8h.html',1,'']]],
-  ['iteratorimpl_22',['iteratorimpl',['../classIteratorImpl.html#ab03b1d739cd00780ac851d60d3e31200',1,'IteratorImpl::IteratorImpl()'],['../classIteratorImpl.html',1,'IteratorImpl']]],
-  ['iteratorimpl_2ecpp_23',['IteratorImpl.cpp',['../IteratorImpl_8cpp.html',1,'']]],
-  ['iteratorimpl_2eh_24',['IteratorImpl.h',['../IteratorImpl_8h.html',1,'']]]
+  ['joinwithdelim_252',['joinWithDelim',['../PrettyPrinter_8cpp.html#ace41e1f79cbb899bb7799142bb4e3359',1,'PrettyPrinter.cpp']]]
 ];

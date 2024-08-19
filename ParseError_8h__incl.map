@@ -1,11 +1,7 @@
-<map id="/tipc/src/error/ParseError.h" name="/tipc/src/error/ParseError.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="62,5,251,31"/>
-<area shape="rect" id="Node000002" href="$Error_8h.html" title=" " alt="" coords="125,79,189,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,31,159,65,154,65,154,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,92,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="141,106,79,147,76,142,138,102"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="117,152,197,177"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="159,104,159,138,154,138,154,104"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="221,152,279,177"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="173,102,226,141,222,146,170,106"/>
+<map id="/home/runner/work/tipc/tipc/src/error/ParseError.h" name="/home/runner/work/tipc/tipc/src/error/ParseError.h">
+<area shape="rect" id="node1" title=" " alt="" coords="62,5,251,47"/>
+<area shape="rect" id="node2" href="$Error_8h.html" title=" " alt="" coords="125,95,189,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,169,92,196"/>
+<area shape="rect" id="node4" title=" " alt="" coords="117,169,197,196"/>
+<area shape="rect" id="node5" title=" " alt="" coords="221,169,279,196"/>
 </map>

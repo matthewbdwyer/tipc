@@ -1,20 +1,11 @@
-<map id="/tipc/src/frontend/ast/SyntaxTree.h" name="/tipc/src/frontend/ast/SyntaxTree.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="545,5,679,45"/>
-<area shape="rect" id="Node000002" href="$ASTNode_8h.html" title=" " alt="" coords="474,93,633,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="600,47,573,84,568,80,596,44"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="741,167,819,192"/>
-<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="635,44,759,155,755,159,631,48"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,144,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="477,121,158,168,157,163,476,116"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="169,167,301,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="503,121,300,166,299,161,502,116"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="325,167,445,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="527,121,426,164,424,159,525,116"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="591,116,731,160,729,165,589,121"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="470,167,546,192"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="548,120,525,157,520,154,544,118"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="571,167,629,192"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="563,118,587,154,583,157,559,120"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="654,167,717,192"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="576,116,653,158,651,162,573,121"/>
+<map id="/home/runner/work/tipc/tipc/src/frontend/ast/SyntaxTree.h" name="/home/runner/work/tipc/tipc/src/frontend/ast/SyntaxTree.h">
+<area shape="rect" id="node1" title=" " alt="" coords="525,5,699,61"/>
+<area shape="rect" id="node2" href="$ASTNode_8h.html" title=" " alt="" coords="474,109,633,136"/>
+<area shape="rect" id="node6" title=" " alt="" coords="741,184,819,211"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,184,144,211"/>
+<area shape="rect" id="node4" title=" " alt="" coords="169,184,301,211"/>
+<area shape="rect" id="node5" title=" " alt="" coords="325,184,445,211"/>
+<area shape="rect" id="node7" title=" " alt="" coords="470,184,546,211"/>
+<area shape="rect" id="node8" title=" " alt="" coords="571,184,629,211"/>
+<area shape="rect" id="node9" title=" " alt="" coords="654,184,717,211"/>
 </map>

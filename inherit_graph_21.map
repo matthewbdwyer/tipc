@@ -1,21 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="5,167,77,192"/>
-<area shape="rect" id="Node000001" href="$classTipCons.html" title="Abstract base class for all proper types." alt="" coords="125,111,200,136"/>
-<area shape="poly" id="edge85_Node000000_Node000001" title=" " alt="" coords="81,158,133,134,135,139,83,163"/>
-<area shape="rect" id="Node000007" href="$classTipMu.html" title="Class representing a recursive type." alt="" coords="131,167,194,192"/>
-<area shape="poly" id="edge91_Node000000_Node000007" title=" " alt="" coords="91,177,131,177,131,182,91,182"/>
-<area shape="rect" id="Node000008" href="$classTipVar.html" title="Class representing a type variable." alt="" coords="131,228,194,253"/>
-<area shape="poly" id="edge92_Node000000_Node000008" title=" " alt="" coords="81,196,138,226,136,230,78,201"/>
-<area shape="rect" id="Node000002" href="$classTipAbsentField.html" title="A proper type representing an absent record field." alt="" coords="248,5,367,31"/>
-<area shape="poly" id="edge86_Node000001_Node000002" title=" " alt="" coords="182,98,211,69,247,40,268,28,271,33,249,44,214,72,185,102"/>
-<area shape="rect" id="Node000003" href="$classTipFunction.html" title="A proper type representing a function." alt="" coords="259,55,356,80"/>
-<area shape="poly" id="edge87_Node000001_Node000003" title=" " alt="" coords="208,103,272,78,274,83,210,108"/>
-<area shape="rect" id="Node000004" href="$classTipInt.html" title="A proper type representing an int." alt="" coords="278,104,337,129"/>
-<area shape="poly" id="edge88_Node000001_Node000004" title=" " alt="" coords="214,118,278,115,278,121,214,124"/>
-<area shape="rect" id="Node000005" href="$classTipRecord.html" title="A proper type representing a record." alt="" coords="264,153,351,179"/>
-<area shape="poly" id="edge89_Node000001_Node000005" title=" " alt="" coords="214,136,265,151,263,156,212,141"/>
-<area shape="rect" id="Node000006" href="$classTipRef.html" title="A proper type representing a reference." alt="" coords="275,203,339,228"/>
-<area shape="poly" id="edge90_Node000001_Node000006" title=" " alt="" coords="191,143,249,188,276,201,274,206,247,192,188,147"/>
-<area shape="rect" id="Node000009" href="$classTipAlpha.html" title="Class for free type variables." alt="" coords="268,252,347,277"/>
-<area shape="poly" id="edge93_Node000008_Node000009" title=" " alt="" coords="208,245,268,256,267,261,207,251"/>
+<area shape="rect" id="node1" href="$classTypeInference.html" title="Perform type inference and checking." alt="" coords="5,5,119,32"/>
 </map>

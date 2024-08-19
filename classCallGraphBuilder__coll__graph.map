@@ -1,5 +1,4 @@
 <map id="CallGraphBuilder" name="CallGraphBuilder">
-<area shape="rect" id="Node000001" title="Builds call graph of a program that represents calling relationships between subroutines This class o..." alt="" coords="5,79,137,104"/>
-<area shape="rect" id="Node000002" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="27,5,116,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,44,74,79,69,79,69,44"/>
+<area shape="rect" id="node1" title="Builds call graph of a program that represents calling relationships between subroutines This class o..." alt="" coords="5,80,137,107"/>
+<area shape="rect" id="node2" href="$classASTVisitor.html" title="Base class for AST visitors." alt="" coords="27,5,116,32"/>
 </map>

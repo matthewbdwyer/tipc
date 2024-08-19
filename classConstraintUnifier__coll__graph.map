@@ -1,5 +1,4 @@
 <map id="ConstraintUnifier" name="ConstraintUnifier">
-<area shape="rect" id="Node000001" title="A constraint handler to unify constraints on the fly." alt="" coords="9,79,141,104"/>
-<area shape="rect" id="Node000002" href="$classConstraintHandler.html" title="Abstract class for handling type constraints as they are generated." alt="" coords="5,5,145,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,44,78,79,73,79,73,44"/>
+<area shape="rect" id="node1" title="A constraint handler to unify constraints on the fly." alt="" coords="9,80,141,107"/>
+<area shape="rect" id="node2" href="$classConstraintHandler.html" title="Abstract class for handling type constraints as they are generated." alt="" coords="5,5,145,32"/>
 </map>

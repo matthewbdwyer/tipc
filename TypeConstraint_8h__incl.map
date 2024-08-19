@@ -1,9 +1,6 @@
-<map id="/tipc/src/semantic/types/constraints/TypeConstraint.h" name="/tipc/src/semantic/types/constraints/TypeConstraint.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,256,45"/>
-<area shape="rect" id="Node000002" href="$TipType_8h.html" title=" " alt="" coords="89,93,173,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,46,133,79,128,79,128,46"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="41,167,119,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,121,98,157,94,154,120,117"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="143,167,219,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="141,117,167,154,163,157,137,121"/>
+<map id="/home/runner/work/tipc/tipc/src/semantic/types/constraints/TypeConstraint.h" name="/home/runner/work/tipc/tipc/src/semantic/types/constraints/TypeConstraint.h">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,216,61"/>
+<area shape="rect" id="node2" href="$TipType_8h.html" title=" " alt="" coords="69,109,153,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="21,184,99,211"/>
+<area shape="rect" id="node4" title=" " alt="" coords="123,184,199,211"/>
 </map>

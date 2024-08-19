@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['optimizer_0',['Optimizer',['../classOptimizer.html',1,'']]],
-  ['outputstmtcontext_1',['OutputStmtContext',['../classTIPParser_1_1OutputStmtContext.html',1,'TIPParser']]]
+  ['unificationerror_512',['UnificationError',['../classUnificationError.html',1,'']]],
+  ['unifier_513',['Unifier',['../classUnifier.html',1,'']]],
+  ['unionfind_514',['UnionFind',['../classUnionFind.html',1,'']]]
 ];

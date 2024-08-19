@@ -1,7 +1,5 @@
 <map id="TipVar" name="TipVar">
-<area shape="rect" id="Node000001" title="Class representing a type variable." alt="" coords="61,93,123,119"/>
-<area shape="rect" id="Node000002" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="5,5,77,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,41,87,91,83,94,53,44"/>
-<area shape="rect" id="Node000003" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="102,5,183,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,44,101,94,97,91,127,41"/>
+<area shape="rect" id="node1" title="Class representing a type variable." alt="" coords="61,95,123,121"/>
+<area shape="rect" id="node2" href="$classTipType.html" title="Abstract base class of all types." alt="" coords="5,5,77,32"/>
+<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="102,5,183,32"/>
 </map>

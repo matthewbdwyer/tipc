@@ -1,7 +1,5 @@
 <map id="ASTInputExpr" name="ASTInputExpr">
-<area shape="rect" id="Node000001" title="Class for input expression." alt="" coords="5,152,115,177"/>
-<area shape="rect" id="Node000002" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="22,79,98,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,118,63,152,57,152,57,118"/>
-<area shape="rect" id="Node000003" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="19,5,101,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="63,44,63,79,57,79,57,44"/>
+<area shape="rect" id="node1" title="Class for input expression." alt="" coords="5,155,115,181"/>
+<area shape="rect" id="node2" href="$classASTExpr.html" title="Abstract class for all expression subtypes." alt="" coords="22,80,98,107"/>
+<area shape="rect" id="node3" href="$classASTNode.html" title="Abstract base class for all AST nodes." alt="" coords="19,5,101,32"/>
 </map>

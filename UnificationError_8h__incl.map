@@ -1,13 +1,8 @@
-<map id="/tipc/src/semantic/types/solver/UnificationError.h" name="/tipc/src/semantic/types/solver/UnificationError.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="45,5,268,45"/>
-<area shape="rect" id="Node000002" href="$SemanticError_8h.html" title=" " alt="" coords="94,93,219,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,46,159,79,154,79,154,46"/>
-<area shape="rect" id="Node000003" href="$Error_8h.html" title=" " alt="" coords="125,167,189,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="159,119,159,153,154,153,154,119"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,240,92,265"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="141,194,79,235,76,230,138,190"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="117,240,197,265"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="159,192,159,226,154,226,154,192"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="221,240,279,265"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="173,190,226,229,222,234,170,194"/>
+<map id="/home/runner/work/tipc/tipc/src/semantic/types/solver/UnificationError.h" name="/home/runner/work/tipc/tipc/src/semantic/types/solver/UnificationError.h">
+<area shape="rect" id="node1" title=" " alt="" coords="65,5,248,61"/>
+<area shape="rect" id="node2" href="$SemanticError_8h.html" title=" " alt="" coords="94,109,219,136"/>
+<area shape="rect" id="node3" href="$Error_8h.html" title=" " alt="" coords="125,184,189,211"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,259,92,285"/>
+<area shape="rect" id="node5" title=" " alt="" coords="117,259,197,285"/>
+<area shape="rect" id="node6" title=" " alt="" coords="221,259,279,285"/>
 </map>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['affects_20tipc_0',['Quick summary of Opaque Pointers and how that affects TIPC.',['../md_OpaquePointers.html',1,'']]],
-  ['and_20how_20that_20affects_20tipc_1',['Quick summary of Opaque Pointers and how that affects TIPC.',['../md_OpaquePointers.html',1,'']]]
+  ['developing_20on_20uva_20hardware_20_28clion_29_930',['Developing on UVA hardware (CLion)',['../md_clion_thin_client.html',1,'']]],
+  ['developing_20on_20uva_20hardware_20_28vs_20code_29_931',['Developing on UVA hardware (VS Code)',['../md_vscode_remote_ssh.html',1,'']]]
 ];

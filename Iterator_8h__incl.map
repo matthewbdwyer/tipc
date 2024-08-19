@@ -1,26 +1,13 @@
-<map id="/tipc/src/frontend/iterators/Iterator.h" name="/tipc/src/frontend/iterators/Iterator.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="404,5,548,45"/>
-<area shape="rect" id="Node000002" href="$IteratorImpl_8h.html" title=" " alt="" coords="327,93,438,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="455,48,409,86,406,82,452,44"/>
-<area shape="rect" id="Node000003" href="$SyntaxTree_8h.html" title=" " alt="" coords="329,167,436,192"/>
-<area shape="poly" id="edge13_Node000001_Node000003" title=" " alt="" coords="476,46,468,82,452,120,434,142,413,160,410,156,430,138,447,117,463,80,471,45"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="759,313,817,339"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="498,44,768,302,764,305,494,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="385,119,385,153,380,153,380,119"/>
-<area shape="rect" id="Node000004" href="$ASTNode_8h.html" title=" " alt="" coords="303,240,462,265"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="385,192,385,226,380,226,380,192"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="5,313,83,339"/>
-<area shape="poly" id="edge11_Node000003_Node000008" title=" " alt="" coords="357,195,84,310,82,306,354,190"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="439,313,577,339"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="404,263,477,304,474,309,401,268"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="602,313,734,339"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="429,263,609,307,608,313,428,268"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="107,313,227,339"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="349,268,215,311,214,306,347,263"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="326,268,97,316,96,310,325,263"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="251,313,327,339"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="369,267,317,307,314,303,366,263"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="463,262,591,282,745,311,744,316,591,287,462,267"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="351,313,414,339"/>
-<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="385,266,385,300,380,300,380,266"/>
+<map id="/home/runner/work/tipc/tipc/src/frontend/iterators/Iterator.h" name="/home/runner/work/tipc/tipc/src/frontend/iterators/Iterator.h">
+<area shape="rect" id="node1" title=" " alt="" coords="381,5,571,61"/>
+<area shape="rect" id="node2" href="$IteratorImpl_8h.html" title=" " alt="" coords="327,109,438,136"/>
+<area shape="rect" id="node3" href="$SyntaxTree_8h.html" title=" " alt="" coords="329,184,436,211"/>
+<area shape="rect" id="node10" title=" " alt="" coords="759,333,817,360"/>
+<area shape="rect" id="node4" href="$ASTNode_8h.html" title=" " alt="" coords="303,259,462,285"/>
+<area shape="rect" id="node8" title=" " alt="" coords="5,333,83,360"/>
+<area shape="rect" id="node5" title=" " alt="" coords="439,333,577,360"/>
+<area shape="rect" id="node6" title=" " alt="" coords="602,333,734,360"/>
+<area shape="rect" id="node7" title=" " alt="" coords="107,333,227,360"/>
+<area shape="rect" id="node9" title=" " alt="" coords="251,333,327,360"/>
+<area shape="rect" id="node11" title=" " alt="" coords="351,333,414,360"/>
 </map>
