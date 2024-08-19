@@ -1,35 +1,20 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/sh
+set -ex
 
-declare -r ANTLR_VERSION=4
-declare -r JAVA_VERSION=11
-declare -r LLVM_VERSION=17
+ANTLR_VERSION=4
+JAVA_VERSION=11
+LLVM_VERSION=17
 
-declare -r ROOT_DIR=${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}
-
-echogreen() {
-  local green=$(tput setaf 2)
-  local reset=$(tput sgr0)
-  echo "${green}${@}${reset}"
-}
-
-
-echoerr() {
-  local red=$(tput setaf 1)
-  local reset=$(tput sgr0)
-  echo "${red}${@}${reset}" 1>&2;
-  echo "$@" 1>&2;
-}
-
+ROOT_DIR=${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}
 
 bootstrap_ubuntu_dependencies() {
   [ -d /usr/share/keyrings ] || sudo mkdir -p /usr/share/keyrings
 
-  wget https://apt.corretto.aws/corretto.key 
+  wget https://apt.corretto.aws/corretto.key
   gpg --dearmor corretto.key
   rm corretto.key
   sudo mv corretto.key.gpg /usr/share/keyrings/amazon-corretto-${JAVA_VERSION}-keyring.gpg
-  sudo cp ${ROOT_DIR}/bin/apt/amazon-corretto-${JAVA_VERSION}.sources /etc/apt/sources.list.d/
+  sudo cp "${ROOT_DIR}/bin/apt/amazon-corretto-${JAVA_VERSION}.sources" /etc/apt/sources.list.d/
   sudo apt -y update
 
   wget https://apt.kitware.com/kitware-archive.sh
@@ -77,8 +62,8 @@ bootstrap_ubuntu_dependencies() {
 
 
 bootstrap_ubuntu_env() {
-  echo export LLVM_DIR=$(llvm-config-$LLVM_VERSION --prefix)/lib/cmake >> ~/.bashrc
-  echo export TIPCLANG=$(llvm-config-$LLVM_VERSION --bindir)/clang >> ~/.bashrc
+  echo export LLVM_DIR="$(llvm-config-$LLVM_VERSION --prefix)/lib/cmake" >> ~/.bashrc
+  echo export TIPCLANG="$(llvm-config-$LLVM_VERSION --bindir)/clang" >> ~/.bashrc
 }
 
 
@@ -90,18 +75,31 @@ bootstrap_ubuntu() {
 
 bootstrap_linux() {
   . /etc/os-release
-  if [ $ID == ubuntu -o $ID == pop ]; then
+  if [ "$ID" = ubuntu ] || [ "$ID" = pop ]; then
     bootstrap_ubuntu
   else
-    echoerr $ID is not supported.
+    echo "$ID is not supported."
     exit 1
   fi
 }
 
 
 bootstrap_mac_env() {
-  echo export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake >> ~/.zshrc
-  echo export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang >> ~/.zshrc
+  case $SHELL in
+    */zsh)
+      echo "export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake" >> ~/.zshrc
+      echo "export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang" >> ~/.zshrc
+      cat ~/.zshrc
+      ;;
+    */bash)
+      # The macOS github runner does not include zsh.
+      echo "export LLVM_DIR=$(brew --prefix llvm@$LLVM_VERSION)/lib/cmake" >> ~/.bashrc
+      echo "export TIPCLANG=$(brew --prefix llvm@$LLVM_VERSION)/bin/clang" >> ~/.bashrc
+      cat ~/.bashrc
+      ;;
+    *)
+      echo "error: $SHELL is not supported."
+  esac
 }
 
 
@@ -132,23 +130,22 @@ bootstrap_mac() {
 
 
 bootstrap() {
-  local unameOut="$(uname -s)"
+  unameOut="$(uname -s)"
   case "${unameOut}" in
     Linux*)
       bootstrap_linux;;
     Darwin*)
       bootstrap_mac;;
     *)
-      echoerr error: Script has not been implemented for: ${unameOut}.
+      echoerr "error: Script has not been implemented for: ${unameOut}."
       exit 1
       ;;
   esac
 
-  echogreen
-  echogreen '--------------------------------------------------------------------------------'
-  echogreen '* bashrc has been updated - be sure to source the file or restart your shell.  *'
-  echogreen '--------------------------------------------------------------------------------'
+  echo
+  echo '---------------------------------------------------------------------------------'
+  echo '* your rc has been updated - be sure to source the file or restart your shell.  *'
+  echo '---------------------------------------------------------------------------------'
 }
 
 bootstrap
-
