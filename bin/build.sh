@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 # Set ROOT_DIR to TIPDIR or the top-level Git directory if TIPDIR is not set
@@ -24,6 +24,8 @@ if [ ! -f "${RTLIB}/tip_rtlib.bc" ]; then
   exit 1
 fi
 
+set -- "$@"
+
 # Execute tipc with the provided arguments
 ${TIPC} "$@"
 
@@ -34,7 +36,6 @@ case "$*" in
     ;;
   *)
     # Perform the linking step
-    ${TIPCLANG} -w "${!#}.bc" "${RTLIB}/tip_rtlib.bc" -o "$(basename "${!#}" .tip)"
+    ${TIPCLANG} -w "${@:$#}.bc" "${RTLIB}/tip_rtlib.bc" -o "$(basename "${@:$#}" .tip)"
     ;;
 esac
-
