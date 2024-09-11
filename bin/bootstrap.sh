@@ -115,7 +115,7 @@ bootstrap_mac_dependencies() {
     cmake \
     pkg-config \
     llvm@$LLVM_VERSION \
-    antlr@$ANTLR_VERSION \
+    antlr \
     lcov \
     graphviz \
     jq \
