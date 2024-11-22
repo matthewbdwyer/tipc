@@ -1,300 +1,310 @@
 #!/bin/bash
+
+# Set up environment variables
 declare -r ROOT_DIR=${TRAVIS_BUILD_DIR:-$(git rev-parse --show-toplevel)}
 declare -r TIPC=${ROOT_DIR}/build/src/tipc
 declare -r RTLIB=${ROOT_DIR}/rtlib
-declare -r SCRATCH_DIR=$(mktemp -d)
 
 if [ -z "${TIPCLANG}" ]; then
-  echo error: TIPCLANG env var must be set
+  echo "error: TIPCLANG env var must be set"
   exit 1
 fi
 
-curdir="$(basename `pwd`)"
+curdir="$(basename "$(pwd)")"
 if [ "${curdir}" != "system" ]; then
   echo "Test runner must be executed in .../tipc/test/system"
   exit 1
 fi
 
+# Initialize counters
 numtests=0
 numfailures=0
 
-initialize_test() {
-  echo -n "."
-  rm -f ${SCRATCH_DIR}/*
-  ((numtests++))
+# Export variables and functions for GNU parallel
+export ROOT_DIR TIPC RTLIB TIPCLANG
+
+# Function to run self-contained tests
+run_selftest() {
+  testfile="$1"
+  base="$(basename "$testfile" .tip)"
+  failures=0
+
+  for optflag in '' '-do'; do
+    # Create a temporary directory for this test
+    SCRATCH_DIR=$(mktemp -d)
+
+    # Compile the test file
+    ${TIPC} $optflag "$testfile" &>/dev/null
+    if [ $? -ne 0 ]; then
+      echo "Compilation failed for: $testfile $optflag" >&2
+      failures=$((failures + 1))
+      rm -rf "$SCRATCH_DIR"
+      continue
+    fi
+
+    # Link and build executable
+    ${TIPCLANG} -w "$testfile.bc" "${RTLIB}/tip_rtlib.bc" -o "$SCRATCH_DIR/$base" &>/dev/null
+    if [ $? -ne 0 ]; then
+      echo "Linking failed for: $testfile $optflag" >&2
+      failures=$((failures + 1))
+      rm -f "$testfile.bc"
+      rm -rf "$SCRATCH_DIR"
+      continue
+    fi
+
+    # Run the executable
+    "$SCRATCH_DIR/$base" &>/dev/null
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+      echo "Test failure for: $testfile $optflag" >&2
+      "$SCRATCH_DIR/$base" >&2
+      failures=$((failures + 1))
+    fi
+
+    # Cleanup
+    rm -f "$testfile.bc"
+    rm -rf "$SCRATCH_DIR"
+  done
+
+  echo $failures
 }
 
-# Self contained test cases
-for i in selftests/*.tip
-do
-  base="$(basename $i .tip)"
+# Function to run SIP tests
+run_siptest() {
+  testfile="$1"
+  base="$(basename "$testfile" .sip)"
+  failures=0
 
-  # test optimized program
-  initialize_test
-  ${TIPC} $i
-  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+  for optflag in '' '-do'; do
+    SCRATCH_DIR=$(mktemp -d)
 
-  ./${base} &>/dev/null
-  exit_code=${?}
-  if [ ${exit_code} -ne 0 ]; then
-    echo -n "Test failure for : " 
-    echo $i
-    ./${base}
-    ((numfailures++))
-  else 
-    rm ${base}
-  fi 
-  rm $i.bc
+    ${TIPC} $optflag "$testfile" &>/dev/null
+    if [ $? -ne 0 ]; then
+      echo "Compilation failed for: $testfile $optflag" >&2
+      failures=$((failures + 1))
+      rm -rf "$SCRATCH_DIR"
+      continue
+    fi
 
-  # test unoptimized program
-  initialize_test
-  ${TIPC} -do $i
-  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
+    ${TIPCLANG} -w "$testfile.bc" "${RTLIB}/tip_rtlib.bc" -o "$SCRATCH_DIR/$base" &>/dev/null
+    if [ $? -ne 0 ]; then
+      echo "Linking failed for: $testfile $optflag" >&2
+      failures=$((failures + 1))
+      rm -f "$testfile.bc"
+      rm -rf "$SCRATCH_DIR"
+      continue
+    fi
 
-  ./${base} &>/dev/null
-  exit_code=${?}
-  if [ ${exit_code} -ne 0 ]; then
-    echo -n "Test failure for : " 
-    echo $i
-    ./${base}
-    ((numfailures++))
-  else 
-    rm ${base}
-  fi 
-  rm $i.bc
-done
+    "$SCRATCH_DIR/$base" &>/dev/null
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+      echo "Test failure for: $testfile $optflag" >&2
+      "$SCRATCH_DIR/$base" >&2
+      failures=$((failures + 1))
+    fi
 
-# IO related test cases
-for i in iotests/*.expected
-do
-  initialize_test
+    rm -f "$testfile.bc"
+    rm -rf "$SCRATCH_DIR"
+  done
 
-  expected="$(basename $i .tip)"
-  executable="$(echo $expected | cut -f1 -d-)"
-  input="$(echo $expected | cut -f2 -d- | cut -f1 -d.)"
+  echo $failures
+}
 
-  ${TIPC} iotests/$executable.tip
-  ${TIPCLANG} -w iotests/$executable.tip.bc ${RTLIB}/tip_rtlib.bc -o $executable
+# Function to run IO tests
+run_iotest() {
+  expected_file="$1"
+  failures=0
 
-  ./${executable} $input >iotests/$executable.output 2>iotests/$executable.output
+  expected="$(basename "$expected_file" .expected)"
+  executable="$(echo "$expected" | cut -f1 -d-)"
+  input="$(echo "$expected" | cut -f2 -d- | cut -f1 -d.)"
 
-  diff iotests/$executable.output $i > ${SCRATCH_DIR}/$executable.diff
-
-  if [[ -s ${SCRATCH_DIR}/$executable.diff ]]
-  then
-    echo -n "Test differences for : " 
-    echo $i
-    cat ${SCRATCH_DIR}/$executable.diff
-    ((numfailures++))
-  fi 
-
-  rm iotests/$executable.tip.bc
-  rm iotests/$executable.output
-  rm $executable
-done
-
-# Tests to cover driver logic for error and argument handling
-for i in iotests/*error.tip
-do
-  initialize_test
-
-  ${TIPC} $i &>/dev/null
-  exit_code=${?}
-  if [ ${exit_code} -eq 0 ]; then
-    echo -n "Test failure for : " 
-    echo -n $i
-    echo " expected error"
-    ((numfailures++))
-    rm iotests/*error.tip.bc
-  fi 
-done
-
-# System tests for polymorphic type inference
-for i in polytests/*.tip
-do
-  base="$(basename $i .tip)"
-
-  # test optimized program
-  initialize_test
-  ${TIPC} --pi $i
-  ${TIPCLANG} -w $i.bc ${RTLIB}/tip_rtlib.bc -o $base
-
-  ./${base} &>/dev/null
-  exit_code=${?}
-  if [ ${exit_code} -ne 0 ]; then
-    echo -n "Test failure for : "
-    echo $i
-    ./${base}
-    ((numfailures++))
-  else
-    rm ${base}
+  SCRATCH_DIR=$(mktemp -d)
+  ${TIPC} "iotests/$executable.tip" &>/dev/null
+  if [ $? -ne 0 ]; then
+    echo "Compilation failed for: $executable.tip" >&2
+    failures=$((failures + 1))
+    rm -rf "$SCRATCH_DIR"
+    return
   fi
-  rm $i.bc
 
-  ${TIPC} --pp --pt --pi $i >${SCRATCH_DIR}/$base.pppt
-  diff $i.pppt ${SCRATCH_DIR}/$base.pppt >${SCRATCH_DIR}/$base.diff
-  if [[ -s ${SCRATCH_DIR}/$base.diff ]]
-  then
-    echo -n "Test differences for : " 
-    echo $i
-    cat ${SCRATCH_DIR}/$base.diff
-    ((numfailures++))
-  fi 
-done
+  ${TIPCLANG} -w "iotests/$executable.tip.bc" "${RTLIB}/tip_rtlib.bc" -o "$SCRATCH_DIR/$executable" &>/dev/null
+  if [ $? -ne 0 ]; then
+    echo "Linking failed for: $executable.tip.bc" >&2
+    failures=$((failures + 1))
+    rm -f "iotests/$executable.tip.bc"
+    rm -rf "$SCRATCH_DIR"
+    return
+  fi
 
-# Tests to cover argument handling
-# Test pretty printing and symbol printing.
-initialize_test
-${TIPC} -pp -ps iotests/fib.tip >${SCRATCH_DIR}/fib.ppps
-diff iotests/fib.ppps ${SCRATCH_DIR}/fib.ppps >${SCRATCH_DIR}/fib.diff
-if [[ -s ${SCRATCH_DIR}/fib.diff ]]
-then
-  echo "Test differences for : iotests/fib.tip"
-  cat ${SCRATCH_DIR}/fib.diff
-  ((numfailures++))
-fi 
+  "$SCRATCH_DIR/$executable" "$input" >"$SCRATCH_DIR/$executable.output" 2>&1
 
-# Test default output file.
-initialize_test
-input=iotests/main.tip
-expected=iotests/main.tip.ll
-${TIPC} --asm $input
-if [ ! -f $expected ]; then
-  echo -n "Did not find expected output, $expected, for input $input" 
-  ((numfailures++))
-fi 
-rm $expected
+  diff "$SCRATCH_DIR/$executable.output" "$expected_file" >"$SCRATCH_DIR/$executable.diff"
 
-# Test human-readable assembly.
-initialize_test
-input=iotests/fib.tip
-output=${SCRATCH_DIR}/fib.tip.ll
-expected=iotests/fib.tip.ll
-diffed=${SCRATCH_DIR}/fib.diff
-${TIPC} --asm $input -o $output
-diff <(sed -n '4,$p' $output) <(sed -n '4,$p' $expected) > $diffed
-if [ -s $diffed ]; then
-  echo -n "Test differences for: $input" 
-  cat $diffed
-  ((numfailures++))
-fi 
+  if [[ -s "$SCRATCH_DIR/$executable.diff" ]]; then
+    echo "Test differences for: $expected_file" >&2
+    cat "$SCRATCH_DIR/$executable.diff" >&2
+    failures=$((failures + 1))
+  fi
 
-# Test call graph.
-initialize_test
-input=iotests/fib.tip
-output=${SCRATCH_DIR}/fib.tip.bc
-output_graph=${SCRATCH_DIR}/fib.tip.dot
-expected_graph=iotests/fib.tip.dot
-diffed_graph=${SCRATCH_DIR}/fib.tip.dot.diff
-${TIPC} --pcg=$output_graph $input -o $output
-diff $output_graph $expected_graph > $diffed_graph
-if [ -s $diffed_graph ]; then
-  echo "Test differences for: $input" 
-  cat $diffed_graph
-  ((numfailures++))
-fi 
+  rm -f "iotests/$executable.tip.bc"
+  rm -rf "$SCRATCH_DIR"
 
+  echo $failures
+}
 
+# Function to run error tests
+run_error_test() {
+  testfile="$1"
+  failures=0
 
-# Test bad input.
-initialize_test
-nonexistent=$(uuidgen).tip
-while [ -e $nonexistent ]; do
-  nonexistent=$(uuidgen).tip
-done
+  ${TIPC} "$testfile" &>/dev/null
+  exit_code=$?
+  if [ $exit_code -eq 0 ]; then
+    echo "Test failure for: $testfile (expected error)" >&2
+    rm -f "${testfile}.bc"
+    failures=$((failures + 1))
+  fi
 
-${TIPC} $nonexistent &>/dev/null
-exit_code=${?}
-if [ ${exit_code} -eq 0 ]; then
-  echo -n "Test failure for non-exisitent input" 
-  ((numfailures++))
-fi
+  echo $failures
+}
 
-# Type checking at the system level
-for i in selftests/*.tip
-do
-  initialize_test
-  base="$(basename $i .tip)"
+# Function to run polymorphic type inference tests
+run_polytest() {
+  testfile="$1"
+  base="$(basename "$testfile" .tip)"
+  failures=0
+  SCRATCH_DIR=$(mktemp -d)
 
-  ${TIPC} -pp -pt $i >${SCRATCH_DIR}/$base.pppt
-  diff $i.pppt ${SCRATCH_DIR}/$base.pppt >${SCRATCH_DIR}/$base.diff
-  if [[ -s ${SCRATCH_DIR}/$base.diff ]]
-  then
-    echo -n "Test differences for : " 
-    echo $i
-    cat ${SCRATCH_DIR}/$base.diff
-    ((numfailures++))
-  fi 
-done
+  # Optimized test
+  ${TIPC} --pi "$testfile" &>/dev/null
+  if [ $? -ne 0 ]; then
+    echo "Compilation failed for: $testfile" >&2
+    failures=$((failures + 1))
+    rm -rf "$SCRATCH_DIR"
+    return
+  fi
 
-# Test unwritable output file for both ast and call graph printing
-initialize_test
-outputfile=iotests/unwritable
-chmod a-w $outputfile
-input=iotests/linkedlist.tip
-${TIPC} --pa=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
-grep "failed to open" ${SCRATCH_DIR}/unwritable.out > ${SCRATCH_DIR}/unwritable.grep
-if [[ ! -s ${SCRATCH_DIR}/unwritable.grep ]]; then
-  echo -n "Test differences for: $outputfile"
-  echo $i
-  cat ${SCRATCH_DIR}/$outputfile.grep
-  ((numfailures++))
-fi 
+  ${TIPCLANG} -w "$testfile.bc" "${RTLIB}/tip_rtlib.bc" -o "$SCRATCH_DIR/$base" &>/dev/null
+  if [ $? -ne 0 ]; then
+    echo "Linking failed for: $testfile.bc" >&2
+    failures=$((failures + 1))
+    rm -f "$testfile.bc"
+    rm -rf "$SCRATCH_DIR"
+    return
+  fi
 
-initialize_test
-outputfile=iotests/unwritable
-chmod a-w $outputfile
-input=iotests/linkedlist.tip
-${TIPC} --pcg=$outputfile $input 2>${SCRATCH_DIR}/unwritable.out
-grep "failed to open" ${SCRATCH_DIR}/unwritable.out > ${SCRATCH_DIR}/unwritable.grep
-if [[ ! -s ${SCRATCH_DIR}/unwritable.grep ]]; then
-  echo -n "Test differences for: $outputfile"
-  echo $i
-  cat ${SCRATCH_DIR}/$outputfile.grep
-  ((numfailures++))
-fi 
+  "$SCRATCH_DIR/$base" &>/dev/null
+  exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+    echo "Test failure for: $testfile" >&2
+    "$SCRATCH_DIR/$base" >&2
+    failures=$((failures + 1))
+  fi
+  rm -f "$testfile.bc"
 
-# Logging test 
-#   enable logging for a basic smoke test
-initialize_test
-${TIPC} -pt -log=/dev/null selftests/polyfactorial.tip &>/dev/null 
+  # Type checking
+  ${TIPC} --pp --pt --pi "$testfile" >"$SCRATCH_DIR/$base.pppt" 2>/dev/null
+  diff "$testfile.pppt" "$SCRATCH_DIR/$base.pppt" >"$SCRATCH_DIR/$base.diff"
+  if [[ -s "$SCRATCH_DIR/$base.diff" ]]; then
+    echo "Test differences for: $testfile" >&2
+    cat "$SCRATCH_DIR/$base.diff" >&2
+    failures=$((failures + 1))
+  fi
 
-# Test AST visualizer
-initialize_test
-input=iotests/linkedlist.tip
-output_graph=${SCRATCH_DIR}/linkedlist.tip.dot
-expected_output=iotests/linkedlist.tip.dot
-diffed_graph=${SCRATCH_DIR}/linkedlist.tip.dot.diff
-${TIPC} --pa=$output_graph $input
-diff $output_graph $expected_output > $diffed_graph
-if [ -s $diffed_graph ]; then
-  echo "Test differences for: $input"
-  cat $diffed_graph
-  ((numfailures++))
-fi
+  rm -rf "$SCRATCH_DIR"
 
-initialize_test
-input=selftests/ptr4.tip
-output_graph=${SCRATCH_DIR}/ptr4.tip.dot
-expected_output=selftests/ptr4.tip.dot
-diffed_graph=${SCRATCH_DIR}/ptr4.tip.dot.diff
-${TIPC} --pa=$output_graph $input 
-diff $output_graph $expected_output > $diffed_graph
-if [ -s $diffed_graph ]; then
-  echo "Test differences for: $input" 
-  cat $diffed_graph
-  ((numfailures++))
-fi 
+  echo $failures
+}
+
+# Function to run type checking tests
+run_typecheck_test() {
+  testfile="$1"
+  base="$(basename "$testfile")"
+  failures=0
+  SCRATCH_DIR=$(mktemp -d)
+
+  ${TIPC} -pp -pt "$testfile" >"$SCRATCH_DIR/$base.pppt" 2>/dev/null
+  diff "$testfile.pppt" "$SCRATCH_DIR/$base.pppt" >"$SCRATCH_DIR/$base.diff"
+  if [[ -s "$SCRATCH_DIR/$base.diff" ]]; then
+    echo "Test differences for: $testfile" >&2
+    cat "$SCRATCH_DIR/$base.diff" >&2
+    failures=$((failures + 1))
+  fi
+
+  rm -rf "$SCRATCH_DIR"
+
+  echo $failures
+}
+
+# Function to run AST visualizer tests
+run_ast_visualizer_test() {
+  testfile="$1"
+  base="$(basename "$testfile" .tip)"
+  failures=0
+  SCRATCH_DIR=$(mktemp -d)
+
+  output_graph="$SCRATCH_DIR/${base}.tip.dot"
+  expected_output="${testfile}.dot"
+
+  ${TIPC} --pa="$output_graph" "$testfile" &>/dev/null
+  diff "$output_graph" "$expected_output" >"$SCRATCH_DIR/${base}.tip.dot.diff"
+  if [ -s "$SCRATCH_DIR/${base}.tip.dot.diff" ]; then
+    echo "Test differences for: $testfile" >&2
+    cat "$SCRATCH_DIR/${base}.tip.dot.diff" >&2
+    failures=$((failures + 1))
+  fi
+
+  rm -rf "$SCRATCH_DIR"
+
+  echo $failures
+}
+
+# Export functions for GNU parallel
+export -f run_selftest run_siptest run_iotest run_error_test run_polytest run_typecheck_test run_ast_visualizer_test
+
+# Run self-contained tests in parallel
+selftest_files=(selftests/*.tip)
+numtests_self=$(( ${#selftest_files[@]} * 2 ))
+numfailures_self=$(printf "%s\n" "${selftest_files[@]}" | parallel --no-notice -j "$(nproc)" run_selftest 2>&1 | awk '{sum+=$1} END{print sum}')
+
+# Run SIP tests in parallel
+siptest_files=(siptests/*.sip)
+numtests_sip=$(( ${#siptest_files[@]} * 2 ))
+numfailures_sip=$(printf "%s\n" "${siptest_files[@]}" | parallel --no-notice -j "$(nproc)" run_siptest 2>&1 | awk '{sum+=$1} END{print sum}')
+
+# Run IO tests in parallel
+iotest_files=(iotests/*.expected)
+numtests_io=${#iotest_files[@]}
+numfailures_io=$(printf "%s\n" "${iotest_files[@]}" | parallel --no-notice -j "$(nproc)" run_iotest 2>&1 | awk '{sum+=$1} END{print sum}')
+
+# Run error tests in parallel
+error_test_files=(iotests/*error.tip)
+numtests_error=${#error_test_files[@]}
+numfailures_error=$(printf "%s\n" "${error_test_files[@]}" | parallel --no-notice -j "$(nproc)" run_error_test 2>&1 | awk '{sum+=$1} END{print sum}')
+
+# Run polymorphic type inference tests in parallel
+polytest_files=(polytests/*.tip)
+numtests_poly=$(( ${#polytest_files[@]} * 2 ))
+numfailures_poly=$(printf "%s\n" "${polytest_files[@]}" | parallel --no-notice -j "$(nproc)" run_polytest 2>&1 | awk '{sum+=$1} END{print sum}')
+
+# Run type checking tests in parallel
+typecheck_files=(selftests/*.tip siptests/*.sip)
+numtests_typecheck=${#typecheck_files[@]}
+numfailures_typecheck=$(printf "%s\n" "${typecheck_files[@]}" | parallel --no-notice -j "$(nproc)" run_typecheck_test 2>&1 | awk '{sum+=$1} END{print sum}')
+
+# Run AST visualizer tests in parallel
+ast_visualizer_files=(iotests/linkedlist.tip selftests/ptr4.tip)
+numtests_ast=${#ast_visualizer_files[@]}
+numfailures_ast=$(printf "%s\n" "${ast_visualizer_files[@]}" | parallel --no-notice -j "$(nproc)" run_ast_visualizer_test 2>&1 | awk '{sum+=$1} END{print sum}')
+
+# Total tests and failures
+numtests=$((numtests_self + numtests_sip + numtests_io + numtests_error + numtests_poly + numtests_typecheck + numtests_ast))
+numfailures=$((numfailures_self + numfailures_sip + numfailures_io + numfailures_error + numfailures_poly + numfailures_typecheck + numfailures_ast))
 
 # Print out the test results
-if [ ${numfailures} -eq "0" ]; then
-  echo -n " all " 
-  echo -n ${numtests}
-  echo " tests passed"
+if [ "$numfailures" -eq 0 ]; then
+  echo "All $numtests tests passed"
 else
-  echo -n " " 
-  echo -n ${numfailures}/${numtests}
-  echo " tests failed"
+  echo "$numfailures/$numtests tests failed"
 fi
-
-rm -r ${SCRATCH_DIR}
