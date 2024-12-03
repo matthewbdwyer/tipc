@@ -41,7 +41,7 @@ run_system_tests() {
   echo "running the system test suite"
   # Change to SYSTEM_TEST_DIR directory
   cd "${SYSTEM_TEST_DIR}" || exit 1
-  if ! ./run.sh; then
+  if ! python3 run_system_tests.py; then
     echo "error while running system tests"
     exit 1
   fi

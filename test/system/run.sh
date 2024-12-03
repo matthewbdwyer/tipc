@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Deprecated: use run_system_tests.py instead
 declare -r ROOT_DIR=${TRAVIS_BUILD_DIR:-$(git rev-parse --show-toplevel)}
 declare -r TIPC=${ROOT_DIR}/build/src/tipc
 declare -r RTLIB=${ROOT_DIR}/rtlib

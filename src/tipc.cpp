@@ -143,6 +143,7 @@ int main(int argc, char *argv[]) {
         if (!astStream.good()) {
           LOG_S(ERROR) << "tipc: error: failed to open '" << astFile
                        << "' for writing";
+          std::exit(EXIT_FAILURE);
         } else {
           FrontEnd::astVisualize(ast, astStream);
         }
